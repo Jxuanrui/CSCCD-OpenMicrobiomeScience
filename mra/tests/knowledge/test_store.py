@@ -107,7 +107,7 @@ def test_jieba_search_matches_multi_character_chinese_terms(tmp_path: Path) -> N
     )
 
     multi_hits = store.search("多中心")
-    assert [hit.entry.id for hit in multi_hits] == entry.id
+    assert [hit.entry.id for hit in multi_hits] == [entry.id]
     assert "多中心" in multi_hits[0].snippet
     assert "多中心" in multi_hits[0].entry.applicability
     assert store.search("批次混杂")[0].entry.id == entry.id

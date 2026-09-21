@@ -103,7 +103,7 @@ def dispatch(action: dict, ctx: ResearchContext) -> dict:
 
 
 def state_digest(session: ResearchSession, max_findings: int = 8) -> str:
-    """给 planner 的紧凑状态摘要（防上下文膨胀：只给计数+最近发现）。"""
+    """给 planner 的紧凑状态摘要（防上下文膨胀：计数 + 最近发现及其结果片段）。"""
     state = session.state
     recent = state["findings"][-max_findings:]
     lines = [
@@ -112,7 +112,10 @@ def state_digest(session: ResearchSession, max_findings: int = 8) -> str:
         f"n_findings: {len(state['findings'])}",
     ]
     for f in recent:
-        lines.append(f"- [{f['tool']}] {f['claim'][:120]}")
+        evidence = f.get("evidence") or {}
+        result_snippet = str(evidence.get("result", ""))[:400]
+        suffix = f" | result: {result_snippet}" if result_snippet else ""
+        lines.append(f"- [{f['tool']}] {str(f['claim'])[:100]}{suffix}")
     return "\n".join(lines)
 
 
@@ -153,10 +156,11 @@ def run_session(
             action = {"error": "planner 返回非 dict"}
         result = dispatch(action, ctx)
         session.add_finding(Finding(
-            claim=json.dumps({"action": action.get("tool"), "result_keys": sorted(result)[:6]},
-                             ensure_ascii=False)[:400],
+            claim=f"{action.get('tool')} -> "
+                  f"{'ok' if 'error' not in result else result['error'][:120]}",
             tool="planner_step", inputs=action,
-            evidence={"rationale": action.get("rationale", "")}))
+            evidence={"rationale": action.get("rationale", ""),
+                      "result": json.dumps(result, ensure_ascii=False)[:1200]}))
         session.save()
     if session.state["status"] == "running":
         session.finish({"summary": "达到迭代上限", "n_findings": len(session.state["findings"])})

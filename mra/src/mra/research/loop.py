@@ -25,7 +25,7 @@ from .rtools import run_partial_spearman
 from .session import Finding, ResearchSession
 
 ACTION_NAMES = {"kg_neighbors", "kg_edge_evidence", "r_association",
-                "record_finding", "submit_report"}
+                "lit_search_read", "record_finding", "submit_report"}
 
 
 class ResearchContext:
@@ -92,6 +92,18 @@ def dispatch(action: dict, ctx: ResearchContext) -> dict:
             return ctx.kg_tools["kg_edge_evidence"](args)
         if name == "r_association":
             return ctx.r_association(**args)
+        if name == "lit_search_read":
+            from .litread import search_and_read
+            result = search_and_read(args["query"], args.get("question", args["query"]),
+                                     max_results=int(args.get("max_results", 20)),
+                                     max_calls=int(args.get("max_calls", 4)))
+            ctx.session.add_artifact(
+                "litread_" + f"{args['query']}"[:40].replace(" ", "_") + ".json",
+                json.dumps(result, ensure_ascii=False, indent=1))
+            return {"query": args["query"], "n_papers": result["n_papers"],
+                    "answers": [n.get("answer", "") for n in result["notes"]],
+                    "relevant_pmids": [p for n in result["notes"]
+                                       for p in n.get("most_relevant_pmids", [])][:10]}
         if name == "record_finding":
             ctx.session.add_finding(Finding(
                 claim=args["claim"], tool="manual", inputs=args,

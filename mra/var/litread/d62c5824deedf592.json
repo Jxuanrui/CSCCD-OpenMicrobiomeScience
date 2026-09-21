@@ -1,0 +1,112 @@
+{
+ "query": "Akkermansia muciniphila dietary intervention",
+ "question": "该菌对膳食干预的响应有无一致性方向",
+ "n_papers": 12,
+ "papers": [
+  {
+   "pmid": "42755448",
+   "title": "SCO‑792 alleviates HFD‑aggravated chronic pancreatitis by modulating the gut-pancreas axis via the AMPK/ACC and TLR4/NF‑κB signaling pathways.",
+   "year": "2026",
+   "abstract": "Chronic pancreatitis (CP) is an inflammatory disorder that manifests as pancreatic fibrosis and exocrine insufficiency, and premature activation of trypsinogen to trypsin. Enteropeptidase has emerged as a promising therapeutic target in CP due to its critical role in activating trypsinogen. The aim of this study was to assess the effects of SCO-792, a novel enteropeptidase inhibitor, on high-fat diet (HFD)-aggravated CP, and explore the underlying mechanisms. A mouse model of HFD-aggravated CP was established by chronic caerulein administration. The protective effects of SCO-792 were evaluated through histological analysis, biochemical assays, and molecular techniques. The composition of the gut microbiota was analyzed by 16S rRNA gene sequencing, and the fecal levels of short-chain fatty acids (SCFAs) were measured. The involvement of the gut-pancreas axis was further validated by supplementation with Akkermansia muciniphila (AKK) and propionate. SCO-792 treatment significantly alleviated HFD-aggravated pancreatic injury and fibrosis, as indicated by reduced histological scores, decreased collagen deposition, and downregulated protein levels of collagen I and α‑SMA. At the metabol"
+  },
+  {
+   "pmid": "42671997",
+   "title": "Theabrownin Alleviates Alcoholic Liver Disease in Mice by Improving Gut Microbiota and Tryptophan Metabolism.",
+   "year": "2026",
+   "abstract": "Theabrownin (TB) is a bioactive compound derived from tea. Alcoholic liver disease (ALD), caused by chronic alcohol consumption, leads to progressive liver damage associated with inflammation and steatosis. This study aimed to investigate TB's protective effects against ALD and elucidate its mechanisms. A chronic-binge ethanol feeding model was used to induce ALD in mice. Mice were administered TB alongside ethanol exposure. Liver function markers, oxidative stress parameters, inflammatory cytokines, and apoptosis indicators were evaluated. Intestinal barrier integrity and gut inflammation were assessed, along with the expression of tight junction proteins. 16S rRNA sequencing was performed to analyze gut microbiota composition. TB supplementation significantly alleviated hepatic oxidative stress and inflammation and decreased hepatocellular apoptosis. In the gut, TB mitigated ethanol-induced inflammation and restored barrier function by enhancing tight junction protein expression. Microbiota analysis revealed that TB notably increased the abundance of Akkermansia muciniphila, which was associated with altered tryptophan metabolism and activation of the aryl hydrocarbon receptor (A"
+  },
+  {
+   "pmid": "42669533",
+   "title": "Agaro-Oligosaccharides Modulate Gut Microbiota to Improve Lipid Metabolism in Obesity Model Rats.",
+   "year": "2026",
+   "abstract": "Obesity is a global health concern, prompting extensive research to identify food components with potential anti-obesity properties. Agaro-oligosaccharides (AOS) have been reported to have anti-obesity effects; however, the precise mechanisms underlying these effects, particularly in relation to the gut microbial metabolites, remain unclear. This study investigated the anti-obesity effects of AOS using Otsuka Long-Evans Tokushima Fatty (OLETF) rats, an established animal model of obesity. Seven-week-old Long-Evans Tokushima Otsuka (LETO) and OLETF rats were fed a control diet or a diet supplemented with AOS for 13 wk. Blood parameters, liver lipids, and gene expression in the liver and ileum were analyzed. Bile acids were evaluated using liquid chromatography-mass spectrometry, and the cecal microbiota was analyzed using 16S rRNA sequencing. AOS supplementation suppressed body weight gain, improved metabolic parameters, and reduced hepatic triglycerides in OLETF rats. AOS supplementation altered bile acids and gut microbiota composition, increasing Akkermansia muciniphila abundance in the cecum. In addition, AOS intake downregulated the expression of lipid synthesis-related genes i"
+  },
+  {
+   "pmid": "42637476",
+   "title": "A Shenling Baizhu San polysaccharide fraction (SLP-2)-based synbiotic alleviates lactose-induced gut dysfunction via a microbiota-metabolite-barrier axis.",
+   "year": "2026",
+   "abstract": "Lactose intolerance (LI) is a common digestive disorder, and its management still relies largely on dietary restriction. Because gut microbial fermentation and barrier dysfunction contribute to LI-related symptoms, microbiota-targeted prebiotic or synbiotic strategies may provide complementary approaches. However, the active plant-polysaccharide fractions and their microbial partners remain unclear. This study aimed to identify the bioactive polysaccharide fraction from Shenling Baizhu San and evaluate its pairing with responder bacteria for alleviating high-lactose diet (HLD)-induced intestinal dysfunction. Stepwise ethanol precipitation yielded SLP-2, which was subsequently identified as the principal bioactive fraction through human fecal fermentation, monoculture assays, and an HLD rat model. SLP-2 enriched Eubacterium-associated taxa and supported the growth of Akkermansia muciniphila in monoculture and in vivo. Building on this, a synbiotic combining SLP-2 with A. muciniphila and E. rectale alleviated HLD-induced gut dysfunction; the antibiotic-matched comparison with the probiotics-only group supported an SLP-2-associated contribution. The synbiotic intervention was associat"
+  },
+  {
+   "pmid": "42635918",
+   "title": "The Role of Akkermansia muciniphila in Obesity: Benefit or Harm?",
+   "year": "2026",
+   "abstract": "The global prevalence of obesity continues to increase, and several studies have demonstrated that modulating the composition and function of gut microbiota can significantly impact on people with overweight and obesity. Akkermansia muciniphila is a commensal gut bacterium associated with beneficial effects on human metabolism. Its abundance is linked to health, whereas a reduction is commonly observed in obesity. A. muciniphila constitutes approximately 3-5% of the gut microbiota in healthy adults and has attracted attention as a potential next-generation probiotic. This bacterium produces metabolites, proteins, and outer membrane compounds that influence gut barrier function, glucose metabolism, and immune response. Despite promising findings, several controversies and knowledge gaps persist. Its precise mechanism of action remains incompletely understood, and some studies raise concerns about potential pro-inflammatory effects under certain conditions or at high concentrations. As a microbial therapeutic, supplementation with A. muciniphila represents an emerging strategy. Overall, current evidence suggests that diet is key determinant of gut microbiota composition and function,"
+  },
+  {
+   "pmid": "42633329",
+   "title": "Gut Microbiome Composition and Response to Immune Checkpoint Inhibitors in Melanoma: A Systematic Review.",
+   "year": "2026",
+   "abstract": "Immune checkpoint inhibitors have significantly improved clinical outcomes in patients with advanced melanoma; however, treatment response remains highly variable, and reliable predictive biomarkers are lacking. Emerging evidence suggests that the gut microbiome influences host immune regulation and may contribute to this variability. This systematic review evaluated the association between gut microbiome composition and response to immune checkpoint inhibitors in melanoma, with a focus on potential biological mechanisms, predictive biomarkers, and therapeutic implications. A systematic search of the PubMed database was conducted to identify studies published between 2015 and 2025. Eligible studies included original observational investigations and secondary analyses of melanoma microbiome datasets that examined associations between gut microbiome characteristics and response to immune checkpoint inhibitors. Interventional fecal microbiota transplantation studies, dietary or probiotic intervention trials, exposure-only studies (including antibiotic, proton pump inhibitor, or Helicobacter pylori exposure without direct microbiome sequencing), non-English-language publications, and p"
+  },
+  {
+   "pmid": "42584126",
+   "title": "Phyllanthus emblica Polysaccharide Improves Metabolic Associated Fatty Liver Disease by Regulating Gut-Liver Axis through Akkermansia and Short-Chain Fatty Acid Receptors.",
+   "year": "2026",
+   "abstract": "This study investigated the therapeutic effects of PEP-2, a 348.45 kDa pectin isolated from Phyllanthus emblica, against metabolic-associated fatty liver disease (MAFLD). Characterized as a homogalacturonan with minor rhamnogalacturonan I, PEP-2 consists of galacturonic acid, galactose, rhamnose, and arabinose. In high-fat diet-induced mice, PEP-2 significantly improved metabolic phenotypes, reducing obesity, insulin resistance, and hepatic steatosis. Mechanistically, PEP-2 modulated the gut-liver axis by enriching Akkermansia and enhancing short-chain fatty acid (SCFA) production. These changes were associated with increased colonic mRNA expression of SCFA receptor-related genes, including GPR41, GPR43, and GPR109A, and favorable regulation of hepatic lipid metabolism-related genes, including AMPK, PPARα, and CPT1. In vitro, PEP-2 promoted Akkermansia muciniphila growth, while its fermentation products effectively reduced lipid accumulation in cell models. These findings support a microbiota-SCFA-associated mechanism underlying the beneficial effects of PEP-2 and highlight its potential as a prebiotic candidate for functional food development against metabolic disorders."
+  },
+  {
+   "pmid": "42551230",
+   "title": "Enrichment of Akkermansia muciniphila by red ginseng promotes GDF15 secretion and suppresses obesity in mice.",
+   "year": "2026",
+   "abstract": "Obesity is a growing global health burden with rising incidence. Red ginseng (RGS), a traditional processed ginseng product, shows potential for improving metabolic parameters, though its anti-obesity mechanism remains incompletely understood. This study investigated the therapeutic effects of short-term RGS administration on obesity and sought to elucidate the underlying mechanism. A high-fat diet (HFD)-induced obese mouse model was used to assess short-term RGS effects. Antibiotic treatment and fecal microbiota transplantation were performed to evaluate gut microbiota involvement. 16S rRNA sequencing and metagenomic analysis identified key bacterial species, and mass spectrometry-based proteomics identified A. muciniphila-derived proteins. The growth differentiation factor 15 (GDF15)-GFRAL axis was interrogated using Gfral‒/‒ mice. Short-term RGS treatment suppressed appetite, reduced body weight, and elevated circulating GDF15 in diet-induced obese (DIO) mice. RGS enriched A. muciniphila, and its depletion abrogated RGS-mediated weight loss and appetite suppression. The A. muciniphila-derived protein Amuc_1631 was identified as a key effector promoting GDF15 secretion. Mechanist"
+  },
+  {
+   "pmid": "42539524",
+   "title": "Feeding the gut-immune axis: dietary, prebiotic, and probiotic strategies to target persistent inflammation in ART-treated HIV: a narrative review.",
+   "year": "2026",
+   "abstract": "People living with HIV (PWH) experience ongoing systemic inflammation driven by gut dysbiosis, epithelial barrier disruption, and microbial translocation, despite antiretroviral therapy (ART). This review examines evidence from randomized controlled trials, mechanistic studies, systematic reviews, and meta-analyses evaluating nutritional and microbiome-based interventions to reduce inflammation in PWH. Reduced production of short-chain fatty acids (SCFAs) by the gut microbiota has been observed to precede morbidity and mortality in PWH, with SCFAs, mainly butyrate, exerting immunomodulatory effects through promoting regulatory T-cell differentiation via histone deacetylase inhibition and G protein-coupled receptor 43 (GPR43) and GPR109A signaling, suppressing nuclear factor kappa B (NF-κB)-mediated pro-inflammatory cytokine production, and enhancing epithelial tight junction integrity. Probiotics, prebiotics, synbiotics, and fecal microbiota transplantation have demonstrated reductions in inflammatory biomarkers including soluble CD14 (sCD14), lipopolysaccharide-binding protein (LBP), and high-sensitivity C-reactive protein (hsCRP). The Mediterranean diet, omega-3 fatty acids, and "
+  },
+  {
+   "pmid": "42526595",
+   "title": "Taurine mitigates intestinal injury and spatial memory deficits induced by high-fat diet and abdominal irradiation.",
+   "year": "2026",
+   "abstract": "Combined metabolic dysfunction and ionizing radiation produce multifactorial systemic harm, challenging organismal homeostasis and cognitive function. Here, we define a new role for dietary taurine (Tau) protection against combined high-fat diet (HFD) and whole-abdominal irradiation (WAI) stress. In a two-sex murine model, we show that Tau intervention blocks metabolic organ damage and severe structural enteropathy. Histological analyses indicate that Tau preserves the intestinal mucosal barrier, which is accompanied by the restoration of Mucin 2 (MUC2) expression. Furthermore, 16S rRNA sequencing showed that Tau reshapes gut dysbiosis, increasing the relative abundance of the mucin-degrading bacterium Akkermansia muciniphila, which may potentially contribute to mucosal homeostasis. Coincident with the stabilization of this mucin-microbiome interface, we observed that Tau attenuates systemic endotoxemia and reduces inflammatory extracellular vesicle transmission of the gut-brain axis. Consequently, this reduced peripheral inflammation preserves hippocampal dentate gyrus (DG) architecture and ameliorates spatial memory deficit. Importantly, while this microbiome-gut-brain protection"
+  },
+  {
+   "pmid": "42516368",
+   "title": "Navigating the gut-metabolite-immune axis: enhancing efficacy and mitigating toxicity of immune checkpoint inhibitors.",
+   "year": "2026",
+   "abstract": "Immune checkpoint inhibitors (ICIs) have revolutionized the oncological landscape by disrupting inhibitory pathways, notably programmed cell death protein-1/programmed death-ligand 1 (PD-1/PD-L1) and cytotoxic T-lymphocyte-associated antigen-4 (CTLA-4) pathways, thereby reinvigorating host antitumor immunity. Although these agents have emerged as frontline standard therapies for malignancies, their clinical utility remains limited. Interpatient therapeutic variability is inextricably linked to the composition and functional capacity of the gut microbiome. The underlying mechanisms appear to involve a complex dialogue between the microbiota and host immune system, where microbial metabolites serve as critical mediators in remodeling the tumor microenvironment. Despite these insights, progression in the field remains constrained due to heterogeneity in study cohorts and sample-processing methodologies, hindering the establishment of reproducible individualized predictive models and clinical intervention strategies. Consequently, there is an urgent need to systematically delineate the microbiome-metabolite-immune axis to optimize the balance between ICI efficacy and systemic toxicity."
+  },
+  {
+   "pmid": "42473065",
+   "title": "Peptide LKLKLL is a more effective component of Akkermansia muciniphila which regulate glucolipid metabolism through GLP-1/GIP dual modulation.",
+   "year": "2026",
+   "abstract": "The ability of Akkermansia muciniphila (AKK) to ameliorate metabolic dysfunction has attracted increasing attention as a potential strategy for obesity and diabetes management. Moving beyond the use of live bacteria toward the identification of defined bioactive components may facilitate translational development. In this study, we found that the metabolic supernatant of AKK promoted GLP-1 and GIP secretion in STC-1 cells. Metabolomic profiling identified 54 small molecules in the AKK supernatant, among which a bioactive hexapeptide, LKLKLL, was identified. LKLKLL reduced body weight in high-fat diet-induced obese mice, improved glucose tolerance in diabetic models, enhanced GLP-1 secretion, and reduced GIP levels. Mechanistically, our data suggest that LKLKLL may interact with GPR119 and activate the Gαs/adenylate cyclase/cAMP signaling pathway, leading to increased intracellular Ca²⁺ levels. Together, these findings identify an AKK-derived peptide with GLP-1/GIP regulatory activity and provide a foundation for further investigation of its potential role in metabolic diseases modulation."
+  }
+ ],
+ "notes": [
+  {
+   "key_findings": [
+    "新型肠激酶抑制剂SCO-792可通过调控肠-胰轴信号通路减轻高脂饮食加重的慢性胰腺炎",
+    "茶褐素可通过改善肠道菌群和色氨酸代谢减轻小鼠酒精性肝病",
+    "琼脂低聚糖可调控肥胖模型大鼠肠道菌群，改善其脂质代谢，抑制体重增长",
+    "参苓白术散活性多糖组分SLP-2组成的合生元可通过菌群-代谢物-屏障轴缓解高乳糖饮食诱导的肠道功能障碍，可支持嗜黏蛋白阿克曼菌生长",
+    "该综述总结了嗜黏蛋白阿克曼菌与肥胖的关联，指出其虽被认为对代谢有益，但仍存在作用机制不明确等争议与研究空白",
+    "该系统综述评价了黑色素瘤患者肠道菌群组成与免疫检查点抑制剂响应的关联，未涉及膳食干预对特定细菌的影响",
+    "余甘子多糖可通过富集嗜黏蛋白阿克曼菌、调控短链脂肪酸受体改善代谢相关脂肪性肝病，还可体外促进该菌生长",
+    "红参可富集嗜黏蛋白阿克曼菌，促进GDF15分泌，抑制小鼠肥胖"
+   ],
+   "answer": "现有这批研究中，针对嗜黏蛋白阿克曼菌的多项膳食来源活性成分干预实验都显示干预后该菌丰度上升，呈现出一致的正向响应方向。不同类型的膳食活性成分，包括植物多糖、传统中药成分、菌菇活性成分等，在多种疾病模型中都表现出富集该菌的作用，暂无研究观察到膳食干预后该菌丰度一致下降的结果。",
+   "most_relevant_pmids": [
+    42635918,
+    42584126,
+    42551230,
+    42637476
+   ]
+  },
+  {
+   "key_findings": [
+    "该综述探讨了接受抗逆转录病毒治疗的HIV患者中，肠道菌群产生的短链脂肪酸（主要丁酸）的免疫调节作用，以及减少炎症的营养和微生物组干预手段。",
+    "该研究发现膳食牛磺酸干预可保护高脂饮食联合腹部辐照小鼠的肠道黏膜屏障，重塑肠道菌群失调，增加嗜黏蛋白阿克曼菌的相对丰度。",
+    "该文指出肠道微生物组的组成和功能会影响免疫检查点抑制剂的疗效，微生物代谢物是重塑肿瘤微环境的关键介质，但研究进展受队列异质性等因素限制。",
+    "该研究发现嗜黏蛋白阿克曼菌的活性六肽LKLKLL可通过GLP-1/GIP双向调节，改善高脂饮食诱导肥胖小鼠的糖脂代谢紊乱。"
+   ],
+   "answer": "现有给定文献中，仅提到牛磺酸对高脂饮食联合辐照小鼠进行膳食干预后，嗜黏蛋白阿克曼菌丰度上升，未探讨该菌或其他肠道菌对膳食干预响应的一致性方向，缺乏相关研究证据。",
+   "most_relevant_pmids": [
+    42526595
+   ]
+  }
+ ]
+}

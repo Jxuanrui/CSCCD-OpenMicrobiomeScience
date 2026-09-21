@@ -31,6 +31,8 @@ SYSTEM_PROMPT = """\
 3. {"tool":"kg_edge_evidence","args":{"subject":"...","object":"..."}} —— 两实体间证据。
 4. {"tool":"record_finding","args":{"claim":"<一句话发现>","evidence":{...}}} —— 登记重要结论。
 5. {"tool":"submit_report","args":{"summary":"<研究总结：显著关联清单、图谱支持 vs 新型模式二分、机制链示例、局限>"}}
+6. {"tool":"lit_search_read","args":{"query":"<PubMed检索式>","question":"<要回答的问题>","max_results":20}}
+   —— 文献检索+批量速读（消耗 LLM 预算，单次会话使用不超过 3 次；有缓存，重复同参数零消耗）。
 
 硬性规则：
 - 只输出一个 JSON 对象 {"tool":...,"args":{...},"rationale":"一句话理由"}，不得输出其他文本。

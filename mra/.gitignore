@@ -40,3 +40,7 @@ var/staging/*
 var/results/*
 var/audit/*
 !var/**/.gitkeep
+
+# KG 快照与评测产物（运行时再生，不入库）
+var/kg_snapshots/
+var/eval/

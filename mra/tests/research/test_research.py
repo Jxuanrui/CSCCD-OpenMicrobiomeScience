@@ -84,6 +84,10 @@ def test_offline_session_end_to_end(graph, tmp_path, monkeypatch):
          "Energy_kcal_方案B": rng.uniform(1500, 3500, n), "Batch": ["B1"] * n}, index=ids))
     monkeypatch.setattr(ds, "top_features_by_prevalence",
                         lambda frame, max_features: list(frame.columns[:max_features]))
+    monkeypatch.setattr(ds, "load_config", lambda: {
+        "exposures": {"dietary_patterns": "-"}, "features": {"species": "-"}})
+    monkeypatch.setattr(ds, "default_covariates",
+                        lambda: ["Age", "Gender", "Energy_kcal_方案B", "Batch"])
     monkeypatch.setattr("mra.research.loop.run_partial_spearman",
                         lambda *a, **k: pd.DataFrame(
                             [{"feature": "BugOne|s__bug", "rho": 0.4, "p": 0.01, "q": 0.02, "n": n}]))

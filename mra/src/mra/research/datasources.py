@@ -1,36 +1,37 @@
-"""目标队列中心数据契约（项目X 只读）：膳食暴露 × 三界菌群/通路 × 协变量。
+"""队列数据契约：暴露表 × 菌群特征表 × 协变量（部署配置驱动，代码零课题细节）。
 
-路径可用环境变量覆盖（PROJECT01_DATA_DIR / RSCRIPT_BIN），默认指向共享服务器既定位置。
-本模块对 项目X 永远只读；ID 为各表首列（如 WC1），跨表一致。
+表注册表外置为不入库的 JSON 配置（示例见 cohort_config.example.json）：
+  环境变量 COHORT_CONFIG 指向配置，缺省 var/cohort_config.json。
+  结构：{"exposures": {名: 绝对路径}, "features": {名: 绝对路径},
+         "metadata": 绝对路径, "default_covariates": [...],
+         "atlas_exposure_cols": {暴露表名: null(全部数值列) 或 [列名...]}}
+本模块对源数据永远只读；ID 为各表首列，跨表一致。
 """
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 
 import pandas as pd
 
-PROJECT01_DATA = Path(os.environ.get(
-    "PROJECT01_DATA_DIR",
-    "~/work/Project/projroot/项目X/Data",
-))
-CLEANED = PROJECT01_DATA / "Cleaned" / "CohortA"
-MICROBIOME = PROJECT01_DATA / "Microbiome" / "CohortA"
+DEFAULT_CONFIG_PATH = Path(__file__).resolve().parents[3] / "var" / "cohort_config.json"
+_CONFIG_CACHE: dict | None = None
 
-EXPOSURE_FILES = {
-    "dietary_patterns": CLEANED / "exposures_patterns.tsv",
-    "chei": CLEANED / "exposures_index.tsv",
-    "food_groups": CLEANED / "exposures_groups.tsv",
-    "di_gm": CLEANED / "exposures_index2.tsv",
-}
-FEATURE_FILES = {
-    "species": MICROBIOME / "features_species.tsv",
-    "pathway": MICROBIOME / "features_pathway.tsv",
-    "fungal": MICROBIOME / "features_fungal.tsv",
-    "viral": MICROBIOME / "features_viral.tsv",
-}
-METADATA_FILE = CLEANED / "metadata.tsv"
-DEFAULT_COVARIATES = ["Age", "Gender", "Energy_kcal_方案B", "Batch"]
+
+class ConfigNotReady(RuntimeError):
+    pass
+
+
+def load_config(refresh: bool = False) -> dict:
+    global _CONFIG_CACHE
+    if _CONFIG_CACHE is None or refresh:
+        path = Path(os.environ.get("COHORT_CONFIG", DEFAULT_CONFIG_PATH))
+        if not path.is_file():
+            raise ConfigNotReady(
+                f"缺少队列配置 {path}；复制 cohort_config.example.json 为该路径并填写部署机实际表路径")
+        _CONFIG_CACHE = json.loads(path.read_text(encoding="utf-8"))
+    return _CONFIG_CACHE
 
 
 def load_table(path: Path) -> pd.DataFrame:
@@ -43,20 +44,30 @@ def load_table(path: Path) -> pd.DataFrame:
 
 
 def load_exposures(name: str) -> pd.DataFrame:
-    if name not in EXPOSURE_FILES:
-        raise KeyError(f"未知暴露表 {name}，可选：{sorted(EXPOSURE_FILES)}")
-    return load_table(EXPOSURE_FILES[name])
+    table = load_config()["exposures"]
+    if name not in table:
+        raise KeyError(f"未知暴露表 {name}，可选：{sorted(table)}")
+    return load_table(table[name])
 
 
 def load_features(name: str) -> pd.DataFrame:
-    """载入菌群特征表并统一为 样本×特征 方向（原始文件为 特征行×样本列）。"""
-    if name not in FEATURE_FILES:
-        raise KeyError(f"未知特征表 {name}，可选：{sorted(FEATURE_FILES)}")
-    return load_table(FEATURE_FILES[name]).T
+    """载入特征表并统一为 样本×特征 方向（原始文件为 特征行×样本列）。"""
+    table = load_config()["features"]
+    if name not in table:
+        raise KeyError(f"未知特征表 {name}，可选：{sorted(table)}")
+    return load_table(table[name]).T
 
 
 def load_metadata() -> pd.DataFrame:
-    return load_table(METADATA_FILE)
+    return load_table(load_config()["metadata"])
+
+
+def default_covariates() -> list[str]:
+    return list(load_config().get("default_covariates", []))
+
+
+def atlas_exposure_cols(exposure_table: str) -> list[str] | None:
+    return load_config().get("atlas_exposure_cols", {}).get(exposure_table)
 
 
 def intersect_ids(*frames: pd.DataFrame) -> list[str]:

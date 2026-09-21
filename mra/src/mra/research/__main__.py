@@ -1,9 +1,9 @@
 """研究循环 CLI。
 
 用法：
-  ARK_API_KEY=... python -m mra.research \
-      --question "构建目标队列中心研究分析任务并刻画新型模式" \
-      --target "项目X 目标队列中心" [--model doubao-seed-2.0-lite] [--max-iterations 16]
+  ARK_API_KEY=... python -m mra.research --question "<研究问题>" --target "<数据/队列描述>" \
+      [--model doubao-seed-2.0-lite] [--max-iterations 16]
+数据契约经 var/cohort_config.json（不入库）注入，代码不含任何队列细节。
 """
 from __future__ import annotations
 

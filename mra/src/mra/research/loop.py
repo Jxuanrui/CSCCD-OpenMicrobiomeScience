@@ -38,15 +38,20 @@ class ResearchContext:
         self._association_cache: dict[str, pd.DataFrame] = {}
 
     # ---------- 工具实现 ----------
-    def r_association(self, exposure: str, features: str = "species",
+    def r_association(self, exposure: str, features: str = None,
                       max_features: int = 100, q_threshold: float = 0.05,
-                      exposure_table: str = "dietary_patterns") -> dict:
+                      exposure_table: str | None = None) -> dict:
         cache_key = f"{exposure_table}:{exposure}|{features}|{max_features}"
         if cache_key not in self._association_cache:
+            if exposure_table is None:
+                exposure_table = next(iter(ds.load_config()["exposures"]))
+            if features is None:
+                features = next(iter(ds.load_config()["features"]))
             exposures = ds.load_exposures(exposure_table)
             feature_table = ds.load_features(features)  # 样本×特征
             metadata = ds.load_metadata()
-            covariates = metadata[[c for c in ds.DEFAULT_COVARIATES if c in metadata.columns]]
+            cov_cols = [c for c in ds.default_covariates() if c in metadata.columns]
+            covariates = metadata[cov_cols]
             if exposure not in exposures.columns:
                 raise KeyError(f"暴露 {exposure} 不在 {exposure_table}，可选 {list(exposures.columns)[:8]}...")
             ids = ds.intersect_ids(exposures, feature_table, covariates)

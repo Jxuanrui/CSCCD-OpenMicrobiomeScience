@@ -45,3 +45,4 @@ var/audit/*
 var/kg_snapshots/
 var/eval/
 var/research/
+var/cohort_config.json

@@ -19,27 +19,14 @@ from ..kg.graph import KGGraph
 from . import datasources as ds
 from .rtools import run_partial_spearman
 
-NEW_DIMENSIONS_FILE = ds.CLEANED / "exposures_dims.tsv"
-EXPOSURE_SPECS: dict[str, list[str] | None] = {
-    "dietary_patterns": None,          # 全部数值列（Pattern1-4）
-    "chei": ["CHEI_ALL"],
-    "di_gm": None,                     # 主指数列
-    "food_groups": None,               # 全部 20 组
-    "new_dimensions": ["pickled_load", "upf_g", "local_pca1", "spicy_freq"],
-}
 FOOD_NODE_HINTS = {
-    "fruit_cup": "Fruit", "veg_cup": "Vegetable", "green_veg_cup": "Vegetable",
-    "whole_grain_oz": "Whole grain", "refined_grain_oz": "Refined grain",
-    "red_meat_oz": "Red Meat", "processed_meat_oz": "Processed Meat",
-    "poultry_oz": "Poultry", "fish_oz": "Fish", "egg_oz": "Egg", "nuts_oz": "Nuts",
-    "soy_oz": "Soy", "legumes_oz": "Legume", "dairy_cup": "Dairy", "ssb_serving": "Sugary",
+    "fruit": "Fruit", "vegetable": "Vegetable", "green_vegetable": "Vegetable",
+    "whole_grain": "Whole grain", "refined_grain": "Refined grain",
+    "red_meat": "Red Meat", "processed_meat": "Processed Meat",
+    "poultry": "Poultry", "fish": "Fish", "egg": "Egg", "nuts": "Nuts",
+    "soy": "Soy", "legume": "Legume", "dairy": "Dairy", "sugary_drink": "Sugary",
 }
-
-
-def _load_exposure_table(name: str) -> pd.DataFrame:
-    if name == "new_dimensions":
-        return ds.load_table(NEW_DIMENSIONS_FILE)
-    return ds.load_exposures(name)
+# 暴露表清单与列过滤全部来自部署配置（atlas_exposure_cols），代码不携带队列细节。
 
 
 def _numeric_columns(frame: pd.DataFrame, wanted: list[str] | None) -> list[str]:
@@ -49,6 +36,10 @@ def _numeric_columns(frame: pd.DataFrame, wanted: list[str] | None) -> list[str]
     return cols
 
 
+def _food_exposure_table() -> str | None:
+    return ds.load_config().get("food_exposure_table")
+
+
 def grade_hit(graph: KGGraph, feature: str, exposure_table: str, exposure: str,
               rho: float) -> str:
     term = ds.species_to_term(feature) if "__" in feature else feature
@@ -56,9 +47,10 @@ def grade_hit(graph: KGGraph, feature: str, exposure_table: str, exposure: str,
     if not hits:
         return "图谱外"
     taxon_id = hits[0].id
-    if exposure_table != "food_groups":
+    if exposure_table != _food_exposure_table():
         return "暴露概念不在图（独特候选）"
-    hint = FOOD_NODE_HINTS.get(exposure, exposure)
+    hints = {**FOOD_NODE_HINTS, **ds.load_config().get("food_node_hints", {})}
+    hint = hints.get(exposure, exposure)
     food_hits = graph.resolve(hint)
     food_id = None
     for h in food_hits:
@@ -86,7 +78,7 @@ def run_sweep(graph: KGGraph, feature_tables: tuple[str, ...] = ("species", "pat
     out_dir = Path(out_dir) if out_dir else Path(__file__).resolve().parents[3] / "var" / "research" / run_id
     out_dir.mkdir(parents=True, exist_ok=True)
     metadata = ds.load_metadata()
-    covariates = metadata[[c for c in ds.DEFAULT_COVARIATES if c in metadata.columns]]
+    covariates = metadata[[c for c in ds.default_covariates() if c in metadata.columns]]
     feature_frames = {name: ds.load_features(name) for name in feature_tables}
     # 生物表过滤到物种级行（原始表混有 k__/p__ 等高阶层级行，属伪信号；
     # 与图谱侧 BugSigDB ETL 当年的 s__ 过滤同款教训）
@@ -96,9 +88,9 @@ def run_sweep(graph: KGGraph, feature_tables: tuple[str, ...] = ("species", "pat
             feature_frames[name] = frame.loc[:, [c for c in frame.columns
                                                  if c.split("|")[-1].startswith("s__")]]
     rows: list[dict] = []
-    for exp_name in EXPOSURE_SPECS:
-        exp_frame = _load_exposure_table(exp_name)
-        for exposure in _numeric_columns(exp_frame, EXPOSURE_SPECS[exp_name]):
+    for exp_name in ds.load_config()["exposures"]:
+        exp_frame = ds.load_exposures(exp_name)
+        for exposure in _numeric_columns(exp_frame, ds.atlas_exposure_cols(exp_name)):
             for feat_name, feats in feature_frames.items():
                 ids = ds.intersect_ids(exp_frame, feats, covariates)
                 keep = pd.to_numeric(exp_frame.loc[ids, exposure], errors="coerce").notna() \

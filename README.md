@@ -74,7 +74,7 @@ Knowledge_Graph/
 ## 协作开发规范（GitHub 多人模式，2026-09-21 起）
 
 - **主仓库**：https://github.com/Jxuanrui/CSCCD-OpenMicrobiomeScience （`main` 为受保护基线；内网另有私有归档 remote `internal-archive` 存完整运维历史）
-- **分支模型**：每人各自开发分支（如 `dev/zcode-agent`、`dev/<你的名字>`），经 **Pull Request** 合入 `main`；建议在 GitHub 仓库设置中开启 main 分支保护（Require PR + 至少 1 审批）
+- **分支模型（轻量，小团队）**：每人各自开发分支（如 `dev/zcode-agent`、`dev/<名字>`），main 不设强制审查；**小变更直接合并推送，里程碑批量变更走 PR 作为变更记录**（自查后即可合并）。三条铁律：①小步提交、里程碑当天合并，分支寿命不过夜于里程碑；②推送前先 `git pull --rebase`；③任何直推 main 前确认工作树干净
 - **克隆与数据**：`git clone https://github.com/Jxuanrui/CSCCD-OpenMicrobiomeScience.git` 后，`data/` 不入库——由管线再生或从共享数据区 `ln -s`（长任务/写 data/ 的批量运行只在指定生产检出发起）
 - **秘钥纪律**：所有凭据（LLM Key、NEO4J_PASSWORD）仅经环境变量注入；任何文件出现明文即视为事故，立即作废轮换
 - **本地依赖**：Python 3.10+（pandas/networkx/neo4j/pykeen/streamlit/lightrag-hku 等，见各脚本 import）；节点 ID 体系与管线详见上文章节

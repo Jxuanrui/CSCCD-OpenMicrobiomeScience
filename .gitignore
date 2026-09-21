@@ -1,0 +1,12 @@
+# 运行时数据（由管线再生，20GB+，不入库；含语料/种子/合并结果/staging/吸收资产/Neo4j/RAG 索引）
+data/
+# Python
+__pycache__/
+*.pyc
+.venv/
+# OS/编辑器
+.DS_Store
+.idea/
+.vscode/
+# 本地环境
+.env

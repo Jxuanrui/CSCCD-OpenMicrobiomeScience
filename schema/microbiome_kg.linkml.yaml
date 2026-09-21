@@ -1,0 +1,153 @@
+id: https://example.org/microbiome-kg/schema
+name: microbiome-kg
+title: Gut Microbiome Knowledge Graph Schema
+description: >-
+  肠道菌群知识图谱 schema。节点体系沿用 MGMLink（PMC11865272），
+  化合物统一 ChEBI，边携带 MedKGent 式证据与时序属性。
+  本文件是图谱数据结构唯一权威定义；node/edge TSV 列名与此处 slots 一一对应。
+
+prefixes:
+  linkml: https://w3id.org/linkml/
+  NCBITaxon: http://purl.obolibrary.org/obo/NCBITaxon_
+  MESH: https://id.nlm.nih.gov/mesh/
+  CHEBI: http://purl.obolibrary.org/obo/CHEBI_
+  NCBIGene: http://identifiers.org/ncbigene/
+  RXNORM: http://purl.bioontology.org/ontology/RXNORM/
+  KEGG: https://www.kegg.jp/entry/
+  LFS: https://example.org/microbiome-kg/local/
+
+default_prefix: LFS
+default_range: string
+
+enums:
+  EvidenceTier:
+    description: 证据分级。A=curated 实验/筛选数据；B=LLM 抽取且>=2 篇文献支持；C=LLM 抽取且仅 1 篇支持。
+    permissible_values:
+      A: {}
+      B: {}
+      C: {}
+  SourceType:
+    permissible_values:
+      curated: { description: 策展数据库（gutMGene/gutMDisorder/BugSigDB/Maier2018/Phenol-Explorer 等） }
+      llm_extracted: { description: LLM 从文献句子抽取 }
+  Polarity:
+    description: 方向性关系的极性（如代谢物对疾病 + 促进 / - 抑制）。
+    permissible_values:
+      positive: {}
+      negative: {}
+      neutral: {}
+
+classes:
+  NamedThing:
+    abstract: true
+    slots: [id, name, aliases, xrefs]
+
+  # ---------- 节点类型（7 类） ----------
+  Microbe:
+    is_a: NamedThing
+    description: 菌株/种/属等分类单元，ID 统一 NCBITaxon（PubTator 与 BugSigDB 天然对齐）。
+    id_prefixes: [NCBITaxon]
+    slots: [tax_rank]
+  Disease:
+    is_a: NamedThing
+    description: 疾病/失调，ID 统一 MeSH。
+    id_prefixes: [MESH]
+  Metabolite:
+    is_a: NamedThing
+    description: 微生物代谢物或食物源化合物（多酚/纤维成分等），ID 统一 ChEBI。
+    id_prefixes: [CHEBI]
+  Gene:
+    is_a: NamedThing
+    description: 宿主靶基因，ID 统一 NCBIGene。
+    id_prefixes: [NCBIGene]
+  Drug:
+    is_a: NamedThing
+    description: 药物（含非抗生素类），ID 统一 RxNorm。
+    id_prefixes: [RXNORM]
+  Food:
+    is_a: NamedThing
+    description: 整体食物（如燕麦、酸奶）。无成熟标准 ID 体系，name 规范化 + 本地 LFS 前缀；成分化合物一律走 Metabolite(ChEBI)。
+    id_prefixes: [LFS]
+  Pathway:
+    is_a: NamedThing
+    description: 代谢通路，ID 统一 KEGG。
+    id_prefixes: [KEGG]
+
+  # ---------- 边（关联） ----------
+  Association:
+    description: >-
+      所有关系的统一容器。subject/predicate/object 对应 TSV 的三列；
+      证据属性（evidence_tier/source_type/pmids/years/...）为每条边必填规范。
+    slots:
+      - subject
+      - predicate
+      - object
+      - source_type
+      - evidence_tier
+      - pmids
+      - years
+      - support_count
+      - confidence
+      - polarity
+      - last_updated
+
+slots:
+  id:
+    identifier: true
+    description: 节点唯一 ID，带前缀（如 NCBITaxon:1639）。
+  name:
+    required: true
+  aliases:
+    multivalued: true
+    description: 别名列表（菌名旧称/异写等）。
+  xrefs:
+    multivalued: true
+    description: 跨库映射（如 MeSH↔MONDO）。
+  tax_rank:
+    description: 分类层级（strain/species/genus/family/phylum）。
+  subject:
+    range: NamedThing
+    required: true
+  predicate:
+    required: true
+    description: 关系类型，取值见下方关系清单。
+  object:
+    range: NamedThing
+    required: true
+  source_type:
+    range: SourceType
+    required: true
+  evidence_tier:
+    range: EvidenceTier
+    required: true
+  pmids:
+    multivalued: true
+    description: 支持文献 PMID 列表；curated 数据无 PMID 时留空。
+  years:
+    multivalued: true
+    description: 对应文献发表年份（MedKGent 式时序，支持知识演化分析）。
+  support_count:
+    range: integer
+    required: true
+    description: 支持证据数（文献数或策展条数）。
+  confidence:
+    range: float
+    description: 0-1。curated=1.0；LLM 按模型输出与复核规则打分。
+  polarity:
+    range: Polarity
+    description: 仅方向性关系使用（affects 等）。
+  last_updated:
+    required: true
+    description: 该边最后更新日期 YYYY-MM-DD。
+
+# ---------- 关系清单（predicate 取值域） ----------
+# Microbe→Disease   : increases_abundance_in | decreases_abundance_in | alleviates | aggravates
+# Microbe→Metabolite: produces | consumes
+# Metabolite→Disease: affects (需 polarity)
+# Microbe→Gene      : regulates_host_gene
+# Metabolite→Gene   : modulates_host_gene
+# Food→Microbe      : promotes_growth | inhibits_growth
+# Microbe→Microbe   : inhibits_growth | parent_taxon
+# Microbe→Pathway   : participates_in
+# Microbe→Drug      : sensitive_to (Maier2018 筛选语义) | biotransforms
+# Metabolite→Food   : contained_in

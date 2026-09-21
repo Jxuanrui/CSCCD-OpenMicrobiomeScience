@@ -1,0 +1,33 @@
+# 模型能力表（平台自维护权威表，Git 版本化）
+# 依据：PLANNING.md 5.7 + policies/reuse-reviews/2026-09-10-modelruntime-adapter-libs.md 第 3 节
+# 规则：按 provider/model/version 登记；不做运行时探测；条目必须经 ARK 集成回归校准后
+#       才能把 status 从 unverified 改为 verified。新增模型先以 unverified 登记。
+# 能力枚举见 src/mra/model_runtime/types.py::Capability
+
+schema_version: 1
+
+models:
+  - provider: ark
+    model: doubao-seed-2.0-lite # MVP 目标模型（Coding Plan 套餐短名）
+    version: unverified
+    endpoint: ark-coding # base_url: https://ark.cn-beijing.volces.com/api/coding/v3
+    capabilities: [chat, tool_calling, structured_output]
+    status: verified # 2026-09-11 真实端点实测：对话/工具调用/结构化输出均通过
+    registered_at: "2026-09-10"
+    note: 2026-09-11 真实集成验证通过（structured_output + tool_calling + usage 归一化）；usage 缺 cache/audio/image 等可选细项（正常）。
+  - provider: ark
+    model: kimi-k3
+    version: unverified
+    endpoint: ark-coding
+    capabilities: [chat, tool_calling]
+    status: verified
+    registered_at: "2026-09-11"
+    note: 2026-09-11 对话验证通过；tool_calling/structured_output 未逐一实测，暂标 verified(chat)。
+  - provider: ark
+    model: deepseek-v4-pro
+    version: unverified
+    endpoint: ark-coding
+    capabilities: [chat]
+    status: verified
+    registered_at: "2026-09-11"
+    note: 2026-09-11 对话验证通过。

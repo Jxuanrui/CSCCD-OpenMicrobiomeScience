@@ -1,0 +1,68 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">EXTERNAL SOURCES</p><h1>来源与候选</h1></div></div>
+{% if not knowledge_enabled %}
+<p class="empty">知识库未启用。</p>
+{% else %}
+<section class="panel">
+  <div class="section-heading"><h2>知识源注册表</h2><span class="muted">{{ sources|length }} 个</span></div>
+  {% if sources %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>来源</th><th>名称</th><th>版本</th><th>提供</th><th>软件许可</th><th>数据许可</th><th>最高使用</th><th>状态</th><th>人工审核</th></tr></thead>
+    <tbody>{% for source in sources %}<tr>
+      <td><code>{{ source.source_id }}</code></td>
+      <td>{{ source.name }}</td>
+      <td>{{ source.version }}</td>
+      <td>{{ source.provides|join(", ") }}</td>
+      <td>{{ source.software_license }}</td>
+      <td>{{ source.data_license }}</td>
+      <td>{{ source.default_use }}</td>
+      <td>{{ source.status }}</td>
+      <td>{{ source.human_review }}</td>
+    </tr>{% endfor %}</tbody>
+  </table></div>
+  {% else %}<p class="empty">尚未注册任何知识源。</p>{% endif %}
+</section>
+
+<section class="panel">
+  <div class="section-heading"><h2>候选证据收件箱</h2><span class="muted">{{ candidates|length }} 条</span></div>
+  <form class="filters" method="get" action="/sources">
+    <label>审核状态
+      <select name="review_status">
+        <option value="" {{ "selected" if not selected_review_status else "" }}>全部</option>
+        <option value="pending" {{ "selected" if selected_review_status == "pending" else "" }}>pending</option>
+        <option value="approved" {{ "selected" if selected_review_status == "approved" else "" }}>approved</option>
+        <option value="rejected" {{ "selected" if selected_review_status == "rejected" else "" }}>rejected</option>
+      </select>
+    </label>
+    <button type="submit">筛选</button>
+  </form>
+  {% if candidates %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>来源记录</th><th>PMID</th><th>DOI</th><th>证据等级</th><th>审核</th><th>摘要片段</th><th>操作</th></tr></thead>
+    <tbody>{% for item in candidates %}<tr>
+      <td><code>{{ item.source_record_id }}</code></td>
+      <td>{{ item.pmid or "-" }}</td>
+      <td>{{ item.doi or "-" }}</td>
+      <td>{{ item.evidence_status }}</td>
+      <td>{{ item.review_status }}</td>
+      <td>{{ (item.raw_excerpt or "")[:100] }}</td>
+      <td>
+        <form method="post" action="/sources/review">
+          <input type="hidden" name="evidence_id" value="{{ item.evidence_id }}">
+          <select name="status">
+            <option value="pending" {{ "selected" if item.review_status == "pending" else "" }}>pending</option>
+            <option value="approved" {{ "selected" if item.review_status == "approved" else "" }}>approved</option>
+            <option value="rejected" {{ "selected" if item.review_status == "rejected" else "" }}>rejected</option>
+          </select>
+          <button type="submit">审阅</button>
+        </form>
+      </td>
+    </tr>{% endfor %}</tbody>
+  </table></div>
+  <p class="muted" style="margin-top:.5rem">晋升草稿（CLI）：<code>python -m mra.knowledge.cli review-candidate --evidence-id &lt;ID&gt; --status approved</code>，再 <code>python -m mra.knowledge.cli draft-entry --evidence-id &lt;ID&gt; --package methods</code></p>
+  {% else %}<p class="empty">候选证据收件箱为空。</p>{% endif %}
+</section>
+<div id="sources-content"></div>
+{% endif %}
+{% endblock %}

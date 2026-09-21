@@ -1,0 +1,17 @@
+{
+  "mra": {
+    "meta": {"revision": "draft-1"},
+    "actions": ["read_projection", "execute_task", "promote_result", "export_data", "manage_policy", "approve_request"],
+    "principal_types": ["human", "agent"],
+    "resource_types": ["projection", "task", "result", "data", "policy", "request"],
+    "classifications": ["synthetic", "internal", "restricted"],
+    "granted_scope": [
+      {"project_id": "project01", "classifications": ["synthetic", "internal"], "resource_types": ["projection"]},
+      {"project_id": "project01", "classifications": ["synthetic"], "resource_types": ["data"]}
+    ],
+    "registered_tasks": {
+      "simulate_association": {"max_memory_mb": 512, "timeout_s": 300},
+      "quality_check": {"max_memory_mb": 256, "timeout_s": 120}
+    }
+  }
+}

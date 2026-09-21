@@ -1,0 +1,12 @@
+id: context-project01-cohort-001
+package: context
+title: 项目X 目标队列菌群膳食队列概况
+version: 1
+evidence_level: contextual_fact
+applicability: 仅适用于 项目X 目标队列中心的研究上下文，不代表其他队列。
+source:
+  - {kind: internal, ref: Method.md 肠道菌群数据章节, date: '2026-09-12'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  目标队列中心清洗后有 1068 例 FFQ 与宏基因组数据，宏基因组结果来自七个批次，包含 MetaPhlAn4 物种丰度和 HUMAnN3 功能通路。此条目不包含样本级数据、原始问卷或完整丰度矩阵。

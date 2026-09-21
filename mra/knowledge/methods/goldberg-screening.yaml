@@ -1,0 +1,13 @@
+id: method-goldberg-screening-001
+package: methods
+title: FFQ 能量合理性筛查保留 Goldberg 双方案敏感性分析
+version: 1
+evidence_level: confirmed_rule
+applicability: 适用于 项目X 目标队列 FFQ 的能量摄入合理性筛查。
+source:
+  - {kind: internal, ref: Method.md 阶段3 Goldberg cutoff, date: '2026-09-12'}
+  - {kind: literature, ref: Black AE 2000, date: '2000-09-01'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  用 EI:BMR 比值和 PAL 分层筛查，不使用固定能量阈值。FFQ 的调查天数 d 缺乏统一共识，因此同时保留 d=1 与 d→∞ 两套分类，比较结论敏感性，不擅自二选一。

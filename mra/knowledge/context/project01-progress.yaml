@@ -1,0 +1,12 @@
+id: context-project01-progress-001
+package: context
+title: 项目X 当前分析进度
+version: 1
+evidence_level: contextual_fact
+applicability: 仅用于判断 项目X 分析阶段和平台接入准备度。
+source:
+  - {kind: internal, ref: Method.md 目标队列中心总体流程, date: '2026-09-12'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  阶段1食物到食物成分表映射、阶段2营养素与能量换算、阶段3 Goldberg 能量合理性筛查已有记录；阶段4能量校正与膳食质量指数、阶段5暴露模式及菌群-膳食关联分析尚未作为平台黄金基准冻结。本平台不据此替代科研分析。

@@ -1,0 +1,12 @@
+id: governance-principal-model-001
+package: governance
+title: 单人平台采用 human 与 agent 两类执法主体
+version: 1
+evidence_level: confirmed_rule
+applicability: 适用于当前单机单用户部署；未来多人协作时再扩展角色模型。
+source:
+  - {kind: internal, ref: PLANNING.md 第9章 Q17, date: '2026-09-12'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  当前执法主体只有 human 与 agent。原 PI、数据管理员、统计审核员、平台管理员仅作为审批收据的可选签核标签，不能作为单人场景的权限路由。

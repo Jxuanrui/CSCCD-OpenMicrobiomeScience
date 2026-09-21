@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">APPROVED KNOWLEDGE</p><h1>知识包</h1></div></div>
+<form class="filters" method="get" action="/knowledge/search">
+  <label>搜索知识包<input name="q" value="{{ query or '' }}" placeholder="输入标题、适用范围或内容"></label>
+  <button type="submit">搜索</button>
+</form>
+{% if not knowledge_enabled %}
+<p class="empty">知识库未启用。</p>
+{% elif search_message %}
+<p class="empty">{{ search_message }}</p>
+{% elif search_hits is defined and search_hits %}
+<section class="panel">
+  <div class="section-heading"><h2>搜索结果</h2><span class="muted">{{ search_hits|length }} 条</span></div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>标题</th><th>证据等级</th><th>适用范围</th><th>来源引用</th></tr></thead>
+    <tbody>{% for hit in search_hits %}<tr>
+      <td>{{ hit.entry.title }}</td><td>{{ hit.evidence_level }}</td>
+      <td>{{ hit.applicability }}</td><td>{{ hit.source_summary }}</td>
+    </tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+{% elif search_hits is defined %}
+<p class="empty">没有匹配的知识条目。</p>
+{% else %}
+{% for package, entries in package_groups.items() %}
+<section class="panel">
+  <div class="section-heading"><h2>{{ package }}</h2><span class="muted">{{ entries|length }} 条</span></div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>ID</th><th>标题</th><th>证据等级</th><th>版本</th><th>已退役</th></tr></thead>
+    <tbody>{% for entry in entries %}<tr>
+      <td><code>{{ entry.id }}</code></td><td>{{ entry.title }}</td>
+      <td>{{ entry.evidence_level }}</td><td>{{ entry.version }}</td>
+      <td>{{ "是" if entry.retired else "否" }}</td>
+    </tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+{% else %}<p class="empty">知识库中暂无条目。</p>{% endfor %}
+{% endif %}
+{% endblock %}

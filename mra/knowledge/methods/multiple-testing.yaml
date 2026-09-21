@@ -1,0 +1,12 @@
+id: method-multiple-testing-001
+package: methods
+title: 多重检验必须声明检验族与校正方法
+version: 1
+evidence_level: confirmed_rule
+applicability: 适用于菌群物种、功能通路等多重关联检验。
+source:
+  - {kind: internal, ref: src/mra/audit AUDIT-MULT-001, date: '2026-09-12'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  分析规格须声明检验族、alpha 和校正方法（如 Bonferroni、Holm、BH 或 BY）。审计器重算校正值并与提交结果比较。p 值非法、族定义缺失或校正结果不一致不得当作通过。

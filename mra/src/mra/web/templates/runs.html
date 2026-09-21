@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">REQUEST CHAINS</p><h1>运行</h1></div></div>
+<section class="panel">
+  {% if runs %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>请求 ID</th><th>最近决定</th><th>原因</th><th>输入摘要</th><th>输出摘要</th><th>事件数</th></tr></thead>
+    <tbody>{% for run in runs %}<tr>
+      <td><a href="/runs/{{ run.request_id }}"><code>{{ run.request_id }}</code></a></td>
+      <td><span class="status status-{{ run.decision }}">{{ run.decision }}</span></td><td>{{ run.reason_codes }}</td>
+      <td><code>{{ run.input_digest }}</code></td><td><code>{{ run.output_digest }}</code></td><td>{{ run.events|length }}</td>
+    </tr>{% endfor %}</tbody>
+  </table></div>
+  {% else %}<p class="empty">暂无带请求 ID 的运行事件。</p>{% endif %}
+</section>
+{% endblock %}

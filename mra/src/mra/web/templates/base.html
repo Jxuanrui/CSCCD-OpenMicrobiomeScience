@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="htmx-config" content='{"responseHandling":[{"code":"400","swap":true},{"code":"[23]..","swap":true},{"code":"[45]..","swap":false,"error":true},{"code":"...","swap":false}]}' >
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='style.css') }}">
+  <script src="{{ url_for('static', path='vendor/htmx.min.js') }}"></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="/">{{ title }}</a>
+    <nav aria-label="主导航">
+      <a href="/">概览</a>
+      <a href="/approvals">审批</a>
+      <a href="/audit">审计</a>
+      <a href="/runs">运行</a>
+      <a href="/permissions">权限</a>
+      <a href="/knowledge">知识包</a>
+      <a href="/sources">来源与候选</a>
+    </nav>
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+</body>
+</html>

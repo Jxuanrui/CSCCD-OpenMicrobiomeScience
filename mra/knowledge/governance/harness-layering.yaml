@@ -1,0 +1,13 @@
+id: governance-harness-layering-001
+package: governance
+title: 治理角色保留为权限信封，工作流人设保持可替换
+version: 1
+evidence_level: confirmed_rule
+applicability: 适用于模型能力快速演进、需要定期替换 Harness 的 Agent 工作流。
+source:
+  - {kind: internal, ref: PLANNING.md 第5.15节与第9章 Q14, date: '2026-09-12'}
+  - {kind: literature, ref: Anthropic Scaling Managed Agents, date: '2026-04-08'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  OPA/PEP 的确定性权限信封不随模型更换；系统提示词、skills 和工具 schema 组成薄 Harness，应版本化、回归测试并可替换。工作流人设不能硬编码对模型能力的过时假设。

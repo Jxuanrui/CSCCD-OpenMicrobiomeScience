@@ -1,0 +1,12 @@
+id: governance-three-tier-001
+package: governance
+title: Agent 动作采用直接放行、需人审批、仅限人三档决策
+version: 1
+evidence_level: confirmed_rule
+applicability: 适用于当前 human/agent 两主体的 OPA 策略。
+source:
+  - {kind: internal, ref: policies/opa/bundle/mra/authz/decision.rego, date: '2026-09-12'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  Agent 可直接读获批投影并执行注册任务；结果晋升需人工审批；导出数据、管理策略和审批动作仅限 human。所有判断仍由 OPA/PEP 强制，模型提示词不能放宽权限。

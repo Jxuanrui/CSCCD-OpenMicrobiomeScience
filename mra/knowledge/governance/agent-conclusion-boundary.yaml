@@ -1,0 +1,12 @@
+id: governance-agent-conclusion-boundary-001
+package: governance
+title: Agent 可自主执行但不可自主定论
+version: 1
+evidence_level: confirmed_rule
+applicability: 适用于所有科研分析工作流和结果发布路径。
+source:
+  - {kind: internal, ref: PLANNING.md 第5.1节, date: '2026-09-12'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  Agent 可以提出计划、调用注册工具、生成候选发现和草稿，但候选发现不能自动升级为已验证结论或内部知识。确定性审计和人工审批是结论晋升的前置条件。

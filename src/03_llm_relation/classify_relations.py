@@ -48,7 +48,38 @@ COMPAT = {
                              "alleviates", "aggravates", "affects"},
     ("Microbe", "Metabolite"): {"produces", "consumes", "affects", "biotransforms"},
     ("Microbe", "Gene"): {"regulates_host_gene", "modulates_host_gene", "affects"},
+    # schema 既定：Food→Microbe = promotes_growth|inhibits_growth（affects 为关联表述安全阀）
+    ("Food", "Microbe"): {"promotes_growth", "inhibits_growth", "affects"},
 }
+
+# 食物组词典（agent 侧需求单 W4，P3 食物组×菌群）：canonical -> 别名列表。
+# 节点 id 归一为 LFS:FOOD:<slug>；词表可替换（项目X 标准膳食分类表到位后映射即可）。
+FOOD_LEXICON = {
+    "whole grain": ["whole grain", "whole grains", "whole-grain", "oat", "oats", "oatmeal", "barley", "brown rice", "rye", "quinoa"],
+    "dietary fiber": ["dietary fiber", "dietary fibre", "soluble fiber", "insoluble fiber", "cellulose", "hemicellulose", "psyllium"],
+    "prebiotic": ["prebiotic", "prebiotics", "inulin", "fructooligosaccharide", "fructo-oligosaccharide", "FOS", "galactooligosaccharide", "GOS", "resistant starch", "beta-glucan", "beta-glucans"],
+    "polyphenol": ["polyphenol", "polyphenols", "flavonoid", "flavonoids", "anthocyanin", "resveratrol", "quercetin", "catechin", "curcumin", "ellagic acid"],
+    "fermented food": ["fermented food", "fermented foods", "kimchi", "sauerkraut", "kefir", "kombucha", "miso", "tempeh", "sourdough"],
+    "dairy product": ["dairy", "yogurt", "yoghurt", "milk", "cheese", "buttermilk", "whey protein"],
+    "red meat": ["red meat", "beef", "pork", "lamb", "mutton"],
+    "processed meat": ["processed meat", "sausage", "bacon", "ham", "deli meat"],
+    "poultry": ["poultry", "chicken", "turkey"],
+    "fish and seafood": ["fish", "seafood", "salmon", "sardine", "mackerel", "omega-3 fatty acid", "omega-3"],
+    "fruit": ["fruit", "fruits", "berry", "berries", "apple", "citrus", "pomegranate", "grape"],
+    "vegetable": ["vegetable", "vegetables", "cruciferous vegetable", "broccoli", "leafy green", "carrot", "tomato"],
+    "legume": ["legume", "legumes", "bean", "beans", "lentil", "soybean", "tofu", "pea protein"],
+    "nut and seed": ["nut", "nuts", "almond", "walnut", "flaxseed", "chia seed"],
+    "coffee and tea": ["coffee", "caffeine", "tea", "green tea", "black tea"],
+    "alcohol": ["alcohol", "ethanol", "wine", "beer", "chronic alcohol"],
+    "high-fat diet": ["high-fat diet", "high fat diet", "western diet", "western-style diet"],
+    "mediterranean diet": ["mediterranean diet", "plant-based diet", "vegetarian diet", "vegan diet"],
+    "food emulsifier": ["emulsifier", "emulsifiers", "polysorbate", "carboxymethylcellulose", "maltodextrin"],
+    "artificial sweetener": ["artificial sweetener", "non-nutritive sweetener", "sucralose", "aspartame", "saccharin"],
+}
+_FOOD_ALIASES = [(a, canon) for canon, aliases in FOOD_LEXICON.items() for a in aliases]
+_FOOD_PATTERN = re.compile("|".join(
+    sorted((re.escape(a) for a, _ in _FOOD_ALIASES), key=len, reverse=True)), re.I)
+
 HOST_TAXIDS = {"9606", "10090", "10116", "9913", "9823", "10114"}
 GENERIC_MICROBE_TAXIDS = {"749906"}
 # 衍生产物简称识别：属首字母 + 产物关键词（如 AmEVs 之于 Akkermansia）。
@@ -94,6 +125,7 @@ produces 与 biotransforms 的严格区分（最重要）：
 - 脱硫酸基/去结合等修饰反应（desulfation/deconjugation/sulfatase）是对大分子（如 mucin）的修饰，不是摄取游离底物（如游离 Sulfates），禁止映射为 consumes(游离物)；
 - "remodels/alters 谱图"类表述默认为间接调控而非直接转化；
 - 客体粒度：Death/存活率等终末事件应建模为具体疾病或 Mortality 风险概念，禁止把 Death 当可加重的疾病实体；
+- Food→Microbe 谓词：膳食暴露促进该菌生长/富集用 promotes_growth，抑制用 inhibits_growth，仅相关表述用 affects 或 no_relation；
 - 强因果谓词（aggravates/alleviates）仅限实验性因果证据（干预/定植/清除实验），纯相关表述（risk factor、elevated in disease）只可产 no_relation 或关联型弱谓词。"""
 
 CUES = ("microbiota", "microbiome", "bacter", "species", "strain", "abundance",
@@ -254,6 +286,20 @@ def build_mention_relink(mentions):
     return cached
 
 
+
+def food_entities(sent):
+    """句内食物组提及（词典匹配）→ Food 实体列表（schema 既定 LFS:FOOD 前缀）。"""
+    out, seen = [], set()
+    for m in _FOOD_PATTERN.finditer(sent):
+        matched = m.group(0)
+        canon = dict((a.lower(), c) for a, c in _FOOD_ALIASES).get(matched.lower())
+        if not canon or canon in seen:
+            continue
+        seen.add(canon)
+        out.append({"id": f"LFS:FOOD:{canon.replace(' ', '_')}", "name": canon,
+                    "mention": matched, "category": "Food"})
+    return out
+
 def tokens(s):
     return set(re.findall(r"[a-z0-9]{3,}", s.lower()))
 
@@ -372,6 +418,7 @@ def build_pairs(records, limit, taxon_names, taxon_ranks, is_microbe, relink):
                 stats[f"ent_{ent['category']}"] += 1
             # 同句内配对
             for idx, ents in enumerate(sent_ents):
+                sent_ents[idx] = ents = ents + food_entities(sents[idx][0])
                 sent_text = sents[idx][0]
                 # PubMed 评论性标题（"Comment on: ..."）无抽取价值。
                 if sent_text.startswith("Comment on"):
@@ -379,6 +426,20 @@ def build_pairs(records, limit, taxon_names, taxon_ranks, is_microbe, relink):
                 if not any(c in sent_text.lower() for c in CUES):
                     continue
                 for sub in ents:
+                    if sub["category"] == "Food":
+                        # schema 既定方向：Food→Microbe（膳食暴露对菌生长/富集的影响）
+                        for obj in ents:
+                            if obj["category"] != "Microbe" or obj["id"] == sub["id"]:
+                                continue
+                            key = (pmid, sub["id"], obj["id"])
+                            if key in seen:
+                                continue
+                            seen.add(key)
+                            pairs.append({"pmid": pmid, "sentence": sent_text,
+                                          "subject": sub, "object": obj})
+                            if len(pairs) >= limit:
+                                return pairs, stats
+                        continue
                     if sub["category"] != "Microbe":
                         continue
                     for obj in ents:

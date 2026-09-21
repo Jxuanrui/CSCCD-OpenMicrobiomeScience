@@ -26,6 +26,10 @@ DOMAINS = {
     "food_fiber": '("dietary fiber" OR prebiotic OR inulin OR "beta-glucan" OR "resistant starch" OR pectin)',
     "food_pattern": '("Mediterranean diet" OR "dietary pattern" OR "high-fat diet" OR "western diet")',
     "food_intervention": '("probiotic intervention" OR synbiotic OR "fermented food" OR "functional food")',
+    "oral": '("oral microbiome" OR "oral microbiota" OR periodontitis OR "dental plaque")',
+    "skin": '("skin microbiome" OR "skin microbiota" OR "atopic dermatitis" OR "wound microbiome")',
+    "airway": '("airway microbiome" OR "respiratory microbiome" OR "lung microbiome" OR asthma OR COPD)',
+    "methods": '("metagenomic sequencing" OR "shotgun metagenomics" OR "16S rRNA" OR "microbiome benchmark" OR "mock community")',
 }
 
 
@@ -57,6 +61,7 @@ def export_batch(session, pmids):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--per-domain", type=int, default=150, help="每个疾病域拉取的 PMID 上限")
+    ap.add_argument("--pmids-dir", help="消费目录内全部 JSON 清单（radar 每日产物），自动与既有语料去重")
     ap.add_argument("--pmids", help="按指定 PMID 清单拉取（JSON 数组文件，优先于疾病域检索；"
                                     "用于并入外部高质量语料如 MicrobeScholar）")
     ap.add_argument("--batch-size", type=int, default=50)
@@ -78,6 +83,17 @@ def main():
     if args.pmids:
         uniq = sorted({str(x) for x in json.loads(Path(args.pmids).read_text(encoding="utf-8"))})
         print(f"[pmids] 指定清单 {len(uniq)} 篇", flush=True)
+    elif args.pmids_dir:
+        # 消费 radar 每日 PMID 清单目录（如 Knowledge_Graph-mra/radar/data/daily/*.json，均为裸数组）
+        pm = set()
+        for f in sorted(Path(args.pmids_dir).glob("*.json")):
+            try:
+                d = json.loads(f.read_text(encoding="utf-8"))
+                pm |= {str(x) for x in (d if isinstance(d, list) else d.get("pmids", []))}
+            except (json.JSONDecodeError, AttributeError):
+                continue
+        uniq = sorted(pm - set(existing))
+        print(f"[pmids_dir] {args.pmids_dir} 去重后净新增 {len(uniq)} 篇", flush=True)
     else:
         # 串行 esearch 各疾病域（避免 NCBI 429 限流）
         pmids, domain_stats = [], {}

@@ -13,7 +13,7 @@ NON_DISEASE_COND={'Diet','Age','Health','Healthy'}
 def main():
  ap=argparse.ArgumentParser(); ap.add_argument('--limit',type=int,default=0); args=ap.parse_args()
  df=pd.read_csv(RAW/'full_dump.csv',skiprows=1,low_memory=False)
- df=df[df['Body site'].fillna('').str.contains('gut|intestin|colon|rect|stomach|fec',case=False,regex=True)]
+ # 2026-09-21 需求单：放开 gut-only 过滤，纳入口腔/皮肤/阴道等全部体位（净增 ~4,526 行实测）。
  if args.limit: df=df.head(args.limit)
  nodes={}; edges={}; today=date.today().isoformat()
  for _,r in df.iterrows():

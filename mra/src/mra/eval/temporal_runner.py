@@ -25,6 +25,59 @@ def _pair_key(a: str, b: str) -> tuple[str, str]:
     return (a, b) if a <= b else (b, a)
 
 
+def build_context_edges(full_graph: KGGraph, cutoff_year: int,
+                        heldout: list[dict]) -> list:
+    """评测上下文边：严格过去(年份≤cutoff) ∪ 安全无日期边。
+
+    无日期策展边是知识先验的一部分，但必须剔除与 held-out 同对(无序)的边，
+    封死直接泄漏；更深的语义重叠属于'先验知识'定义本身，在报告中披露。
+    """
+    heldout_pairs = {_pair_key(q["subject"], q["object"]) for q in heldout if q["answer"]}
+    context = []
+    for edge in full_graph.edges:
+        first = edge.earliest_year
+        if first is not None:
+            if first <= cutoff_year:
+                context.append(edge)
+        else:
+            if _pair_key(edge.subject, edge.object) not in heldout_pairs:
+                context.append(edge)
+    return context
+
+
+def mechanism_digest(full_graph: KGGraph, context_edges: list, node_id: str,
+                     target_id: str | None = None, max_lines: int = 10) -> str:
+    """机制桥摘要：node 产出的代谢物 ×（可选）目标疾病已知菌的共享代谢物桥。
+
+    图中真实存在的 3 路径结构：m --produces--> metab <--produces-- m' --abundance--> D。
+    仅使用上下文边；产物清单与共享桥分开陈述，供裁判自行权衡。
+    """
+    products: dict[str, set[str]] = {}
+    abundance: dict[str, list[tuple[str, str]]] = {}
+    for edge in context_edges:
+        if edge.predicate == "produces":
+            products.setdefault(edge.subject, set()).add(edge.object)
+        elif edge.predicate in ("increases_abundance_in", "decreases_abundance_in"):
+            sign = "↑" if edge.predicate.startswith("increases") else "↓"
+            abundance.setdefault(edge.object, []).append((edge.subject, sign))
+
+    def _name(nid: str) -> str:
+        node = full_graph.nodes.get(nid)
+        return node.name if node else nid
+
+    my_products = products.get(node_id, set())
+    lines = [f"已知产出代谢物：{', '.join(_name(p) for p in sorted(my_products)[:8]) or '（无）'}"]
+    if target_id and my_products:
+        bridges = []
+        for microbe, sign in abundance.get(target_id, [])[:12]:
+            shared = my_products & products.get(microbe, set())
+            if shared:
+                bridges.append(f"{_name(microbe)}({sign}于该病, 共享{len(shared)}个代谢物)")
+        if bridges:
+            lines.append("机制桥（该病已知菌与主语菌共享代谢物）：" + "; ".join(bridges[:max_lines]))
+    return "\n".join(lines)
+
+
 def load_temporal(cutoff_year: int, eval_root: Path = DEFAULT_EVAL_ROOT) -> dict:
     out_dir = Path(eval_root) / f"temporal_{cutoff_year}"
     if not (out_dir / "heldout_questions.jsonl").is_file():
@@ -162,27 +215,59 @@ def run_heuristic_baselines(pairs: list[dict], past_index: PastGraphIndex) -> di
     return out
 
 
-def _neighborhood_digest(full_graph: KGGraph, past_index: PastGraphIndex,
-                         node_id: str, max_edges: int = 40) -> str:
-    """节点在"过去图"中的 1 跳邻域摘要（带谓词与证据等级）。"""
+def _neighborhood_digest(full_graph: KGGraph, index: PastGraphIndex,
+                         node_id: str, edge_attrs: dict | None = None,
+                         max_edges: int = 40) -> str:
+    """节点在给定索引中的 1 跳邻域摘要（谓词/证据等级仅取自上下文边，防泄漏）。"""
     lines = []
-    for other in sorted(past_index.neighbors(node_id))[:max_edges]:
+    for other in sorted(index.neighbors(node_id))[:max_edges]:
         node = full_graph.nodes.get(other)
-        edges = full_graph.edge_evidence(node_id, other)
-        pred = edges[0].predicate if edges else "?"
-        tier = edges[0].evidence_tier if edges else "?"
+        attrs = (edge_attrs or {}).get(_pair_key(node_id, other))
+        pred = attrs["predicate"] if attrs else "?"
+        tier = attrs["tier"] if attrs else "?"
         lines.append(f"{pred}({tier}) {node.name if node else other}")
-    return "; ".join(lines) if lines else "（过去图中无邻接）"
+    return "; ".join(lines) if lines else "（上下文中无邻接）"
+
+
+def bootstrap_auc_ci(scores: list[float], labels: list[int],
+                     n_boot: int = 1000, seed: int = 0) -> tuple[float, float]:
+    import random as _random
+
+    rng = _random.Random(seed)
+    n = len(scores)
+    if n == 0 or not any(labels) or all(labels):
+        return (float("nan"), float("nan"))
+    aucs = []
+    for _ in range(n_boot):
+        idx = [rng.randrange(n) for _ in range(n)]
+        s = [scores[i] for i in idx]
+        l = [labels[i] for i in idx]
+        if any(l) and not all(l):
+            aucs.append(auc(s, l))
+    if not aucs:
+        return (float("nan"), float("nan"))
+    aucs.sort()
+    return round(aucs[int(0.025 * len(aucs))], 4), round(aucs[int(0.975 * len(aucs))], 4)
 
 
 def llm_scores(
     pairs: list[dict],
     full_graph: KGGraph,
-    past_index: PastGraphIndex,
+    index: PastGraphIndex,
     model_name: str | None = None,
     max_calls: int = 60,
+    context_mode: str = "flat",
+    context_edges: list | None = None,
+    edge_attrs: dict | None = None,
+    seed: int = 42,
 ) -> list[float]:
-    """LLM 条件：只依据过去图邻域给关联合理性打分（0-1），预算硬顶 max_calls。"""
+    """LLM 条件打分。context_mode：
+    - flat：仅 1 跳邻域摘要；
+    - mechanism：邻域 + 代谢物介导机制链（来自上下文边）；
+    - shuffled：邻域(真实) + 机制链换随机供体菌（消融：内容 vs 结构）。
+    只依据上下文知识，解析失败记中性 0.5，预算硬顶 max_calls。
+    """
+    import random as _random
     import uuid
 
     from ..model_runtime import Message, ModelRef, ModelRequest
@@ -192,10 +277,30 @@ def llm_scores(
     runtime = ArkRuntime(capabilities_path=CAPABILITIES_PATH, pricing_path=PRICING_PATH)
     model_ref = ModelRef(provider="ark", model=model_name or "doubao-seed-2.0-lite",
                          version="unverified", endpoint="ark-coding")
+    rng = _random.Random(seed)
+    donors = []
+    if context_mode == "shuffled" and context_edges:
+        seen = set()
+        for e in context_edges:
+            if e.predicate in ("produces", "consumes") and e.subject not in seen:
+                seen.add(e.subject)
+                donors.append(e.subject)
+
+    def _context_block(subject: str, target: str) -> str:
+        flat = _neighborhood_digest(full_graph, index, subject, edge_attrs)
+        if context_mode == "flat" or context_edges is None:
+            return f"邻域知识：{flat}"
+        if context_mode == "mechanism":
+            bridge = mechanism_digest(full_graph, context_edges, subject, target)
+            return f"邻域知识：{flat}\n机制信息：{bridge}"
+        donor = rng.choice(donors) if donors else subject
+        bridge = mechanism_digest(full_graph, context_edges, donor, target)
+        return f"邻域知识：{flat}\n机制信息：{bridge}"
+
     system = (
-        "你是菌群知识评测裁判。只依据给定的'过去知识'评估 微生物与目标实体 存在"
+        "你是菌群知识评测裁判。只依据给定的'已知知识'评估 微生物与目标实体 存在"
         "直接生物学关联的可能性，输出 JSON：{\"score\": 0到1的小数, \"reason\": \"一句话\"}。"
-        "不得使用过去知识之外的参数知识猜测；信息不足给 0.5 附近。只输出 JSON。"
+        "不得使用已知知识之外的参数知识猜测；信息不足给 0.5 附近。只输出 JSON。"
     )
     scores: list[float] = []
     for pair in pairs[:max_calls]:
@@ -205,7 +310,7 @@ def llm_scores(
             scores.append(0.5)
             continue
         user = (
-            f"微生物：{microbe.name}\n其过去知识邻域：{_neighborhood_digest(full_graph, past_index, pair['subject'])}\n"
+            f"微生物：{microbe.name}\n{_context_block(pair['subject'], pair['object'])}\n"
             f"目标实体：{obj.name}（{obj.category}）\n"
             f"问题：二者存在直接生物学关联（如丰度变化/产生/调控）的可能性？"
         )
@@ -229,6 +334,11 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--n-pairs", type=int, default=200)
     parser.add_argument("--llm", type=int, default=0, help="LLM 条件调用数上限（0=跳过）")
     parser.add_argument("--model", default=None)
+    parser.add_argument("--context", choices=("flat", "mechanism", "shuffled"), default="flat",
+                        help="LLM 条件上下文模式（mechanism/shuffled 需扩展上下文=严格过去∪安全无日期）")
+    parser.add_argument("--strict-context", action="store_true",
+                        help="LLM 条件也只用严格过去图（默认扩展上下文用于非 flat 模式）")
+    parser.add_argument("--out", default=None, help="报告 JSON 追加写入路径")
     args = parser.parse_args(argv)
 
     data = load_temporal(args.cutoff)
@@ -243,6 +353,15 @@ def main(argv: list[str] | None = None) -> int:
         "heuristics": run_heuristic_baselines(pairs, past_index),
     }
     if args.llm > 0:
+        context_edges = None
+        edge_attrs = None
+        index = past_index
+        if not args.strict_context and args.context != "flat":
+            context_edges = build_context_edges(full_graph, args.cutoff, data["heldout"])
+            edge_attrs = {_pair_key(e.subject, e.object): {"predicate": e.predicate,
+                                                           "tier": e.evidence_tier}
+                          for e in context_edges}
+            index = PastGraphIndex([(e.subject, e.object) for e in context_edges])
         subset = []
         for p in pairs:  # 每个正例配其首个负例，保持 1:1 平衡直到用满额度
             if p["label"] == 1 and len(subset) + 2 <= args.llm:
@@ -250,11 +369,22 @@ def main(argv: list[str] | None = None) -> int:
                 neg = next((q for q in pairs if q["label"] == 0 and q["subject"] == p["subject"]), None)
                 if neg:
                     subset.append(neg)
-        scores = llm_scores(subset, full_graph, past_index, args.model, max_calls=args.llm)
+        scores = llm_scores(subset, full_graph, index, args.model, max_calls=args.llm,
+                            context_mode=args.context, context_edges=context_edges,
+                            edge_attrs=edge_attrs)
         labels = [p["label"] for p in subset[:len(scores)]]
-        report["llm"] = {"auc": round(auc(scores, labels), 4), "n": len(labels),
-                         "model": args.model or "doubao-seed-2.0-lite"}
+        lo, hi = bootstrap_auc_ci(scores, labels)
+        report["llm"] = {"auc": round(auc(scores, labels), 4),
+                         "auc_ci95": [lo, hi], "n": len(labels),
+                         "model": args.model or "doubao-seed-2.0-lite",
+                         "context": args.context,
+                         "context_edges": len(context_edges) if context_edges else "strict-past"}
     print(json.dumps(report, ensure_ascii=False, indent=2))
+    if args.out:
+        out_path = Path(args.out)
+        existing = json.loads(out_path.read_text(encoding="utf-8")) if out_path.exists() else {}
+        existing[f"{report.get('llm', {}).get('model', 'heur')}:{args.context}:{args.llm}"] = report
+        out_path.write_text(json.dumps(existing, ensure_ascii=False, indent=2), encoding="utf-8")
     return 0
 
 

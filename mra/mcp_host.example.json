@@ -1,0 +1,20 @@
+{
+  "mcpServers": {
+    "microbiome-kg": {
+      "command": "python",
+      "args": ["-m", "mra.mcp_server"],
+      "env": {
+        "KG_MERGED_DIR": "/path/to/Knowledge_Graph/data/merged",
+        "COHORT_CONFIG": "/path/to/var/cohort_config.json",
+        "RSCRIPT_BIN": "/path/to/microbiome_R/bin/Rscript",
+        "ARK_API_KEY": "<env-injected>",
+        "HTTPS_PROXY": "http://127.0.0.1:7890"
+      }
+    },
+    "biomcp": {
+      "command": "biomcp",
+      "args": ["serve"],
+      "note": "通用生医查询（PubMed/PubTator3/临床试验/药物）；安装见 biomcp.org，PyPI 包名 biomcp-cli"
+    }
+  }
+}

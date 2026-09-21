@@ -71,12 +71,13 @@ Knowledge_Graph/
 - **BugSigDB / gutMGene / gutMDisorder / Maier 2018**：按原论文与数据仓库许可引用。
 
 
-## 协作开发规范（Git，2026-09-21 起）
+## 协作开发规范（GitHub 多人模式，2026-09-21 起）
 
-- **远程裸仓库**：`Knowledge_Graph.git`（内网 bare 归档仓库；每位开发者**克隆到自己的独立路径**开发，禁止共用同一工作目录）
-- **data/ 不入库**：全部运行时数据由管线再生或由共享数据区提供；克隆后按需 `ln -s` 共享 data 或重跑管线
-- **秘钥纪律**：API Key 仅经环境变量注入，任何文件出现明文 Key 视为事故（历史：曾有一次聊天明文泄露已轮换）
-- **流程**：`main` 受保护——特性开发走 `git switch -c feat/xxx`，完成后 merge 回 main；运行中的长任务（LLM 批量）只允许在一个指定检出里发起
+- **主仓库**：https://github.com/Jxuanrui/CSCCD-OpenMicrobiomeScience （`main` 为受保护基线；内网另有私有归档 remote `internal-archive` 存完整运维历史）
+- **分支模型**：每人各自开发分支（如 `dev/zcode-agent`、`dev/<你的名字>`），经 **Pull Request** 合入 `main`；建议在 GitHub 仓库设置中开启 main 分支保护（Require PR + 至少 1 审批）
+- **克隆与数据**：`git clone https://github.com/Jxuanrui/CSCCD-OpenMicrobiomeScience.git` 后，`data/` 不入库——由管线再生或从共享数据区 `ln -s`（长任务/写 data/ 的批量运行只在指定生产检出发起）
+- **秘钥纪律**：所有凭据（LLM Key、NEO4J_PASSWORD）仅经环境变量注入；任何文件出现明文即视为事故，立即作废轮换
+- **本地依赖**：Python 3.10+（pandas/networkx/neo4j/pykeen/streamlit/lightrag-hku 等，见各脚本 import）；节点 ID 体系与管线详见上文章节
 
 ## 进展日志
 

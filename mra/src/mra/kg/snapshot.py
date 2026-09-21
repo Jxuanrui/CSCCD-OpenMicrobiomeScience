@@ -7,6 +7,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import shutil
 from datetime import date
 from pathlib import Path
@@ -15,8 +16,17 @@ NODES_FILE = "merged_nodes.tsv"
 EDGES_FILE = "merged_edges.tsv"
 MANIFEST_FILE = "manifest.json"
 
-DEFAULT_SOURCE = Path("~/work/Project/Knowledge_Graph/data/merged")
+# 部署路径经环境变量注入（KG_MERGED_DIR 指向主图谱仓库 data/merged），代码不含机器路径
+DEFAULT_SOURCE = Path(os.environ.get("KG_MERGED_DIR", ""))
 DEFAULT_ROOT = Path(__file__).resolve().parents[3] / "var" / "kg_snapshots"
+
+
+def _source_dir(source: Path | None) -> Path:
+    source = Path(source) if source else DEFAULT_SOURCE
+    if not str(source) or not source.is_dir():
+        raise FileNotFoundError(
+            f"主图谱 merged 目录不可用（{source or '未设置'}）；请设置 KG_MERGED_DIR 或显式传 source")
+    return source
 
 
 def _sha256(path: Path) -> str:
@@ -33,11 +43,12 @@ def _count_data_lines(path: Path) -> int:
 
 
 def create_snapshot(
-    source: Path = DEFAULT_SOURCE,
+    source: Path | None = None,
     root: Path = DEFAULT_ROOT,
     snapshot_id: str | None = None,
 ) -> Path:
-    source, root = Path(source), Path(root)
+    source = _source_dir(source)
+    root = Path(root)
     snapshot_id = snapshot_id or date.today().isoformat()
     dest = root / snapshot_id
     if dest.exists():

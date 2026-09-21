@@ -3,7 +3,7 @@ package: methods
 title: 菌群跨批次分析采用差异检验与无监督分析双轨
 version: 1
 evidence_level: confirmed_rule
-applicability: 适用于目标队列中心七批次 MetaPhlAn4/HUMAnN3 结果的跨批次分析。
+applicability: 适用于多批次 MetaPhlAn4/HUMAnN3 结果的跨批次分析。
 source:
   - {kind: internal, ref: Method.md 批次整合方法, date: '2026-09-12'}
   - {kind: literature, ref: MMUPHin Genome Biology 2022, date: '2022-06-01'}

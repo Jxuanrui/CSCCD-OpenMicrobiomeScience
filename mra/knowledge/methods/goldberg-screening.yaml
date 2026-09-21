@@ -3,7 +3,7 @@ package: methods
 title: FFQ 能量合理性筛查保留 Goldberg 双方案敏感性分析
 version: 1
 evidence_level: confirmed_rule
-applicability: 适用于 项目X 目标队列 FFQ 的能量摄入合理性筛查。
+applicability: 适用于 FFQ 类膳食问卷的能量摄入合理性筛查。
 source:
   - {kind: internal, ref: Method.md 阶段3 Goldberg cutoff, date: '2026-09-12'}
   - {kind: literature, ref: Black AE 2000, date: '2000-09-01'}

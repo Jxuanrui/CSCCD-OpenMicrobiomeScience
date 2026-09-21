@@ -11,10 +11,10 @@ def _write_entry(path: Path, **overrides: object) -> Path:
     values: dict[str, object] = {
         "id": "methods-cli",
         "package": "methods",
-        "title": "目标队列批次审计",
+        "title": "队列A批次审计",
         "version": 1,
         "evidence_level": "confirmed_rule",
-        "applicability": "目标队列队列",
+        "applicability": "队列A",
         "content": "Goldberg 方法用于批次混杂审计。",
         "source": [{"kind": "literature", "ref": "PMID:456", "date": "2026-09-12"}],
         "approval": {"status": "approved", "by": "pi", "revision": "r1"},
@@ -48,9 +48,9 @@ def test_cli_ingest_search_and_list_continue_after_failure(
     assert "FAILED" in ingest_output
     assert "success=2 failure=1" in ingest_output
 
-    assert main(["search", "目标队列", "--db", str(db_path)]) == 0
+    assert main(["search", "队列A", "--db", str(db_path)]) == 0
     search_output = capsys.readouterr().out
-    assert "目标队列批次审计|confirmed_rule|目标队列队列|PMID:456" in search_output
+    assert "队列A批次审计|confirmed_rule|队列A|PMID:456" in search_output
 
     assert main(["list", "--package", "methods", "--db", str(db_path)]) == 0
     list_output = capsys.readouterr().out

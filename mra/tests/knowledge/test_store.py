@@ -101,15 +101,15 @@ def test_jieba_search_matches_multi_character_chinese_terms(tmp_path: Path) -> N
             tmp_path / "cjk.yaml",
             id="methods-cjk",
             title="批次混杂与目标队列样本",
-            applicability="目标队列队列",
+            applicability="队列A",
             content="Goldberg 方法说明批次混杂风险。",
         )
     )
 
-    harbin_hits = store.search("目标队列")
+    harbin_hits = store.search("队列A")
     assert [hit.entry.id for hit in harbin_hits] == [entry.id]
-    assert "目标队列" in harbin_hits[0].snippet
-    assert "目标队列" in harbin_hits[0].entry.applicability
+    assert "队列A" in harbin_hits[0].snippet
+    assert "队列A" in harbin_hits[0].entry.applicability
     assert store.search("批次混杂")[0].entry.id == entry.id
     assert store.search("Goldberg")[0].entry.id == entry.id
     assert store.search("哈") == []

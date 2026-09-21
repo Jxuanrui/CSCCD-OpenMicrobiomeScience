@@ -13,10 +13,7 @@ from pathlib import Path
 
 import pandas as pd
 
-RSCRIPT = Path(os.environ.get(
-    "RSCRIPT_BIN",
-    "~/work/Project/Knowledge_Graph/data/envs/microbiome_R/bin/Rscript",
-))
+RSCRIPT = Path(os.environ.get("RSCRIPT_BIN", ""))  # 部署机 R 沙箱路径经环境变量注入
 
 _R_SCRIPT = r"""
 args <- commandArgs(trailingOnly = TRUE)

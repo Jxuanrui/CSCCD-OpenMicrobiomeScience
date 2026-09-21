@@ -46,3 +46,5 @@ var/kg_snapshots/
 var/eval/
 var/research/
 var/cohort_config.json
+PLANNING.md
+knowledge/context/project01-*.yaml

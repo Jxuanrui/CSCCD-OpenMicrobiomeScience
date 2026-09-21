@@ -101,15 +101,15 @@ def test_jieba_search_matches_multi_character_chinese_terms(tmp_path: Path) -> N
             tmp_path / "cjk.yaml",
             id="methods-cjk",
             title="批次混杂与多中心样本",
-            applicability="队列A",
+            applicability="多中心分析",
             content="Goldberg 方法说明批次混杂风险。",
         )
     )
 
-    multi_hits = store.search("队列A")
-    assert [hit.entry.id for hit in multi_hits] == [entry.id]
-    assert "队列A" in multi_hits[0].snippet
-    assert "队列A" in multi_hits[0].entry.applicability
+    multi_hits = store.search("多中心")
+    assert [hit.entry.id for hit in multi_hits] == entry.id
+    assert "多中心" in multi_hits[0].snippet
+    assert "多中心" in multi_hits[0].entry.applicability
     assert store.search("批次混杂")[0].entry.id == entry.id
     assert store.search("Goldberg")[0].entry.id == entry.id
-    assert store.search("哈") == []
+    assert store.search("批") == []

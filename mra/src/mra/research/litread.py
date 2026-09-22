@@ -84,6 +84,8 @@ def quickread_notes(papers: list[dict], question: str, model_name: str | None = 
                           "most_relevant_pmids": []})
             continue
         batch = papers[i:i + BATCH_SIZE]
+        from ..budget import record_and_check
+        record_and_check()
         payload = "\n\n".join(f"[PMID {p['pmid']}|{p['year']}] {p['title']}\n{p['abstract'][:900]}"
                               for p in batch)
         try:

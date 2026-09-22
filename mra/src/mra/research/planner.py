@@ -64,11 +64,14 @@ def make_ark_planner(
                          version="unverified", endpoint="ark-coding")
 
     def planner(state_digest: str) -> dict:
+        from ..budget import record_and_check
+
         messages: list[Message] = [
             Message(role="system", content=SYSTEM_PROMPT),
             Message(role="user", content=state_digest),
         ]
         for _attempt in range(2):
+            record_and_check()  # 全局日预算闸（会话级 cap 之外的第二层护栏）
             response = runtime.complete(ModelRequest(
                 request_id=uuid.uuid4().hex, model=model_ref, messages=tuple(messages)))
             try:

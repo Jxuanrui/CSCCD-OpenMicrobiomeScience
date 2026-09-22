@@ -89,7 +89,13 @@ def main():
         for f in sorted(Path(args.pmids_dir).glob("*.json")):
             try:
                 d = json.loads(f.read_text(encoding="utf-8"))
-                pm |= {str(x) for x in (d if isinstance(d, list) else d.get("pmids", []))}
+                items = d if isinstance(d, list) else d.get("pmids", [])
+                for x in items:
+                    # radar 清单为 {'pmid':…,'title':…} 字典；仅接受纯数字 PMID。
+                    v = x.get("pmid") if isinstance(x, dict) else x
+                    v = str(v).strip()
+                    if v.isdigit():
+                        pm.add(v)
             except (json.JSONDecodeError, AttributeError):
                 continue
         uniq = sorted(pm - set(existing))

@@ -120,6 +120,38 @@ def dispatch(action: dict, ctx: ResearchContext) -> dict:
     return {"error": "unreachable"}
 
 
+def meta_review(session: ResearchSession) -> str:
+    """确定性 meta-critique：从轨迹中提炼改进要点注入下轮摘要（co-scientist 借鉴）。
+
+    零 API：统计错误模式（哪类动作失败最多）、审计 verdict 分布、覆盖进度，
+    输出可执行的改进指令（如"严格使用契约表名""优先覆盖未试过的特征表"）。
+    """
+    findings = session.state["findings"]
+    tool_errors: dict[str, int] = {}
+    audit_notes: list[str] = []
+    for f in findings:
+        claim = str(f.get("claim", ""))
+        tool = str(f.get("tool", ""))
+        if "失败" in claim or "Error" in claim or "error" in claim:
+            tool_errors[f.get("inputs", {}).get("tool", tool)] = \
+                tool_errors.get(f.get("inputs", {}).get("tool", tool), 0) + 1
+        for v in (f.get("evidence", {}).get("result", "") or "").split('"verdict":')[1:]:
+            audit_notes.append(v.strip(' ",}'))
+    lines = []
+    if tool_errors:
+        worst = sorted(tool_errors.items(), key=lambda kv: -kv[1])[:2]
+        lines.append("改进要点：动作 " + "/".join(f"{t}×{n}" for t, n in worst)
+                     + " 失败较多——检查参数是否严格使用契约中的表/列名，勿凭记忆拼写。")
+    review = [v for v in audit_notes if v.startswith("REVIEW")]
+    if len(review) >= 3:
+        lines.append(f"审计提示：{len(review)} 条 REVIEW_REQUIRED（批次/成分性），"
+                     "结论措辞需保留'横断面关联'限定。")
+    if session.state["iterations"] >= 6 and not any(
+            "submit_report" in str(f.get("inputs", {})) for f in findings[-3:]):
+        lines.append("进度提示：迭代已多，若主要组合已覆盖请尽快 submit_report 收口。")
+    return "\n".join(lines)
+
+
 def state_digest(session: ResearchSession, max_findings: int = 8) -> str:
     """给 planner 的紧凑状态摘要（防上下文膨胀：计数 + 数据契约 + 最近发现及结果片段）。"""
     state = session.state
@@ -184,7 +216,12 @@ def run_session(
     while session.state["status"] == "running" and session.state["iterations"] < max_iterations:
         session.state["iterations"] += 1
         session.record_llm_call()  # BudgetExceeded 会被抛出并置 budget_stopped
-        action = planner_fn(state_digest(session))
+        digest = state_digest(session)
+        if session.state["iterations"] % 3 == 0:  # 每3轮注入一次 meta-critique
+            critique = meta_review(session)
+            if critique:
+                digest += "\n" + critique
+        action = planner_fn(digest)
         if not isinstance(action, dict):
             action = {"error": "planner 返回非 dict"}
         result = dispatch(action, ctx)

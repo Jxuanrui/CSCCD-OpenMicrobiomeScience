@@ -134,6 +134,11 @@ class PastGraphIndex:
         raise KeyError(f"未知打分方法 {method}")
 
 
+def _degree_bucket(node_id: str, index: PastGraphIndex) -> int:
+    """度桶（log2）内匹配负例：排除"热门节点天然高分/低分"的混杂。"""
+    return int(math.log2(index.deg.get(node_id, 0) + 1))
+
+
 def build_eval_pairs(
     heldout: list[dict],
     full_graph: KGGraph,
@@ -148,13 +153,10 @@ def build_eval_pairs(
     for node in full_graph.nodes.values():
         if node.category:
             by_category.setdefault(node.category, []).append(node.id)
-    # 度桶（log2）内匹配负例：排除"热门节点天然高分/低分"的混杂
-    def _bucket(node_id: str) -> int:
-        return int(math.log2(past_index.deg.get(node_id, 0) + 1))
     by_bucket: dict[tuple[str, int], list[str]] = {}
     for category, nodes in by_category.items():
         for node_id in nodes:
-            by_bucket.setdefault((category, _bucket(node_id)), []).append(node_id)
+            by_bucket.setdefault((category, _degree_bucket(node_id, past_index)), []).append(node_id)
 
     usable = [q for q in heldout
               if q["answer"] and past_index.neighbors(q["subject"])]
@@ -167,7 +169,7 @@ def build_eval_pairs(
         pairs.append({"subject": q["subject"], "object": q["object"],
                       "label": 1, "predicate": q["predicate"]})
         made, attempts = 0, 0
-        bucket_pool = by_bucket.get((obj_node.category, _bucket(q["object"])),
+        bucket_pool = by_bucket.get((obj_node.category, _degree_bucket(q["object"], past_index)),
                                     by_category.get(obj_node.category, []))
         while made < negatives_per_positive and attempts < 60:
             attempts += 1
@@ -204,6 +206,69 @@ def auc(scores: list[float], labels: list[int]) -> float:
         return float("nan")
     rank_sum_pos = sum(r for r, l in zip(ranks, labels) if l == 1)
     return (rank_sum_pos - pos * (pos + 1) / 2) / (pos * neg)
+
+
+def build_known_pairs(
+    past_edges: list[tuple[str, str]],
+    full_graph: KGGraph,
+    past_index: PastGraphIndex,
+    n_pairs: int = 50,
+    negatives_per_positive: int = 4,
+    seed: int = 42,
+) -> list[dict]:
+    """PoT 对照臂：从过去边采样"已知为真"的对（模型应当能验证）。
+
+    与未来臂同构（同负例规则、同度桶匹配）。auc_known 与 auc_future 之差即
+    "预见缺口"：known 高而 future 低 = 真预见困难；两者同低 = 上下文贫困。
+    """
+    rng = random.Random(seed + 1)
+    usable = [(s, o) for s, o in past_edges
+              if past_index.neighbors(s) and past_index.deg.get(o, 0) > 0
+              and full_graph.nodes.get(o) is not None]
+    rng.shuffle(usable)
+    by_category: dict[str, list[str]] = {}
+    by_bucket: dict[tuple[str, int], list[str]] = {}
+    for node in full_graph.nodes.values():
+        if node.category:
+            by_category.setdefault(node.category, []).append(node.id)
+            by_bucket.setdefault((node.category, _degree_bucket(node.id, past_index)), []).append(node.id)
+    pairs: list[dict] = []
+    for s, o in usable[:n_pairs]:
+        pairs.append({"subject": s, "object": o, "label": 1, "predicate": "known"})
+        obj_node = full_graph.nodes[o]
+        pool = by_bucket.get((obj_node.category, _degree_bucket(o, past_index))) \
+            or by_category.get(obj_node.category, [])
+        made, attempts = 0, 0
+        while made < negatives_per_positive and attempts < 60:
+            attempts += 1
+            neg = rng.choice(pool) if pool else None
+            if neg is None or neg in (s, o) or past_index.deg.get(neg, 0) == 0:
+                continue
+            if _pair_key(s, neg) in past_index.edge_pairs or full_graph.edge_evidence(s, neg):
+                continue
+            pairs.append({"subject": s, "object": neg, "label": 0, "predicate": "known"})
+            made += 1
+    return pairs
+
+
+def earliest_year_from_pair_years(years: list[int] | None, cutoff: int) -> int:
+    """held-out 对的证据最早年份（无年份归 cutoff+1）。"""
+    if years:
+        return min(years)
+    return cutoff + 1
+
+
+def stratified_auc(scores: list[float], labels: list[int], years: list[int],
+                   split_year: int) -> dict:
+    """HINDSIGHT 式年份分层：近期未来 vs 更远未来的 AUC 衰减。"""
+    near = [(s, l) for s, l, y in zip(scores, labels, years) if y <= split_year]
+    far = [(s, l) for s, l, y in zip(scores, labels, years) if y > split_year]
+    out = {}
+    for name, group in (("near_future", near), ("far_future", far)):
+        if group and any(l for _, l in group) and not all(l for _, l in group):
+            out[name] = round(auc([s for s, _ in group], [l for _, l in group]), 4)
+            out[name + "_n_pos"] = sum(l for _, l in group)
+    return out
 
 
 def run_heuristic_baselines(pairs: list[dict], past_index: PastGraphIndex) -> dict:
@@ -339,6 +404,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--strict-context", action="store_true",
                         help="LLM 条件也只用严格过去图（默认扩展上下文用于非 flat 模式）")
     parser.add_argument("--out", default=None, help="报告 JSON 追加写入路径")
+    parser.add_argument("--control", action="store_true",
+                        help="PoT 对照臂：已知过去对（可验证性）与未来对对照 + 年份分层")
     args = parser.parse_args(argv)
 
     data = load_temporal(args.cutoff)
@@ -352,6 +419,21 @@ def main(argv: list[str] | None = None) -> int:
         "pairs": {"n": len(pairs), "positives": n_pos, "negatives": len(pairs) - n_pos},
         "heuristics": run_heuristic_baselines(pairs, past_index),
     }
+    if args.control:
+        known = build_known_pairs(data["past_edges"], full_graph, past_index,
+                                  n_pairs=max(30, args.llm // 2 or 30))
+        report["pot_control"] = {
+            "known_pairs": {"n": len(known), "positives": sum(p["label"] for p in known)},
+            "heuristics_known": run_heuristic_baselines(known, past_index),
+            "protocol": "PoT/HINDSIGHT-aligned: auc_known vs auc_future = 预见缺口",
+        }
+        years_map = {_pair_key(q["subject"], q["object"]):
+                     earliest_year_from_pair_years(q.get("evidence", {}).get("years"), args.cutoff)
+                     for q in data["heldout"] if q["answer"]}
+        report["pot_control"]["heldout_year_hist"] = {}
+        for y in sorted(set(years_map.values())):
+            report["pot_control"]["heldout_year_hist"][y] = sum(
+                1 for v in years_map.values() if v == y)
     if args.llm > 0:
         context_edges = None
         edge_attrs = None
@@ -379,6 +461,23 @@ def main(argv: list[str] | None = None) -> int:
                          "model": args.model or "doubao-seed-2.0-lite",
                          "context": args.context,
                          "context_edges": len(context_edges) if context_edges else "strict-past"}
+        years = [years_map.get(_pair_key(p["subject"], p["object"]), args.cutoff + 1)
+                 for p in subset[:len(scores)]] if args.control else None
+        if years:
+            report["llm"]["stratified"] = stratified_auc(scores, labels, years,
+                                                         split_year=args.cutoff + 1)
+        if args.control:
+            known = build_known_pairs(data["past_edges"], full_graph, past_index,
+                                      n_pairs=max(10, args.llm // 4))
+            known_subset = [p for p in known][: max(10, args.llm // 2)]
+            k_scores = llm_scores(known_subset, full_graph, index, args.model,
+                                  max_calls=max(10, args.llm // 2),
+                                  context_mode=args.context, context_edges=context_edges,
+                                  edge_attrs=edge_attrs)
+            k_labels = [p["label"] for p in known_subset[:len(k_scores)]]
+            report["pot_control"]["llm_known_auc"] = round(auc(k_scores, k_labels), 4)
+            report["pot_control"]["foresight_gap"] = round(
+                report["pot_control"]["llm_known_auc"] - report["llm"]["auc"], 4)
     print(json.dumps(report, ensure_ascii=False, indent=2))
     if args.out:
         out_path = Path(args.out)

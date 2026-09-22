@@ -3,6 +3,8 @@ from __future__ import annotations
 import shutil
 import subprocess
 
+import os
+
 import pytest
 
 from mra.pep.systemd_runner import systemd_scope_runner
@@ -25,6 +27,7 @@ requires_systemd_scope = pytest.mark.skipif(
 
 
 @requires_systemd_scope
+@pytest.mark.skipif(os.environ.get("GITHUB_ACTIONS") == "true", reason="GitHub runner 容器不强制 cgroup MemoryMax（宿主能力测试须真机复跑）")
 def test_scope_enforces_memory_limit() -> None:
     result = systemd_scope_runner(
         "python3",

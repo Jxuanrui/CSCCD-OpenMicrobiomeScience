@@ -26,7 +26,11 @@ def _graph(tmp_path):
     return KGGraph(create_snapshot(source=src, root=tmp_path / "snaps", snapshot_id="atlas-fx"))
 
 
-def test_grade_hit_directions(tmp_path):
+def test_grade_hit_directions(tmp_path, monkeypatch):
+    from mra.research import datasources as ds
+    monkeypatch.setattr(ds, "load_config", lambda: {
+        "food_exposure_table": "food_groups",
+        "food_node_hints": {"fruit_cup": "Fruit"}})
     g = _graph(tmp_path)
     assert grade_hit(g, "s__BugOne", "food_groups", "fruit_cup", rho=0.3) == "复制"      # 图谱↑ 我们+
     assert grade_hit(g, "s__BugTwo", "food_groups", "fruit_cup", rho=0.3) == "相反"      # 图谱↓ 我们+

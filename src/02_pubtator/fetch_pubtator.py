@@ -47,14 +47,32 @@ def esearch(session, query, retmax):
 
 
 def export_batch(session, pmids):
-    for attempt in range(5):
+    if not pmids:
+        return []
+    try:
+        return _export_once(session, pmids)
+    except requests.RequestException:
+        if len(pmids) == 1:
+            # 单篇仍失败：极新 PMID 尚未进 PubTator 索引，跳过并告警（次轮 radar 周期自然重试）。
+            print(f"  [warn] PMID {pmids[0]} 导出失败（可能未索引），跳过", flush=True)
+            return []
+        mid = len(pmids) // 2
+        return export_batch(session, pmids[:mid]) + export_batch(session, pmids[mid:])
+
+
+def _export_once(session, pmids):
+    for attempt in range(3):
         try:
             r = session.post(f"{API}/publications/export/biocjson",
                              json={"pmids": pmids}, timeout=90)
             r.raise_for_status()
             return r.json().get("PubTator3", [])
+        except requests.HTTPError:
+            if r.status_code == 400:
+                raise  # 400 立即上抛走分批降级，不做无谓重试
+            time.sleep(2 ** attempt); continue
         except requests.RequestException:
-            if attempt == 4: raise
+            if attempt == 2: raise
             time.sleep(2 ** attempt)
 
 

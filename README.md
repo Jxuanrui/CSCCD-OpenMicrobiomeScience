@@ -79,6 +79,14 @@ Knowledge_Graph/
 - **秘钥纪律**：所有凭据（LLM Key、NEO4J_PASSWORD）仅经环境变量注入；任何文件出现明文即视为事故，立即作废轮换
 - **本地依赖**：Python 3.10+（pandas/networkx/neo4j/pykeen/streamlit/lightrag-hku 等，见各脚本 import）；节点 ID 体系与管线详见上文章节
 
+
+### 双终端并行开发守则（单人双 AI，2026-09-22 起）
+
+- **第二终端使用独立克隆**（`git clone` 到另一路径或 `git worktree add`），绝不共用本工作目录——两个 AI 同时编辑/提交会产生 git 状态互相污染与进程误杀（本项目已有实证教训）
+- **data/ 经 symlink 共享**（只读为主）；写 data/ 的批量任务（LLM/merge/导入）**只从本终端发起**
+- **进程操作禁用宽匹配 kill**（`kill $(pgrep -f 关键词)` 在另一终端会误伤）；需要停任务时按 PID 精确操作
+- LLM 批量运行时第二终端避免同时发起 API 密集任务（同 Key 并发互踩）
+
 ## 进展日志
 
 - 2026-09-15 骨架、README、LinkML schema 建立。

@@ -88,9 +88,10 @@ def test_offline_session_end_to_end(graph, tmp_path, monkeypatch):
         "exposures": {"dietary_patterns": "-"}, "features": {"species": "-"}})
     monkeypatch.setattr(ds, "default_covariates",
                         lambda: ["Age", "Gender", "Energy_kcal_方案B", "Batch"])
-    monkeypatch.setattr("mra.research.loop.run_partial_spearman",
-                        lambda *a, **k: pd.DataFrame(
-                            [{"feature": "BugOne|s__bug", "rho": 0.4, "p": 0.01, "q": 0.02, "n": n}]))
+    monkeypatch.setattr("mra.research.gate.run_gated_association",
+                        lambda *a, **k: (pd.DataFrame(
+                            [{"feature": "BugOne|s__bug", "rho": 0.4, "p": 0.01, "q": 0.02, "n": n}]),
+                            [{"rule": "AUDIT-MULT", "verdict": "PASS", "details": {}}]))
 
     plan = [
         {"tool": "kg_neighbors", "args": {"term": "BugOne", "hops": 1}},
@@ -106,6 +107,28 @@ def test_offline_session_end_to_end(graph, tmp_path, monkeypatch):
     assert session.state["llm_calls"] == 0
     assert any(f["claim"] == "合成链路验证" for f in session.state["findings"])
     assert (session.run_dir / "assoc_dietary_patterns_Pattern_test_species.tsv").exists()
+
+
+def test_budget_stopped_session_resumes(graph, tmp_path, monkeypatch):
+    import pandas as pd
+
+    from mra.research.session import ResearchSession
+
+    s = ResearchSession(question="续跑问题", target="t", run_id="resume-test",
+                        root=tmp_path, llm_call_cap=1)
+    s.record_llm_call()
+    with pytest.raises(BudgetExceeded):
+        s.record_llm_call()
+    assert s.state["status"] == "budget_stopped"
+
+    import mra.research.datasources as ds
+    monkeypatch.setattr(ds, "load_config", lambda: {"exposures": {"t": "-"}, "features": {"species": "-"}})
+    session = run_session("续跑问题", "t", graph,
+                          offline_plan=[{"tool": "submit_report", "args": {"summary": "续跑收口"}}],
+                          session=s)
+    assert session.state["status"] == "done"
+    assert session.state["llm_calls"] == 1  # 预算计数延续
+    assert session.state["iterations"] >= 1
 
 
 def test_dispatch_rejects_unknown_action(graph, tmp_path):

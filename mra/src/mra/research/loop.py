@@ -60,11 +60,11 @@ class ResearchContext:
             ids = [i for i, k in zip(ids, keep) if k]
             feats = ds.top_features_by_prevalence(
                 feature_table.loc[ids], max_features=max_features)
-            result = run_partial_spearman(
+            from .gate import run_gated_association
+            result, audit_verdicts = run_gated_association(
                 exposures.loc[ids, exposure],
                 feature_table.loc[ids, feats],
-                covariates.loc[ids],
-            )
+                covariates.loc[ids], run_id=self.session.run_id)
             self._association_cache[cache_key] = result
             self.session.add_artifact(
                 f"assoc_{exposure_table}_{exposure}_{features}.tsv",
@@ -76,6 +76,7 @@ class ResearchContext:
             "n_features_tested": int(len(result)), "n_samples": int(result["n"].iloc[0]),
             "n_significant_q": int(len(hits)),
             "top_hits": hits.head(15).to_dict(orient="records"),
+            "audit": audit_verdicts,
         }
 
 
@@ -145,10 +146,18 @@ def run_session(
     max_iterations: int = 12,
     session: ResearchSession | None = None,
 ) -> ResearchSession:
-    """运行研究循环。offline_plan（确定性）与 planner_fn（LLM）二选一。"""
+    """运行研究循环。offline_plan（确定性）与 planner_fn（LLM）二选一。
+
+    传入已有 session 即为断点续跑：状态/发现/预算计数全部延续；
+    budget_stopped 的会话续跑时自动恢复为 running（额度由全局日预算闸把关）。
+    """
+    resumed = session is not None
     session = session or ResearchSession(question=question, target=target)
+    if resumed and session.state["status"] in ("budget_stopped",):
+        session.state["status"] = "running"
     ctx = ResearchContext(graph=graph, session=session)
-    session.set_plan(offline_plan or [{"tool": "planner", "args": {"mode": "llm"}}])
+    if not resumed:
+        session.set_plan(offline_plan or [{"tool": "planner", "args": {"mode": "llm"}}])
 
     if offline_plan is not None:
         for action in offline_plan:

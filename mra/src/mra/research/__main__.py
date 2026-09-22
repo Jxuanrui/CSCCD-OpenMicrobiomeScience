@@ -24,16 +24,21 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--max-iterations", type=int, default=16)
     parser.add_argument("--llm-call-cap", type=int, default=50)
     parser.add_argument("--run-id", default=None)
+    parser.add_argument("--resume", default=None, help="断点续跑：既有 run_id（与 --run-id 互斥）")
     args = parser.parse_args(argv)
 
     from .planner import make_ark_planner
+    from .session import DEFAULT_RESEARCH_ROOT, ResearchSession
+    session = None
+    if args.resume:
+        session = ResearchSession.load(DEFAULT_RESEARCH_ROOT / args.resume)
     session = run_session(
         args.question, args.target,
         graph=KGGraph(latest_snapshot()),
         planner_fn=make_ark_planner(args.model),
         max_iterations=args.max_iterations,
-        session=ResearchSession(question=args.question, target=args.target,
-                                run_id=args.run_id, llm_call_cap=args.llm_call_cap),
+        session=session or ResearchSession(question=args.question, target=args.target,
+                                            run_id=args.run_id, llm_call_cap=args.llm_call_cap),
     )
     state = session.state
     print(json.dumps({

@@ -65,6 +65,7 @@ def make_ark_planner(
 
     def planner(state_digest: str) -> dict:
         from ..budget import record_and_check
+        from ..model_runtime.glm import fallback_complete, glm_available
 
         messages: list[Message] = [
             Message(role="system", content=SYSTEM_PROMPT),
@@ -72,8 +73,15 @@ def make_ark_planner(
         ]
         for _attempt in range(2):
             record_and_check()  # 全局日预算闸（会话级 cap 之外的第二层护栏）
-            response = runtime.complete(ModelRequest(
-                request_id=uuid.uuid4().hex, model=model_ref, messages=tuple(messages)))
+            request = ModelRequest(
+                request_id=uuid.uuid4().hex, model=model_ref, messages=tuple(messages))
+            try:
+                response = runtime.complete(request)
+            except Exception:
+                if not glm_available():
+                    raise
+                record_and_check()
+                response = fallback_complete(request)
             try:
                 return _extract_json(response.content)
             except (ValueError, json.JSONDecodeError):

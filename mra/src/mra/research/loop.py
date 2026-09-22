@@ -121,7 +121,7 @@ def dispatch(action: dict, ctx: ResearchContext) -> dict:
 
 
 def state_digest(session: ResearchSession, max_findings: int = 8) -> str:
-    """给 planner 的紧凑状态摘要（防上下文膨胀：计数 + 最近发现及其结果片段）。"""
+    """给 planner 的紧凑状态摘要（防上下文膨胀：计数 + 数据契约 + 最近发现及结果片段）。"""
     state = session.state
     recent = state["findings"][-max_findings:]
     lines = [
@@ -129,6 +129,13 @@ def state_digest(session: ResearchSession, max_findings: int = 8) -> str:
         f"iterations: {state['iterations']}  llm_calls: {state['llm_calls']}/{state['llm_call_cap']}",
         f"n_findings: {len(state['findings'])}",
     ]
+    try:
+        contract = ds.load_config()
+        lines.append(f"可用暴露表: {sorted(contract['exposures'])}；"
+                     f"可用特征表: {sorted(contract['features'])}；"
+                     f"协变量: {ds.default_covariates()}（表/列名必须严格使用以上名称）")
+    except Exception:  # noqa: BLE001 —— 契约不可用时摘要仍可用
+        pass
     for f in recent:
         evidence = f.get("evidence") or {}
         result_snippet = str(evidence.get("result", ""))[:400]

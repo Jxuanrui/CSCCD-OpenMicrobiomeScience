@@ -43,7 +43,8 @@ ENTRIES = """\
   python -m mra.research.litread --query "..." --question "..."  # 文献速读
   python -c "from mra.vecstore import query; print(query('...', 'kg_entities', k=8))"
   python -m mra.benchmark.microbiome_eval 2022             # 评测
-  python -m mra                                           # 本欢迎页"""
+  python -m mra                                           # 本欢迎页
+项目级配置：mra/.env（模板见 .env.example；环境变量优先；密钥类变量拒载）"""
 
 # 256色渐变停靠点（深蓝→青→亮青），扫描动画沿列移动
 _GRADIENT = (17, 18, 19, 24, 31, 38, 44, 50, 51, 86, 87, 117)

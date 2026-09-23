@@ -56,6 +56,30 @@ def test_r_sandbox_recovers_injected_signal():
     assert (out["n"] == n).all()
 
 
+def test_constant_exposure_rejected_before_r():
+    """零方差守卫第一道闸：常数暴露在进 R 前即 ValueError（无 R 也可回归）。"""
+    rng = np.random.default_rng(7)
+    cov = pd.DataFrame({"Age": rng.uniform(30, 80, 40), "Batch": ["a", "b"] * 20})
+    feats = pd.DataFrame({"f": rng.normal(0, 1, 40)})
+    with pytest.raises(ValueError, match="常数"):
+        run_partial_spearman(pd.Series([0.0] * 40, name="avocado"), feats, cov)
+
+
+@pytest.mark.skipif(not RSCRIPT.is_file(), reason="microbiome_R 环境不可用")
+def test_r_sandbox_guards_constant_columns():
+    """零方差守卫 R 侧冗余：常数暴露 RuntimeError；常数特征行被剔除不出伪值。"""
+    rng = np.random.default_rng(11)
+    n = 60
+    cov = pd.DataFrame({"Age": rng.uniform(30, 80, n), "Batch": ["a", "b"] * (n // 2)})
+    feats = pd.DataFrame({"const": [3.0] * n, "real": rng.normal(0, 1, n)})
+    out = run_partial_spearman(pd.Series(rng.normal(0, 1, n), name="exp"), feats, cov)
+    assert "const" not in set(out["feature"])  # 常数特征整行剔除
+    assert set(out["feature"]) == {"real"}
+    # 常数暴露被 Python 前置守卫拦截（ValueError），R 侧 stop 为直调 R 的冗余防线
+    with pytest.raises(ValueError, match="常数"):
+        run_partial_spearman(pd.Series([0.0] * n, name="zero"), feats, cov)
+
+
 def test_session_budget_and_persistence(tmp_path):
     s = ResearchSession(question="q", target="t", run_id="budget-test",
                         root=tmp_path, llm_call_cap=2)

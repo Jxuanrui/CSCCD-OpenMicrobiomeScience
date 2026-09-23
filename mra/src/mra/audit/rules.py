@@ -327,11 +327,18 @@ def audit_batch(spec: AnalysisSpec) -> AuditFinding:
         "batch_levels": [str(value) for value in table.columns.tolist()],
         "contingency_table": observed.tolist(),
     }
-    if observed.shape[0] < 2 or observed.shape[1] < 2:
+    if observed.shape[0] < 2:
+        return _finding(
+            rule_id,
+            Verdict.FAIL,
+            reason="exposure has fewer than two observed levels; constant exposures are not testable",
+            **table_details,
+        )
+    if observed.shape[1] < 2:
         return _finding(
             rule_id,
             Verdict.REVIEW_REQUIRED,
-            reason="association cannot be assessed without at least two exposure and batch levels",
+            reason="a single batch level was observed; batch structure cannot be assessed",
             **table_details,
         )
 

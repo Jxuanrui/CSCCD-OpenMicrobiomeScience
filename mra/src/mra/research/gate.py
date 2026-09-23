@@ -46,9 +46,8 @@ def _audit_verdicts(result: pd.DataFrame, exposure: pd.Series, covariates: pd.Da
         family_id=family_id or str(exposure.name),
         exposure=[float(v) if pd.notna(v) else None for v in exposure.tolist()[:2000]],
         batch=covariates["Batch"].astype(str).tolist()[:2000] if "Batch" in covariates.columns else None,
-        abundance=[[float(v) for v in row] for row in
-                   exposure.to_frame().T.values.tolist()],  # 成分性以暴露行为占位声明
-        data_scale="rank-based-spearman",
+        # 成分性审计声明为不适用：秩残差化偏 Spearman 不做 CLR/ILR 变换，
+        # 不存在需复现的对数比矩阵（此前喂暴露行占位属伪声明，负值暴露会误伤 FAIL）。
     )
     findings = [audit_mult(spec), audit_batch(spec), audit_comp(spec)]
     return [{"rule": f.rule_id, "verdict": f.verdict.value, "details": f.details}
@@ -67,12 +66,28 @@ def run_gated_association(
     timeout_seconds: int = 900,
     tmp_builder=None,
 ) -> tuple[pd.DataFrame, list[dict]]:
-    """受治理的 R 关联执行：返回 (结果表, 审计verdicts)。FAIL 抛 AuditGateError。"""
+    """受治理的 R 关联执行：返回 (结果表, 审计verdicts)。FAIL 抛 AuditGateError。
+
+    常数（零方差）暴露在 R 执行前即拒绝并入账 deny——伪相关守卫第二道闸，
+    与 rtools 的 ValueError 守卫互为冗余（执行不可绕过治理）。"""
     import tempfile
 
     ledger = AuditLedger(str(ledger_path or DEFAULT_LEDGER_PATH))
     event_id, request_id = uuid.uuid4().hex, uuid.uuid4().hex
     constraints = {"max_memory_mb": max_memory_mb, "cpu_quota_percent": cpu_quota_percent}
+    numeric = pd.to_numeric(exposure, errors="coerce")
+    if numeric.nunique() < 2:
+        ledger.record_event(AuditEvent(
+            id=event_id, ts=datetime.now(timezone.utc).isoformat(),
+            principal_type="agent", principal_id="research-loop",
+            action="execute_task", resource_kind="r_analysis",
+            resource_id=f"{exposure.name}", request_id=request_id,
+            subject_hash=hashlib.sha256(str(exposure.name).encode()).hexdigest()[:16],
+            decision="deny", approval_required=False,
+            reason_codes=("constant-exposure",), constraints=constraints,
+        ))
+        raise AuditGateError(
+            f"暴露列 {exposure.name} 为常数（非缺失唯一值 {int(numeric.nunique())} 个），审计 FAIL 拒绝执行")
     event = AuditEvent(
         id=event_id, ts=datetime.now(timezone.utc).isoformat(),
         principal_type="agent", principal_id="research-loop",

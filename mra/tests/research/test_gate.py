@@ -49,3 +49,17 @@ def test_gated_association_end_to_end(tmp_path):
     conn = sqlite3.connect(tmp_path / "a.db")
     n_events = conn.execute("SELECT COUNT(*) FROM audit_events").fetchone()[0]
     assert n_events == 1  # 执行事件已入账
+
+
+def test_constant_exposure_denied_at_gate(tmp_path):
+    """零方差守卫第二道闸：常数暴露在 R 执行前被拒，账本记 deny（无 R 也可回归）。"""
+    exposure, features, cov = _toy_data()
+    constant = pd.Series([0.0] * len(exposure), name="exp")
+    with pytest.raises(AuditGateError, match="常数"):
+        run_gated_association(constant, features, cov, run_id="gate-const",
+                              ledger_path=tmp_path / "a.db")
+    conn = sqlite3.connect(tmp_path / "a.db")
+    row = conn.execute(
+        "SELECT decision, reason_codes FROM audit_events").fetchone()
+    assert row[0] == "deny"
+    assert "constant-exposure" in row[1]

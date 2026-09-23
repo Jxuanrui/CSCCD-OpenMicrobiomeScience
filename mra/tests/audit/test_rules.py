@@ -418,3 +418,25 @@ def test_run_audit_has_stable_rule_order() -> None:
         "AUDIT-PERM-001",
     ]
     assert all(finding.verdict is Verdict.NOT_APPLICABLE for finding in findings)
+
+
+def test_batch_constant_exposure_fails() -> None:
+    finding = audit_batch(
+        AnalysisSpec(
+            exposure=["low", "low", "low", "low", "low", "low"],
+            batch=["b1", "b1", "b2", "b2", "b3", "b3"],
+        )
+    )
+
+    assert finding.verdict is Verdict.FAIL
+
+
+def test_batch_single_batch_level_requires_review() -> None:
+    finding = audit_batch(
+        AnalysisSpec(
+            exposure=["low", "high", "low", "high"],
+            batch=["only"] * 4,
+        )
+    )
+
+    assert finding.verdict is Verdict.REVIEW_REQUIRED

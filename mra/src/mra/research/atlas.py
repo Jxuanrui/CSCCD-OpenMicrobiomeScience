@@ -17,7 +17,6 @@ import pandas as pd
 
 from ..kg.graph import KGGraph
 from . import datasources as ds
-from .rtools import run_partial_spearman
 
 FOOD_NODE_HINTS = {
     "fruit": "Fruit", "vegetable": "Vegetable", "green_vegetable": "Vegetable",
@@ -30,9 +29,13 @@ FOOD_NODE_HINTS = {
 
 
 def _numeric_columns(frame: pd.DataFrame, wanted: list[str] | None) -> list[str]:
-    cols = [c for c in frame.columns if pd.to_numeric(frame[c], errors="coerce").notna().any()]
-    if wanted is not None:
-        cols = [c for c in cols if c in wanted]
+    """可检验的数值列：至少 2 个非缺失唯一值（常数列的秩残差是浮点尘埃，
+    会产出结构性伪显著——2026-09-21 atlas 事故根因，零方差守卫第三道闸）。"""
+    cols = []
+    for c in frame.columns:
+        s = pd.to_numeric(frame[c], errors="coerce")
+        if s.notna().any() and s.nunique() > 1 and (wanted is None or c in wanted):
+            cols.append(c)
     return cols
 
 
@@ -88,9 +91,17 @@ def run_sweep(graph: KGGraph, feature_tables: tuple[str, ...] = ("species", "pat
             feature_frames[name] = frame.loc[:, [c for c in frame.columns
                                                  if c.split("|")[-1].startswith("s__")]]
     rows: list[dict] = []
+    skipped_constant: dict[str, list[str]] = {}
     for exp_name in ds.load_config()["exposures"]:
         exp_frame = ds.load_exposures(exp_name)
-        for exposure in _numeric_columns(exp_frame, ds.atlas_exposure_cols(exp_name)):
+        wanted = ds.atlas_exposure_cols(exp_name)
+        testable = _numeric_columns(exp_frame, wanted)
+        skipped = [c for c in exp_frame.columns
+                   if c not in testable and (wanted is None or c in wanted)
+                   and pd.to_numeric(exp_frame[c], errors="coerce").nunique() <= 1]
+        if skipped:
+            skipped_constant[exp_name] = skipped
+        for exposure in testable:
             for feat_name, feats in feature_frames.items():
                 ids = ds.intersect_ids(exp_frame, feats, covariates)
                 keep = pd.to_numeric(exp_frame.loc[ids, exposure], errors="coerce").notna() \
@@ -98,9 +109,12 @@ def run_sweep(graph: KGGraph, feature_tables: tuple[str, ...] = ("species", "pat
                 ids = [i for i, k in zip(ids, keep) if k]
                 sel = ds.top_features_by_prevalence(feats.loc[ids], max_features=max_features)
                 try:
-                    result = run_partial_spearman(
+                    # 过治理门执行（资源限制+审计账本+统计审计）：与研究循环
+                    # r_association 同一道闸，全景扫描不再有绕过治理的旁路。
+                    from .gate import run_gated_association
+                    result, _ = run_gated_association(
                         pd.to_numeric(exp_frame.loc[ids, exposure]),
-                        feats.loc[ids, sel], covariates.loc[ids])
+                        feats.loc[ids, sel], covariates.loc[ids], run_id=run_id)
                 except RuntimeError as exc:
                     rows.append({"exposure_table": exp_name, "exposure": exposure,
                                  "feature_table": feat_name, "feature": f"__ERROR__{exc}"[:60],
@@ -117,6 +131,7 @@ def run_sweep(graph: KGGraph, feature_tables: tuple[str, ...] = ("species", "pat
     by_table = hits.groupby("feature_table").size().to_dict() if len(hits) else {}
     summary = {"run_id": run_id, "n_hits": len(hits), "grades": grade_counts,
                "by_feature_table": by_table,
+               "skipped_constant_columns": skipped_constant,
                "n_tested": {f: len(ds.top_features_by_prevalence(fr, max_features))
                             for f, fr in feature_frames.items()}}
     (out_dir / "summary.json").write_text(json.dumps(summary, ensure_ascii=False, indent=2),

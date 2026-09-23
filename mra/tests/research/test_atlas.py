@@ -1,9 +1,11 @@
 """atlas 定级逻辑最小行为检查：同向=复制、反向=相反、缺边=独特候选。"""
 from __future__ import annotations
 
+import pandas as pd
+
 from mra.kg.graph import KGGraph
 from mra.kg.snapshot import create_snapshot
-from mra.research.atlas import grade_hit
+from mra.research.atlas import _numeric_columns, grade_hit
 
 NODES = "id\tname\tcategory\taliases\txrefs\ttax_rank\n"
 EDGES = ("subject\tpredicate\tobject\tsource_type\tevidence_tier\tpmids\tyears\t"
@@ -37,3 +39,11 @@ def test_grade_hit_directions(tmp_path, monkeypatch):
     assert grade_hit(g, "s__BugThree", "food_groups", "fruit_cup", rho=-0.2) == "无该食物边（独特候选）"
     assert grade_hit(g, "s__Nobody", "food_groups", "fruit_cup", rho=0.1) == "图谱外"
     assert grade_hit(g, "s__BugOne", "dietary_patterns", "Pattern1", rho=0.2) == "暴露概念不在图（独特候选）"
+
+
+def test_numeric_columns_drop_constant():
+    """零方差守卫第三道闸：常数列（即使全为数值）不进入检验。"""
+    frame = pd.DataFrame({"ok": [1.0, 2.0, 3.0], "zero": [0.0, 0.0, 0.0],
+                          "txt": ["a", "b", "c"]})
+    assert _numeric_columns(frame, None) == ["ok"]
+    assert _numeric_columns(frame, ["ok", "zero"]) == ["ok"]

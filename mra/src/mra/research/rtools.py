@@ -27,15 +27,22 @@ cov_rank <- function(x) {
   r <- rank(x, ties.method = "average")
   resid(lm(r ~ ., data = C))[seq_along(r)]
 }
-e <- cov_rank(E[[colnames(E)[1]]])
+# 零方差守卫：常数列的 lm 秩残差是浮点尘埃，Spearman 对尘埃排序会产出
+# 结构性伪显著（atlas 2026-09-21 事故根因），必须在统计前显式拒绝。
+x <- E[[colnames(E)[1]]]
+if (length(unique(x[!is.na(x)])) < 2) stop("exposure has <2 distinct non-NA values")
+e <- cov_rank(x)
 n <- length(ids)
 res <- t(sapply(colnames(F), function(g) {
-  rho <- suppressWarnings(cor(e, cov_rank(F[[g]]), method = "spearman"))
-  p <- suppressWarnings(cor.test(e, cov_rank(F[[g]]), method = "spearman",
+  fg <- F[[g]]
+  if (length(unique(fg[!is.na(fg)])) < 2) return(c(rho = NA, p = NA))
+  rho <- suppressWarnings(cor(e, cov_rank(fg), method = "spearman"))
+  p <- suppressWarnings(cor.test(e, cov_rank(fg), method = "spearman",
                                   exact = FALSE)$p.value)
   c(rho = unname(rho), p = unname(p))
 }))
 res <- as.data.frame(res)
+res <- res[!is.na(res$p), , drop = FALSE]  # 常数特征不可检验，整行剔除
 res$q <- p.adjust(res$p, method = "BH")
 res$feature <- rownames(res)
 res$n <- n
@@ -50,7 +57,13 @@ def run_partial_spearman(
     covariates: pd.DataFrame,
     timeout_seconds: int = 900,
 ) -> pd.DataFrame:
-    """单暴露 × 多特征偏 Spearman（秩残差控制协变量），返回 feature/rho/p/q_BH/n。"""
+    """单暴露 × 多特征偏 Spearman（秩残差控制协变量），返回 feature/rho/p/q_BH/n。
+
+    常数（零方差）暴露在进入 R 前即抛 ValueError——伪相关守卫第一道闸。"""
+    numeric = pd.to_numeric(exposure, errors="coerce")
+    if numeric.nunique() < 2:
+        raise ValueError(
+            f"暴露列 {exposure.name} 为常数（非缺失唯一值 {int(numeric.nunique())} 个），Spearman 不可检验")
     if not RSCRIPT.is_file():
         raise FileNotFoundError(f"Rscript 缺失：{RSCRIPT}（可用 RSCRIPT_BIN 覆盖）")
     with tempfile.TemporaryDirectory(prefix="mra_r_") as tmp:

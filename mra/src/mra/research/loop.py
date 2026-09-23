@@ -25,7 +25,7 @@ from .rtools import run_partial_spearman
 from .session import Finding, ResearchSession
 
 ACTION_NAMES = {"kg_neighbors", "kg_edge_evidence", "r_association",
-                "lit_search_read", "record_finding", "submit_report"}
+                "lit_search_read", "vec_query", "record_finding", "submit_report"}
 
 
 class ResearchContext:
@@ -105,6 +105,11 @@ def dispatch(action: dict, ctx: ResearchContext) -> dict:
                     "answers": [n.get("answer", "") for n in result["notes"]],
                     "relevant_pmids": [p for n in result["notes"]
                                        for p in n.get("most_relevant_pmids", [])][:10]}
+        if name == "vec_query":
+            from .. import vecstore
+            table = args.get("table", "kg_entities")
+            hits = vecstore.query(args["text"], table, k=int(args.get("k", 8)))
+            return {"table": table, "hits": hits}
         if name == "record_finding":
             ctx.session.add_finding(Finding(
                 claim=args["claim"], tool="manual", inputs=args,

@@ -19,6 +19,8 @@ dependencies = [
     "python-multipart>=0.0.32",
     "jieba>=0.42.1",
     "mcp>=2.2.0",
+    "lancedb>=0.39.0",
+    "fastembed>=0.8.1",
 ]
 
 [dependency-groups]
@@ -33,3 +35,7 @@ build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/mra"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+norecursedirs = ["var", ".venv"]

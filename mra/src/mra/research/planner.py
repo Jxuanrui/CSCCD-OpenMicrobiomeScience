@@ -33,6 +33,8 @@ SYSTEM_PROMPT = """\
 5. {"tool":"submit_report","args":{"summary":"<研究总结：显著关联清单、图谱支持 vs 新型模式二分、机制链示例、局限>"}}
 6. {"tool":"lit_search_read","args":{"query":"<PubMed检索式>","question":"<要回答的问题>","max_results":20}}
    —— 文献检索+批量速读（消耗 LLM 预算，单次会话使用不超过 3 次；有缓存，重复同参数零消耗）。
+7. {"tool":"vec_query","args":{"text":"<自然语言描述>","table":"kg_entities|lit_papers","k":8}}
+   —— 语义模糊检索（本地零 API）：按意思找图谱实体或文献，名称没写全也能兜住。
 
 硬性规则：
 - 只输出一个 JSON 对象 {"tool":...,"args":{...},"rationale":"一句话理由"}，不得输出其他文本。

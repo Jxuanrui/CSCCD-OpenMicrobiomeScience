@@ -41,9 +41,15 @@ SYSTEM_PROMPT = """\
 9. {"tool":"knowledge_route","args":{"term":"<实体名>","question":"<问题>","knowledge_type":"auto|phage_host|gene_protein_function|taxonomy|pathway_annotation|literature|method"}}
    —— Knowledge Router（P0-1）：Local KG 优先，miss 自动降级文献（LITERATURE/EXTERNAL_LIVE，
    带 provenance）。返回 source_type 五分：LOCAL_KG/EXTERNAL_LIVE/LITERATURE/METHOD_KNOWLEDGE/CURRENT_STUDY。
+10. {"tool":"gap_check","args":{"entities":["<设计涉及的实体>"],"analysis_types":["<分析类型关键词>"]}}
+   —— Knowledge Gap Detector（P1-1）：设计任何新研究/分析前先跑，识别设计依赖的
+   未知知识（KG 未覆盖实体→route_to_live；无验证方法规则→manual_design_review），
+   按 recommended_action 逐项补齐后再定稿设计。
 
 硬性规则：
-- 设计新的 r_association/跨层关联分析前，必须先用 method_query 查相关方法学约束并遵守。
+- 设计新的研究问题或跨层关联分析前：先 gap_check 识别知识缺口，再按建议动作补齐
+  （route_to_live→knowledge_route；consult_method_rules→method_query），最后才定稿设计。
+- 设计单个 r_association 前，必须先用 method_query 查相关方法学约束并遵守。
 - 只输出一个 JSON 对象 {"tool":...,"args":{...},"rationale":"一句话理由"}，不得输出其他文本。
 - 证据纪律：图谱结论必须引 evidence_tier；数据结论必须引 q 值与样本量；禁止无证据推断。
 - r_association 结果有缓存，不要重复相同参数的分析。

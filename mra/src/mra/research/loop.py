@@ -26,7 +26,7 @@ from .session import Finding, ResearchSession
 
 ACTION_NAMES = {"kg_neighbors", "kg_edge_evidence", "r_association",
                 "lit_search_read", "vec_query", "method_query", "knowledge_route",
-                "record_finding", "submit_report"}
+                "gap_check", "record_finding", "submit_report"}
 
 
 class ResearchContext:
@@ -125,6 +125,11 @@ def dispatch(action: dict, ctx: ResearchContext) -> dict:
                          knowledge_type=args.get("knowledge_type", "auto"),
                          hops=int(args.get("hops", 1)),
                          max_results=int(args.get("max_results", 10)))
+        if name == "gap_check":
+            from ..knowledge.gap import detect_gaps
+            return detect_gaps(ctx.graph,
+                               entities=list(args.get("entities", [])),
+                               analysis_types=list(args.get("analysis_types", [])))
         if name == "record_finding":
             ctx.session.add_finding(Finding(
                 claim=args["claim"], tool="manual", inputs=args,

@@ -31,12 +31,26 @@ import time
 from pathlib import Path
 
 DSH_NPX = ["npx", "-y", "@deepseek-ai/dsh@0.1.7-rc.1"]  # 精确钉版（UPSTREAM.lock.json）
-TOOL = "mcp__mra__method_query"
-ARGS = json.dumps({"query": "零方差", "k": 3}, ensure_ascii=False)
+CANARIES = {
+    "method.query": ("mcp__mra__method_query",
+                     {"query": "零方差", "k": 3}),
+    "knowledge.route": ("mcp__mra__knowledge_route",
+                        {"term": "Faecalibacterium prausnitzii",
+                         "question": "关联哪些疾病？", "knowledge_type": "auto"}),
+    "gap.check": ("mcp__mra__gap_check",
+                  {"entities": ["Streptococcus phage YMC-2011",
+                                "Faecalibacterium prausnitzii"],
+                   "analysis_types": ["零方差 常数列"]}),
+}
+TOOL = CANARIES["method.query"][0]
+ARGS = json.dumps(CANARIES["method.query"][1], ensure_ascii=False)
 CALLID = "call_00_s1mramethodquery0000000000001"
 
 
-def build_fixture(template: Path, out: Path, cwd: str) -> None:
+def build_fixture(template: Path, out: Path, cwd: str,
+                  tool: str = TOOL, args: dict | None = None) -> None:
+    args = json.dumps(args if args is not None else json.loads(ARGS), ensure_ascii=False)
+    callid = "call_00_" + (tool.replace("_", "").replace(".", "").lower())[:28].ljust(28, "0")
     lines = [json.loads(l) for l in template.read_text().splitlines() if l.strip()]
     now = int(time.time() * 1000)
     for e in lines:
@@ -47,22 +61,22 @@ def build_fixture(template: Path, out: Path, cwd: str) -> None:
         if t == "assistant/message" and d.get("step") == 1:
             for b in d["message"]["content"]:
                 if b.get("type") == "tool-call":
-                    b.update(name=TOOL, id=CALLID, arguments=ARGS)
+                    b.update(name=tool, id=callid, arguments=args)
             for c in d.get("stream", []):
                 chunk = c.get("chunk", c)
                 if chunk.get("type") == "tool-call-chunks":
-                    chunk.update(id=CALLID, name=TOOL)
-                    chunk["args"] = [ARGS[i:i + 4] for i in range(0, len(ARGS), 4)]
+                    chunk.update(id=callid, name=tool)
+                    chunk["args"] = [args[i:i + 4] for i in range(0, len(args), 4)]
                     chunk["dt"] = [0] * (len(chunk["args"]) - 1)
                 if chunk.get("type") == "block-end" and chunk.get("block", {}).get("type") == "tool-call":
-                    chunk["block"].update(name=TOOL, id=CALLID, arguments=ARGS)
+                    chunk["block"].update(name=tool, id=callid, arguments=args)
         if t == "tool/call":
-            d.update(name=TOOL, callId=CALLID, arguments=ARGS)
+            d.update(name=tool, callId=callid, arguments=args)
         if t == "tool/result":
-            d["message"]["source"]["callId"] = CALLID
+            d["message"]["source"]["callId"] = callid
             for b in d["message"].get("content", []):
                 if b.get("type") == "tool-result":
-                    b["toolCallId"] = CALLID
+                    b["toolCallId"] = callid
     src = [e for e in lines if e.get("type") == "assistant/message" and e["data"].get("step") == 2][0]
     third = copy.deepcopy(src); third["data"]["step"] = 3
     out_lines, step_ends = [], 0
@@ -74,9 +88,6 @@ def build_fixture(template: Path, out: Path, cwd: str) -> None:
                 ss = copy.deepcopy([x for x in lines if x.get("type") == "step/start"][0]); ss["data"]["step"] = 3
                 out_lines += [ss, third, se]
             continue
-        if e.get("type") == "turn/end":
-            se = copy.deepcopy([x for x in lines if x.get("type") == "step/end"][0]); se["data"]["step"] = 3
-            out_lines.append(se)
         out_lines.append(e)
     out.write_text("".join(json.dumps(e, ensure_ascii=False) + "\n" for e in out_lines))
 
@@ -132,13 +143,21 @@ def main(argv=None) -> int:
     ap.add_argument("--dsh-src", default="/tmp/dsh", help="钉版克隆目录")
     ap.add_argument("--s1-dir", default="/tmp/s1", help="切片工作目录")
     ap.add_argument("--mra-dir", required=True)
+    ap.add_argument("--canary", default="method.query",
+                    choices=sorted(CANARIES), help="金丝雀能力（三条都必须可跑）")
     a = ap.parse_args(argv)
     s1 = Path(a.s1_dir); s1.mkdir(parents=True, exist_ok=True)
-    fixture = s1 / "fixture.session.v3.jsonl"
-    build_fixture(Path(a.dsh_src) / "snapshots/session/bash-tool-turn/session.v3.jsonl", fixture, str(s1))
-    build_patch(s1 / "slice.cordis.yml", Path(a.mra_dir), fixture)
-    print(f"fixture+patch 就绪: {fixture}")
-    print("后续运行命令见模块 docstring 第 5 步；运行后 anchor() 完成双账本互锚")
+    tool, args = CANARIES[a.canary]
+    fixture = s1 / f"fixture.{a.canary.replace('.', '_')}.session.v3.jsonl"
+    template = Path(a.dsh_src) / "snapshots/session/bash-tool-turn/session.v3.jsonl"
+    if not template.is_file():  # 优先仓库固化模板
+        template = Path(__file__).parents[2] / "tests" / "dsh_adapter" / "assets" / "upstream_template.session.v3.jsonl"
+    build_fixture(template, fixture, str(s1), tool=tool, args=args)
+    build_patch(s1 / f"slice.{a.canary.replace('.', '_')}.cordis.yml", Path(a.mra_dir), fixture)
+    print(f"[{a.canary}] fixture+patch 就绪: {fixture}")
+    print(f"运行: DSH_HOME={s1}/dsh-home DEEPSEEK_API_KEY=dummy npx -y @deepseek-ai/dsh@0.1.7-rc.1 "
+          f"--profile s1head --patch {s1}/slice.{a.canary.replace('.', '_')}.cordis.yml \"<prompt>\"")
+    print("运行后: anchor(最新session文件, mra仓根) 完成双账本互锚")
     return 0
 
 

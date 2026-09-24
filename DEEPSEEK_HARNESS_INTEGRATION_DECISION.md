@@ -126,3 +126,27 @@ dsh 不可用时损失=upstream 客户端生态/会话 UX/通用 dispatch；**�
   ACP attach 实测（把 mra MCP 面挂上 dsh 跑通一次）→ G8 matrix 逐客户端验证 →
   G2 插件化**；
 - 本文档为 G0.5 审计结论，纳入 HARNESS_ARCHITECTURE 最高约束体系（v1.2 附录引用）。
+
+---
+
+## 附录二（2026-09-24 用户裁决记录）
+
+**一、S2/G3 边界确认**：Registry 只负责 capability definition / implementation
+mapping / IO contract / provenance contract / governance / side-effect /
+availability & version；不实现 dispatch、session runtime、streaming、通用重试、
+通用客户端协议、通用 agent loop。Planner 只面向 capability_id。
+
+**二、三条 Golden Capabilities 全部切片通过**（Upstream Compatibility Canary）：
+- method.query（METHOD_KNOWLEDGE 基准，S1 切片+复跑）；
+- knowledge.route（LOCAL_KG 命中 tier_A/10 邻居/provenance 无损；miss→受控
+  LITERATURE 降级契约在 Registry 映射）；
+- gap.check（真缺口检出；只建议不动手；不写 KG 不改 Evidence）。
+**金丝雀规则：每次 upstream 升级三条必须全部重跑通过，任一失败不得进主分支。**
+
+**三、Python SDK 非强依赖**：PyPI SDK（最高 0.1.5rc1）与钉版 runtime
+0.1.7-rc.1 不对齐；正式通道=CLI/ACP/MCP；SDK 待版本契约对齐后再升级为
+supported adapter。不为 SDK 完整性放松 commit pinning。
+
+**四、fixture 资产固化**：upstream 模板 vendor 入仓（MIT 署名）+
+Contract CI 层（每次必跑，无 dsh 依赖）+ Upstream Integration Slice
+（Node+opt-in 自动；否则 manual/nightly/release-gate；不得删除复现资产）。

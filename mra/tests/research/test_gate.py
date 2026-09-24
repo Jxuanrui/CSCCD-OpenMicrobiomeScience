@@ -63,3 +63,13 @@ def test_constant_exposure_denied_at_gate(tmp_path):
         "SELECT decision, reason_codes FROM audit_events").fetchone()
     assert row[0] == "deny"
     assert "constant-exposure" in row[1]
+
+
+def test_misaligned_exposure_blocked_at_gate(tmp_path):
+    """真实门禁案例回归（2026-09-24 层间检验实测）：暴露向量若未随 complete-case
+    过滤同步重排（1068 vs 1060），AUDIT-BATCH-001 必须 FAIL 拦截，而非静默错位计算。"""
+    exposure, features, cov = _toy_data()
+    ids = list(cov.index[:-8])  # 模拟协变量侧 drop 8 例
+    with pytest.raises(AuditGateError, match="exposure and batch must be non-empty vectors"):
+        run_gated_association(exposure, features.loc[ids], cov.loc[ids],
+                              run_id="gate-misalign", ledger_path=tmp_path / "a.db")

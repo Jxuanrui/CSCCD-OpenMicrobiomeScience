@@ -139,3 +139,16 @@ streaming（P2，H5 前置）。
 **四、图谱侧同步内容升级**为《Harness Architecture v1.0 + KG Layer
 Requirements》（KG_LAYER_REQUIREMENTS.md）：KG 是 Harness 的 Local Knowledge
 Layer，不是研究结果仓库。
+
+---
+
+## 附录 B（v1.2 修订，2026-09-24 用户裁决）
+
+总原则升级为 **DeepSeek-compatible / upstream-friendly Scientific Research
+Harness**：通用 Harness 基础设施（模型适配/通用 dispatch/客户端协议）复用
+upstream（deepseek-ai/deepseek-harness，MIT，经源码级审计 @46a7f68）；我方只维护
+Scientific Research Core（知识层/科学治理/Evidence 双账本/能力语义）。禁止 fork
+改 upstream core；Scientific Core 零 dsh import，耦合限制在 adapter 薄层。
+G2/G3/G8 全部重定义（G3=Scientific Capability Registry；G8=Client Compatibility
+& Research Extension Contract；G2=Scientific Planning/Governance Plugin）。
+完整审计与 13 项决策见 DEEPSEEK_HARNESS_INTEGRATION_DECISION.md（G0.5）。

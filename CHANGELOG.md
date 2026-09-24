@@ -1,10 +1,64 @@
 # Changelog
 
-## v1.1.0 candidate（Unreleased，2026-09-24 用户裁决）
+## v1.1.0 (2026-09-24) — Identity, Idempotency, Recovery & Production Hardening
 
-> 版本口径：v1.0.0 为已发布历史基线，保持不变；当前开发线统一作为
-> **v1.1.0 candidate** 管理（含 B4.1 行为变化：幂等提交），暂不 release，
-> 待 Production-readiness Review 完成后再决定发布。
+> **正式定位**：Scientific Research Harness v1.1.0。
+> Production-ready for：single-operator / single-project / single-host /
+> governed scientific workflows / internal Scientific Workspace state /
+> READ_ONLY + COMPUTE_ONLY + governed WORKSPACE_WRITE。
+> **Not yet production-ready for**：untrusted multi-user operation /
+> distributed execution / multi-tenant deployment / **EXTERNAL_WRITE** /
+> autonomous irreversible actions。
+> v1.1.0 production-ready scope **不包含 EXTERNAL_WRITE**（Registry 中实现数=0）；
+> 首个 EXTERNAL_WRITE capability 注册前必须实现并验证三分类恢复：
+> idempotent API→幂等键重试 / queryable state→verify-before-retry /
+> irreversible-unknown→不自动重试→`recovery_requires_review`。
+
+### Release Blockers（Conditional Go 两项，已落地）
+
+- **graph_snapshot_id 进科研 provenance**（可重复性核心信息）：
+  `CandidateResult` / `Evidence` 新增加性字段 `graph_snapshot_id`；ScientificLoop
+  显式参数或从 `kg.snapshot.latest_snapshot()` 解析并给候选/证据打标；
+  `Workspace.lineage()` 暴露。快照内容指纹/行数/时间在快照 manifest
+  （`var/kg_snapshots/<snapshot_id>/manifest.json`）。测试锁定：同一
+  ResearchTask 在 snapshot A 原始结论 vs snapshot B 版本化重算，lineage
+  可明确区分知识上下文。
+- **Ledger durable append**（scientific commit ack ≈ durable commit）：
+  durable 模式（**生产默认**）write→flush→fsync 成功后才返回；fsync/写入
+  失败 → 回滚未确认尾部并抛出（replay 不视为已提交、seq 不消耗、无假成功
+  通道）；回滚失败（磁盘满）则残留被 fail-closed 检出。`durability_mode`：
+  durable/buffered（`MRA_LEDGER_DURABILITY` 或构造参数；buffered 供批量
+  导入/测试）。全量测试套件在 durable 默认下 ~15s，无性能顾虑。
+
+### Human Review Boundary（v1.1.0 范围声明）
+
+- **Fully automatic**：READ_ONLY 查询 / COMPUTE_ONLY / CandidateResult / ordinary planning
+- **Governed automatic**：Evidence creation / downgrade / refute
+- **Human-controlled or unavailable**：EXTERNAL_WRITE / irreversible asset
+  mutation / permission escalation / destructive operation
+
+### Migration / Compatibility（v1.0.0 → v1.1.0）
+
+- **加性 optional 字段**（旧账本完全可读可 replay，全部缺省兼容）：
+  `CandidateResult.research_task_id` / `CandidateResult.graph_snapshot_id`；
+  `GovernanceDecision.research_task_id`；`Evidence.graph_snapshot_id`。
+- **返回信封加性键**：`already_committed` / `already_applied` / `event_seq` / `reused`。
+- **行为变化**（v1 versioning policy 据此进入 v1.1.0）：
+  1. 同 decision + 同内容重复提交 `record_evidence` → `already_committed`
+     零新事件（v1.0.0 会追加一条冗余 revision）；
+  2. `Workspace.append` 默认 durable（v1.0.0 为 buffered 单写）；
+  3. task scope 内重复 `analysis_id` 候选 append 硬拒；无域裁决遇跨 task
+     同名候选拒绝歧义解析（v1.0.0 依赖调用方约定不重名）。
+- **升级动作**：无（加性演进，无 schema 迁移）；依赖 v1.0.0 行为的调用方
+  仅需注意上述三点语义收紧。
+
+### Release Gate（全项满足）
+
+Tests：447 → **452 passed / 2 skipped**（+5：RB1 快照区分×1、RB2
+durability×4）。Golden / B3 / B4 回归全绿；credential leakage = 0；
+governance bypass = 0；duplicate semantic commit = 0；ledger corruption
+fail-closed；declared production scope 内无 critical blocker。
+明细见 `PRODUCTION_READINESS_REVIEW.md`。
 
 ### Production-readiness Hardening（评审第 4/5/6/10/12 节落地项）
 

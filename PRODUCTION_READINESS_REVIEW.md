@@ -195,8 +195,8 @@ KG/Evidence 可见性矩阵、export 审批——全部列为 FUTURE SCALE WORK�
 
 ## v1.1.0 Release Gate（评审通过后再决定）
 
-- [x] 447+ existing tests 全绿（447 passed / 2 skipped @ 9724d45+本轮）
-- [x] production negative tests 全绿（11/11：secret×3 / 磁盘 / 损坏 / 外部 A–E×4 / 血缘 / Case005）
+- [x] 452+ existing tests 全绿（452 passed / 2 skipped @ v1.1.0）
+- [x] production negative tests 全绿（16/16：secret×3 / 磁盘 / 损坏 / 外部 A–E×4 / 血缘 / Case005 / RB1 快照×1 / RB2 durability×4）
 - [x] Golden regression 全绿（e2e golden 在套件内）
 - [x] B3 recovery regression 全绿（13/13）
 - [x] B4 concurrency regression 全绿（9/9 + B4.1 8/8）
@@ -204,14 +204,25 @@ KG/Evidence 可见性矩阵、export 审批——全部列为 FUTURE SCALE WORK�
 - [x] unauthorized mutation = 0（B4/B4.1 负路径）
 - [x] duplicate semantic commit = 0（幂等用例）
 - [x] ledger corruption fail-closed（读写双向，有测试）
-- [ ] **no critical blocker**：今日无阻塞路径成立（EXTERNAL_WRITE 零注册、
-      单信任域使用），✅ 在既定 Guardrails 内成立
-- [ ] CHANGELOG 完整（本轮已补 v1.1.0 candidate 段；release 时定稿）
-- [ ] migration / compatibility note（v1.0.0→v1.1.0：加性字段
-      research_task_id×2、信封加性键 already_committed/already_applied、
-      行为变化=同 decision 同内容重复提交不再产生冗余 revision——
-      release 时随 tag 出正式 note）
+- [x] **no critical blocker**：在既定 Guardrails 与 declared scope 内成立
+      （EXTERNAL_WRITE 零注册、单信任域使用）
+- [x] CHANGELOG 完整（v1.1.0 定稿：定位声明 + EXTERNAL_WRITE 排除 +
+      人审边界 + migration note + gate 记录）
+- [x] migration / compatibility note（加性字段/信封键/三点行为变化，
+      见 CHANGELOG v1.1.0 节）
+- [x] **Release Blocker 1：graph_snapshot_id** 进 provenance（加性字段 +
+      loop 打标 + lineage 暴露；snapshot A/B 同任务可区分，测试锁定）
+- [x] **Release Blocker 2：ledger durable append**（durable 生产默认；
+      fsync 失败→回滚→replay 不视为已提交→seq 不消耗→无假成功；buffered 可选）
 
 **评审结论**：在"单操作者、单项目、单机、无 EXTERNAL_WRITE"既定边界内，
 Harness 具备进入真实持续使用的条件；超出该边界的每一项扩展都有明确的
 BLOCKER/Gate 指引。
+**裁决记录（2026-09-24）**：Production-readiness Review 验收通过；v1.1.0
+Conditional Go 的两项 release blocker 已补齐且全回归绿 → **v1.1.0 released**。
+
+### Release 后路线（Production Hardening Phase 2，用户裁定优先级）
+
+P1 Budget/resource metering → P2 External knowledge expansion + A–E fault
+contract → P3 Backup/restore automation → P4 Multi-workspace/project
+isolation → P5 EXTERNAL_WRITE recovery framework → 再评估 v1.2 或 H6。

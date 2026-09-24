@@ -264,3 +264,107 @@ def test_case005_honest_stop_no_forced_conclusion(tmp_path):
     terminals = [e["record"] for e in Workspace("prd-c5", root=tmp_path).events()
                  if e["record_type"] == "LoopEvent" and e["record"]["kind"] == "terminal"]
     assert terminals and terminals[-1]["verdict"] == "evidence_insufficient"
+
+
+# ---- Release Blocker 1：graph_snapshot_id 可追溯（科研可重复性） ----
+
+def _snap_loop(study, root, snapshot_id):
+    def _exec(capability_id, inputs, context=None):
+        return {"candidate": _cand(inputs["analysis_id"], "T-SNAP").model_dump(),
+                "execution_verdicts": [{"rule": "audit", "verdict": "PASS"}]}
+    return ScientificLoop(study, registry=build_default_registry(),
+                          workspace_root=root, executor=_exec,
+                          graph_snapshot_id=snapshot_id)
+
+
+def test_rb1_snapshot_a_vs_b_distinguishable_in_lineage(tmp_path):
+    """同一 ResearchTask：基于 snapshot A 的原始结论 vs KG 更新后 snapshot B
+    的版本化重算——lineage 必须能明确区分两者依据的知识上下文。"""
+    task = ResearchTask(task_id="T-SNAP", question="快照可追溯性", client="prd-test")
+
+    def _plan(aid):
+        return ResearchPlan(
+            plan_id="SNAP-P", research_task_id="T-SNAP", plan_version=1,
+            steps=[PlanStep(step_id="s1", capability_id="diversity.alpha_shannon",
+                            inputs={"features": "species", "analysis_id": aid})],
+            method_constraints=[RULE], stopping_conditions=["insufficient_data"])
+
+    # Day 1：snapshot A 上的原始结论
+    loop_a = _snap_loop("prd-snap", tmp_path, "2026-09-20-v1")
+    loop_a.open_task(task)
+    loop_a.adopt_plan(task, _plan("SNAP-A1"))
+    out_a = loop_a.execute_step(task, _plan("SNAP-A1"), _plan("SNAP-A1").steps[0])
+    d_a = loop_a.evaluate_and_commit(task, out_a["candidate"], rules=[RULE])["decision"]
+    loop_a.commit_evidence(task, out_a["candidate"], d_a, claim="A 版结论",
+                           evidence_id="EV-SNAP-A1")
+    # KG 更新 → Day 2：snapshot B 上版本化重算（新 analysis_id，符合 B4.1 唯一性）
+    loop_b = _snap_loop("prd-snap", tmp_path, "2026-09-24-v2")
+    out_b = loop_b.execute_step(task, _plan("SNAP-A2"), _plan("SNAP-A2").steps[0])
+    d_b = loop_b.evaluate_and_commit(task, out_b["candidate"], rules=[RULE])["decision"]
+    loop_b.commit_evidence(task, out_b["candidate"], d_b, claim="B 版重算",
+                           evidence_id="EV-SNAP-A2")
+    lin = Workspace("prd-snap", root=tmp_path).lineage("T-SNAP")
+    cand_snaps = {c["analysis_id"]: c["graph_snapshot_id"] for c in lin["candidates"]}
+    ev_snaps = {e["evidence_id"]: e["graph_snapshot_id"] for e in lin["evidence"]}
+    assert cand_snaps["SNAP-A1"] == "2026-09-20-v1" != cand_snaps["SNAP-A2"]
+    assert cand_snaps["SNAP-A2"] == "2026-09-24-v2"
+    assert ev_snaps["EV-SNAP-A1"] == "2026-09-20-v1"
+    assert ev_snaps["EV-SNAP-A2"] == "2026-09-24-v2"
+
+
+# ---- Release Blocker 2：ledger durable append / fsync ----
+
+def test_rb2_fsync_success_is_durable_commit(tmp_path):
+    """fsync 成功 → commit 成功且已落盘（不依赖用户态 buffer）。"""
+    ws = Workspace("prd-dur", root=tmp_path)  # 生产默认 durable
+    assert ws.durability == "durable"
+    seq = ws.append(ResearchTask(task_id="T-DUR", question="durability", client="prd"))
+    assert seq == 1
+    raw = ws.events_path.read_text(encoding="utf-8")
+    assert '"T-DUR"' in raw  # 直接读盘可见（非仅进程内状态）
+
+
+def test_rb2_fsync_failure_fails_and_rolls_back(tmp_path, monkeypatch):
+    """fsync failure → commit 必须失败；replay 不得把该事件视为已提交；
+    seq 不被消耗（下一次 append 复用同一 seq）。"""
+    ws = Workspace("prd-dur2", root=tmp_path)
+    ws.append(ResearchTask(task_id="T-DUR2", question="rollback", client="prd"))
+    n_before = len(ws.events())
+
+    def _fsync_boom(fd):
+        raise OSError("simulated fsync failure (ENOSPC)")
+
+    monkeypatch.setattr(os, "fsync", _fsync_boom)
+    with pytest.raises(OSError, match="fsync"):
+        ws.append(_cand("DUR-C1", "T-DUR2"))
+    monkeypatch.undo()
+    ws2 = Workspace("prd-dur2", root=tmp_path)
+    assert len(ws2.events()) == n_before            # 回滚生效：事件不在账本
+    assert ws2.replay().candidate_results == 0
+    seq_retry = ws2.append(_cand("DUR-C1", "T-DUR2"))  # 重试成功
+    assert seq_retry == n_before + 1                  # seq 未被失败消耗
+    assert ws2.replay().candidate_results == 1
+
+
+def test_rb2_no_success_while_only_in_userspace_buffer(tmp_path, monkeypatch):
+    """caller 不可能收到 success 而事件仅存在于用户态 buffer——fsync 抛出时
+    append 走异常路径（上一个测试证明回滚）；本测试补显式断言：异常路径上
+    返回值不存在（无 False-success 通道）。"""
+    ws = Workspace("prd-dur3", root=tmp_path)
+    monkeypatch.setattr(os, "fsync",
+                        lambda fd: (_ for _ in ()).throw(OSError("ENOSPC")))
+    returned = None
+    try:
+        returned = ws.append(ResearchTask(task_id="T-DUR3", question="x", client="prd"))
+    except OSError:
+        pass
+    assert returned is None  # 异常路径无返回值 → 无假成功
+
+
+def test_rb2_buffered_mode_skips_fsync(tmp_path, monkeypatch):
+    """buffered 模式（批量导入/测试提速）不 fsync——注入 fsync 故障仍可提交。"""
+    monkeypatch.setattr(os, "fsync",
+                        lambda fd: (_ for _ in ()).throw(AssertionError("buffered 不应 fsync")))
+    ws = Workspace("prd-dur4", root=tmp_path, durability="buffered")
+    assert ws.append(ResearchTask(task_id="T-DUR4", question="x", client="prd")) == 1
+    assert ws.replay().tasks[0]["task_id"] == "T-DUR4"

@@ -96,11 +96,23 @@ class ScientificLoop:
     """确定性科研循环引擎（同一引擎可被任何 runtime 驱动：standalone/dsh/OpenCode）。"""
 
     def __init__(self, study_id: str, registry: CapabilityRegistry | None = None,
-                 workspace_root=None, executor: Callable[..., dict] | None = None):
+                 workspace_root=None, executor: Callable[..., dict] | None = None,
+                 graph_snapshot_id: str | None = None):
         self.study_id = study_id
         self.registry = registry or default_registry()
         self.ws = Workspace(study_id, root=workspace_root)
         self._executor = executor  # 可注入执行器（默认 registry.invoke）
+        self._graph_snapshot_id = graph_snapshot_id  # None=从 kg 快照解析；""=显式无图谱
+
+    def _snapshot_id(self) -> str:
+        """本 loop 的知识上下文（KG 快照 id）——进候选与证据 provenance（v1.1.0）。"""
+        if self._graph_snapshot_id is not None:
+            return self._graph_snapshot_id
+        try:
+            from ..kg.snapshot import latest_snapshot
+            return latest_snapshot().name
+        except Exception:
+            return ""
 
     def _emit(self, task_id: str, kind: str, **kw) -> None:
         self.ws.append(LoopEvent(research_task_id=task_id, kind=kind, **kw))
@@ -196,9 +208,13 @@ class ScientificLoop:
             result = (self._executor or self.registry.invoke)(
                 step.capability_id, dict(step.inputs), context=runtime_ctx or {})
             candidate = CandidateResult(**result["candidate"])
+            updates: dict = {}
             if not candidate.research_task_id:  # B4.1：loop 产出一律 task 打标
-                candidate = candidate.model_copy(
-                    update={"research_task_id": task.task_id})
+                updates["research_task_id"] = task.task_id
+            if not candidate.graph_snapshot_id:  # v1.1.0：知识上下文随行
+                updates["graph_snapshot_id"] = self._snapshot_id()
+            if updates:
+                candidate = candidate.model_copy(update=updates)
             self.ws.append(candidate)
             return {"kind": "candidate", "candidate": candidate,
                     "verdicts": result.get("execution_verdicts", [])}
@@ -257,7 +273,8 @@ class ScientificLoop:
              "record": {"evidence_id": ev_id, "task_id": task.task_id,
                         "claim": claim, "effect": candidate.metrics or candidate.effect_estimate,
                         "analysis_version": candidate.analysis_id,
-                        "method_rules_applied": [], "candidate_id": candidate.analysis_id},
+                        "method_rules_applied": [], "candidate_id": candidate.analysis_id,
+                        "graph_snapshot_id": self._snapshot_id()},
              "decision_id": decision.decision_id},
             context={"workspace_root": self._root()})
 

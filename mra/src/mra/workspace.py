@@ -155,6 +155,7 @@ class Evidence(BaseModel):
     falsification: str = "none"   # none / sensitivity_passed / downgraded / refuted
     # ---- Evidence Governance 扩展（加性，v1.1）----
     candidate_id: str | None = None          # 溯源 CandidateResult.analysis_id
+    graph_snapshot_id: str = ""              # 结论所依据的 KG 快照（v1.1.0 科研可重复性）
     governance: dict[str, Any] = Field(default_factory=dict)  # verdict/checks/actor
     canonical: bool = False                  # set_canonical 置位（需 supporting_lineage）
     supporting_lineage: list[str] = Field(default_factory=list)
@@ -198,6 +199,7 @@ class CandidateResult(BaseModel):
     input_fingerprint: str = Field(min_length=1)
     output_summary: str = Field(min_length=1)
     research_task_id: str = ""              # task scope（B4.1；空=legacy 无域）
+    graph_snapshot_id: str = ""             # 知识上下文（v1.1.0；空=未用图谱）
     # ---- 通用信封（v1.2 泛化）：领域专属输出进 typed payload，不再顶层加字段 ----
     result_type: str = "association"          # association/atlas_scan/diversity/enrichment/...
     result_schema: str = ""                   # schema_ref（payload 结构自描述）
@@ -334,9 +336,16 @@ _RECORD_TYPES = {"ResearchTask": ResearchTask, "KnowledgeProvenance": KnowledgeP
 
 
 class Workspace:
-    """append-only 事件流 + 回放重建。"""
+    """append-only 事件流 + 回放重建。
 
-    def __init__(self, study_id: str, root: Path | None = None):
+    Durability（v1.1.0）：scientific commit acknowledgement ≈ durable commit——
+    durable 模式（生产默认）下每次 append 先 flush 再 fsync，成功返回时事件
+    已落盘；fsync/写入失败则回滚未确认尾部并抛出，replay 永远不会把未
+    durable 确认的事件视为已提交。buffered 模式仅供批量导入/测试提速。
+    """
+
+    def __init__(self, study_id: str, root: Path | None = None,
+                 durability: str | None = None):
         if not re.fullmatch(r"[A-Za-z0-9_.-]+", study_id):
             raise ValueError("study_id 仅允许字母数字_.-")
         root = Path(root) if root else Path(
@@ -344,6 +353,10 @@ class Workspace:
                            Path(__file__).resolve().parents[2] / "var" / "workspace"))
         self.study_dir = root / study_id
         self.events_path = self.study_dir / "events.jsonl"
+        self.durability = durability or os.environ.get(
+            "MRA_LEDGER_DURABILITY", "durable")
+        if self.durability not in ("durable", "buffered"):
+            raise ValueError(f"未知 durability 模式 {self.durability}")
 
     def append(self, record: BaseModel) -> int:
         rtype = type(record).__name__
@@ -360,9 +373,30 @@ class Workspace:
         seq = self._next_seq()
         line = {"seq": seq, "record_type": rtype,
                 "record": record.model_dump(), "appended_at": _now()}
-        with self.events_path.open("a", encoding="utf-8") as fh:
-            fh.write(json.dumps(line, ensure_ascii=False) + "\n")
+        start_size = self.events_path.stat().st_size if self.events_path.is_file() else 0
+        try:
+            with self.events_path.open("a", encoding="utf-8") as fh:
+                fh.write(json.dumps(line, ensure_ascii=False) + "\n")
+                fh.flush()
+                if self.durability == "durable":
+                    os.fsync(fh.fileno())  # 返回成功 = 已落盘（非用户态 buffer）
+        except OSError:
+            self._rollback_tail(start_size)
+            raise
         return seq
+
+    def _rollback_tail(self, start_size: int) -> None:
+        """写入/fsync 失败后回滚未确认尾部（best-effort）。
+
+        回滚成功 → replay 看不到该事件（caller 收到异常，语义一致）；
+        回滚失败（如磁盘满）→ 残留半行会被 fail-closed 检出，绝不静默视为已提交。
+        """
+        try:
+            if self.events_path.is_file():
+                with self.events_path.open("r+b") as fh:
+                    fh.truncate(start_size)
+        except OSError:
+            pass
 
     def _check_identity_invariants(self, record: BaseModel) -> None:
         """B4.1 身份域铁律：task scope 内 analysis_id 结构性唯一。
@@ -487,6 +521,7 @@ class Workspace:
                             "implementation_id": c["implementation_id"],
                             "implementation_version": c["implementation_version"],
                             "input_fingerprint": c["input_fingerprint"],
+                            "graph_snapshot_id": c.get("graph_snapshot_id", ""),
                             "deterministic": c.get("deterministic", True),
                             "seq": c["seq"]} for c in candidates],
             "decisions": [{"decision_id": d["decision_id"],
@@ -500,6 +535,7 @@ class Workspace:
                            "seq": d["seq"]} for d in decisions],
             "evidence": [{"evidence_id": e["evidence_id"], "claim": e["claim"],
                           "candidate_id": e.get("candidate_id"),
+                          "graph_snapshot_id": e.get("graph_snapshot_id", ""),
                           "falsification": e.get("falsification", "none"),
                           "canonical": e.get("canonical", False),
                           "supersedes_seq": e.get("supersedes_seq"),

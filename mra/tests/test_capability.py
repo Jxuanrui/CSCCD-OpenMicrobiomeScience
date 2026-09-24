@@ -73,5 +73,35 @@ def test_invoke_route_and_gap_with_graph_context(tmp_path, monkeypatch):
 
 def test_catalog_exports_schema_not_callables():
     cat = build_default_registry().catalog()
-    assert len(cat) == 6 and all("input_schema" in c for c in cat)
+    assert len(cat) == 13 and all("input_schema" in c for c in cat)
     assert all(not str(c.get("implementation_id", "")).startswith("<") for c in cat)
+
+
+def test_compute_only_enum_and_track_b_readonly_batch():
+    """COMPUTE_ONLY 四级语义 + Track B 只读批（kg/vec/literature）零 schema 迁移。"""
+    from mra.capability import SIDE_EFFECTS
+    reg = build_default_registry()
+    assert SIDE_EFFECTS == ("READ_ONLY", "COMPUTE_ONLY", "WORKSPACE_WRITE", "EXTERNAL_WRITE")
+    for cap in ("kg.resolve", "kg.neighbors", "kg.edge_evidence", "vec.query",
+                "literature.search"):
+        impl = reg.resolve(cap)
+        assert impl.side_effect == "READ_ONLY"
+    lit = reg.resolve("literature.search")
+    assert lit.deterministic is False and lit.auth_scope  # live 检索非确定+需可选凭据
+
+
+def test_workspace_write_capabilities_are_guarded(tmp_path):
+    """workspace.* 变更能力：WORKSPACE_WRITE+guarded；commit 走 Workspace 账本。"""
+    reg = build_default_registry()
+    for cap in ("workspace.record_execution", "workspace.record_evidence"):
+        impl = reg.resolve(cap)
+        assert impl.side_effect == "WORKSPACE_WRITE" and impl.governance_level == "guarded"
+    out = reg.invoke("workspace.record_evidence",
+                     {"study_id": "cap-test",
+                      "record": {"evidence_id": "EV-T1", "task_id": "T1",
+                                 "claim": "registry commit 通道测试"}},
+                     context={"workspace_root": tmp_path})
+    assert out == {"study_id": "cap-test", "committed": True}
+    from mra.workspace import Workspace
+    st = Workspace("cap-test", root=tmp_path).replay()
+    assert st.evidence and st.evidence[0]["evidence_id"] == "EV-T1"

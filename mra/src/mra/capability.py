@@ -19,7 +19,10 @@ from typing import Any, Callable
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-SIDE_EFFECTS = ("READ_ONLY", "WORKSPACE_WRITE", "EXTERNAL_WRITE")
+# 四级语义（用户裁决 2026-09-24）：查询已有状态 / 计算产生临时结果但不改科研状态 /
+# 改变 Scientific Workspace 或 Evidence 状态 / 改变 Harness 外部系统状态。
+# 纯科学计算不得因产生输出即被视为 WORKSPACE_WRITE。
+SIDE_EFFECTS = ("READ_ONLY", "COMPUTE_ONLY", "WORKSPACE_WRITE", "EXTERNAL_WRITE")
 GOVERNANCE_LEVELS = ("open", "guarded", "governed")
 TRANSPORTS = ("python-inproc", "mcp", "cli", "http")
 
@@ -149,20 +152,68 @@ def _fn_gap_check(payload: dict, ctx: dict) -> dict:
                        analysis_types=list(payload.get("analysis_types", [])))
 
 
+def _fn_kg_resolve(payload, ctx):
+    from .kg.tools import build_tool_functions
+    return build_tool_functions(ctx["graph"])["kg_resolve"]({"term": payload["term"]})
+
+
+def _fn_kg_neighbors(payload, ctx):
+    from .kg.tools import build_tool_functions
+    return build_tool_functions(ctx["graph"])["kg_neighbors"](
+        {"term": payload["term"], "hops": int(payload.get("hops", 1)),
+         "categories": payload.get("categories")})
+
+
+def _fn_kg_edge_evidence(payload, ctx):
+    from .kg.tools import build_tool_functions
+    return build_tool_functions(ctx["graph"])["kg_edge_evidence"](
+        {"subject": payload["subject"], "object": payload["object"]})
+
+
+def _fn_vec_query(payload, ctx):
+    from . import vecstore
+    hits = vecstore.query(payload["text"], payload.get("table", "kg_entities"),
+                          k=int(payload.get("k", 8)))
+    return {"table": payload.get("table", "kg_entities"), "hits": hits}
+
+
+def _fn_literature_search(payload, ctx):
+    from .research.litread import search_and_read
+    return search_and_read(payload["query"], payload.get("question", payload["query"]),
+                           max_results=int(payload.get("max_results", 20)),
+                           max_calls=int(payload.get("max_calls", 0)))  # 默认纯元数据(零LLM)
+
+
+def _fn_workspace_record_execution(payload, ctx):
+    from .workspace import ToolExecution, Workspace
+    ws = Workspace(payload["study_id"], root=ctx.get("workspace_root"))
+    ws.append(ToolExecution(**payload["record"]))
+    return {"study_id": payload["study_id"], "committed": True}
+
+
+def _fn_workspace_record_evidence(payload, ctx):
+    from .workspace import Evidence, Workspace
+    ws = Workspace(payload["study_id"], root=ctx.get("workspace_root"))
+    ws.append(Evidence(**payload["record"]))
+    return {"study_id": payload["study_id"], "committed": True}
+
+
 def build_default_registry() -> CapabilityRegistry:
-    """S2 第一批：三条 Golden Capabilities（各挂 python-inproc + mcp 双实现）。"""
+    """S2 第一批 Golden×3 + Track B 只读批 + workspace.* 高治理变更能力。"""
     reg = CapabilityRegistry()
 
     def _impl(cap: str, impl: str, transport: str, priority: int, fn,
               input_s: dict, output_s: dict, prov: dict, **kw):
+        fields = dict(side_effect="READ_ONLY", deterministic=True,
+                      auth_scope=[], availability="available",
+                      timeout_policy="default", retry_policy="none",
+                      validation_status="validated")
+        fields.update(kw)  # 调用侧可覆盖任意治理/行为字段
         return CapabilityImplementation(
             capability_id=cap, capability_version="1.0.0",
             implementation_id=impl, implementation_version="1.0.0",
             transport=transport, input_schema=input_s, output_schema=output_s,
-            provenance_contract=prov, side_effect="READ_ONLY",
-            deterministic=True, auth_scope=[], availability="available",
-            timeout_policy="default", retry_policy="none",
-            validation_status="validated", priority=priority, **kw), fn
+            provenance_contract=prov, priority=priority, **fields), fn
 
     # A. method.query —— METHOD_KNOWLEDGE 基准能力（S1 切片已验）
     reg.register(*_impl(
@@ -203,6 +254,50 @@ def build_default_registry() -> CapabilityRegistry:
                         _fn_gap_check, _gap_in, _gap_out, _gap_prov))
     reg.register(*_impl("gap.check", "mcp.mra", "mcp", 20,
                         _fn_gap_check, _gap_in, _gap_out, _gap_prov))
+
+    # ---- Track B：READ_ONLY 批量迁移（零 Registry schema 改动） ----
+    _kg_prov = {"source_type_field": "evidence_tier",
+                "required": ["evidence_tier", "pmids"], "note": "结果强制携带证据分级"}
+    for cap, impl_id, fn, in_s, out_s, prio in [
+        ("kg.resolve", "mra.kg", _fn_kg_resolve,
+         {"term": "string"}, {"candidates": "list"}, 10),
+        ("kg.neighbors", "mra.kg", _fn_kg_neighbors,
+         {"term": "string", "hops": "int=1", "categories": "list[str]?"},
+         {"center": "string", "neighbors": "dict", "counts_by_category": "dict"}, 10),
+        ("kg.edge_evidence", "mra.kg", _fn_kg_edge_evidence,
+         {"subject": "string", "object": "string"},
+         {"edges": "list[dict]"}, 10),
+        ("vec.query", "mra.vecstore", _fn_vec_query,
+         {"text": "string", "table": "str=kg_entities", "k": "int=8"},
+         {"table": "string", "hits": "list"}, 10),
+        ("literature.search", "mra.litread", _fn_literature_search,
+         {"query": "string", "question": "string", "max_results": "int=20",
+          "max_calls": "int=0"},
+         {"papers": "list", "provenance": "dict", "n_papers": "int"}, 10),
+    ]:
+        prov = (_kg_prov if cap.startswith("kg.")
+                else {"source_type_field": "provenance.source_type",
+                      "required": ["provenance"],
+                      "note": "EXTERNAL_LIVE 缓存≠入库"})
+        extra = ({"deterministic": False,
+                  "auth_scope": ["NCBI_API_KEY(可选)", "ARK_API_KEY(速读)"]}
+                 if cap == "literature.search" else {})
+        reg.register(*_impl(cap, impl_id, "python-inproc", prio, fn, in_s, out_s,
+                            prov, **extra))
+
+    # ---- workspace.* 高治理变更能力：计算工具说"算出了什么"，
+    #      governance 决定"什么成为正式证据"（WORKSPACE_WRITE + guarded） ----
+    _ws_prov = {"lineage_required": True,
+                "note": "commit 须携带 provenance 与（证据类）lineage/falsification"}
+    for cap, fn, in_s in [
+        ("workspace.record_execution", _fn_workspace_record_execution,
+         {"study_id": "string", "record": "ToolExecution-dict"}),
+        ("workspace.record_evidence", _fn_workspace_record_evidence,
+         {"study_id": "string", "record": "Evidence-dict"}),
+    ]:
+        reg.register(*_impl(cap, "mra.workspace", "python-inproc", 10, fn, in_s,
+                            {"study_id": "string", "committed": "bool"}, _ws_prov,
+                            side_effect="WORKSPACE_WRITE", governance_level="guarded"))
     return reg
 
 

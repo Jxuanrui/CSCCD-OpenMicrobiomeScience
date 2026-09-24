@@ -42,7 +42,7 @@ def test_registry_contract_ci():
         impls = reg.implementations(cap)
         assert {i.transport for i in impls} == {"python-inproc", "mcp"}
         assert all(i.side_effect == "READ_ONLY" for i in impls)
-    assert set(SIDE_EFFECTS) == {"READ_ONLY", "WORKSPACE_WRITE", "EXTERNAL_WRITE"}
+    assert set(SIDE_EFFECTS) == {"READ_ONLY", "COMPUTE_ONLY", "WORKSPACE_WRITE", "EXTERNAL_WRITE"}
 
 
 @pytest.mark.skipif(not (shutil.which("node") and __import__("os").environ.get("MRA_UPSTREAM_SLICE")),

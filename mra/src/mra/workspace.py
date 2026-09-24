@@ -114,6 +114,13 @@ class Evidence(BaseModel):
     source_type: str = "CURRENT_STUDY"                      # 证据域固定，不得伪装外部知识
     lineage: list[KnowledgeProvenance] = Field(default_factory=list)  # 依据的知识来源
     falsification: str = "none"   # none / sensitivity_passed / downgraded / refuted
+    # ---- Evidence Governance 扩展（加性，v1.1）----
+    candidate_id: str | None = None          # 溯源 CandidateResult.analysis_id
+    governance: dict[str, Any] = Field(default_factory=dict)  # verdict/checks/actor
+    canonical: bool = False                  # set_canonical 置位（需 supporting_lineage）
+    supporting_lineage: list[str] = Field(default_factory=list)
+    supersedes_seq: int | None = None        # 状态转换引用的前事件 seq（历史不覆盖）
+    reason: str | None = None                # 转换理由（mutation 必填）
     created_at: str = Field(default_factory=_now)
 
     @field_validator("source_type")
@@ -131,6 +138,39 @@ class Evidence(BaseModel):
         return v
 
 
+class CandidateResult(BaseModel):
+    """计算结果候选——语义："工具算出了什么"，不是"系统已经相信什么"。
+
+    CandidateResult != Evidence：它由 COMPUTE_ONLY 能力产生，必须经
+    Scientific Governance Gate（evaluate_candidate）裁决后才允许经
+    workspace.record_evidence 进入 Scientific Ledger。
+    """
+    model_config = ConfigDict(extra="forbid")
+    analysis_id: str = Field(min_length=3)
+    capability_id: str = Field(min_length=3)
+    implementation_id: str = Field(min_length=3)
+    capability_version: str = Field(min_length=1)
+    implementation_version: str = Field(min_length=1)
+    input_fingerprint: str = Field(min_length=1)
+    output_summary: str = Field(min_length=1)
+    effect_estimate: dict[str, Any] = Field(default_factory=dict)
+    uncertainty: dict[str, Any] = Field(default_factory=dict)
+    assumptions_checked: list[str] = Field(default_factory=list)
+    warnings: list[dict[str, Any]] = Field(default_factory=list)  # {level, message}
+    provenance: dict[str, Any] = Field(default_factory=dict)
+    deterministic: bool = True
+    tool_execution_id: str | None = None
+    created_at: str = Field(default_factory=_now)
+
+    @field_validator("warnings")
+    @classmethod
+    def _warn(cls, v):
+        for w in v:
+            if not isinstance(w, dict) or w.get("level") not in ("info", "blocking"):
+                raise ValueError("warning 须为 {level: info|blocking, message}")
+        return v
+
+
 class WorkspaceState(BaseModel):
     model_config = ConfigDict(extra="forbid")
     study_id: str
@@ -139,12 +179,14 @@ class WorkspaceState(BaseModel):
     evidence: list[dict[str, Any]] = Field(default_factory=list)
     knowledge_queries: int = 0
     tool_executions: int = 0
+    candidate_results: int = 0
     narrative_version: str = ""
     canonical_refs: dict[str, str] = Field(default_factory=dict)
 
 
 _RECORD_TYPES = {"ResearchTask": ResearchTask, "KnowledgeProvenance": KnowledgeProvenance,
-                 "ToolExecution": ToolExecution, "Evidence": Evidence}
+                 "ToolExecution": ToolExecution, "Evidence": Evidence,
+                 "CandidateResult": CandidateResult}
 
 
 class Workspace:
@@ -193,6 +235,8 @@ class Workspace:
                 state.knowledge_queries += 1
             elif rtype == "ToolExecution":
                 state.tool_executions += 1
+            elif rtype == "CandidateResult":
+                state.candidate_results += 1
             elif rtype == "Evidence":
                 evidence_by_id[rec["evidence_id"]] = rec  # 后写覆盖=修订可追溯
         state.evidence = list(evidence_by_id.values())
@@ -203,5 +247,5 @@ class Workspace:
         return (events[-1]["seq"] + 1) if events else 1
 
 
-__all__ = ["Evidence", "KnowledgeProvenance", "ResearchTask", "SOURCE_TYPES",
-           "ToolExecution", "Workspace", "WorkspaceState", "digest"]
+__all__ = ["CandidateResult", "Evidence", "KnowledgeProvenance", "ResearchTask",
+           "SOURCE_TYPES", "ToolExecution", "Workspace", "WorkspaceState", "digest"]

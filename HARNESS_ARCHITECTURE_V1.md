@@ -152,3 +152,28 @@ Scientific Research Core（知识层/科学治理/Evidence 双账本/能力语�
 G2/G3/G8 全部重定义（G3=Scientific Capability Registry；G8=Client Compatibility
 & Research Extension Contract；G2=Scientific Planning/Governance Plugin）。
 完整审计与 13 项决策见 DEEPSEEK_HARNESS_INTEGRATION_DECISION.md（G0.5）。
+
+---
+
+## 附录 C（v1.3，2026-09-24）：Scientific Compute / Evidence Governance 契约
+
+**CandidateResult ≠ Evidence**（schema 强制）：计算能力（COMPUTE_ONLY）产出
+CandidateResult（analysis_id/双版本/input_fingerprint/effect_estimate/uncertainty/
+assumptions_checked/warnings/provenance/deterministic/tool_execution_id…16 字段，
+`mra.workspace.CandidateResult`），语义="工具算出了什么"；经 **Scientific
+Governance Gate**（`mra.governance.evaluate_candidate`，六查：provenance/input
+lineage/method constraints/sensitivity/execution governance/阻断 warning +
+canonical 资格）裁决 allow 后，才可经 `workspace.record_evidence`（无 allow
+裁决即拒绝——治理不可绕过为结构性强制）进入 Scientific Ledger。
+
+**Evidence 状态机**（append-only，历史不覆盖，现值由流重建）：Candidate →
+Evidence → {canonical | sensitivity_passed | downgraded | refuted}。六铁律已入
+测试（tests/test_evidence_governance.py）：refuted 不得静默恢复 canonical；
+再升级须新治理事件；set_canonical 须 supporting_lineage；compute capability
+禁直调 set_canonical（context 调用方标记拦截）；全 mutation 可 replay；现值
+由事件流重建。
+
+**首个 Golden Compute Slice 实测**（golden-compute-slice workspace，5 事件）：
+method.query→gap.check→association.partial_spearman(真实治理门R：n=1060/30检验/
+4显著+审计verdicts)→CandidateResult→gate(allow)→record_execution→
+record_evidence→mark_downgraded(supersedes_seq=4)→replay 一致；无裁决提交被拦。

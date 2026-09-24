@@ -198,6 +198,114 @@ def _fn_workspace_record_evidence(payload, ctx):
     return {"study_id": payload["study_id"], "committed": True}
 
 
+def _fn_association_partial_spearman(payload, ctx):
+    """COMPUTE_ONLY：治理门内的偏 Spearman 计算 → CandidateResult（不写 Evidence）。"""
+    import pandas as pd
+    from .research import datasources as ds
+    from .research.gate import run_gated_association
+    from .workspace import CandidateResult, digest
+
+    exposure = payload["exposure"]
+    features = payload.get("features", "species")
+    exposure_table = payload.get("exposure_table") or next(iter(ds.load_config()["exposures"]))
+    max_features = int(payload.get("max_features", 50))
+    q_threshold = float(payload.get("q_threshold", 0.05))
+    exp = ds.load_exposures(exposure_table)
+    ft = ds.load_features(features)
+    meta = ds.load_metadata()
+    covs = meta[[c for c in ds.default_covariates() if c in meta.columns]]
+    ids = ds.intersect_ids(exp, ft, covs)
+    keep = (pd.to_numeric(exp.loc[ids, exposure], errors="coerce").notna()
+            & covs.loc[ids].notna().all(axis=1))
+    ids = [i for i, k in zip(ids, keep) if k]
+    sel = ds.top_features_by_prevalence(ft.loc[ids], max_features=max_features)
+    result, verdicts = run_gated_association(
+        pd.to_numeric(exp.loc[ids, exposure]), ft.loc[ids, sel], covs.loc[ids],
+        run_id=payload.get("run_id", "compute"))
+    hits = result[result["q"] < q_threshold]
+    candidate = CandidateResult(
+        analysis_id=payload.get("analysis_id") or f"assoc-{exposure}-{features}",
+        capability_id="association.partial_spearman", implementation_id="mra.r",
+        capability_version="1.0.0", implementation_version="1.0.0",
+        input_fingerprint=digest({"exposure_table": exposure_table, "exposure": exposure,
+                                  "features": features, "n": len(ids),
+                                  "max_features": max_features}),
+        output_summary=f"n={len(ids)}; tested={len(result)}; significant(q<{q_threshold})={len(hits)}",
+        effect_estimate={"n_significant": int(len(hits)),
+                         "top": [{"feature": r["feature"][:80], "rho": round(float(r["rho"]), 4),
+                                  "q": float(r["q"])} for _, r in hits.head(5).iterrows()]},
+        uncertainty={"bh_family_size": int(len(result)), "q_threshold": q_threshold},
+        assumptions_checked=["零方差守卫(四道闸)", "样本对齐(AUDIT-BATCH-001)", "BH族内校正"],
+        warnings=[],
+        provenance={"execution_verdicts": [f"{v['rule']}:{v['verdict']}" for v in verdicts],
+                    "n_samples": int(result["n"].iloc[0]) if len(result) else None,
+                    "exposure_table": exposure_table, "features": features},
+        deterministic=True)
+    return {"candidate": candidate.model_dump(), "execution_verdicts": verdicts}
+
+
+def _latest_evidence_event(ws, evidence_id):
+    latest = None
+    for ev in ws.events():
+        if ev["record_type"] == "Evidence" and ev["record"]["evidence_id"] == evidence_id:
+            latest = ev
+    return latest
+
+
+def _mutate_evidence(payload, ctx, *, falsification=None, canonical=None):
+    from .workspace import Workspace
+    ws = Workspace(payload["study_id"], root=ctx.get("workspace_root"))
+    prev = _latest_evidence_event(ws, payload["evidence_id"])
+    if prev is None:
+        raise ValueError(f"Evidence {payload['evidence_id']} 不存在，无法变更")
+    if not payload.get("reason"):
+        raise ValueError("Scientific State Mutation 必须携带 reason")
+    rec = dict(prev["record"])
+    gov = dict(rec.get("governance") or {})
+    gov["last_mutation"] = {"actor": payload.get("actor", "unknown"),
+                            "reason": payload["reason"],
+                            "supersedes_seq": prev["seq"],
+                            "at": __import__("datetime").datetime.now(
+                                __import__("datetime").timezone.utc).isoformat()}
+    rec.update(governance=gov, supersedes_seq=prev["seq"],
+               reason=payload["reason"], falsification=falsification
+               if falsification is not None else rec.get("falsification", "none"),
+               canonical=canonical if canonical is not None else rec.get("canonical", False))
+    ws.append(__import__("mra.workspace", fromlist=["Evidence"]).Evidence(**rec))
+    return {"study_id": payload["study_id"], "evidence_id": payload["evidence_id"],
+            "supersedes_seq": prev["seq"], "committed": True}
+
+
+def _fn_ws_revise(payload, ctx):
+    return _mutate_evidence(payload, ctx)
+
+
+def _fn_ws_mark_downgraded(payload, ctx):
+    return _mutate_evidence(payload, ctx, falsification="downgraded")
+
+
+def _fn_ws_mark_refuted(payload, ctx):
+    return _mutate_evidence(payload, ctx, falsification="refuted")
+
+
+def _fn_ws_set_canonical(payload, ctx):
+    caller = ctx.get("caller_capability", "")
+    if caller.startswith("association.") or ctx.get("caller_side_effect") == "COMPUTE_ONLY":
+        raise ValueError("铁律4：compute capability 不得直接调用 set_canonical")
+    if not payload.get("supporting_lineage"):
+        raise ValueError("铁律3：set_canonical 必须引用 supporting evidence lineage")
+    from .workspace import Workspace
+    ws = Workspace(payload["study_id"], root=ctx.get("workspace_root"))
+    prev = _latest_evidence_event(ws, payload["evidence_id"])
+    if prev is None:
+        raise ValueError(f"Evidence {payload['evidence_id']} 不存在")
+    current = prev["record"].get("falsification", "none")
+    if current == "refuted" and not payload.get("revalidation_governance_event"):
+        raise ValueError("铁律1/2：refuted 不得静默恢复 canonical；再升级必须生成新治理事件")
+    return _mutate_evidence({**payload, "reason": payload.get("reason") or "set canonical"},
+                            ctx, canonical=True)
+
+
 def build_default_registry() -> CapabilityRegistry:
     """S2 第一批 Golden×3 + Track B 只读批 + workspace.* 高治理变更能力。"""
     reg = CapabilityRegistry()
@@ -289,15 +397,60 @@ def build_default_registry() -> CapabilityRegistry:
     #      governance 决定"什么成为正式证据"（WORKSPACE_WRITE + guarded） ----
     _ws_prov = {"lineage_required": True,
                 "note": "commit 须携带 provenance 与（证据类）lineage/falsification"}
-    for cap, fn, in_s in [
-        ("workspace.record_execution", _fn_workspace_record_execution,
-         {"study_id": "string", "record": "ToolExecution-dict"}),
-        ("workspace.record_evidence", _fn_workspace_record_evidence,
-         {"study_id": "string", "record": "Evidence-dict"}),
-    ]:
-        reg.register(*_impl(cap, "mra.workspace", "python-inproc", 10, fn, in_s,
-                            {"study_id": "string", "committed": "bool"}, _ws_prov,
+    # record_*：提交通道（record_evidence 强制治理门裁决——不可绕过）
+    reg.register(*_impl("workspace.record_execution", "mra.workspace", "python-inproc",
+                        10, _fn_workspace_record_execution,
+                        {"study_id": "string", "record": "ToolExecution-dict"},
+                        {"study_id": "string", "committed": "bool"}, _ws_prov,
+                        side_effect="WORKSPACE_WRITE", governance_level="guarded"))
+
+    def _fn_record_evidence_gated(payload, ctx):
+        gov = payload.get("governance") or {}
+        if gov.get("allow_evidence") is not True:
+            raise ValueError("治理门未通过/缺失（evaluate_candidate 须先 allow）——拒绝提交 Evidence")
+        record = dict(payload["record"])
+        record.setdefault("candidate_id", None)
+        rec_gov = dict(record.get("governance") or {})
+        rec_gov["gate"] = gov
+        record["governance"] = rec_gov
+        return _fn_workspace_record_evidence({"study_id": payload["study_id"],
+                                              "record": record}, ctx)
+
+    reg.register(*_impl("workspace.record_evidence", "mra.workspace", "python-inproc",
+                        10, _fn_record_evidence_gated,
+                        {"study_id": "string", "record": "Evidence-dict",
+                         "governance": "{allow_evidence: bool, checks, blocking}"},
+                        {"study_id": "string", "committed": "bool"}, _ws_prov,
+                        side_effect="WORKSPACE_WRITE", governance_level="guarded"))
+
+    # Scientific State Mutation：revise / downgrade / refute / canonical
+    for cap, fn in [("workspace.revise_evidence", _fn_ws_revise),
+                    ("workspace.mark_downgraded", _fn_ws_mark_downgraded),
+                    ("workspace.mark_refuted", _fn_ws_mark_refuted)]:
+        reg.register(*_impl(cap, "mra.workspace", "python-inproc", 10, fn,
+                            {"study_id": "string", "evidence_id": "string",
+                             "reason": "string(必填)", "actor": "string"},
+                            {"study_id": "string", "supersedes_seq": "int",
+                             "committed": "bool"}, _ws_prov,
                             side_effect="WORKSPACE_WRITE", governance_level="guarded"))
+    reg.register(*_impl("workspace.set_canonical", "mra.workspace", "python-inproc",
+                        10, _fn_ws_set_canonical,
+                        {"study_id": "string", "evidence_id": "string",
+                         "supporting_lineage": "list[string](必填)",
+                         "reason": "string", "revalidation_governance_event": "string?"},
+                        {"study_id": "string", "supersedes_seq": "int",
+                         "committed": "bool"}, _ws_prov,
+                        side_effect="WORKSPACE_WRITE", governance_level="governed"))
+
+    # ---- 首个 COMPUTE_ONLY：Scientific Compute 基准（不写 Evidence） ----
+    reg.register(*_impl("association.partial_spearman", "mra.r", "python-inproc", 10,
+                        _fn_association_partial_spearman,
+                        {"exposure": "string", "features": "str=species",
+                         "exposure_table": "string?", "max_features": "int=50",
+                         "q_threshold": "float=0.05", "analysis_id": "string?"},
+                        {"candidate": "CandidateResult-dict",
+                         "execution_verdicts": "list"}, _ws_prov,
+                        side_effect="COMPUTE_ONLY", governance_level="guarded"))
     return reg
 
 

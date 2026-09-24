@@ -73,7 +73,7 @@ def test_invoke_route_and_gap_with_graph_context(tmp_path, monkeypatch):
 
 def test_catalog_exports_schema_not_callables():
     cat = build_default_registry().catalog()
-    assert len(cat) == 13 and all("input_schema" in c for c in cat)
+    assert len(cat) == 18 and all("input_schema" in c for c in cat)
     assert all(not str(c.get("implementation_id", "")).startswith("<") for c in cat)
 
 
@@ -93,13 +93,19 @@ def test_compute_only_enum_and_track_b_readonly_batch():
 def test_workspace_write_capabilities_are_guarded(tmp_path):
     """workspace.* 变更能力：WORKSPACE_WRITE+guarded；commit 走 Workspace 账本。"""
     reg = build_default_registry()
-    for cap in ("workspace.record_execution", "workspace.record_evidence"):
+    for cap in ("workspace.record_execution", "workspace.record_evidence",
+                "workspace.revise_evidence", "workspace.mark_downgraded",
+                "workspace.mark_refuted"):
         impl = reg.resolve(cap)
         assert impl.side_effect == "WORKSPACE_WRITE" and impl.governance_level == "guarded"
+    sc = reg.resolve("workspace.set_canonical")
+    assert sc.side_effect == "WORKSPACE_WRITE" and sc.governance_level == "governed"  # 更高权限
     out = reg.invoke("workspace.record_evidence",
                      {"study_id": "cap-test",
                       "record": {"evidence_id": "EV-T1", "task_id": "T1",
-                                 "claim": "registry commit 通道测试"}},
+                                 "claim": "registry commit 通道测试"},
+                      "governance": {"allow_evidence": True, "checks": [],
+                                     "blocking": []}},  # 治理门裁决随行
                      context={"workspace_root": tmp_path})
     assert out == {"study_id": "cap-test", "committed": True}
     from mra.workspace import Workspace

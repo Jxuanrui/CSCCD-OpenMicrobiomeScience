@@ -9,9 +9,27 @@ import pandas as pd
 ROOT=Path(__file__).resolve().parents[2]
 SEED=ROOT/'data/seed'; STAGING=ROOT/'data/staging'; MERGED=ROOT/'data/merged'
 
+
+# ---- Source Registry 闸门（P0-1）：未登记来源的知识不得进入 KG ----
+REGISTRY = ROOT/'data/registry/source_registry.tsv'
+SOURCE_MAP = {  # 输入文件前缀 -> registry source_key（新增数据源必须先登记）
+    'seed_': 'maier2018_st3', 'bugsigdb_': 'bugsigdb_export',
+    'gutmgene_': 'gutmgene_v3', 'gutmdisorder_': 'gutmdisorder_v3',
+    'kegg_pathway_': 'kegg_rest', 'llm_relations': 'glm_extract_v2',
+}
+def registry_gate():
+    import pandas as pd
+    reg = pd.read_csv(REGISTRY, sep='\t').fillna('')
+    active = set(reg[reg.status=='active'].source_key)
+    missing = [k for k in SOURCE_MAP.values() if k not in active]
+    if missing:
+        raise SystemExit(f'[registry] 以下来源未登记/未激活，拒绝合并: {missing}')
+    return {k: v for k, v in SOURCE_MAP.items()}
+
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--include-c',action='store_true'); args=ap.parse_args()
     MERGED.mkdir(parents=True,exist_ok=True)
+    smap = registry_gate(); print(f'[registry] {len(smap)} 个输入来源全部登记在案')
     nodes=pd.read_csv(SEED/'seed_nodes.tsv',sep='\t')
     edges=pd.read_csv(SEED/'seed_edges.tsv',sep='\t').fillna('')
     # 合并成熟的 BugSigDB gut 子集（结构与主图相同，按三元组幂等去重）。
@@ -87,6 +105,10 @@ def main():
         add['evidence_tier']='B'
         edges=pd.concat([edges,add],ignore_index=True)
     edges=edges.drop_duplicates(subset=['subject','predicate','object'],keep='first')
+    # Phase 2 预备：source_ref/curator 元数据列（存量边按来源段回填，事实字段零改动）
+    if 'source_ref' not in edges.columns: edges['source_ref']=''
+    if 'curator' not in edges.columns: edges['curator']='automated_pipeline'
+    edges['source_ref']=edges['source_ref'].replace('', 'unattributed')
     edges.to_csv(MERGED/'merged_edges.tsv',sep='\t',index=False)
     nodes.to_csv(MERGED/'merged_nodes.tsv',sep='\t',index=False)
     print(f'[out] 主图 nodes={len(nodes)} edges={len(edges)}; pending_review={len(review)}')

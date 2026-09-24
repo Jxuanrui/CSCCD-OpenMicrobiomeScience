@@ -87,6 +87,13 @@ Knowledge_Graph/
 - **进程操作禁用宽匹配 kill**（`kill $(pgrep -f 关键词)` 在另一终端会误伤）；需要停任务时按 PID 精确操作
 - LLM 批量运行时第二终端避免同时发起 API 密集任务（同 Key 并发互踩）
 
+
+## Local Knowledge Layer 架构原则（v1.0，2026-09-24 审计批准）
+
+**四层知识边界**：Local Knowledge（本 KG：研究前已知，策展库+已发表文献）/ Live Knowledge（NCBI/UniProt 等实时查询，经 curation 方可升级入 Local）/ Research Evidence（当前研究结果，存 AgentLab，只许引用 KG 实体，禁止写 KG relation）/ Method Knowledge（方法学知识）。
+
+**铁律**：①当前研究 association/effect size/p value/atlas result/findings 永不自动入图；②模型预测可提名候选但不得自动提升知识等级（prediction→candidate_evidence→manual review→approved）；③无登记来源的知识不得进入 KG（`data/registry/source_registry.tsv` 闸门已装于 merge_qc，未登记来源拒绝合并）；④一切 relation 必须可回答"来自哪里"（Phase 2 补全 source_id/retrieved_at/version/curator）。
+
 ## 进展日志
 
 - 2026-09-15 骨架、README、LinkML schema 建立。

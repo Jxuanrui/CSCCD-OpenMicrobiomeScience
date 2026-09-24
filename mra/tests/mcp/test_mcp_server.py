@@ -40,7 +40,8 @@ def test_stdio_roundtrip_list_and_call(tmp_path):
                 tools = (await session.list_tools()).tools
                 names = {t.name for t in tools}
                 assert {"kg_resolve", "kg_neighbors", "kg_edge_evidence",
-                        "r_association", "lit_search_read"} <= names
+                        "r_association", "lit_search_read",
+                        "method_query", "knowledge_route", "gap_check"} <= names
                 result = await session.call_tool("kg_resolve",
                                                  {"term": "F. prausnitzii"})
                 text = "".join(getattr(c, "text", "") for c in result.content)

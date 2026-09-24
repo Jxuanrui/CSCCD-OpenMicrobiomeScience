@@ -253,3 +253,15 @@ microbe-phenotype / gene-function / pathway-organism / food-microbiome）。
 | P1-3 检索模板（原 P1 内容并入） | 待 |
 | P1 候选管线投产 / KnowledgeStore 全量接入 / Evidence schema | 顺延保持 |
 | P2/P3 各项 | 不变 |
+
+---
+
+## 附录 B：项目定位升级（2026-09-24 用户裁决）
+
+项目最高层定位由"bioinformatics Agent"升级为 **Model-agnostic Scientific
+Research Harness**（为通用基础模型提供知识/工具/记忆/治理/证据追踪的可复用
+Harness）。成熟度视角由 Agent Level 转为 **Harness Maturity（当前 H4-min）**；
+P1-2 重定义为 **Harness Research Loop**（客户端无关七步闭环）。完整架构、
+六能力评估与最高约束见《Scientific Research Harness Architecture v1.0》
+（HARNESS_ARCHITECTURE_V1.md，后续开发最高约束文档）。本报告附录 A 的
+L5-min 定级保留为 Agent 视角历史记录。

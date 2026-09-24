@@ -1,3 +1,5 @@
+![Gut Microbiome Knowledge Graph](docs/images/01-header.jpg)
+
 # Gut Microbiome Knowledge Graph（肠道菌群知识图谱）
 
 全菌群领域知识图谱：整合策展数据库与文献抽取，支持"输入一个菌 → 拉出尽可能多的跨域关联信息（疾病/代谢物/基因/药物/食物/通路）"。

@@ -50,3 +50,5 @@ PLANNING.md
 knowledge/context/project01-*.yaml
 var/exec_registry/
 var/vecstore/
+var/litread/
+var/workspace/

@@ -116,3 +116,26 @@ P1-2 不再是"planner 升级"，而是把研究循环提升为**客户端无关
 | 修订 | 日期 | 内容 |
 |---|---|---|
 | v1.0 | 2026-09-24 | 定位升级为 Model-agnostic Scientific Research Harness；六层架构/六能力评估/Harness Maturity（H4-min）/P1-2 重定义为 Harness Research Loop |
+
+---
+
+## 附录 A（v1.1 修订，2026-09-24 用户裁决）
+
+**一、G 序调整为 G4 → G3 → G2**：G4 Evidence/Workspace Schema 第一阶段（状态载体
+先行）；G3 Unified Tool Registry 第二阶段；G2 Model Adapter 待内核稳定后第三阶段。
+原则：模型可替换，Harness 不变。
+
+**二、G4 Schema v1 已实现**（`mra/workspace.py`）：五类记录 ResearchTask /
+KnowledgeProvenance / ToolExecution / Evidence / WorkspaceState；append-only
+JSONL 事件流 + replay 重建；Evidence.source_type 锁定 CURRENT_STUDY（隔离铁律
+进 schema 层）；ToolExecution 以 governance_event_id 锚接审计账本。实测：本仓
+Food–Pathway–Phage 战役 9 事件（4 证据覆盖全部四种证伪状态）已回填课题仓
+AgentLab/food-pathway-phage/ 并回放验证。
+
+**三、新增缺口 G8：Client Contract**——"MCP 可调用"不等于"客户端生态完成"。
+需单独评估：session / auth / workspace / error schema / provenance return /
+streaming（P2，H5 前置）。
+
+**四、图谱侧同步内容升级**为《Harness Architecture v1.0 + KG Layer
+Requirements》（KG_LAYER_REQUIREMENTS.md）：KG 是 Harness 的 Local Knowledge
+Layer，不是研究结果仓库。

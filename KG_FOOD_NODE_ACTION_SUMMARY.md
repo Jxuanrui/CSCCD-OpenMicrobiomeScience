@@ -1,3 +1,5 @@
+> **状态：已被 KG_LAYER_REQUIREMENTS.md 取代（2026-09-24）**——内容并入《Harness Architecture v1.0 + KG Layer Requirements》，本文保留作历史参考。
+
 # KG / Food Node Action Summary（图谱侧执行摘要 · 2026-09-24）
 
 > 源自《项目全链路运行审计报告·知识架构升级版》（Knowledge_Graph-mra 仓根目录）。

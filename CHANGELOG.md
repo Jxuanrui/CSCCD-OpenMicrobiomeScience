@@ -1,5 +1,23 @@
 # Changelog
 
+## Unreleased (2026-09-24, post-v1.0.0)
+
+### B-class Validation Gaps 全部补齐（H5 B1–B5 实证闭环）
+
+v1.0.0 Known Limitations 中 B 类四项（另含 v1 冻结前已完成的 B1）全部由
+B 系列测试实证，"supported, not yet demonstrated" 状态清零：
+
+| 项 | 验证内容 | 测试 |
+|---|---|---|
+| B1 Literature influence | 文献知识 B→A 影响决策（v1.0.0 冻结前完成） | `test_h5_literature_influence.py` |
+| B2 Complex planning | 7 步计划+依赖图+revision+fallback+方法约束变化+全链 replay | `test_h5_complex_planning.py` |
+| B3 Long-horizon recovery | 跨天/跨会话中断恢复：危险窗口恢复、语义等价、KSDS 预算延续 | `test_h5_long_horizon_recovery.py` |
+| B4 Concurrent isolation | 并发任务隔离：3 Case + 6 负路径 | `test_h5_concurrent_isolation.py` |
+| B5 Multi-omics | 代谢组/蛋白组经数据契约+方法规则适配端到端处理，零核心改动 | `test_h5_multi_omics.py` |
+
+- Tests：394 → 423 passed / 2 skipped（含 B2/B3/B4/B5 新增用例）
+- 遗留：C 类（production gaps）不变；下一步 Release Readiness Review。
+
 ## v1.0.0 (2026-09-24) — Scientific Research Harness v1
 
 ### Summary

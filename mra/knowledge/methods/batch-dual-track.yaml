@@ -5,9 +5,29 @@ version: 1
 evidence_level: confirmed_rule
 applicability: 适用于多批次 MetaPhlAn4/HUMAnN3 结果的跨批次分析。
 source:
-  - {kind: internal, ref: Method.md 批次整合方法, date: '2026-09-12'}
-  - {kind: literature, ref: MMUPHin Genome Biology 2022, date: '2022-06-01'}
-approval: {status: approved, by: human, revision: seed-v1}
+- kind: internal
+  ref: Method.md 批次整合方法
+  date: '2026-09-12'
+- kind: literature
+  ref: MMUPHin Genome Biology 2022
+  date: '2022-06-01'
+approval:
+  status: approved
+  by: human
+  revision: seed-v1
 retired: false
-content: |
-  差异丰度和关联检验轨保留原始丰度矩阵，并将批次作为协变量或随机效应；无监督聚类、降维和机器学习输入轨可用 MMUPHin adjust_batch。校正时须保护核心膳食暴露变量。校正矩阵不能用于 alpha 多样性计算。
+content: 'trigger: 多批次宏基因组/宏转录组数据的跨批次分析。
+
+  risk: 单一矩阵策略要么损失检验严谨性（校正后）要么损失无监督结构（不校正）。
+
+  action: 双轨：检验轨保留原始矩阵+批次协变量；无监督轨用批次校正矩阵（校正时保护核心暴露变量）；校正矩阵不得用于 alpha 多样性。
+
+  contraindication: 最小批次(N<15)慎做矩阵级校正。
+
+  evidence_source: Method.md 批次整合方法（MMUPHin 双轨决策）。
+
+  validation_status: validated_in_real_study
+
+  provenance: ''{repo: Knowledge_Graph-mra, study: Food-Pathway-Phage, date: 2026-09-24}''
+
+  '

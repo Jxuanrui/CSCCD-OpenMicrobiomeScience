@@ -5,8 +5,16 @@ version: 1
 evidence_level: confirmed_rule
 applicability: 适用于菌群物种、功能通路等多重关联检验。
 source:
-  - {kind: internal, ref: src/mra/audit AUDIT-MULT-001, date: '2026-09-12'}
-approval: {status: approved, by: human, revision: seed-v1}
+- kind: internal
+  ref: src/mra/audit AUDIT-MULT-001
+  date: '2026-09-12'
+approval:
+  status: approved
+  by: human
+  revision: seed-v1
 retired: false
-content: |
-  分析规格须声明检验族、alpha 和校正方法（如 Bonferroni、Holm、BH 或 BY）。审计器重算校正值并与提交结果比较。p 值非法、族定义缺失或校正结果不一致不得当作通过。
+content: "trigger: 任何多重检验场景（单暴露×特征表族、批量扫描、跨表汇总）。\nrisk: 未声明检验族与校正方法→假阳性率失控或不可复现（atlas 2026-09 事故的口径声明配套）。\n\
+  action: 声明检验族口径（如 BH within exposure×feature_table family）并写入结果 provenance；跨族比较需二级校正或按\n  Bonferroni-Meff\
+  \ 复核。\ncontraindication: 不得把族内 q 值当作全局 FDR 解读；不得事后挑族。\nevidence_source: Method.md 多重比较范围声明 + atlas v3/v4\
+  \ summary 口径。\nvalidation_status: validated_in_real_study\nprovenance: '{repo: Knowledge_Graph-mra,\
+  \ study: Food-Pathway-Phage, date: 2026-09-24}'\n"

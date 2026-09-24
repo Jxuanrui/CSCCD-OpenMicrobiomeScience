@@ -5,8 +5,26 @@ version: 1
 evidence_level: confirmed_rule
 applicability: 适用于相对丰度菌群矩阵的变换、距离、建模和审计。
 source:
-  - {kind: internal, ref: src/mra/audit AUDIT-COMP-001, date: '2026-09-12'}
-approval: {status: approved, by: human, revision: seed-v1}
+- kind: internal
+  ref: src/mra/audit AUDIT-COMP-001
+  date: '2026-09-12'
+approval:
+  status: approved
+  by: human
+  revision: seed-v1
 retired: false
-content: |
-  相对丰度是成分数据，CLR/ILR 对零值没有天然定义。必须记录 data_scale、变换方法、零值处理算法及参数。不能把 CLR 宣称为唯一正确方法；Bray-Curtis 等选择应结合研究问题和敏感性分析判断。
+content: 'trigger: 相对丰度/占比数据含零值并拟做 log/CLR 变换。
+
+  risk: 零值策略缺失或隐式→变换不可复现、伪计数支配区风险（与 pseudocount-floor-001 配套）。
+
+  action: 显式声明零值策略（伪计数量级/替换法）；非零中位丰度≤伪计数时列入可疑集。
+
+  contraindication: 不得无声明地混用不同伪数量级的结果。
+
+  evidence_source: Method.md 成分数据处理约定 + 09d/33 号分析实践。
+
+  validation_status: validated_in_real_study
+
+  provenance: ''{repo: Knowledge_Graph-mra, study: Food-Pathway-Phage, date: 2026-09-24}''
+
+  '

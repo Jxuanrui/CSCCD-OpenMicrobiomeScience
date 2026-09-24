@@ -5,9 +5,29 @@ version: 1
 evidence_level: confirmed_rule
 applicability: 适用于 FFQ 类膳食问卷的能量摄入合理性筛查。
 source:
-  - {kind: internal, ref: Method.md 阶段3 Goldberg cutoff, date: '2026-09-12'}
-  - {kind: literature, ref: Black AE 2000, date: '2000-09-01'}
-approval: {status: approved, by: human, revision: seed-v1}
+- kind: internal
+  ref: Method.md 阶段3 Goldberg cutoff
+  date: '2026-09-12'
+- kind: literature
+  ref: Black AE 2000
+  date: '2000-09-01'
+approval:
+  status: approved
+  by: human
+  revision: seed-v1
 retired: false
-content: |
-  用 EI:BMR 比值和 PAL 分层筛查，不使用固定能量阈值。FFQ 的调查天数 d 缺乏统一共识，因此同时保留 d=1 与 d→∞ 两套分类，比较结论敏感性，不擅自二选一。
+content: 'trigger: FFQ 膳食数据的能量合理性筛查。
+
+  risk: 单一 d 参数口径下 FFQ 适配性无共识→分类不稳定（实测 254 人因 d 取值变类）。
+
+  action: Goldberg 双方案（d=1 保守 / d→∞ 严格）并行作敏感性；低报者只标记不硬剔。
+
+  contraindication: 不得单方案硬剔除；不得忽视 PAL 缺失样本。
+
+  evidence_source: Method.md 阶段3（Black 2000/Bédard 2004 双方案决策）。
+
+  validation_status: validated_in_real_study
+
+  provenance: ''{repo: Knowledge_Graph-mra, study: Food-Pathway-Phage, date: 2026-09-24}''
+
+  '

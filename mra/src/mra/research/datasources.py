@@ -81,9 +81,17 @@ def intersect_ids(*frames: pd.DataFrame) -> list[str]:
 
 
 def top_features_by_prevalence(features: pd.DataFrame, max_features: int = 100) -> list[str]:
-    """按流行度（非零样本比例）选 top 特征，控制进入检验的多次比较规模。"""
+    """按流行度（非零样本比例）选 top 特征，控制进入检验的多次比较规模。
+
+    并列破断为确定性三级：流行度↓ → 非零中位丰度↓ → 特征名↑。此前在流行度
+    全并列（如通路表大量 prevalence=1.00）时 head() 取并列序任意 200 条，
+    "top200"实为任意子集（2026-09-24 诊断发现），故显式固定排序键。"""
     prevalence = (features > 0).mean(axis=0)
-    return list(prevalence.sort_values(ascending=False).head(max_features).index)
+    nonzero_median = features[features > 0].median()
+    order = (pd.DataFrame({"prev": prevalence, "med": nonzero_median,
+                           "name": features.columns})
+             .sort_values(["prev", "med", "name"], ascending=[False, False, True]))
+    return list(order["name"].head(max_features))
 
 
 def species_to_term(species_name: str) -> str:

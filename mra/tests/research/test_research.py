@@ -160,3 +160,12 @@ def test_dispatch_rejects_unknown_action(graph, tmp_path):
                                                  run_id="reject-test", root=tmp_path))
     out = dispatch({"tool": "drop_table"}, ctx)
     assert "未知动作" in out["error"]
+
+
+def test_top_features_tie_break_is_deterministic():
+    """流行度全并列时按 非零中位丰度↓→名称↑ 确定性破断（atlas top200 框架修复）。"""
+    frame = pd.DataFrame(
+        [[1.0, 5.0, 2.0], [1.0, 5.0, 2.0], [0.0, 5.0, 2.0]], columns=["b", "a", "c"])
+    # 三列流行度 2/3,2/3,2/3 全并列；非零中位 a=5 > b=1.5 > c=2? a=5,c=2,b=1.5 → a,c,b
+    assert top_features_by_prevalence(frame, 3) == ["a", "c", "b"]
+    assert top_features_by_prevalence(frame, 2) == ["a", "c"]

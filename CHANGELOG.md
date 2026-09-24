@@ -1,5 +1,72 @@
 # Changelog
 
+## v1.2.0 candidate（Unreleased）— P1 Budget / Resource Metering
+
+> v1.1.0 为不可变发布基线；P1 及后续行为变化进入本 candidate。
+> 核心原则：**预算耗尽必须让 Agent 学会停下来，而不是学会绕过预算
+> 继续完成任务。**
+
+### P1 落地内容（Production Hardening Phase 2 · P1）
+
+- **ResourceUsage 一等计量对象**（`mra/resources.py`，新账本记录类型）：
+  research_task_id / plan_id / step_id / capability_id / execution_id /
+  model_id / provider / model_calls / input-output-total_tokens /
+  external_api_calls / compute-wall_duration_ms / retry_count /
+  cache_hit-miss_count / estimated_cost(+currency/pricing_source/
+  pricing_version/calculated_at) / measured_at / kind
+  （execution | cache_hit | idempotent_retry）。计量 ≠ 成本追踪：compute、
+  外部检索、重试、运行时、缓存与 tokens 同为一等维度。
+- **ResourceBudget 预算对象**（新账本记录类型，绑 task scope）：九个
+  max_* 维度，**未配置=unbounded 而非 0**；修订 append-only
+  （supersedes_budget_id + reason）。**不破坏 frozen ResearchTask v1**——
+  预算经 ledger 记录挂接（runtime/governance metadata）。
+- **Pre/Post 双门**：execute_step 在（免费幂等复用检查之后）执行前做
+  Budget Gate——任一配置维度已耗尽 → terminal
+  `resource_budget_exhausted`（新增合法停止状态）+ LoopStopped，禁止开启
+  新的高成本操作；执行后 Post-accounting 记 ResourceUsage（wall/compute
+  实测 + executor 上报的 model/external/retry 用量 + literature.* 的
+  from_cache 推导 external=0/cache_hit=1）。
+- **预算停止摘要**（`budget_stop_summary`）：已完成/未完成步骤、停止
+  原因（exhausted 维度）、usage totals、预算、可复用 candidates/evidence。
+- **防绕过**：同 task 静默预算重置被拒（须显式 supersedes + reason）；
+  plan revision / retry 天然继承 task 预算；child task 无自有预算时沿
+  parent_task_id 链继承（保守默认，不能靠派生任务拿新预算）；
+  `resource_usage(include_children=True)` 把子任务用量并入父口径。
+- **幂等与计费一致但不混同**：真正重执行→增 usage；幂等 retry
+  （候选/裁决/commit 复用路径）→零记账零计费；cache hit→计数不按
+  API 全量计费。
+- **Replay 正确**：totals 永远由账本聚合重建——restart 后预算不重置
+  是构造性保证（Case D 实测）。
+- **事实/派生分离**：`estimate_cost(totals, pricing, source, version)` 按
+  价目表派生；价格变化产生新派生值，历史 usage 永不被反向改写。
+- **凭据纪律延续**：ResourceUsage 为 typed schema（extra=forbid），
+  provider/model 可记、api_key/token 无处安放；append 级扫描继续覆盖。
+- **观测出口（无 dashboard）**：`Workspace.resource_usage(task_id)` →
+  totals / by_capability / by_model / budget(+继承链) / verdict / reusable。
+
+### Golden Budget Cases A–E（`tests/test_p1_budget_metering.py`，12 用例全绿）
+
+- A 正常预算：task_completed，usage < budget
+- B 模型预算耗尽：合法停止、不再请求模型、摘要完整
+- C External 预算耗尽：停止态= resource_budget_exhausted 而**非**
+  evidence_insufficient（"没预算继续查"≠"没有文献证据"）
+- D Recovery：crash → restart → 预算余额正确继承（不重置）
+- E Idempotent retry：科研事件零新增 + 资源零重复计费（模型真实调用数=1）
+- 治理不变式：静默预算重置拒/错误取代目标拒/合法修订 OK；plan revision
+  与 child 继承；计量重建一致；cache hit 不全量计费；计价分离；
+  凭据拒入；零字段预算=unbounded。
+
+### 量化指标（P1 验收口径，全部测试锁定）
+
+Usage reconstruction mismatch = 0；Budget bypass = 0；Post-restart budget
+reset = 0；Idempotent retry double-charge = 0；Unmetered model execution = 0
+（loop 产出面）；Unauthorized budget mutation = 0。
+
+- Tests：452 → **464 passed / 2 skipped**（+12 P1 用例）
+- 已知边界：planner/dsh adapter 侧的 model 调用计量经公开入口
+  `loop.record_usage()` 注入（loop 内 execute 面已自动计量）；capabilit
+  实现内自发的外部调用须经 `resource_usage` 扩展上报（literature.* 已接）。
+
 ## v1.1.0 (2026-09-24) — Identity, Idempotency, Recovery & Production Hardening
 
 > **正式定位**：Scientific Research Harness v1.1.0。

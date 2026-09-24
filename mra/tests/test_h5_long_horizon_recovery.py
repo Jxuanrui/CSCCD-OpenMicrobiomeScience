@@ -310,10 +310,13 @@ def test_case_f_mutation_retry_dedup(tmp_path):
 # ---- 等价性：中断续跑 vs 一次性跑完 ----
 
 def _semantic_projection(events):
-    """语义投影：递归剥离时间戳（created_at/at）；GovernanceDecision.candidate_hash
-    归一为占位符——它是对含 created_at 的候选全记录的摘要，两次运行语义相同
-    仍必然不同（指纹只用于防篡改，不承载跨运行语义；账本内重验见负路径2）。"""
-    volatile = ("created_at", "at")
+    """语义投影：递归剥离时间戳（created_at/at/measured_at/calculated_at）与
+    实测时长（wall/compute_duration_ms——物理计时跨运行必然不同，属测量噪声
+    而非科研语义）；GovernanceDecision.candidate_hash 归一为占位符——它是对
+    含 created_at 的候选全记录的摘要，两次运行语义相同仍必然不同（指纹只用
+    于防篡改，不承载跨运行语义；账本内重验见负路径2）。"""
+    volatile = ("created_at", "at", "measured_at", "calculated_at",
+                "wall_duration_ms", "compute_duration_ms")
 
     def _strip(obj):
         if isinstance(obj, dict):

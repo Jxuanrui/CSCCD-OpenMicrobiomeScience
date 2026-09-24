@@ -29,6 +29,8 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
+from .resources import ResourceBudget, ResourceUsage, aggregate_usage, budget_verdict
+
 SOURCE_TYPES = ("LOCAL_KG", "EXTERNAL_LIVE", "LITERATURE",
                 "METHOD_KNOWLEDGE", "CURRENT_STUDY")
 
@@ -64,6 +66,14 @@ def find_credential_keys(obj: Any, prefix: str = "") -> list[str]:
         for i, v in enumerate(obj):
             hits.extend(find_credential_keys(v, f"{prefix}[{i}]"))
     return hits
+
+
+def _group_usage(usages: list[dict], key: str) -> dict[str, dict]:
+    """按 capability/model 等维度分组聚合用量。"""
+    groups: dict[str, list[dict]] = {}
+    for u in usages:
+        groups.setdefault(u.get(key) or "(未标注)", []).append(u)
+    return {k: aggregate_usage(v) for k, v in groups.items()}
 
 
 class ResearchTask(BaseModel):
@@ -324,6 +334,8 @@ class WorkspaceState(BaseModel):
     governance_decisions: int = 0
     research_plans: int = 0
     loop_events: int = 0
+    resource_usages: int = 0            # P1 计量记录数
+    budgets: int = 0                     # P1 预算记录数
     narrative_version: str = ""
     canonical_refs: dict[str, str] = Field(default_factory=dict)
 
@@ -332,7 +344,9 @@ _RECORD_TYPES = {"ResearchTask": ResearchTask, "KnowledgeProvenance": KnowledgeP
                  "ToolExecution": ToolExecution, "Evidence": Evidence,
                  "CandidateResult": CandidateResult,
                  "GovernanceDecision": GovernanceDecision,
-                 "ResearchPlan": ResearchPlan, "LoopEvent": LoopEvent}
+                 "ResearchPlan": ResearchPlan, "LoopEvent": LoopEvent,
+                 # P1 Budget/Resource Metering（v1.2.0 candidate 加性记录类型）
+                 "ResourceUsage": ResourceUsage, "ResourceBudget": ResourceBudget}
 
 
 class Workspace:
@@ -452,6 +466,10 @@ class Workspace:
                 state.research_plans += 1
             elif rtype == "LoopEvent":
                 state.loop_events += 1
+            elif rtype == "ResourceUsage":
+                state.resource_usages += 1
+            elif rtype == "ResourceBudget":
+                state.budgets += 1
             elif rtype == "Evidence":
                 evidence_by_id[rec["evidence_id"]] = rec  # 后写覆盖=修订可追溯
         state.evidence = list(evidence_by_id.values())
@@ -544,6 +562,66 @@ class Workspace:
             "mutations": len(mutations),
             "terminal": terminal[-1] if terminal else None,
         }
+
+    def resource_usage(self, research_task_id: str,
+                       include_children: bool = True) -> dict[str, Any]:
+        """按任务聚合资源用量 + 有效预算 + 门控判定（P1 observability 出口）。
+
+        totals 永远由账本重建（restart/replay 后预算不重置的构造性保证）；
+        预算继承：自有 → parent_task_id 链（include_children 聚合子任务用量
+        到父任务口径，防 child 分裂计量）。
+        """
+        events = self.events()
+        task_record = next((e["record"] for e in events
+                            if e["record_type"] == "ResearchTask"
+                            and e["record"].get("task_id") == research_task_id), None)
+        # 计量范围：本任务（+子任务，若选择）
+        scope_ids = {research_task_id}
+        if include_children and task_record is not None:
+            child_ids = {research_task_id}
+            while True:
+                more = {e["record"]["task_id"] for e in events
+                        if e["record_type"] == "ResearchTask"
+                        and e["record"].get("parent_task_id") in child_ids
+                        and e["record"]["task_id"] not in scope_ids}
+                if not more:
+                    break
+                scope_ids |= more
+                child_ids = more
+        usages = [e["record"] for e in events
+                  if e["record_type"] == "ResourceUsage"
+                  and e["record"].get("research_task_id") in scope_ids]
+        totals = aggregate_usage(usages)
+        # 有效预算：自有（最新未被取代）→ parent_task_id 链继承
+        budget = None
+        chain: list[str] = []
+        tid: str | None = research_task_id
+        while tid:
+            chain.append(tid)
+            own = [e["record"] for e in events
+                   if e["record_type"] == "ResourceBudget"
+                   and e["record"].get("research_task_id") == tid]
+            if own:
+                superseded = {b.get("supersedes_budget_id") for b in own}
+                candidates = [b for b in own if b.get("budget_id") not in superseded]
+                budget = (candidates or own)[-1]
+                break
+            tid = next((e["record"].get("parent_task_id") for e in events
+                        if e["record_type"] == "ResearchTask"
+                        and e["record"].get("task_id") == tid), None)
+        return {"research_task_id": research_task_id,
+                "usage_scope": sorted(scope_ids),
+                "totals": totals,
+                "by_capability": _group_usage(usages, "capability_id"),
+                "by_model": _group_usage(usages, "model_id"),
+                "budget": budget, "budget_inherited_via": chain if budget else [],
+                "verdict": budget_verdict(budget, totals),
+                "reusable": {"candidates": sum(
+                    1 for e in events if e["record_type"] == "CandidateResult"
+                    and e["record"].get("research_task_id") == research_task_id),
+                    "evidence": sum(
+                    1 for e in events if e["record_type"] == "Evidence"
+                    and e["record"].get("task_id") == research_task_id)}}
 
 
 __all__ = ["CandidateResult", "Evidence", "GovernanceDecision", "KnowledgeProvenance",

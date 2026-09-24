@@ -24,13 +24,15 @@ from typing import Any, Callable
 
 from ..capability import CapabilityRegistry, default_registry
 from ..governance import evaluate_candidate
+from ..resources import ResourceBudget, ResourceUsage
 from ..workspace import (CandidateResult, LoopEvent, ResearchPlan,
                          ResearchTask, Workspace)
 
 STAGES = ("gap_assessment", "knowledge_acquisition", "method_constraint_resolution",
           "planning", "governed_execution", "evidence_evaluation", "workspace_update")
 TERMINAL_STATES = ("task_completed", "insufficient_data", "unresolved_method_gap",
-                   "blocking_governance", "no_valid_capability", "evidence_insufficient")
+                   "blocking_governance", "no_valid_capability", "evidence_insufficient",
+                   "resource_budget_exhausted")  # P1：给定资源边界内无法继续=合法停止
 
 
 class LoopStopped(Exception):
@@ -189,7 +191,15 @@ class ScientificLoop:
                                             step.inputs.get("analysis_id") or "")
             if existing is not None and existing.deterministic:
                 return {"kind": "candidate", "candidate": existing,
-                        "reused": True, "verdicts": []}
+                        "reused": True, "verdicts": []}  # 幂等复用：零记账
+        # P1 Pre-execution Budget Gate：耗尽后禁止开启新的高成本操作
+        # （已完成步骤的幂等重驱动不受阻——那是免费恢复，不是新消耗）
+        gate = self._usage_gate(task.task_id)
+        if not gate["verdict"]["allow"]:
+            exhausted = ";".join(gate["verdict"]["exhausted"])
+            self._emit(task.task_id, "terminal", verdict="resource_budget_exhausted",
+                       detail=exhausted)
+            raise LoopStopped("resource_budget_exhausted", exhausted)
         self._stage(task.task_id, "governed_execution")
         verdict = execution_gate(step.capability_id, self.registry, task, runtime_ctx)
         self._emit(task.task_id, "gate_verdict", gate="execution",
@@ -204,6 +214,8 @@ class ScientificLoop:
                        detail=f"execution gate:{step.step_id}")
             raise LoopStopped("blocking_governance", ";".join(verdict["problems"]))
         impl = self.registry.resolve(step.capability_id)
+        import time as _time
+        t0 = _time.perf_counter()
         if impl.side_effect == "COMPUTE_ONLY":
             result = (self._executor or self.registry.invoke)(
                 step.capability_id, dict(step.inputs), context=runtime_ctx or {})
@@ -216,10 +228,14 @@ class ScientificLoop:
             if updates:
                 candidate = candidate.model_copy(update=updates)
             self.ws.append(candidate)
+            self._emit_usage(task, plan, step, (_time.perf_counter() - t0) * 1000,
+                             compute_only=True, result=result)
             return {"kind": "candidate", "candidate": candidate,
                     "verdicts": result.get("execution_verdicts", [])}
         result = (self._executor or self.registry.invoke)(
             step.capability_id, dict(step.inputs), context=runtime_ctx or {})
+        self._emit_usage(task, plan, step, (_time.perf_counter() - t0) * 1000,
+                         compute_only=False, result=result)
         return {"kind": "result", "result": result}
 
     def evaluate_and_commit(self, task: ResearchTask, candidate: CandidateResult,
@@ -280,6 +296,87 @@ class ScientificLoop:
 
     def complete(self, task_id: str, detail: str = "") -> None:
         self._emit(task_id, "terminal", verdict="task_completed", detail=detail)
+
+    # ---- P1 Budget / Resource Metering ----
+    def set_budget(self, budget: ResourceBudget, actor: str = "unknown") -> None:
+        """挂接预算（runtime/governance metadata，不动 frozen ResearchTask）。
+
+        防绕过：同 task 已有有效预算时，新预算必须以 supersedes_budget_id
+        显式取代并携带 reason——禁止静默重置（plan revision/child task 不隐式
+        获得新预算；child 无自有预算时沿 parent 链继承，见 resource_usage）。
+        """
+        ru = self.ws.resource_usage(budget.research_task_id)
+        existing = ru.get("budget")
+        if existing is not None and not budget.supersedes_budget_id:
+            raise ValueError(
+                f"task {budget.research_task_id} 已有有效预算 "
+                f"{existing.get('budget_id')}——修订须显式 supersedes_budget_id + reason"
+                f"（预算防绕过：禁止静默重置）")
+        if existing is not None and budget.supersedes_budget_id != existing.get("budget_id"):
+            raise ValueError(
+                f"supersedes_budget_id 须指向当前有效预算 {existing.get('budget_id')}")
+        self.ws.append(budget.model_copy(update={"set_by": budget.set_by or actor}))
+
+    def record_usage(self, usage: ResourceUsage) -> int:
+        """公开计量入口（runtime/planner/dsh adapter 的 model 调用也入同一账本）。"""
+        return self.ws.append(usage)
+
+    def _usage_gate(self, task_id: str) -> dict:
+        """Pre-execution 门 + 当前 totals（账本重建，restart 后不重置）。"""
+        ru = self.ws.resource_usage(task_id)
+        return {"verdict": ru["verdict"], "totals": ru["totals"], "report": ru}
+
+    def _emit_usage(self, task: ResearchTask, plan: ResearchPlan, step,
+                    wall_ms: float, compute_only: bool,
+                    result: dict | None) -> None:
+        """Post-execution accounting：真实执行才记账（幂等复用路径零记账）。"""
+        ext = dict((result or {}).get("resource_usage") or {})
+        if not ext and step.capability_id.startswith("literature."):
+            cached = bool((result or {}).get("from_cache"))
+            ext = {"external_api_calls": 0 if cached else 1,
+                   "cache_hit_count": 1 if cached else 0,
+                   "cache_miss_count": 0 if cached else 1}
+        n_prior = sum(1 for e in self.ws.events()
+                      if e["record_type"] == "ResourceUsage"
+                      and e["record"].get("research_task_id") == task.task_id)
+        self.ws.append(ResourceUsage(
+            usage_id=f"RU-{task.task_id}-{n_prior + 1}",
+            research_task_id=task.task_id, kind="execution",
+            plan_id=plan.plan_id, step_id=step.step_id,
+            capability_id=step.capability_id,
+            execution_id=f"EX-{task.task_id}-{step.step_id}-{n_prior + 1}",
+            model_id=str(ext.get("model_id", "")),
+            provider=str(ext.get("provider", "")),
+            model_calls=int(ext.get("model_calls", 0)),
+            input_tokens=int(ext.get("input_tokens", 0)),
+            output_tokens=int(ext.get("output_tokens", 0)),
+            total_tokens=int(ext.get("total_tokens", 0)),
+            external_api_calls=int(ext.get("external_api_calls", 0)),
+            compute_duration_ms=round(wall_ms, 3) if compute_only else 0.0,
+            wall_duration_ms=round(wall_ms, 3),
+            retry_count=int(ext.get("retry_count", 0)),
+            cache_hit_count=int(ext.get("cache_hit_count", 0)),
+            cache_miss_count=int(ext.get("cache_miss_count", 0))))
+
+    def budget_stop_summary(self, task: ResearchTask, plan: ResearchPlan) -> dict:
+        """预算停止摘要：已完成/未完成步骤、停止原因、消耗、可复用产出。"""
+        ru = self.ws.resource_usage(task.task_id)
+        done = set()
+        for e in self.ws.events():
+            if e["record_type"] == "CandidateResult" and \
+                    e["record"].get("research_task_id") == task.task_id:
+                done.add(e["record"]["analysis_id"])
+        steps = [{"step_id": s.step_id, "analysis_id": s.inputs.get("analysis_id", ""),
+                  "completed": bool(s.inputs.get("analysis_id") and
+                                    s.inputs.get("analysis_id") in done)}
+                 for s in plan.steps]
+        return {"stop_reason": "resource_budget_exhausted",
+                "exhausted": ru["verdict"].get("exhausted", []),
+                "completed_steps": [s["step_id"] for s in steps if s["completed"]],
+                "pending_steps": [s["step_id"] for s in steps if not s["completed"]],
+                "usage_totals": ru["totals"],
+                "budget": ru["verdict"].get("budget"),
+                "reusable": ru["reusable"]}
 
     # ---- 内部 ----
     def _find_candidate(self, task_id: str, analysis_id: str):

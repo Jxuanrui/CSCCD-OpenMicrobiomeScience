@@ -112,24 +112,25 @@ def dispatch(action: dict, ctx: ResearchContext) -> dict:
             hits = vecstore.query(args["text"], table, k=int(args.get("k", 8)))
             return {"table": table, "hits": hits}
         if name == "method_query":
-            from ..knowledge.method_rules import search_method_rules
-            rules = search_method_rules(args["query"], k=int(args.get("k", 5)))
+            from ..capability import default_registry
+            _r = default_registry().invoke("method.query",
+                                           {"query": args["query"], "k": int(args.get("k", 5))})
+            rules = _r["rules"]
             return {"source_type": "METHOD_KNOWLEDGE", "n_rules": len(rules),
                     "rules": [{k: r.get(k) for k in
                                ("rule_id", "title", "trigger", "risk", "action",
                                 "contraindication", "validation_status")}
                               for r in rules]}
         if name == "knowledge_route":
-            from ..knowledge.router import route
-            return route(ctx.graph, args["term"], args.get("question", args["term"]),
-                         knowledge_type=args.get("knowledge_type", "auto"),
-                         hops=int(args.get("hops", 1)),
-                         max_results=int(args.get("max_results", 10)))
+            from ..capability import default_registry
+            return default_registry().invoke("knowledge.route",
+                {**args}, context={"graph": ctx.graph})
         if name == "gap_check":
-            from ..knowledge.gap import detect_gaps
-            return detect_gaps(ctx.graph,
-                               entities=list(args.get("entities", [])),
-                               analysis_types=list(args.get("analysis_types", [])))
+            from ..capability import default_registry
+            return default_registry().invoke("gap.check",
+                {"entities": list(args.get("entities", [])),
+                 "analysis_types": list(args.get("analysis_types", []))},
+                context={"graph": ctx.graph})
         if name == "record_finding":
             ctx.session.add_finding(Finding(
                 claim=args["claim"], tool="manual", inputs=args,

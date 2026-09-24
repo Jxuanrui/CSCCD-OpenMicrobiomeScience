@@ -56,18 +56,12 @@ def test_no_gap_and_mixed(tmp_path):
     assert out2["overall"] == "mixed_gaps"
 
 
-def test_dispatch_gap_check(monkeypatch):
+def test_dispatch_gap_check_via_registry(tmp_path):
     from mra.research.loop import ResearchContext, dispatch
 
-    class FakeSession:
-        pass
-
     ctx = ResearchContext.__new__(ResearchContext)
-    ctx.session = FakeSession()
-    ctx.graph = None  # detect_gaps 已被替换，不触图
-    monkeypatch.setattr("mra.knowledge.gap.detect_gaps",
-                        lambda graph, entities, analysis_types: {"status": "OK",
-                                                                 "overall": "no_gap_detected"})
-    result = dispatch({"tool": "gap_check", "args": {"entities": ["A"],
-                                                     "analysis_types": ["B"]}}, ctx)
-    assert result["overall"] == "no_gap_detected"
+    ctx.session = type("S", (), {})()
+    ctx.graph = _graph(tmp_path)
+    result = dispatch({"tool": "gap_check", "args": {"entities": ["NoSuch X"],
+                                                     "analysis_types": []}}, ctx)
+    assert result["overall"] == "entity_gaps_only"

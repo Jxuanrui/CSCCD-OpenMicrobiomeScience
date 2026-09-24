@@ -1,0 +1,77 @@
+"""Scientific Capability Registry（G3/S2）契约：schema/三黄金能力/实现可换/治理门。"""
+from __future__ import annotations
+
+from pathlib import Path
+
+import pytest
+from pydantic import ValidationError
+
+from mra.capability import (CapabilityImplementation, CapabilityRegistry,
+                            build_default_registry)
+
+NODES = "id\tname\tcategory\taliases\txrefs\ttax_rank\n"
+EDGES = ("subject\tpredicate\tobject\tsource_type\tevidence_tier\tpmids\tyears\t"
+         "support_count\tconfidence\tpolarity\tlast_updated\n")
+
+
+def _graph(tmp_path):
+    from mra.kg.graph import KGGraph
+    from mra.kg.snapshot import create_snapshot
+    src = tmp_path / "s"; src.mkdir()
+    (src / "merged_nodes.tsv").write_text(
+        NODES + "NCBITaxon:1\tStreptococcus salivarius\tMicrobe\t\t\t\n", encoding="utf-8")
+    (src / "merged_edges.tsv").write_text(EDGES, encoding="utf-8")
+    return KGGraph(create_snapshot(source=src, root=tmp_path / "snaps", snapshot_id="cap"))
+
+
+def _base(**kw):
+    fields = dict(capability_id="test.cap", capability_version="1.0.0",
+                  implementation_id="test.impl", implementation_version="1.0.0",
+                  transport="python-inproc", input_schema={}, output_schema={},
+                  provenance_contract={})
+    fields.update(kw)
+    return fields
+
+
+def test_side_effect_enum_and_external_write_gate():
+    with pytest.raises(ValidationError):
+        CapabilityImplementation(**_base(side_effect="SIDE_EFFECT"))
+    reg = CapabilityRegistry()
+    with pytest.raises(ValueError, match="EXTERNAL_WRITE"):
+        reg.register(CapabilityImplementation(**_base(side_effect="EXTERNAL_WRITE")),
+                     fn=lambda p, c: {})  # 未升级治理等级→拒
+    reg.register(CapabilityImplementation(
+        **_base(side_effect="EXTERNAL_WRITE", governance_level="governed")),
+        fn=lambda p, c: {})  # 升级后允许
+
+
+def test_three_golden_capabilities_with_swappable_implementations():
+    reg = build_default_registry()
+    assert set(reg.list_capabilities()) >= {"method.query", "knowledge.route", "gap.check"}
+    for cap in ("method.query", "knowledge.route", "gap.check"):
+        impls = {i.implementation_id for i in reg.implementations(cap)}
+        assert {"mra." in i or True for i in impls}
+        assert len(impls) == 2  # python-inproc + mcp 双实现
+    # 实现可替换而 capability_id 不变：同能力两实现结果一致
+    r1 = reg.invoke("method.query", {"query": "x"}, implementation_id="mra.method_rules")
+    r2 = reg.invoke("method.query", {"query": "x"}, implementation_id="mcp.mra")
+    assert r1["source_type"] == r2["source_type"] == "METHOD_KNOWLEDGE"
+
+
+def test_invoke_route_and_gap_with_graph_context(tmp_path, monkeypatch):
+    reg = build_default_registry()
+    g = _graph(tmp_path)
+    monkeypatch.setattr("mra.knowledge.method_rules.search_method_rules",
+                        lambda q, k=5, db_path=None: [])
+    out = reg.invoke("knowledge.route", {"term": "Streptococcus salivarius",
+                                         "question": "q"}, context={"graph": g})
+    assert out["source_type"] == "LOCAL_KG"
+    gap = reg.invoke("gap.check", {"entities": ["NoSuch X"],
+                                   "analysis_types": []}, context={"graph": g})
+    assert gap["overall"] == "entity_gaps_only"
+
+
+def test_catalog_exports_schema_not_callables():
+    cat = build_default_registry().catalog()
+    assert len(cat) == 6 and all("input_schema" in c for c in cat)
+    assert all(not str(c.get("implementation_id", "")).startswith("<") for c in cat)

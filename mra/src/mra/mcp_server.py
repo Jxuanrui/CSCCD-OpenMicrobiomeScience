@@ -75,31 +75,35 @@ def r_association(exposure: str, features: str = "species",
 @mcp.tool(description=("Method Knowledge 检索（本地零 API）：方法学规则库（零方差拒绝/样本对齐/"
                        "秩变换幅度/伪计数/特异性对照/关联≠机制等）。设计分析前应先查询。"))
 def method_query(query: str, k: int = 5) -> str:
-    from .knowledge.method_rules import search_method_rules
-    rules = search_method_rules(query, k=k)
-    return json.dumps({"source_type": "METHOD_KNOWLEDGE", "n_rules": len(rules),
+    from .capability import default_registry
+    result = default_registry().invoke("method.query", {"query": query, "k": k})
+    return json.dumps({"source_type": result["source_type"], "n_rules": result["n_rules"],
                        "rules": [{key: r.get(key) for key in
                                   ("rule_id", "title", "trigger", "risk", "action",
                                    "contraindication", "validation_status")}
-                                 for r in rules]}, ensure_ascii=False)
+                                 for r in result["rules"]]}, ensure_ascii=False)
 
 
 @mcp.tool(description=("Knowledge Router：Local KG 优先，miss 自动降级文献检索"
                        "（LITERATURE/EXTERNAL_LIVE，带 provenance）。"
                        "source_type 五分：LOCAL_KG/EXTERNAL_LIVE/LITERATURE/METHOD_KNOWLEDGE/CURRENT_STUDY。"))
 def knowledge_route(term: str, question: str, knowledge_type: str = "auto") -> str:
-    from .knowledge.router import route
-    return json.dumps(route(_graph(), term, question, knowledge_type=knowledge_type),
-                      ensure_ascii=False)
+    from .capability import default_registry
+    result = default_registry().invoke("knowledge.route",
+        {"term": term, "question": question, "knowledge_type": knowledge_type},
+        context={"graph": _graph()})
+    return json.dumps(result, ensure_ascii=False)
 
 
 @mcp.tool(description=("Knowledge Gap Detector：对研究设计要素（实体×分析类型）探测知识覆盖，"
                        "返回逐项建议动作（query_local/route_to_live/consult_method_rules/"
                        "manual_design_review）。设计新研究前先跑。"))
 def gap_check(entities: list[str], analysis_types: list[str]) -> str:
-    from .knowledge.gap import detect_gaps
-    return json.dumps(detect_gaps(_graph(), entities=entities,
-                                  analysis_types=analysis_types), ensure_ascii=False)
+    from .capability import default_registry
+    result = default_registry().invoke("gap.check",
+        {"entities": entities, "analysis_types": analysis_types},
+        context={"graph": _graph()})
+    return json.dumps(result, ensure_ascii=False)
 
 
 @mcp.tool(description=("文献速读：PubMed 检索+批量结构化复读（消耗 LLM 额度，有缓存）。"

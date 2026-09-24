@@ -1,0 +1,18 @@
+id: method-association-not-mechanism-001
+package: methods
+title: 关联≠机制：四层证据平行不等于因果链
+version: 1
+evidence_level: confirmed_rule
+applicability: 撰写任何多层证据（diet→pathway/host/phage）叙事与图表时。
+source:
+  - {kind: internal, ref: 'AgentLab/food_pathway_phage/findings.md v4 主线冻结', date: '2026-09-24'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  trigger: 多层各自显著、拟使用"链条/闭环/驱动/介导"等词的场合。
+  risk: 语言越界把平行响应包装成机制（本轮主线因此从"四段链"收紧为 multilayer parallel responses）。
+  action: 层间联系未直接检验前只写"四层证据链"；机制词需层间统计证据+方向一致性+特异性对照三重支持。
+  contraindication: 横断面数据禁止 causes/mediates 表述；闭环一词仅限三边同号显著且过对照。
+  evidence_source: 主线措辞两轮收紧的用户裁决记录（v3→v4）。
+  validation_status: validated_in_real_study。
+  provenance: {repo: Knowledge_Graph-mra, study: Food-Pathway-Phage, date: '2026-09-24'}

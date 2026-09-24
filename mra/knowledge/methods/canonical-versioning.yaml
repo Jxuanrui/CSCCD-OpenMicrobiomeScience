@@ -1,0 +1,18 @@
+id: method-canonical-versioning-001
+package: methods
+title: 全景结果须冻结 canonical 版本，旧版显式 superseded
+version: 1
+evidence_level: confirmed_rule
+applicability: 会因代码修复/参数变更而重跑的批扫描产物（atlas、批量 MaAsLin3 等）。
+source:
+  - {kind: internal, ref: 'atlas_harbin_v4 CANONICAL.txt / atlas_harbin_v3 SUPERSEDED.txt', date: '2026-09-24'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  trigger: 重跑后新旧版本并存。
+  risk: 后续引用混版，数字对不上账。
+  action: 冻结 canonical + 旧版标 superseded + 出具 delta 报告（总量/成员进出/核心结论四项核对）；正式数字图表只引 canonical。
+  contraindication: 无 delta 核对直接替换版本。
+  evidence_source: v4 冻结实录（582 条、四项核对全稳）。
+  validation_status: validated_in_real_study。
+  provenance: {repo: Knowledge_Graph-mra, study: Food-Pathway-Phage, date: '2026-09-24'}

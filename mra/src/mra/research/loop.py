@@ -25,7 +25,8 @@ from .rtools import run_partial_spearman
 from .session import Finding, ResearchSession
 
 ACTION_NAMES = {"kg_neighbors", "kg_edge_evidence", "r_association",
-                "lit_search_read", "vec_query", "record_finding", "submit_report"}
+                "lit_search_read", "vec_query", "method_query", "knowledge_route",
+                "record_finding", "submit_report"}
 
 
 class ResearchContext:
@@ -110,6 +111,20 @@ def dispatch(action: dict, ctx: ResearchContext) -> dict:
             table = args.get("table", "kg_entities")
             hits = vecstore.query(args["text"], table, k=int(args.get("k", 8)))
             return {"table": table, "hits": hits}
+        if name == "method_query":
+            from ..knowledge.method_rules import search_method_rules
+            rules = search_method_rules(args["query"], k=int(args.get("k", 5)))
+            return {"source_type": "METHOD_KNOWLEDGE", "n_rules": len(rules),
+                    "rules": [{k: r.get(k) for k in
+                               ("rule_id", "title", "trigger", "risk", "action",
+                                "contraindication", "validation_status")}
+                              for r in rules]}
+        if name == "knowledge_route":
+            from ..knowledge.router import route
+            return route(ctx.graph, args["term"], args.get("question", args["term"]),
+                         knowledge_type=args.get("knowledge_type", "auto"),
+                         hops=int(args.get("hops", 1)),
+                         max_results=int(args.get("max_results", 10)))
         if name == "record_finding":
             ctx.session.add_finding(Finding(
                 claim=args["claim"], tool="manual", inputs=args,

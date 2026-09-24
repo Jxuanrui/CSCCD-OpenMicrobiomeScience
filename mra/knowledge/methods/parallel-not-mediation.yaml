@@ -1,0 +1,19 @@
+id: method-parallel-not-mediation-001
+package: methods
+title: 平行响应≠中介：未做中介检验不得宣称"经由/通过"
+version: 1
+evidence_level: confirmed_rule
+applicability: 同一暴露在多层（通路/宿主/噬菌体）都有信号的解读场合。
+source:
+  - {kind: internal, ref: 'AgentLab/food_pathway_phage 层间联系检验不升级判定', date: '2026-09-24'}
+  - {kind: internal, ref: 'Method.md 15/30 号中介分析阴性结论（LDM 复核）', date: '2026-09-20'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  trigger: "UPF 同时关联通路和宿主"类多层同显著，拟写"A→B→C"路径。
+  risk: 共同驱动被误读为传导路径；本队列既往中介检验全部阴性（30 号 LDM）。
+  action: 写"共同驱动下的多层平行响应"；中介表述需正式中介分析（bootstrap/置换）且预注册。
+  contraindication: 层间零增量联系（正交化后≈0）连平行耦合都算不上，只能算各自响应。
+  evidence_source: 层间检验 + 课题仓 15/30 号双阴性记录。
+  validation_status: validated_in_real_study。
+  provenance: {repo: Knowledge_Graph-mra, study: Food-Pathway-Phage, date: '2026-09-24'}

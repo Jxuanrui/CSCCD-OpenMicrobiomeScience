@@ -1,0 +1,19 @@
+id: method-sample-alignment-001
+package: methods
+title: 多表联合分析必须复核样本对齐（暴露/协变量/特征三表行序一致）
+version: 1
+evidence_level: confirmed_rule
+applicability: 暴露表、协变量表、特征表来自不同文件且经过 complete-case 过滤的任何关联分析。
+source:
+  - {kind: internal, ref: 'AgentLab/food_pathway_phage 层间检验 2026-09-24 治理门拦截实录', date: '2026-09-24'}
+  - {kind: internal, ref: 'tests/research/test_gate.py::test_misaligned_exposure_blocked_at_gate', date: '2026-09-24'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  trigger: 暴露向量在过滤前构建而协变量/特征在过滤后切片，两侧行数不一致（实测 1068 vs 1060）。
+  risk: 错位相关——统计照常出数且看似显著，样本层面完全错误。
+  action: 过滤后按最终 id 列表重建全部输入向量；任何统计入口先校验三方等长（治理门 AUDIT-BATCH-001 强制 FAIL）。
+  contraindication: 严禁在过滤前的索引上构建暴露向量再直接送检。
+  evidence_source: 治理门实测拦截 + 回归测试固化（commit ef39b3d）。
+  validation_status: validated_in_real_study（2026-09-24 层间检验第一轮即触发拦截）。
+  provenance: {repo: Knowledge_Graph-mra, commit: ef39b3d, study: Food-Pathway-Phage, date: '2026-09-24'}

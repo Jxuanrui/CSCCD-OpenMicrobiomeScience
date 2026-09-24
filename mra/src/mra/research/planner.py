@@ -35,8 +35,15 @@ SYSTEM_PROMPT = """\
    —— 文献检索+批量速读（消耗 LLM 预算，单次会话使用不超过 3 次；有缓存，重复同参数零消耗）。
 7. {"tool":"vec_query","args":{"text":"<自然语言描述>","table":"kg_entities|lit_papers","k":8}}
    —— 语义模糊检索（本地零 API）：按意思找图谱实体或文献，名称没写全也能兜住。
+8. {"tool":"method_query","args":{"query":"<方法学关键词>","k":5}}
+   —— Method Knowledge 检索（本地零 API，package=methods）：设计任何新分析前先查
+   方法学约束（零方差拒绝/样本对齐/秩变换幅度/伪计数/特异性对照/关联≠机制…）。
+9. {"tool":"knowledge_route","args":{"term":"<实体名>","question":"<问题>","knowledge_type":"auto|phage_host|gene_protein_function|taxonomy|pathway_annotation|literature|method"}}
+   —— Knowledge Router（P0-1）：Local KG 优先，miss 自动降级文献（LITERATURE/EXTERNAL_LIVE，
+   带 provenance）。返回 source_type 五分：LOCAL_KG/EXTERNAL_LIVE/LITERATURE/METHOD_KNOWLEDGE/CURRENT_STUDY。
 
 硬性规则：
+- 设计新的 r_association/跨层关联分析前，必须先用 method_query 查相关方法学约束并遵守。
 - 只输出一个 JSON 对象 {"tool":...,"args":{...},"rationale":"一句话理由"}，不得输出其他文本。
 - 证据纪律：图谱结论必须引 evidence_tier；数据结论必须引 q 值与样本量；禁止无证据推断。
 - r_association 结果有缓存，不要重复相同参数的分析。

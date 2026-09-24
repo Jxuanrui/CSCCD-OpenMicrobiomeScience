@@ -14,7 +14,7 @@
 | Method KB 影响计划/治理 | **A. Demonstrated** | Golden Benchmark：`method-zero-variance-guard-001` 进入 method_constraints → plan_gate 要求其存在；**反事实 CF1**：移除规则后 gap.check 立即报方法缺口（0→1），证明非固定答案 |
 | Local KG 影响路由 | **A. Demonstrated** | knowledge.route LOCAL_KG 命中（tier_A, 10 邻居）→ 双 runtime 一致 |
 | Gap Detector 影响行动 | **A. Demonstrated** | UPF 实体 miss → route_to_live 建议；方法缺口 → unresolved_method_gap 合法停止 |
-| Literature/外部知识 | **B. Supported** | Router miss→LITERATURE 降级代码存在且实测过（PubMed 1 篇），但 Golden Benchmark 内未走外部分支（LOCAL_KG 已命中）；ARK key 缺失阻碍 LLM 速读端到端验证 |
+| Literature/外部知识 | **A. Demonstrated** | Router miss→LITERATURE 降级实测（PubMed 1 篇，provenance 带 EXTERNAL_LIVE/retrieved_at/PMID）；**反事实**：移除文献检索→Router 显式 LIVE_UNAVAILABLE（不静默返回空）；文献 PMID 进 CandidateResult provenance 进 GovernanceDecision lineage（test_h5_literature_influence.py 3 测全过，2026-09-24 B→A 升级） |
 | Provenance 改变决策 | **A. Demonstrated** | GovernanceDecision 账本六验：指纹不一致即拒（测试覆盖）；CandidateResult 无 provenance 即拒 |
 | **知识实际影响决策（counterfactual）** | **A. Demonstrated** | CF1（移规则→行为变）+ CF4（加阻断→行为变）+ CF2/CF3（改参数→状态变）全部通过 |
 
@@ -69,13 +69,15 @@
 
 | 已实证 | 证据 |
 |---|---|
-| standalone runtime | Golden Benchmark Runtime A（全程 27 提交开发即用它） |
+| standalone runtime | Golden Benchmark Runtime A（全程开发即用它） |
 | DeepSeek Harness (dsh) | G8 Phase 1 金丝雀三连 + Golden Compute Slice |
 | OpenCode (独立 Agent runtime) | G8 Phase 2 全链 + Golden Benchmark 双跑（kimi-k3 真实自主规划） |
-| MCP Inspector (参考客户端) | G8 Phase 1 Client B 三金丝雀 |
+| MCP Inspector (协议参考客户端) | G8 Phase 1 Client B 三金丝雀 |
 | ACP / MCP transport | dsh 挂载 + Inspector 直调 + OpenCode MCP 面三通道 |
 
 **跨 runtime 零修改指标**：Scientific Core=0 / Registry schema=0 / Governance policy=0 / Workspace schema=0（Golden Benchmark 量化）。
+
+**口径修正（2026-09-24）**：以上结果证明的是"**已在多 runtime / client path 下验证 portability**"——runtime/Agent execution（standalone / dsh / OpenCode）与 protocol reference client（MCP Inspector）分属不同层，不合并为"4 runtime"。
 
 **未实证（B 类）**：Claude Code / WorkBuddy / ZCode MCP 挂载——已安装但未实际挂载测试。**不外推为"任何 Agent 天然兼容"。**
 

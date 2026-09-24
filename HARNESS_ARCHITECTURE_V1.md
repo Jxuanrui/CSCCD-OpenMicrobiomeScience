@@ -207,3 +207,22 @@ blocking_governance / no_valid_capability / evidence_insufficient。
 8 阶段序列相同 / 4 门裁决序列相同（plan:allow→execution:allow→evidence:allow→
 execution:allow）/ terminal=task_completed / 同 policy@1.1.0。差异仅在
 Agent 层（模型不同/措辞不同）——scientific loop 语义 runtime-independent 成立。
+
+---
+
+## 附录 E（v1.5，2026-09-24 用户裁决）：v1 核心架构冻结
+
+**九项冻结**：Capability Registry / CandidateResult / GovernanceDecision / Evidence+state-transition invariants / ResearchTask / ResearchPlan / LoopEvent / ScientificLoop / Workspace。
+
+**冻结规则**：
+- 允许：向后兼容 optional 字段追加 / 不改语义的 metadata 扩展 / implementation 增加 / capability 新增。
+- 必须升级版本：删除字段 / 改名 / 类型变化 / optional→required / 默认行为变化 / 状态语义变化 / governance invariant 变化 / replay 语义变化 / capability_id 语义变化。
+- 禁止"只是加字段"绕过 contract versioning。
+
+**各 contract 建立四件套**：schema_version / compatibility policy / migration policy / deprecation policy。
+
+**v1 Stabilization Phase**（当前阶段）：
+P0 = Regression Gate 落地（Tier 1 PR / Tier 2 nightly / Tier 3 release-gate）→
+B1 Literature influence B→A → Release Readiness Review → 统一 v1 release。
+
+**H6 暂不自动启动**；自主假设提出/跨会话记忆/多 Agent 协作为候选，待 v1 稳定后单独评估。

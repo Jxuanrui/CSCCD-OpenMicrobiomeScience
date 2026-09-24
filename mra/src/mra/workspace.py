@@ -43,6 +43,29 @@ def digest(obj: Any) -> str:
     return "sha256:" + hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
+# Production-readiness（凭据纪律）：账本结构性拒绝疑似凭据字段。
+# 精确键名匹配（大小写不敏感）——"api_key_used"/"n_tokens" 等业务字段不受影响。
+_CREDENTIAL_KEY_NAMES = frozenset({
+    "api_key", "apikey", "api_token", "token", "secret", "secret_key",
+    "password", "passwd", "authorization", "credentials", "private_key",
+    "access_token", "refresh_token", "client_secret", "bearer"})
+
+
+def find_credential_keys(obj: Any, prefix: str = "") -> list[str]:
+    """递归扫描疑似凭据键名（只看键名，不看值——避免误伤业务数据）。"""
+    hits: list[str] = []
+    if isinstance(obj, dict):
+        for k, v in obj.items():
+            path = f"{prefix}.{k}" if prefix else str(k)
+            if str(k).lower() in _CREDENTIAL_KEY_NAMES:
+                hits.append(path)
+            hits.extend(find_credential_keys(v, path))
+    elif isinstance(obj, list):
+        for i, v in enumerate(obj):
+            hits.extend(find_credential_keys(v, f"{prefix}[{i}]"))
+    return hits
+
+
 class ResearchTask(BaseModel):
     """G2 一等研究任务契约（v1.2 加性扩展；旧字段向后兼容）。
 
@@ -326,6 +349,12 @@ class Workspace:
         rtype = type(record).__name__
         if rtype not in _RECORD_TYPES:
             raise ValueError(f"不支持的记录类型 {rtype}")
+        # Production-readiness 凭据纪律：任何账本记录不得携带疑似凭据字段
+        leaked = find_credential_keys(record.model_dump())
+        if leaked:
+            raise ValueError(
+                f"凭据纪律违例：{rtype} 携带疑似凭据字段 {leaked}——"
+                f"secret 只经环境/secret provider 注入，永不入账本")
         self.study_dir.mkdir(parents=True, exist_ok=True)
         self._check_identity_invariants(record)
         seq = self._next_seq()
@@ -398,7 +427,90 @@ class Workspace:
         events = self.events()
         return (events[-1]["seq"] + 1) if events else 1
 
+    def lineage(self, research_task_id: str) -> dict[str, Any]:
+        """按任务查全链血缘（只读报告层，Production-readiness observability 最小版）。
+
+        回答"这个科研结论是怎么来的"：Task → Plan → 候选 → 裁决 → 证据
+        （含 mutation）→ terminal，附版本随行（capability/implementation/
+        model/client/policy）。legacy 无域候选按"被本任务裁决引用"回捞。
+        """
+        task = None
+        plans: list[dict] = []
+        candidates: list[dict] = []
+        decisions: list[dict] = []
+        evidence_events: list[dict] = []
+        terminal: list[dict] = []
+        for ev in self.events():
+            rtype, rec = ev["record_type"], ev["record"]
+            if rtype == "ResearchTask" and rec.get("task_id") == research_task_id:
+                task = {"seq": ev["seq"], **rec}
+            elif rtype == "ResearchPlan" and rec.get("research_task_id") == research_task_id:
+                plans.append({"seq": ev["seq"], **rec})
+            elif rtype == "LoopEvent" and rec.get("research_task_id") == research_task_id \
+                    and rec.get("kind") == "terminal":
+                terminal.append({"seq": ev["seq"], **rec})
+            elif rtype == "Evidence" and rec.get("task_id") == research_task_id:
+                evidence_events.append({"seq": ev["seq"], **rec})
+        cand_ids = set()
+        for ev in self.events():
+            rtype, rec = ev["record_type"], ev["record"]
+            if rtype != "GovernanceDecision":
+                continue
+            scoped = rec.get("research_task_id", "")
+            referenced = any(e.get("candidate_id") == rec.get("analysis_id")
+                             for e in evidence_events)
+            if scoped == research_task_id or (not scoped and referenced):
+                decisions.append({"seq": ev["seq"], **rec})
+                cand_ids.add(rec.get("analysis_id"))
+        for ev in self.events():
+            rtype, rec = ev["record_type"], ev["record"]
+            if rtype != "CandidateResult":
+                continue
+            scoped = rec.get("research_task_id", "")
+            if scoped == research_task_id or (not scoped and rec["analysis_id"] in cand_ids):
+                candidates.append({"seq": ev["seq"], **rec})
+        mutations = [e for e in evidence_events if e.get("supersedes_seq") is not None
+                     or e.get("reason")]
+        # 证据按 evidence_id 呈现最新状态（mutation 后），与 replay 口径一致
+        latest: dict[str, dict] = {}
+        for e in evidence_events:
+            latest[e["evidence_id"]] = e
+        evidence = list(latest.values())
+        return {
+            "research_task_id": research_task_id,
+            "workspace": self.study_dir.name,
+            "task": task,
+            "plans": plans,
+            "candidates": [{"analysis_id": c["analysis_id"],
+                            "capability_id": c["capability_id"],
+                            "capability_version": c["capability_version"],
+                            "implementation_id": c["implementation_id"],
+                            "implementation_version": c["implementation_version"],
+                            "input_fingerprint": c["input_fingerprint"],
+                            "deterministic": c.get("deterministic", True),
+                            "seq": c["seq"]} for c in candidates],
+            "decisions": [{"decision_id": d["decision_id"],
+                           "analysis_id": d["analysis_id"],
+                           "policy_id": d.get("policy_id"),
+                           "policy_version": d.get("policy_version"),
+                           "actor": d.get("actor"), "client": d.get("client"),
+                           "model": d.get("model"),
+                           "allow_evidence": d.get("allow_evidence"),
+                           "supersedes_decision_id": d.get("supersedes_decision_id"),
+                           "seq": d["seq"]} for d in decisions],
+            "evidence": [{"evidence_id": e["evidence_id"], "claim": e["claim"],
+                          "candidate_id": e.get("candidate_id"),
+                          "falsification": e.get("falsification", "none"),
+                          "canonical": e.get("canonical", False),
+                          "supersedes_seq": e.get("supersedes_seq"),
+                          "reason": e.get("reason"), "seq": e["seq"]}
+                         for e in evidence],
+            "mutations": len(mutations),
+            "terminal": terminal[-1] if terminal else None,
+        }
+
 
 __all__ = ["CandidateResult", "Evidence", "GovernanceDecision", "KnowledgeProvenance",
            "LoopEvent", "PlanStep", "ResearchPlan", "ResearchTask", "SOURCE_TYPES",
-           "ToolExecution", "Workspace", "WorkspaceState", "digest"]
+           "ToolExecution", "Workspace", "WorkspaceState", "digest",
+           "find_credential_keys"]

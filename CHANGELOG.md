@@ -1,6 +1,32 @@
 # Changelog
 
-## Unreleased (2026-09-24, post-v1.0.0)
+## v1.1.0 candidate（Unreleased，2026-09-24 用户裁决）
+
+> 版本口径：v1.0.0 为已发布历史基线，保持不变；当前开发线统一作为
+> **v1.1.0 candidate** 管理（含 B4.1 行为变化：幂等提交），暂不 release，
+> 待 Production-readiness Review 完成后再决定发布。
+
+### Production-readiness Hardening（评审第 4/5/6/10/12 节落地项）
+
+- **凭据纪律（结构性）**：`Workspace.append` 对任何账本记录递归扫描疑似
+  凭据键名（api_key/token/secret/password 等精确匹配）→ 硬拒；业务字段
+  （api_key_used/n_tokens）不误伤。测试：3 负路径（候选 provenance /
+  Evidence 深层嵌套 / 误伤对照）。
+- **磁盘故障注入**：write failure（目录+文件只读）→ append 响亮失败、
+  账本零污染、恢复后状态一致。
+- **账本损坏 fail-closed 政策**：半行损坏后读与写均拒绝——恢复逻辑不得
+  在不确定状态上猜测成功；政策：人工检视 + 备份恢复，禁止自动"修复"。
+- **外部知识不稳定 A–E（litread 故障注入，零真实网络）**：timeout 抛出
+  （≠no evidence）且不落缓存；unavailable（异常）与 negative result
+  （空命中）结构性分离；malformed 不入 provenance/缓存；缓存命中
+  from_cache=True 明示并保留原始 retrieved_at 与 raw_response_sha256
+  （cached ≠ current live）。
+- **血缘报告层（observability 最小版）**：`Workspace.lineage(task_id)`
+  只读查询全链 Task→Plan→候选→裁决→证据(含 mutation)→terminal，版本
+  随行（capability/implementation/model/client/policy）。
+- **Benchmark Case 005（No-valid-conclusion）**：证据不足 →
+  evidence_insufficient 诚实终止，零强产证据。
+- 详见 `PRODUCTION_READINESS_REVIEW.md`（分项判级 + 四部输出）。
 
 ### B4.1 — Identity & Idempotency Hardening
 
@@ -44,6 +70,11 @@ governance-evidence 窗口（有效裁决复用、零重复 decision）、**evid
 checkpoint/workflow engine**。量化指标全零：Duplicate CandidateResult /
 GovernanceDecision / Evidence commit、Lost lineage、Resume-from-wrong-stage、
 Illegal re-execution、Replay mismatch。
+
+**证明边界**：B3 验证的是 Scientific Workspace 内部状态的 long-horizon
+recovery；EXTERNAL_WRITE 的 exactly-once / verify-before-retry recovery
+**未覆盖**，留待 production hardening（当前注册表无 EXTERNAL_WRITE 能力，
+见 Production-readiness Review 第 9 节）。
 
 ### B-class Validation Gaps 全部补齐（H5 B1–B5 实证闭环）
 

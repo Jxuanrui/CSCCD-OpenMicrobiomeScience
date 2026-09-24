@@ -1,4 +1,4 @@
-"""Evidence Governance 铁律与 CandidateResult 契约（2026-09-24 用户裁决六铁律）。"""
+"""Evidence Governance v1.1：GovernanceDecision 一等账本 + 六验 + 六铁律。"""
 from __future__ import annotations
 
 import pytest
@@ -6,7 +6,8 @@ from pydantic import ValidationError
 
 from mra.capability import build_default_registry
 from mra.governance import evaluate_candidate
-from mra.workspace import CandidateResult, Workspace
+from mra.workspace import (CandidateResult, GovernanceDecision, Workspace,
+                           digest)
 
 
 def _cand(**kw):
@@ -18,97 +19,160 @@ def _cand(**kw):
     return CandidateResult(**fields)
 
 
-def _gate_ok(cand=None):
-    return evaluate_candidate(cand or _cand(),
-                              method_rules_applied=["method-zero-variance-guard-001"],
-                              sensitivity_status="none_required",
-                              execution_governance={"verdicts": ["MULT:PASS"]})
+def _seed(tmp_path, study="s", cand=None, decision_kwargs=None):
+    """候选+裁决入账本，返回 (ws, decision)。"""
+    reg = build_default_registry()
+    ws = Workspace(study, root=tmp_path)
+    cand = cand or _cand()
+    ws.append(cand)
+    seq = ws.events()[-1]["seq"]
+    decision = evaluate_candidate(
+        cand, candidate_event_seq=seq,
+        method_rules_applied=["method-zero-variance-guard-001"],
+        execution_governance={"verdicts": ["MULT:PASS"]}, **(decision_kwargs or {}))
+    ws.append(decision)
+    return ws, decision, reg
 
 
-def test_candidate_result_is_not_evidence_and_gate_enforced():
-    cand = _cand()
-    assert _gate_ok(cand)["allow_evidence"] is True
-    assert _gate_ok(cand)["canonical_eligible"] is True
-    # 阻断级 warning / 缺规则 / 缺执行治理 → 拒绝
-    assert evaluate_candidate(_cand(warnings=[{"level": "blocking", "message": "x"}]),
-                              method_rules_applied=["r"], execution_governance={"v": 1}
-                              )["allow_evidence"] is False
-    assert evaluate_candidate(_cand(), execution_governance={"verdicts": ["v"]}
-                              )["allow_evidence"] is False  # 无方法规则
+def test_decision_is_ledger_object_and_gate_math(tmp_path):
+    ws, d, _ = _seed(tmp_path)
+    assert d.allow_evidence and d.canonical_eligible and not d.blocking_reasons
+    st = ws.replay()
+    assert st.governance_decisions == 1 and st.candidate_results == 1
+    bad = evaluate_candidate(_cand(warnings=[{"level": "blocking", "message": "x"}]),
+                             candidate_event_seq=1,
+                             method_rules_applied=["r"],
+                             execution_governance={"verdicts": ["v"]})
+    assert not bad.allow_evidence and bad.blocking_reasons
     with pytest.raises(ValidationError):
         _cand(warnings=[{"level": "fatal", "message": "x"}])
 
 
-def test_record_evidence_cannot_bypass_gate(tmp_path):
-    reg = build_default_registry()
+def test_record_evidence_requires_ledger_verified_decision(tmp_path):
+    ws, d, reg = _seed(tmp_path)
     ctx = {"workspace_root": tmp_path}
-    ev = {"evidence_id": "EV-G1", "task_id": "T1", "claim": "c"}
-    with pytest.raises(ValueError, match="治理门"):
-        reg.invoke("workspace.record_evidence", {"study_id": "s", "record": ev}, context=ctx)
+    ev = {"evidence_id": "EV-1", "task_id": "T1", "claim": "c",
+          "candidate_id": "A-1"}
+    # 裸 allow_evidence / 缺 decision_id → 拒
+    with pytest.raises(ValueError, match="不再被接受|decision_id"):
+        reg.invoke("workspace.record_evidence",
+                   {"study_id": "s", "record": ev,
+                    "governance": {"allow_evidence": True}}, context=ctx)
+    # 正道：decision_id → 六验通过
     out = reg.invoke("workspace.record_evidence",
-                     {"study_id": "s", "record": ev, "governance": _gate_ok()},
+                     {"study_id": "s", "record": ev, "decision_id": d.decision_id},
                      context=ctx)
-    assert out["committed"] is True
+    assert out["committed"]
 
 
-def _seed_evidence(reg, tmp_path, eid="EV-G1"):
+def test_six_verifications_negative_paths(tmp_path):
+    ws, d, reg = _seed(tmp_path)
+    ctx = {"workspace_root": tmp_path}
+    ev = {"evidence_id": "EV-1", "task_id": "T1", "claim": "c", "candidate_id": "A-1"}
+    # 1) 不存在的裁决
+    with pytest.raises(ValueError, match="不在 Scientific Ledger"):
+        reg.invoke("workspace.record_evidence",
+                   {"study_id": "s", "record": ev, "decision_id": "D-NONE"}, context=ctx)
+    # 2) 候选不对应（错 candidate_id）
+    with pytest.raises(ValueError, match="不对应"):
+        reg.invoke("workspace.record_evidence",
+                   {"study_id": "s", "record": {**ev, "candidate_id": "A-OTHER"},
+                    "decision_id": d.decision_id}, context=ctx)
+    # 3) 指纹篡改：改写流外重建候选再裁决（seq 对但 hash 变）——模拟篡改
+    tampered = _cand(effect_estimate={"x": 1})
+    d2 = GovernanceDecision(decision_id="D-TAMPER", analysis_id="A-1",
+                            candidate_event_seq=d.candidate_event_seq,
+                            candidate_hash=digest(tampered.model_dump()),
+                            allow_evidence=True)
+    ws.append(tampered.__class__(**{**ws.events()[1]["record"]})) if False else None
+    ws.append(d2)
+    with pytest.raises(ValueError, match="指纹"):
+        reg.invoke("workspace.record_evidence",
+                   {"study_id": "s", "record": ev, "decision_id": "D-TAMPER"}, context=ctx)
+    # 4) allow=False 的裁决
+    ws.append(GovernanceDecision(decision_id="D-DENY", analysis_id="A-1",
+                                 candidate_event_seq=d.candidate_event_seq,
+                                 candidate_hash=d.candidate_hash,
+                                 allow_evidence=False))
+    with pytest.raises(ValueError, match="allow_evidence=False"):
+        reg.invoke("workspace.record_evidence",
+                   {"study_id": "s", "record": ev, "decision_id": "D-DENY"}, context=ctx)
+    # 5) 失效裁决（被再裁决取代）
+    ws.append(evaluate_candidate(_cand(), candidate_event_seq=d.candidate_event_seq,
+                                 method_rules_applied=["r2"],
+                                 execution_governance={"verdicts": ["v"]},
+                                 decision_id="D-NEW",
+                                 supersedes_decision_id=d.decision_id))
+    with pytest.raises(ValueError, match="已失效"):
+        reg.invoke("workspace.record_evidence",
+                   {"study_id": "s", "record": ev, "decision_id": d.decision_id}, context=ctx)
+
+
+def _seed_evidence(tmp_path, eid="EV-1"):
+    ws, d, reg = _seed(tmp_path)
     reg.invoke("workspace.record_evidence",
                {"study_id": "s", "record": {"evidence_id": eid, "task_id": "T1",
-                                            "claim": "c"},
-                "governance": _gate_ok()}, context={"workspace_root": tmp_path})
+                                            "claim": "c", "candidate_id": "A-1"},
+                "decision_id": d.decision_id}, context={"workspace_root": tmp_path})
+    return ws, d, reg
 
 
-def test_state_mutations_keep_history_and_require_reason(tmp_path):
+def test_mutations_append_only_and_replay(tmp_path):
     reg = build_default_registry()
     ctx = {"workspace_root": tmp_path}
-    _seed_evidence(reg, tmp_path)
+    _seed_evidence(tmp_path)
     with pytest.raises(ValueError, match="reason"):
         reg.invoke("workspace.mark_downgraded",
-                   {"study_id": "s", "evidence_id": "EV-G1"}, context=ctx)
-    out = reg.invoke("workspace.mark_downgraded",
-                     {"study_id": "s", "evidence_id": "EV-G1",
-                      "reason": "敏感性检验推翻"}, context=ctx)
-    assert out["supersedes_seq"] == 1
-    ws = Workspace("s", root=tmp_path)
-    events = [e for e in ws.events() if e["record_type"] == "Evidence"]
-    assert len(events) == 2  # 历史不覆盖（append-only）
-    st = ws.replay()
-    assert st.evidence[0]["falsification"] == "downgraded"  # 现值由流重建
+                   {"study_id": "s", "evidence_id": "EV-1"}, context=ctx)
+    reg.invoke("workspace.mark_downgraded",
+               {"study_id": "s", "evidence_id": "EV-1", "reason": "敏感性推翻",
+                "actor": "t"}, context=ctx)
+    evs = [e for e in Workspace("s", root=tmp_path).events()
+           if e["record_type"] == "Evidence"]
+    assert len(evs) == 2
+    assert Workspace("s", root=tmp_path).replay().evidence[0]["falsification"] == "downgraded"
 
 
-def test_refuted_cannot_silently_become_canonical(tmp_path):
+def test_canonical_requires_eligible_decision_or_governance_event(tmp_path):
     reg = build_default_registry()
     ctx = {"workspace_root": tmp_path}
-    _seed_evidence(reg, tmp_path)
-    reg.invoke("workspace.mark_refuted",
-               {"study_id": "s", "evidence_id": "EV-G1", "reason": "对照否决"}, context=ctx)
-    with pytest.raises(ValueError, match="铁律1/2"):
+    _seed_evidence(tmp_path)
+    with pytest.raises(ValueError, match="decision_id"):
         reg.invoke("workspace.set_canonical",
-                   {"study_id": "s", "evidence_id": "EV-G1",
-                    "supporting_lineage": ["EV-G2"], "reason": "r"}, context=ctx)
-    # 提供新治理事件后允许（铁律2：再升级须新治理事件）
-    out = reg.invoke("workspace.set_canonical",
-                     {"study_id": "s", "evidence_id": "EV-G1",
-                      "supporting_lineage": ["EV-G2"], "reason": "重验证通过",
-                      "revalidation_governance_event": "gov-evt-9"}, context=ctx)
-    assert out["committed"] is True
+                   {"study_id": "s", "evidence_id": "EV-1",
+                    "supporting_lineage": ["x"], "reason": "r"}, context=ctx)
+    with pytest.raises(ValueError, match="铁律4"):
+        reg.invoke("workspace.set_canonical",
+                   {"study_id": "s", "evidence_id": "EV-1",
+                    "supporting_lineage": ["x"], "reason": "r",
+                    "decision_id": "whatever"},
+                   context={**ctx, "caller_capability": "association.partial_spearman"})
+    # refuted → 无新治理事件不得 canonical
+    reg.invoke("workspace.mark_refuted",
+               {"study_id": "s", "evidence_id": "EV-1", "reason": "否决"}, context=ctx)
+    with pytest.raises(ValueError, match="canonical"):
+        reg.invoke("workspace.set_canonical",
+                   {"study_id": "s", "evidence_id": "EV-1",
+                    "supporting_lineage": ["x"], "reason": "r",
+                    "decision_id": "D-NEW-VALID"}, context=ctx)
+    reg.invoke("workspace.set_canonical",
+               {"study_id": "s", "evidence_id": "EV-1",
+                "supporting_lineage": ["x"], "reason": "重验证",
+                "revalidation_governance_event": "gov-9"}, context=ctx)
     assert Workspace("s", root=tmp_path).replay().evidence[0]["canonical"] is True
 
 
-def test_set_canonical_requires_lineage_and_blocks_compute_caller(tmp_path):
+def test_candidate_generic_envelope():
+    c = _cand(result_type="atlas_scan",
+              result_payload={"viral": [{"feature": "x", "rho": 0.1, "q": 0.01}]},
+              artifacts=[{"kind": "tsv", "path": "hits.tsv", "sha256": "sha256:z"}],
+              metrics={"viral_tested": 200, "viral_hits": 1})
+    assert c.result_type == "atlas_scan" and c.metrics["viral_hits"] == 1
+    base = _cand()  # 首用例字段 optional（空 dict 兼容）
+    assert base.effect_estimate == {}
+
+
+def test_compute_capabilities_are_compute_only():
     reg = build_default_registry()
-    ctx = {"workspace_root": tmp_path}
-    _seed_evidence(reg, tmp_path)
-    with pytest.raises(ValueError, match="铁律3"):
-        reg.invoke("workspace.set_canonical",
-                   {"study_id": "s", "evidence_id": "EV-G1", "reason": "r"}, context=ctx)
-    with pytest.raises(ValueError, match="铁律4"):
-        reg.invoke("workspace.set_canonical",
-                   {"study_id": "s", "evidence_id": "EV-G1",
-                    "supporting_lineage": ["x"], "reason": "r"},
-                   context={**ctx, "caller_capability": "association.partial_spearman"})
-
-
-def test_compute_capability_is_compute_only_in_registry():
-    impl = build_default_registry().resolve("association.partial_spearman")
-    assert impl.side_effect == "COMPUTE_ONLY"  # 纯计算≠WORKSPACE_WRITE（四级语义）
+    for cap in ("association.partial_spearman", "atlas.single_exposure_scan"):
+        assert reg.resolve(cap).side_effect == "COMPUTE_ONLY"

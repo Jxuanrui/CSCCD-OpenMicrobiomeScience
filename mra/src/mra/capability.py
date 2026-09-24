@@ -296,6 +296,16 @@ def _fn_ws_set_canonical(payload, ctx):
         raise ValueError("铁律3：set_canonical 必须引用 supporting evidence lineage")
     from .workspace import Workspace
     ws = Workspace(payload["study_id"], root=ctx.get("workspace_root"))
+    if payload.get("decision_id"):  # 升级为账本可验证 canonical 裁决
+        _verify = None
+        for ev in ws.events():
+            if ev["record_type"] == "GovernanceDecision" and \
+                    ev["record"]["decision_id"] == payload["decision_id"]:
+                _verify = ev["record"]
+        if _verify is None or not _verify.get("canonical_eligible"):
+            raise ValueError("set_canonical 须提供 canonical_eligible=true 的有效裁决")
+    elif not payload.get("revalidation_governance_event"):
+        raise ValueError("set_canonical 须提供 decision_id（canonical 裁决）或再验证治理事件")
     prev = _latest_evidence_event(ws, payload["evidence_id"])
     if prev is None:
         raise ValueError(f"Evidence {payload['evidence_id']} 不存在")
@@ -304,6 +314,76 @@ def _fn_ws_set_canonical(payload, ctx):
         raise ValueError("铁律1/2：refuted 不得静默恢复 canonical；再升级必须生成新治理事件")
     return _mutate_evidence({**payload, "reason": payload.get("reason") or "set canonical"},
                             ctx, canonical=True)
+
+
+def _fn_atlas_single_exposure_scan(payload, ctx):
+    """COMPUTE_ONLY：单暴露 × 多特征表全景扫描（多重检验输出，多结果候选）。"""
+    import pandas as pd
+    from .research import datasources as ds
+    from .research.atlas import grade_hit
+    from .research.gate import run_gated_association
+    from .workspace import CandidateResult, digest
+
+    exposure = payload["exposure"]
+    exposure_table = payload.get("exposure_table") or next(iter(ds.load_config()["exposures"]))
+    feature_tables = tuple(payload.get("feature_tables", ("species", "pathway", "fungal", "viral")))
+    max_features = int(payload.get("max_features", 100))
+    q_threshold = float(payload.get("q_threshold", 0.05))
+    graph = ctx.get("graph")
+
+    exp = ds.load_exposures(exposure_table)
+    metadata = ds.load_metadata()
+    covs = metadata[[c for c in ds.default_covariates() if c in metadata.columns]]
+    all_verdicts: list[str] = []
+    payload_hits: dict[str, list] = {}
+    metrics: dict[str, int] = {}
+    for feat_name in feature_tables:
+        feats = ds.load_features(feat_name)
+        if feat_name in ("species", "fungal", "viral"):
+            feats = feats.loc[:, [c for c in feats.columns
+                                  if c.split("|")[-1].startswith("s__")]]
+        ids = ds.intersect_ids(exp, feats, covs)
+        keep = (pd.to_numeric(exp.loc[ids, exposure], errors="coerce").notna()
+                & covs.loc[ids].notna().all(axis=1))
+        ids = [i for i, k in zip(ids, keep) if k]
+        sel = ds.top_features_by_prevalence(feats.loc[ids], max_features=max_features)
+        try:
+            result, verdicts = run_gated_association(
+                pd.to_numeric(exp.loc[ids, exposure]), feats.loc[ids, sel],
+                covs.loc[ids], run_id=payload.get("run_id", "atlas-scan"))
+        except RuntimeError as exc:
+            all_verdicts.append(f"{feat_name}:DENIED({str(exc)[:40]})")
+            metrics[f"{feat_name}_tested"] = 0
+            payload_hits[feat_name] = []
+            continue
+        all_verdicts += [f"{feat_name}:{v['rule']}:{v['verdict']}" for v in verdicts]
+        hits = result[result["q"] < q_threshold]
+        metrics[f"{feat_name}_tested"] = int(len(result))
+        metrics[f"{feat_name}_hits"] = int(len(hits))
+        rows = []
+        for _, r in hits.iterrows():
+            rows.append({"feature": r["feature"][:100], "rho": round(float(r["rho"]), 4),
+                         "q": float(r["q"]), "n": int(r["n"]),
+                         "grade": (grade_hit(graph, r["feature"], exposure_table,
+                                             exposure, float(r["rho"]))
+                                   if graph is not None else "")})
+        payload_hits[feat_name] = rows
+    candidate = CandidateResult(
+        analysis_id=payload.get("analysis_id") or f"atlas-{exposure}",
+        capability_id="atlas.single_exposure_scan", implementation_id="mra.r",
+        capability_version="1.0.0", implementation_version="1.0.0",
+        input_fingerprint=digest({"exposure_table": exposure_table, "exposure": exposure,
+                                  "feature_tables": feature_tables,
+                                  "max_features": max_features, "q": q_threshold}),
+        output_summary="; ".join(f"{k}={v}" for k, v in metrics.items()),
+        result_type="atlas_scan",
+        result_schema="payload.{table}[]= {feature,rho,q,n,grade}",
+        result_payload=payload_hits, metrics=metrics,
+        assumptions_checked=["零方差守卫", "样本对齐", "BH族内校正(每暴露×表族)"],
+        provenance={"execution_verdicts": all_verdicts,
+                    "multiple_testing": "BH within (exposure × feature_table) family"},
+        deterministic=True)
+    return {"candidate": candidate.model_dump(), "execution_verdicts": all_verdicts}
 
 
 def build_default_registry() -> CapabilityRegistry:
@@ -404,14 +484,52 @@ def build_default_registry() -> CapabilityRegistry:
                         {"study_id": "string", "committed": "bool"}, _ws_prov,
                         side_effect="WORKSPACE_WRITE", governance_level="guarded"))
 
+    def _verify_decision(ws, decision_id, candidate_id=None, need_canonical=False):
+        """账本六验：存在/同候选/指纹一致/allow/未失效/lineage。"""
+        events = ws.events()
+        decision = None
+        for ev in events:
+            if ev["record_type"] == "GovernanceDecision" and \
+                    ev["record"]["decision_id"] == decision_id:
+                decision = ev["record"]
+        if decision is None:
+            raise ValueError(f"裁决 {decision_id} 不在 Scientific Ledger（裸 allow_evidence 不再被接受）")
+        cand_ev = next((e for e in events
+                        if e["record_type"] == "CandidateResult"
+                        and e["record"]["analysis_id"] == decision["analysis_id"]), None)
+        if cand_ev is None:
+            raise ValueError(f"裁决对应候选 {decision['analysis_id']} 不在账本")
+        if decision["candidate_event_seq"] != cand_ev["seq"]:
+            raise ValueError("裁决引用的候选事件 seq 不符")
+        from .workspace import digest as _digest
+        if decision["candidate_hash"] != _digest(cand_ev["record"]):
+            raise ValueError("候选指纹与裁决时不一致（候选被篡改或版本错位）")
+        if candidate_id is not None and decision["analysis_id"] != candidate_id:
+            raise ValueError("裁决与提交的 candidate_id 不对应")
+        later = [e for e in events if e["record_type"] == "GovernanceDecision"
+                 and e["record"].get("supersedes_decision_id") == decision_id]
+        if later or not decision.get("valid", True):
+            raise ValueError(f"裁决 {decision_id} 已失效（被再裁决取代）")
+        if not decision["allow_evidence"]:
+            raise ValueError("裁决 allow_evidence=False——拒绝提交")
+        if need_canonical and not decision["canonical_eligible"]:
+            raise ValueError("canonical 裁决缺失（canonical_eligible≠true）")
+        return decision
+
     def _fn_record_evidence_gated(payload, ctx):
-        gov = payload.get("governance") or {}
-        if gov.get("allow_evidence") is not True:
-            raise ValueError("治理门未通过/缺失（evaluate_candidate 须先 allow）——拒绝提交 Evidence")
+        from .workspace import Workspace
+        ws = Workspace(payload["study_id"], root=ctx.get("workspace_root"))
+        if not payload.get("decision_id"):
+            raise ValueError("record_evidence 须提供 decision_id（账本六验；"
+                             "裸 allow_evidence 不再被接受）")
         record = dict(payload["record"])
-        record.setdefault("candidate_id", None)
+        decision = _verify_decision(ws, payload["decision_id"],
+                                    candidate_id=record.get("candidate_id"))
         rec_gov = dict(record.get("governance") or {})
-        rec_gov["gate"] = gov
+        rec_gov["decision"] = {"decision_id": decision["decision_id"],
+                               "policy_id": decision["policy_id"],
+                               "policy_version": decision["policy_version"],
+                               "checks": decision["checks"]}
         record["governance"] = rec_gov
         return _fn_workspace_record_evidence({"study_id": payload["study_id"],
                                               "record": record}, ctx)
@@ -419,7 +537,7 @@ def build_default_registry() -> CapabilityRegistry:
     reg.register(*_impl("workspace.record_evidence", "mra.workspace", "python-inproc",
                         10, _fn_record_evidence_gated,
                         {"study_id": "string", "record": "Evidence-dict",
-                         "governance": "{allow_evidence: bool, checks, blocking}"},
+                         "decision_id": "string(账本裁决ID,六验必需)"},
                         {"study_id": "string", "committed": "bool"}, _ws_prov,
                         side_effect="WORKSPACE_WRITE", governance_level="guarded"))
 
@@ -441,6 +559,16 @@ def build_default_registry() -> CapabilityRegistry:
                         {"study_id": "string", "supersedes_seq": "int",
                          "committed": "bool"}, _ws_prov,
                         side_effect="WORKSPACE_WRITE", governance_level="governed"))
+
+    # ---- 第二个 COMPUTE_ONLY：atlas 单暴露扫描（多结果/多重检验/图谱定级） ----
+    reg.register(*_impl("atlas.single_exposure_scan", "mra.r", "python-inproc", 10,
+                        _fn_atlas_single_exposure_scan,
+                        {"exposure": "string", "exposure_table": "string?",
+                         "feature_tables": "list[str]", "max_features": "int=100",
+                         "q_threshold": "float=0.05", "analysis_id": "string?"},
+                        {"candidate": "CandidateResult(result_type=atlas_scan)",
+                         "execution_verdicts": "list"}, _ws_prov,
+                        side_effect="COMPUTE_ONLY", governance_level="guarded"))
 
     # ---- 首个 COMPUTE_ONLY：Scientific Compute 基准（不写 Evidence） ----
     reg.register(*_impl("association.partial_spearman", "mra.r", "python-inproc", 10,

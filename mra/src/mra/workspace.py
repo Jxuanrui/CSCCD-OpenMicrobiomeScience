@@ -153,6 +153,13 @@ class CandidateResult(BaseModel):
     implementation_version: str = Field(min_length=1)
     input_fingerprint: str = Field(min_length=1)
     output_summary: str = Field(min_length=1)
+    # ---- 通用信封（v1.2 泛化）：领域专属输出进 typed payload，不再顶层加字段 ----
+    result_type: str = "association"          # association/atlas_scan/diversity/enrichment/...
+    result_schema: str = ""                   # schema_ref（payload 结构自描述）
+    result_payload: dict[str, Any] = Field(default_factory=dict)
+    artifacts: list[dict[str, Any]] = Field(default_factory=list)  # {kind,path,sha256}
+    metrics: dict[str, Any] = Field(default_factory=dict)
+    # 首用例字段（向后兼容，迁移期 optional 语义：空 dict=未提供）
     effect_estimate: dict[str, Any] = Field(default_factory=dict)
     uncertainty: dict[str, Any] = Field(default_factory=dict)
     assumptions_checked: list[str] = Field(default_factory=list)
@@ -171,6 +178,34 @@ class CandidateResult(BaseModel):
         return v
 
 
+class GovernanceDecision(BaseModel):
+    """Scientific Ledger 可验证的正式治理裁决（一等账本对象）。
+
+    record_evidence 不再接受调用方自报 allow_evidence；必须提交 decision_id，
+    由 Workspace 按账本六验（存在性/同一候选/指纹一致/allow/未失效/lineage）
+    自行核验。canonical_eligible 只代表"允许进入 canonical 决策"。
+    """
+    model_config = ConfigDict(extra="forbid")
+    decision_id: str = Field(min_length=3)
+    analysis_id: str = Field(min_length=3)
+    candidate_event_seq: int = Field(ge=1)          # 候选在流中的事件 seq
+    candidate_hash: str = Field(min_length=8)       # digest(CandidateResult record)
+    policy_id: str = "scientific-governance"
+    policy_version: str = "1.1.0"
+    checks: list[dict[str, Any]] = Field(default_factory=list)
+    allow_evidence: bool = False
+    canonical_eligible: bool = False
+    blocking_reasons: list[str] = Field(default_factory=list)
+    warnings: list[dict[str, Any]] = Field(default_factory=list)
+    governance_event_id: str | None = None          # 外部治理账本锚（如 audit ledger）
+    actor: str = "unknown"
+    client: str = "unknown"
+    model: str = ""
+    created_at: str = Field(default_factory=_now)
+    supersedes_decision_id: str | None = None       # 再裁决引用（旧决策由此失效）
+    valid: bool = True                              # 被取代即置 False（新事件记录）
+
+
 class WorkspaceState(BaseModel):
     model_config = ConfigDict(extra="forbid")
     study_id: str
@@ -180,13 +215,15 @@ class WorkspaceState(BaseModel):
     knowledge_queries: int = 0
     tool_executions: int = 0
     candidate_results: int = 0
+    governance_decisions: int = 0
     narrative_version: str = ""
     canonical_refs: dict[str, str] = Field(default_factory=dict)
 
 
 _RECORD_TYPES = {"ResearchTask": ResearchTask, "KnowledgeProvenance": KnowledgeProvenance,
                  "ToolExecution": ToolExecution, "Evidence": Evidence,
-                 "CandidateResult": CandidateResult}
+                 "CandidateResult": CandidateResult,
+                 "GovernanceDecision": GovernanceDecision}
 
 
 class Workspace:
@@ -237,6 +274,8 @@ class Workspace:
                 state.tool_executions += 1
             elif rtype == "CandidateResult":
                 state.candidate_results += 1
+            elif rtype == "GovernanceDecision":
+                state.governance_decisions += 1
             elif rtype == "Evidence":
                 evidence_by_id[rec["evidence_id"]] = rec  # 后写覆盖=修订可追溯
         state.evidence = list(evidence_by_id.values())
@@ -247,5 +286,6 @@ class Workspace:
         return (events[-1]["seq"] + 1) if events else 1
 
 
-__all__ = ["CandidateResult", "Evidence", "KnowledgeProvenance", "ResearchTask",
-           "SOURCE_TYPES", "ToolExecution", "Workspace", "WorkspaceState", "digest"]
+__all__ = ["CandidateResult", "Evidence", "GovernanceDecision", "KnowledgeProvenance",
+           "ResearchTask", "SOURCE_TYPES", "ToolExecution", "Workspace",
+           "WorkspaceState", "digest"]

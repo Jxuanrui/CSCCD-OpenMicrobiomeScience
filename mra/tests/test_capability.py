@@ -73,7 +73,7 @@ def test_invoke_route_and_gap_with_graph_context(tmp_path, monkeypatch):
 
 def test_catalog_exports_schema_not_callables():
     cat = build_default_registry().catalog()
-    assert len(cat) == 18 and all("input_schema" in c for c in cat)
+    assert len(cat) == 19 and all("input_schema" in c for c in cat)
     assert all(not str(c.get("implementation_id", "")).startswith("<") for c in cat)
 
 
@@ -100,14 +100,26 @@ def test_workspace_write_capabilities_are_guarded(tmp_path):
         assert impl.side_effect == "WORKSPACE_WRITE" and impl.governance_level == "guarded"
     sc = reg.resolve("workspace.set_canonical")
     assert sc.side_effect == "WORKSPACE_WRITE" and sc.governance_level == "governed"  # 更高权限
+    # v1.1：须经账本裁决（候选+决策入流后按 decision_id 提交）
+    from mra.governance import evaluate_candidate
+    from mra.workspace import CandidateResult, Workspace
+    ws = Workspace("cap-test", root=tmp_path)
+    cand = CandidateResult(analysis_id="AC-1", capability_id="x.y",
+                           implementation_id="i.i", capability_version="1",
+                           implementation_version="1", input_fingerprint="f",
+                           output_summary="s", provenance={"n": 1})
+    ws.append(cand)
+    d = evaluate_candidate(cand, candidate_event_seq=ws.events()[-1]["seq"],
+                           method_rules_applied=["r"],
+                           execution_governance={"verdicts": ["v"]})
+    ws.append(d)
     out = reg.invoke("workspace.record_evidence",
                      {"study_id": "cap-test",
                       "record": {"evidence_id": "EV-T1", "task_id": "T1",
-                                 "claim": "registry commit 通道测试"},
-                      "governance": {"allow_evidence": True, "checks": [],
-                                     "blocking": []}},  # 治理门裁决随行
+                                 "claim": "registry commit 通道测试",
+                                 "candidate_id": "AC-1"},
+                      "decision_id": d.decision_id},
                      context={"workspace_root": tmp_path})
     assert out == {"study_id": "cap-test", "committed": True}
-    from mra.workspace import Workspace
     st = Workspace("cap-test", root=tmp_path).replay()
     assert st.evidence and st.evidence[0]["evidence_id"] == "EV-T1"

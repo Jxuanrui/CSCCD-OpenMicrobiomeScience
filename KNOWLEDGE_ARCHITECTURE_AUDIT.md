@@ -213,3 +213,43 @@ KG miss 不自动转外部。**当前 = "LLM + 人工指令 + 图谱局部先验
 raw hash/缓存分离）在 KG 与 knowledge/ 模块中真实存在且被测试保护；**真正缺的是"接线与运营"**——
 知识路由未建、候选管线未投产、方法知识未条目化、研究循环的设计阶段仍是 LLM+人工。L4 已站稳；
 通往 L5 的路是明确的 P0/P1 清单，而非架构重构。
+
+---
+
+## 附录 A：正式定级与阶段裁决记录（2026-09-24 用户裁决）
+
+**一、P0 三件套验收通过**（commit 3142e05）：Method KB 可检索 / Live Knowledge
+完整 provenance / Knowledge Router MVP，五项核心验收目标全绿。
+
+**二、正式定级：Level 5-min —— Knowledge-driven Research Agent 基础形态**。
+依据八项已具备能力：Local 查询 / Live 获取 / Method 约束 / Evidence-Knowledge 隔离 /
+provenance 完整追踪 / source-aware retrieval / 知识缺失受控外查 / 当前研究结果不污染
+外部知识层。
+
+**三、暂不定义完整 L5**。缺口 = **Knowledge Gap Detection**：Agent 主动识别
+"当前研究设计依赖哪些未知知识"，并自主决定查询 KG / 文献 / API / 方法库 / 设计补充分析。
+下一阶段主线：**Knowledge Retrieval → Knowledge-driven Research Planning**。
+
+**四、P0 三件套冻结**（接口与行为稳定，后续扩展不得破坏契约）；PubMed 检索质量列 P1
+（entity-name retrieval → entity-aware query planning，五类模板：phage-host /
+microbe-phenotype / gene-function / pathway-organism / food-microbiome）。
+
+**五、L5-full 能力建设优先级**：
+- **P1-1 Knowledge Gap Detector**（最优先）；
+- P1-2 Research Planner knowledge-aware 升级（设计→gap检查→自动补齐→再设计的闭环）；
+- P1-3 Query strategy optimization（实体感知检索模板）。
+并行依赖：图谱侧完成 Source Registry / provenance / Food schema。
+
+**六、长期原则重申**：Research Evidence 不回写 Local KG；下一阶段目标是
+"Agent 知道什么时候需要知识，并主动获取知识推动研究设计"。
+
+### P0–P3 缺口清单状态更新
+
+| 项 | 状态 |
+|---|---|
+| P0-1 Router MVP / P0-2 litread provenance / P0-3 Method KB | ✅ 完成并冻结 |
+| P1-1 Knowledge Gap Detector | 🚧 本轮启动（MVP） |
+| P1-2 Planner knowledge-aware 升级 | 待 P1-1 稳定 |
+| P1-3 检索模板（原 P1 内容并入） | 待 |
+| P1 候选管线投产 / KnowledgeStore 全量接入 / Evidence schema | 顺延保持 |
+| P2/P3 各项 | 不变 |

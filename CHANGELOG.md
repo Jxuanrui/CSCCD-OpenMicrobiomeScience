@@ -2,6 +2,49 @@
 
 ## Unreleased (2026-09-24, post-v1.0.0)
 
+### B4.1 — Identity & Idempotency Hardening
+
+原则：**same scientific command + retry = same scientific state**；恢复重试
+不得被误认为新的科研事件。
+
+- **幂等 Evidence commit**：`workspace.record_evidence` 对同
+  (evidence_id, 提交内容, decision) 的重试返回 `already_committed` +
+  既有事件引用，不再新增 append-only 修订（内容经 Evidence 模型归一化并
+  剥离 governance/created_at 后比较）。只有新 GovernanceDecision 或新
+  科学内容才产生新事件。**行为变化**：此前同 decision 同内容重复提交会
+  产生一条冗余 revision。
+- **mutation 同义去重**：`revise / mark_downgraded / mark_refuted /
+  set_canonical` 对"目标状态 + reason 均未变化"的重复请求返回
+  `already_applied`，零新事件；新 rationale 合法产生新事件。
+- **task-scoped 身份域（结构性，非调用方约定）**：`CandidateResult` 与
+  `GovernanceDecision` 新增加性可选字段 `research_task_id`；正式 lookup
+  身份为 `(research_task_id, analysis_id)`。`Workspace.append` 对同
+  task scope 内重复 analysis_id 的候选**硬拒**（isolation invariant 违例）；
+  跨 task 同名合法；无域裁决遇跨 task 同名候选拒绝歧义解析；legacy 无域
+  条目行为不变。loop 产出的候选/裁决一律 task 打标。
+- **loop 幂等重驱动**：`adopt_plan`（同 plan_id+version 已采纳 → reused）、
+  `execute_step`（COMPUTE_ONLY + deterministic 已有候选 → 复用零重算；
+  非确定性重算须版本化 analysis_id，否则被唯一性守卫硬拒）、
+  `evaluate_and_commit`（已有有效等价裁决 → 复用）、`commit_evidence`
+  （已提交 → already_committed；新增 evidence_id 参数支持多步任务）。
+- **B4 指标口径收紧**：Cross-task evidence mutation 类指标一律加
+  "Unauthorized" 限定（合法跨任务推翻须显式 target/provenance/actor/
+  rationale/GovernanceDecision/supporting lineage）。
+- 测试：`tests/test_b41_identity_idempotency.py`（幂等 4 用例 + 身份域 4 用例）。
+
+### B3 — Long-horizon Recovery（全规格重做，B4.1 之后）
+
+`tests/test_h5_long_horizon_recovery.py` 按 Case A–F 全规格实证：planning
+后中断（plan version/supersedes lineage/current_stage 恢复、不重建同版计划）、
+compute-governance 窗口（deterministic 候选复用、fingerprint 不变）、
+governance-evidence 窗口（有效裁决复用、零重复 decision）、**evidence commit
+后 ACK 丢失（Evidence 数量不增加——retry ≠ 新科研事实）**、多步计划 s1-s4
+完成后从 s5 续跑（零重复事件、不跳依赖）、mutation 后同义重试去重。
+执行状态由账本派生（候选/有效裁决/Evidence 在场即完成），**未引入第二套
+checkpoint/workflow engine**。量化指标全零：Duplicate CandidateResult /
+GovernanceDecision / Evidence commit、Lost lineage、Resume-from-wrong-stage、
+Illegal re-execution、Replay mismatch。
+
 ### B-class Validation Gaps 全部补齐（H5 B1–B5 实证闭环）
 
 v1.0.0 Known Limitations 中 B 类四项（另含 v1 冻结前已完成的 B1）全部由
@@ -15,8 +58,8 @@ B 系列测试实证，"supported, not yet demonstrated" 状态清零：
 | B4 Concurrent isolation | 并发任务隔离：3 Case + 6 负路径 | `test_h5_concurrent_isolation.py` |
 | B5 Multi-omics | 代谢组/蛋白组经数据契约+方法规则适配端到端处理，零核心改动 | `test_h5_multi_omics.py` |
 
-- Tests：394 → 423 passed / 2 skipped（含 B2/B3/B4/B5 新增用例）
-- 遗留：C 类（production gaps）不变；下一步 Release Readiness Review。
+- Tests：394 → 436 passed / 2 skipped（含 B2/B3/B4/B5 与 B4.1 新增用例）
+- 遗留：C 类（production gaps）不变。
 
 ## v1.0.0 (2026-09-24) — Scientific Research Harness v1
 

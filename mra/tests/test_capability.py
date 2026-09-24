@@ -120,6 +120,7 @@ def test_workspace_write_capabilities_are_guarded(tmp_path):
                                  "candidate_id": "AC-1"},
                       "decision_id": d.decision_id},
                      context={"workspace_root": tmp_path})
-    assert out == {"study_id": "cap-test", "committed": True}
+    assert out == {"study_id": "cap-test", "committed": True,
+                   "already_committed": False}  # B4.1：信封加性键
     st = Workspace("cap-test", root=tmp_path).replay()
     assert st.evidence and st.evidence[0]["evidence_id"] == "EV-T1"

@@ -160,6 +160,11 @@ class CandidateResult(BaseModel):
     CandidateResult != Evidence：它由 COMPUTE_ONLY 能力产生，必须经
     Scientific Governance Gate（evaluate_candidate）裁决后才允许经
     workspace.record_evidence 进入 Scientific Ledger。
+
+    身份域（B4.1）：analysis_id 的正式 lookup 身份为 (research_task_id,
+    analysis_id)——task scope 内结构性唯一（Workspace.append 硬拒重复），
+    跨 task 允许同名（并发任务隔离）。空 research_task_id 为 legacy 无域
+    条目（向后兼容，不参与唯一性强制）。
     """
     model_config = ConfigDict(extra="forbid")
     analysis_id: str = Field(min_length=3)
@@ -169,6 +174,7 @@ class CandidateResult(BaseModel):
     implementation_version: str = Field(min_length=1)
     input_fingerprint: str = Field(min_length=1)
     output_summary: str = Field(min_length=1)
+    research_task_id: str = ""              # task scope（B4.1；空=legacy 无域）
     # ---- 通用信封（v1.2 泛化）：领域专属输出进 typed payload，不再顶层加字段 ----
     result_type: str = "association"          # association/atlas_scan/diversity/enrichment/...
     result_schema: str = ""                   # schema_ref（payload 结构自描述）
@@ -254,12 +260,17 @@ class GovernanceDecision(BaseModel):
     record_evidence 不再接受调用方自报 allow_evidence；必须提交 decision_id，
     由 Workspace 按账本六验（存在性/同一候选/指纹一致/allow/未失效/lineage）
     自行核验。canonical_eligible 只代表"允许进入 canonical 决策"。
+
+    身份域（B4.1）：research_task_id 非空时，候选解析按 (task, analysis_id)
+    精确匹配（同 analysis_id 跨 task 不歧义）；同一候选允许多次合法再裁决
+    （supersedes 链），但恢复重试不得产生第二个等价 decision（loop 层复用）。
     """
     model_config = ConfigDict(extra="forbid")
     decision_id: str = Field(min_length=3)
     analysis_id: str = Field(min_length=3)
     candidate_event_seq: int = Field(ge=1)          # 候选在流中的事件 seq
     candidate_hash: str = Field(min_length=8)       # digest(CandidateResult record)
+    research_task_id: str = ""                      # task scope（B4.1；空=legacy）
     policy_id: str = "scientific-governance"
     policy_version: str = "1.1.0"
     checks: list[dict[str, Any]] = Field(default_factory=list)
@@ -316,12 +327,37 @@ class Workspace:
         if rtype not in _RECORD_TYPES:
             raise ValueError(f"不支持的记录类型 {rtype}")
         self.study_dir.mkdir(parents=True, exist_ok=True)
+        self._check_identity_invariants(record)
         seq = self._next_seq()
         line = {"seq": seq, "record_type": rtype,
                 "record": record.model_dump(), "appended_at": _now()}
         with self.events_path.open("a", encoding="utf-8") as fh:
             fh.write(json.dumps(line, ensure_ascii=False) + "\n")
         return seq
+
+    def _check_identity_invariants(self, record: BaseModel) -> None:
+        """B4.1 身份域铁律：task scope 内 analysis_id 结构性唯一。
+
+        身份唯一性是 isolation invariant，由系统保证而非调用方约定——
+        同一 (research_task_id, analysis_id) 的第二个 CandidateResult 直接
+        拒绝（恢复重试应复用已有候选；非确定性重算应版本化 analysis_id）。
+        legacy 无域条目（research_task_id 为空）不参与强制，向后兼容。
+        """
+        if type(record).__name__ != "CandidateResult":
+            return
+        scope = getattr(record, "research_task_id", "")
+        if not scope:
+            return
+        for ev in self.events():
+            if ev["record_type"] != "CandidateResult":
+                continue
+            other = ev["record"]
+            if other.get("research_task_id", "") == scope and \
+                    other["analysis_id"] == record.analysis_id:
+                raise ValueError(
+                    f"isolation invariant 违例：task {scope} 内 analysis_id "
+                    f"'{record.analysis_id}' 已存在（seq {ev['seq']}）。"
+                    f"恢复重试应复用已有候选，非确定性重算应版本化 analysis_id。")
 
     def events(self) -> list[dict]:
         if not self.events_path.is_file():

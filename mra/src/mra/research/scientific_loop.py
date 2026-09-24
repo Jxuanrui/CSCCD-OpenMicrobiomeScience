@@ -142,6 +142,14 @@ class ScientificLoop:
         return rules
 
     def adopt_plan(self, task: ResearchTask, plan: ResearchPlan) -> dict[str, Any]:
+        # B4.1/B3 幂等重驱动：同 (plan_id, version) 已采纳 → 不重复入账、不重复事件
+        for ev in self.ws.events():
+            if ev["record_type"] == "ResearchPlan":
+                p = ev["record"]
+                if p["plan_id"] == plan.plan_id and \
+                        p["plan_version"] == plan.plan_version:
+                    return {"gate": "plan", "allow": True, "problems": [],
+                            "reused": True}
         self._stage(task.task_id, "planning")
         verdict = plan_gate(plan, self.registry)
         self._emit(task.task_id, "gate_verdict", gate="plan",
@@ -157,6 +165,19 @@ class ScientificLoop:
 
     def execute_step(self, task: ResearchTask, plan: ResearchPlan, step,
                      runtime_ctx: dict[str, Any] | None = None) -> dict[str, Any]:
+        # B4.1/B3 幂等重驱动：已完成 COMPUTE 步骤的重复执行不是新科研事件——
+        # deterministic 候选直接复用（零新事件）；非确定性候选按 capability
+        # contract 应版本化 analysis_id 后重算（Workspace 唯一性守卫会硬拒同名）。
+        try:
+            impl_probe = self.registry.resolve(step.capability_id)
+        except KeyError:
+            impl_probe = None
+        if impl_probe is not None and impl_probe.side_effect == "COMPUTE_ONLY":
+            existing = self._find_candidate(task.task_id,
+                                            step.inputs.get("analysis_id") or "")
+            if existing is not None and existing.deterministic:
+                return {"kind": "candidate", "candidate": existing,
+                        "reused": True, "verdicts": []}
         self._stage(task.task_id, "governed_execution")
         verdict = execution_gate(step.capability_id, self.registry, task, runtime_ctx)
         self._emit(task.task_id, "gate_verdict", gate="execution",
@@ -175,6 +196,9 @@ class ScientificLoop:
             result = (self._executor or self.registry.invoke)(
                 step.capability_id, dict(step.inputs), context=runtime_ctx or {})
             candidate = CandidateResult(**result["candidate"])
+            if not candidate.research_task_id:  # B4.1：loop 产出一律 task 打标
+                candidate = candidate.model_copy(
+                    update={"research_task_id": task.task_id})
             self.ws.append(candidate)
             return {"kind": "candidate", "candidate": candidate,
                     "verdicts": result.get("execution_verdicts", [])}
@@ -186,6 +210,11 @@ class ScientificLoop:
                             rules: list[str], execution_verdicts: list[dict] | None = None,
                             sensitivity_status: str = "none_required",
                             actor: str = "loop") -> dict[str, Any]:
+        # B4.1/B3 幂等重驱动：已有有效等价裁决（同候选指纹、未失效、未被取代）
+        # → 直接复用，不产生第二个等价 decision。
+        existing = self._find_valid_decision(candidate)
+        if existing is not None:
+            return {"decision": existing, "reused": True}
         self._stage(task.task_id, "evidence_evaluation")
         seq = self.ws.events()[-1]["seq"]
         decision = evaluate_candidate(
@@ -193,6 +222,9 @@ class ScientificLoop:
             method_rules_applied=rules, sensitivity_status=sensitivity_status,
             execution_governance={"verdicts": execution_verdicts or [{"rule": "loop", "verdict": "PASS"}]},
             actor=actor, client=task.client, model=task.model)
+        if candidate.research_task_id and not decision.research_task_id:
+            decision = decision.model_copy(
+                update={"research_task_id": candidate.research_task_id})
         self.ws.append(decision)
         verdict = evidence_gate(candidate, decision)
         self._emit(task.task_id, "gate_verdict", gate="evidence",
@@ -205,11 +237,24 @@ class ScientificLoop:
         return {"decision": decision}
 
     def commit_evidence(self, task: ResearchTask, candidate: CandidateResult,
-                        decision, claim: str) -> dict[str, Any]:
+                        decision, claim: str,
+                        evidence_id: str | None = None) -> dict[str, Any]:
+        ev_id = evidence_id or f"EV-{task.task_id}"
+        # B4.1/B3 幂等重驱动：同 (evidence_id, decision) 已提交 → 零新事件
+        for ev in self.ws.events():
+            if ev["record_type"] != "Evidence":
+                continue
+            rec = ev["record"]
+            if rec.get("evidence_id") == ev_id and \
+                    (rec.get("governance") or {}).get(
+                        "decision", {}).get("decision_id") == decision.decision_id:
+                return {"study_id": self.study_id, "committed": False,
+                        "already_committed": True, "evidence_id": ev_id,
+                        "event_seq": ev["seq"]}
         self._stage(task.task_id, "workspace_update")
         return self.registry.invoke("workspace.record_evidence",
             {"study_id": self.study_id,
-             "record": {"evidence_id": f"EV-{task.task_id}", "task_id": task.task_id,
+             "record": {"evidence_id": ev_id, "task_id": task.task_id,
                         "claim": claim, "effect": candidate.metrics or candidate.effect_estimate,
                         "analysis_version": candidate.analysis_id,
                         "method_rules_applied": [], "candidate_id": candidate.analysis_id},
@@ -220,10 +265,50 @@ class ScientificLoop:
         self._emit(task_id, "terminal", verdict="task_completed", detail=detail)
 
     # ---- 内部 ----
+    def _find_candidate(self, task_id: str, analysis_id: str):
+        """按 (task, analysis_id) 查已有候选（B4.1 身份域；恢复复用入口）。"""
+        if not analysis_id:
+            return None
+        for ev in reversed(self.ws.events()):
+            if ev["record_type"] != "CandidateResult":
+                continue
+            r = ev["record"]
+            if r["analysis_id"] == analysis_id and \
+                    r.get("research_task_id", "") == task_id:
+                return CandidateResult(**r)
+        return None
+
+    def _find_valid_decision(self, candidate: CandidateResult):
+        """查候选的现有有效裁决：同 analysis_id + 同候选指纹 + task 同域 +
+        未失效 + 未被再裁决取代 → 复用（恢复重试不产生第二个等价 decision）。"""
+        from ..workspace import GovernanceDecision, digest
+        want_hash = digest(candidate.model_dump())
+        events = self.ws.events()
+        superseded = {e["record"].get("supersedes_decision_id")
+                      for e in events if e["record_type"] == "GovernanceDecision"}
+        for ev in reversed(events):
+            if ev["record_type"] != "GovernanceDecision":
+                continue
+            d = ev["record"]
+            if d["analysis_id"] != candidate.analysis_id or d["candidate_hash"] != want_hash:
+                continue
+            d_scope = d.get("research_task_id", "")
+            if candidate.research_task_id and d_scope and \
+                    d_scope != candidate.research_task_id:
+                continue
+            if not d.get("valid", True) or d["decision_id"] in superseded:
+                continue
+            return GovernanceDecision(**d)
+        return None
+
     def _candidate_seq(self, candidate: CandidateResult) -> int:
+        scope = getattr(candidate, "research_task_id", "")
         for ev in reversed(self.ws.events()):
             if ev["record_type"] == "CandidateResult" and \
                     ev["record"]["analysis_id"] == candidate.analysis_id:
+                if scope and ev["record"].get("research_task_id", "") \
+                        not in ("", scope):
+                    continue  # 跨 task 同名候选不误取（B4.1 身份域）
                 return ev["seq"]
         raise ValueError(f"候选 {candidate.analysis_id} 不在账本")
 

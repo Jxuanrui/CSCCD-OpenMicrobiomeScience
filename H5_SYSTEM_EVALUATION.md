@@ -140,8 +140,8 @@
 
 1. **Literature/EXTERNAL_LIVE 知识获取对决策的影响**：✅ 已实证（B1，`mra/tests/test_h5_literature_influence.py`，v1 冻结时完成）。原缺口：Router 降级代码存在并实测过一次，但 Golden Benchmark 走 LOCAL_KG 分支——外部知识在完整科研循环中的角色需专门设计案例。
 2. **LLM planner 自主规划质量**：✅ 已实证（B2，`mra/tests/test_h5_complex_planning.py`：7 步计划+依赖图+revision+fallback+方法约束变化+全链 replay）。原缺口：OpenCode 全链通过但任务简单；复杂多步推理（>5 步、跨领域依赖）未测。
-3. **长周期任务恢复**：✅ 已实证（B3，`mra/tests/test_h5_long_horizon_recovery.py`：候选-裁决危险窗口恢复、中断-完整账本语义等价、KSDS 会话跨天预算延续、5 条损坏/篡改/错配负路径）。原缺口：断点续跑机制存在（session save/load），但跨天/跨会话的 Scientific Loop 中断恢复未测试。
-4. **并发任务隔离**：✅ 已实证（B4，`mra/tests/test_h5_concurrent_isolation.py`：3 Case + 6 负路径）。原缺口：多 Workspace 理论独立，但并发写入冲突/锁未测试。
+3. **长周期任务恢复**：✅ 已实证（B3，`mra/tests/test_h5_long_horizon_recovery.py`：Case A–F 全规格——planning/compute/governance/evidence-commit/mutation 五类中断窗口 + 多步计划 s1-s4 完成后从 s5 续跑 + ACK 丢失重试 + KSDS 会话跨天预算延续 + 5 条损坏/篡改/错配负路径；执行状态由账本派生，未引入第二套 workflow engine）。量化指标全零：Duplicate CandidateResult / GovernanceDecision / Evidence commit、Lost lineage、Resume-from-wrong-stage、Illegal re-execution、Replay mismatch。原缺口：断点续跑机制存在（session save/load），但跨天/跨会话的 Scientific Loop 中断恢复未测试。
+4. **并发任务隔离**：✅ 已实证（B4，`mra/tests/test_h5_concurrent_isolation.py`：3 Case + 6 负路径；B4.1 加固后另见 `test_b41_identity_idempotency.py`）。**指标口径（收紧版）**：Unauthorized cross-task contamination = 0；Unauthorized governance reuse = 0；Unauthorized cross-task evidence mutation = 0；Replay contamination = 0；Failed-task unintended impact = 0；Duplicate semantic commit = 0。合法跨任务 Evidence mutation（如 Task B 的新 sensitivity/falsification 结果推翻 Task A 的 Evidence）必须具备：explicit target task/evidence、provenance、actor、rationale、GovernanceDecision、supporting lineage——仅因共用 workspace 产生的隐式跨任务修改被结构性阻断。原缺口：多 Workspace 理论独立，但并发写入冲突/锁未测试。
 5. **更多数据类型**：✅ 已实证（B5，`mra/tests/test_h5_multi_omics.py`：代谢组/蛋白组经数据契约+方法规则适配端到端处理，零 Scientific Core 改动）。原缺口：全部验证基于哈尔滨队列（species/pathway/fungal/viral）；其他组学（代谢组/蛋白组）未触及。
 
 ### Production-readiness Gaps（C 类——如需真实科研使用还缺什么）

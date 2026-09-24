@@ -226,3 +226,32 @@ P0 = Regression Gate 落地（Tier 1 PR / Tier 2 nightly / Tier 3 release-gate�
 B1 Literature influence B→A → Release Readiness Review → 统一 v1 release。
 
 **H6 暂不自动启动**；自主假设提出/跨会话记忆/多 Agent 协作为候选，待 v1 稳定后单独评估。
+
+---
+
+## 附录 F（v1.6，2026-09-24 用户裁决）：B4.1 身份域与幂等（isolation/recovery 前置底座）
+
+**原则**：same scientific command + retry = same scientific state——恢复重试
+（网络重试/进程恢复/ACK 丢失/caller 不确定）不得被误认为新的科研事件。
+
+**身份域**：候选与裁决的正式 lookup 身份为 `(research_task_id, analysis_id)`
+（两者新增加性可选字段 `research_task_id`）。task scope 内重复 analysis_id 由
+`Workspace.append` 结构性硬拒（isolation invariant，系统保证而非调用方约定）；
+跨 task 同名合法；无域裁决遇跨 task 同名候选拒绝歧义解析；legacy 无域条目
+行为不变（向后兼容）。非确定性重算须版本化 analysis_id。
+
+**幂等提交**：`workspace.record_evidence` 同 (evidence_id, 内容, decision)
+重试 → `already_committed` + 既有事件引用，零新事件；只有新
+GovernanceDecision / 新科学内容 / 新 rationale / 显式 revision intent 才
+允许新增 append-only 事件。mutation（revise/downgrade/refute/canonical）
+同状态+同理由重试 → `already_applied`。
+
+**恢复语义（B3 实证）**：执行状态由账本派生（候选在场=compute 完成；
+有效裁决在场=governance 完成；Evidence 在场=commit 完成），loop 四写点
+（adopt/execute/evaluate/commit）幂等重驱动——不引入第二套 checkpoint /
+workflow engine。
+
+**冻结合规**：均为加性字段与行为收紧（幂等去重只消除冗余事件，不改变
+合法事件的语义与顺序）；指标口径同步收紧——Cross-task 类指标一律加
+"Unauthorized" 限定，合法跨任务推翻须显式 target/provenance/actor/
+rationale/GovernanceDecision/supporting lineage。

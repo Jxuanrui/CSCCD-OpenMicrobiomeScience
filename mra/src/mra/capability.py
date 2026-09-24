@@ -261,6 +261,17 @@ def _mutate_evidence(payload, ctx, *, falsification=None, canonical=None):
     if not payload.get("reason"):
         raise ValueError("Scientific State Mutation 必须携带 reason")
     rec = dict(prev["record"])
+    # B4.1 同义变更去重：目标状态与理由均未变化的重复请求不是新科研事件
+    # （恢复重试/ACK 丢失）→ already_applied；新 rationale/新裁决 → 允许新事件。
+    target_fals = falsification if falsification is not None \
+        else rec.get("falsification", "none")
+    target_canon = canonical if canonical is not None else rec.get("canonical", False)
+    if rec.get("falsification", "none") == target_fals and \
+            rec.get("canonical", False) == target_canon and \
+            rec.get("reason") == payload["reason"]:
+        return {"study_id": payload["study_id"], "evidence_id": payload["evidence_id"],
+                "supersedes_seq": prev["seq"], "committed": False,
+                "already_applied": True}
     gov = dict(rec.get("governance") or {})
     gov["last_mutation"] = {"actor": payload.get("actor", "unknown"),
                             "reason": payload["reason"],
@@ -273,7 +284,8 @@ def _mutate_evidence(payload, ctx, *, falsification=None, canonical=None):
                canonical=canonical if canonical is not None else rec.get("canonical", False))
     ws.append(__import__("mra.workspace", fromlist=["Evidence"]).Evidence(**rec))
     return {"study_id": payload["study_id"], "evidence_id": payload["evidence_id"],
-            "supersedes_seq": prev["seq"], "committed": True}
+            "supersedes_seq": prev["seq"], "committed": True,
+            "already_applied": False}
 
 
 def _fn_ws_revise(payload, ctx):
@@ -516,7 +528,11 @@ def build_default_registry() -> CapabilityRegistry:
                         side_effect="WORKSPACE_WRITE", governance_level="guarded"))
 
     def _verify_decision(ws, decision_id, candidate_id=None, need_canonical=False):
-        """账本六验：存在/同候选/指纹一致/allow/未失效/lineage。"""
+        """账本六验：存在/同候选/指纹一致/allow/未失效/lineage。
+
+        B4.1：裁决带 task scope 时按 (task, analysis_id) 精确解析候选；
+        无域裁决遇到跨 task 同名候选时拒绝歧义解析（身份域铁律）。
+        """
         events = ws.events()
         decision = None
         for ev in events:
@@ -525,11 +541,22 @@ def build_default_registry() -> CapabilityRegistry:
                 decision = ev["record"]
         if decision is None:
             raise ValueError(f"裁决 {decision_id} 不在 Scientific Ledger（裸 allow_evidence 不再被接受）")
-        cand_ev = next((e for e in events
-                        if e["record_type"] == "CandidateResult"
-                        and e["record"]["analysis_id"] == decision["analysis_id"]), None)
+        scope = decision.get("research_task_id", "")
+        matches = [e for e in events
+                   if e["record_type"] == "CandidateResult"
+                   and e["record"]["analysis_id"] == decision["analysis_id"]]
+        if scope:
+            cand_ev = next((e for e in matches
+                            if e["record"].get("research_task_id", "") == scope), None)
+        elif len(matches) > 1:
+            raise ValueError(
+                f"候选 {decision['analysis_id']} 跨 task 重复而裁决未带 task scope——"
+                f"拒绝歧义解析（B4.1：裁决与候选须同域）")
+        else:
+            cand_ev = matches[0] if matches else None
         if cand_ev is None:
-            raise ValueError(f"裁决对应候选 {decision['analysis_id']} 不在账本")
+            raise ValueError(f"裁决对应候选 {decision['analysis_id']} 不在账本"
+                             f"（task scope={scope or '无'}）")
         if decision["candidate_event_seq"] != cand_ev["seq"]:
             raise ValueError("裁决引用的候选事件 seq 不符")
         from .workspace import digest as _digest
@@ -556,14 +583,37 @@ def build_default_registry() -> CapabilityRegistry:
         record = dict(payload["record"])
         decision = _verify_decision(ws, payload["decision_id"],
                                     candidate_id=record.get("candidate_id"))
+        # B4.1 幂等提交：同 (evidence_id, 提交内容, decision) 的重试不是新科研事件
+        # （网络重试/进程恢复/ACK 丢失/caller 不确定上一次是否成功）→ already_committed。
+        # 只有新 GovernanceDecision 或新科学内容（claim/effect 变化）才允许新事件。
+        # 两侧内容须经同一 Evidence 模型归一化（默认字段填充）并剥离易变字段后比较。
+        from .workspace import Evidence as _Evidence
+        submitted = _Evidence(**record).model_dump()
+        volatile = ("governance", "created_at")
+        idem_body = {k: v for k, v in submitted.items() if k not in volatile}
+        for ev in ws.events():
+            if ev["record_type"] != "Evidence":
+                continue
+            stored = ev["record"]
+            if stored.get("evidence_id") != record.get("evidence_id"):
+                continue
+            stored_body = {k: v for k, v in stored.items() if k not in volatile}
+            same_decision = (stored.get("governance") or {}).get(
+                "decision", {}).get("decision_id") == decision["decision_id"]
+            if same_decision and stored_body == idem_body:
+                return {"study_id": payload["study_id"], "committed": False,
+                        "already_committed": True,
+                        "evidence_id": record.get("evidence_id"),
+                        "event_seq": ev["seq"]}
         rec_gov = dict(record.get("governance") or {})
         rec_gov["decision"] = {"decision_id": decision["decision_id"],
                                "policy_id": decision["policy_id"],
                                "policy_version": decision["policy_version"],
                                "checks": decision["checks"]}
         record["governance"] = rec_gov
-        return _fn_workspace_record_evidence({"study_id": payload["study_id"],
-                                              "record": record}, ctx)
+        out = _fn_workspace_record_evidence({"study_id": payload["study_id"],
+                                             "record": record}, ctx)
+        return {**out, "already_committed": False}
 
     reg.register(*_impl("workspace.record_evidence", "mra.workspace", "python-inproc",
                         10, _fn_record_evidence_gated,

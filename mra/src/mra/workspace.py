@@ -44,6 +44,11 @@ def digest(obj: Any) -> str:
 
 
 class ResearchTask(BaseModel):
+    """G2 一等研究任务契约（v1.2 加性扩展；旧字段向后兼容）。
+
+    铁律：research_question 不得被 Agent 静默改变——问题变更须显式产生
+    revision/child task（parent_task_id 指回原任务）。
+    """
     model_config = ConfigDict(extra="forbid")
     task_id: str = Field(min_length=3)
     question: str = Field(min_length=1)
@@ -51,6 +56,17 @@ class ResearchTask(BaseModel):
     client: str = "unknown"          # zcode / claude-code / mcp / cli / human …
     model: str = ""                  # 空=人工/离线计划（Harness 不绑定模型）
     status: str = "open"             # open / done / abandoned
+    # ---- G2 contract（可选，缺省兼容旧行为） ----
+    objective: str = ""
+    research_question: str = ""      # 缺省回填 question（同一语义）
+    task_type: str = "exploratory_association"
+    entities: list[str] = Field(default_factory=list)
+    available_data: list[str] = Field(default_factory=list)
+    constraints: list[str] = Field(default_factory=list)  # 如 forbid:EXTERNAL_WRITE
+    requested_outputs: list[str] = Field(default_factory=list)
+    current_stage: str = "created"
+    parent_task_id: str | None = None
+    created_by: str = "unknown"
     created_at: str = Field(default_factory=_now)
 
     @field_validator("status")
@@ -178,6 +194,60 @@ class CandidateResult(BaseModel):
         return v
 
 
+class PlanStep(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+    step_id: str = Field(min_length=1)
+    capability_id: str = Field(min_length=3)   # 只面向能力；禁止绑定 implementation
+    inputs: dict[str, Any] = Field(default_factory=dict)
+    depends_on: list[str] = Field(default_factory=list)   # 依赖图（step_id）
+    expected_output: str = ""
+
+
+class ResearchPlan(BaseModel):
+    """G2 一等研究计划（显式、版本化；Planning 与 Execution 分离的证据物）。
+
+    修订为 append-only：Plan v2 以 supersedes_plan_id 指回 v1，历史不覆盖。
+    """
+    model_config = ConfigDict(extra="forbid")
+    plan_id: str = Field(min_length=3)
+    research_task_id: str = Field(min_length=1)
+    plan_version: int = Field(ge=1)
+    supersedes_plan_id: str | None = None
+    steps: list[PlanStep] = Field(min_length=1)
+    required_capabilities: list[str] = Field(default_factory=list)
+    expected_outputs: list[str] = Field(default_factory=list)
+    method_constraints: list[str] = Field(default_factory=list)   # METHOD_KNOWLEDGE rule_ids
+    governance_requirements: list[str] = Field(default_factory=list)
+    stopping_conditions: list[str] = Field(default_factory=list)
+    fallback_paths: list[str] = Field(default_factory=list)
+    created_by: str = "unknown"
+    created_at: str = Field(default_factory=_now)
+
+    @field_validator("steps")
+    @classmethod
+    def _steps(cls, v: list[PlanStep]) -> list[PlanStep]:
+        ids = [s.step_id for s in v]
+        if len(ids) != len(set(ids)):
+            raise ValueError("step_id 重复")
+        for s in v:
+            unknown = set(s.depends_on) - set(ids)
+            if unknown:
+                raise ValueError(f"step {s.step_id} 依赖不存在的步骤 {unknown}")
+        return v
+
+
+class LoopEvent(BaseModel):
+    """G2 循环事件：stage 迁移 / 四门裁决 / 计划采纳 / 终止（可重放的研究过程）。"""
+    model_config = ConfigDict(extra="forbid")
+    research_task_id: str = Field(min_length=1)
+    kind: str = Field(min_length=1)  # stage_entered|gate_verdict|plan_adopted|terminal
+    stage: str = ""
+    gate: str = ""                   # plan|execution|evidence|mutation
+    verdict: str = ""
+    detail: str = ""
+    at: str = Field(default_factory=_now)
+
+
 class GovernanceDecision(BaseModel):
     """Scientific Ledger 可验证的正式治理裁决（一等账本对象）。
 
@@ -216,6 +286,8 @@ class WorkspaceState(BaseModel):
     tool_executions: int = 0
     candidate_results: int = 0
     governance_decisions: int = 0
+    research_plans: int = 0
+    loop_events: int = 0
     narrative_version: str = ""
     canonical_refs: dict[str, str] = Field(default_factory=dict)
 
@@ -223,7 +295,8 @@ class WorkspaceState(BaseModel):
 _RECORD_TYPES = {"ResearchTask": ResearchTask, "KnowledgeProvenance": KnowledgeProvenance,
                  "ToolExecution": ToolExecution, "Evidence": Evidence,
                  "CandidateResult": CandidateResult,
-                 "GovernanceDecision": GovernanceDecision}
+                 "GovernanceDecision": GovernanceDecision,
+                 "ResearchPlan": ResearchPlan, "LoopEvent": LoopEvent}
 
 
 class Workspace:
@@ -276,6 +349,10 @@ class Workspace:
                 state.candidate_results += 1
             elif rtype == "GovernanceDecision":
                 state.governance_decisions += 1
+            elif rtype == "ResearchPlan":
+                state.research_plans += 1
+            elif rtype == "LoopEvent":
+                state.loop_events += 1
             elif rtype == "Evidence":
                 evidence_by_id[rec["evidence_id"]] = rec  # 后写覆盖=修订可追溯
         state.evidence = list(evidence_by_id.values())
@@ -287,5 +364,5 @@ class Workspace:
 
 
 __all__ = ["CandidateResult", "Evidence", "GovernanceDecision", "KnowledgeProvenance",
-           "ResearchTask", "SOURCE_TYPES", "ToolExecution", "Workspace",
-           "WorkspaceState", "digest"]
+           "LoopEvent", "PlanStep", "ResearchPlan", "ResearchTask", "SOURCE_TYPES",
+           "ToolExecution", "Workspace", "WorkspaceState", "digest"]

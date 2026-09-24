@@ -386,6 +386,37 @@ def _fn_atlas_single_exposure_scan(payload, ctx):
     return {"candidate": candidate.model_dump(), "execution_verdicts": all_verdicts}
 
 
+def _fn_diversity_alpha_shannon(payload, ctx):
+    """COMPUTE_ONLY：α 多样性（Shannon）按样本计算 → CandidateResult（diversity 形态）。"""
+    import numpy as np
+    from .research import datasources as ds
+    from .workspace import CandidateResult, digest
+
+    features = payload.get("features", "species")
+    ft = ds.load_features(features)
+    if features in ("species", "fungal", "viral"):
+        ft = ft.loc[:, [c for c in ft.columns if c.split("|")[-1].startswith("s__")]]
+    rel = ft.div(ft.sum(axis=1).replace(0, np.nan), axis=0)
+    shannon = -(rel * np.log(rel)).sum(axis=1, skipna=True)
+    shannon = shannon.dropna()
+    q = float(np.quantile(shannon, [0.25, 0.5, 0.75])[1])
+    candidate = CandidateResult(
+        analysis_id=payload.get("analysis_id") or f"alpha-{features}",
+        capability_id="diversity.alpha_shannon", implementation_id="mra.numpy",
+        capability_version="1.0.0", implementation_version="1.0.0",
+        input_fingerprint=digest({"features": features, "n_samples": int(ft.shape[0])}),
+        output_summary=f"n={len(shannon)}; median_shannon={q:.4f}",
+        result_type="diversity_alpha",
+        result_payload={"median": float(q),
+                        "iqr": [float(np.quantile(shannon, 0.25)),
+                                float(np.quantile(shannon, 0.75))]},
+        metrics={"n_samples": int(len(shannon)), "median_shannon": round(float(q), 4)},
+        assumptions_checked=["按样本TSS相对化", "skipna"],
+        provenance={"features": features, "n_samples": int(ft.shape[0])},
+        deterministic=True)
+    return {"candidate": candidate.model_dump(), "execution_verdicts": []}
+
+
 def build_default_registry() -> CapabilityRegistry:
     """S2 第一批 Golden×3 + Track B 只读批 + workspace.* 高治理变更能力。"""
     reg = CapabilityRegistry()
@@ -569,6 +600,12 @@ def build_default_registry() -> CapabilityRegistry:
                         {"candidate": "CandidateResult(result_type=atlas_scan)",
                          "execution_verdicts": "list"}, _ws_prov,
                         side_effect="COMPUTE_ONLY", governance_level="guarded"))
+
+    reg.register(*_impl("diversity.alpha_shannon", "mra.numpy", "python-inproc", 10,
+                        _fn_diversity_alpha_shannon,
+                        {"features": "str=species", "analysis_id": "string?"},
+                        {"candidate": "CandidateResult(result_type=diversity_alpha)"},
+                        _ws_prov, side_effect="COMPUTE_ONLY", governance_level="guarded"))
 
     # ---- 首个 COMPUTE_ONLY：Scientific Compute 基准（不写 Evidence） ----
     reg.register(*_impl("association.partial_spearman", "mra.r", "python-inproc", 10,

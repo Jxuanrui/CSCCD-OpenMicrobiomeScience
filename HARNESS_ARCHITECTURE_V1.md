@@ -177,3 +177,33 @@ Evidence → {canonical | sensitivity_passed | downgraded | refuted}。六铁律
 method.query→gap.check→association.partial_spearman(真实治理门R：n=1060/30检验/
 4显著+审计verdicts)→CandidateResult→gate(allow)→record_execution→
 record_evidence→mark_downgraded(supersedes_seq=4)→replay 一致；无裁决提交被拦。
+
+---
+
+## 附录 D（v1.4，2026-09-24）：G2 Scientific Research Loop 契约
+
+**一等对象**：ResearchTask（12字段契约，research_question 不可静默变更——变更须
+显式 revision/child task，parent_task_id 指回）；ResearchPlan（版本化，
+steps 只面向 capability_id，禁止绑定 implementation_id，plan_gate 拦截；
+修订 append-only：v2 以 supersedes_plan_id 指回 v1）；LoopEvent
+（stage 迁移/四门裁决/计划采纳/终止——可重放的研究过程）。
+
+**七阶段固定状态机**（不依赖自然语言隐式表示进度）：gap_assessment →
+knowledge_acquisition → method_constraint_resolution → planning →
+governed_execution → evidence_evaluation → workspace_update。
+
+**四门穿透**（plan → gate → execute → gate → evidence → gate → workspace）：
+plan_gate（能力存在/无实现绑定/方法约束/停止条件）、execution_gate（能力可用/
+任务约束 forbid:*/治理等级/EXTERNAL_WRITE 须 governed）、evidence_gate
+（GovernanceDecision 裁决 + 账本六验）、state_mutation_gate（workspace.*
+内建，set_canonical 须 canonical_eligible 裁决）。
+
+**六种合法停止**（"不能继续做"是合法科研结果而非 Agent failure）：
+task_completed / insufficient_data / unresolved_method_gap /
+blocking_governance / no_valid_capability / evidence_insufficient。
+
+**双 runtime 金环实测**（standalone + OpenCode kimi-k3 真实自主驱动同一引擎）：
+两侧账本逐项一致——20 事件 / plans=1 / candidates=2 / decisions=1 / evidence=1 /
+8 阶段序列相同 / 4 门裁决序列相同（plan:allow→execution:allow→evidence:allow→
+execution:allow）/ terminal=task_completed / 同 policy@1.1.0。差异仅在
+Agent 层（模型不同/措辞不同）——scientific loop 语义 runtime-independent 成立。

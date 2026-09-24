@@ -73,7 +73,7 @@ def test_invoke_route_and_gap_with_graph_context(tmp_path, monkeypatch):
 
 def test_catalog_exports_schema_not_callables():
     cat = build_default_registry().catalog()
-    assert len(cat) == 19 and all("input_schema" in c for c in cat)
+    assert len(cat) == 20 and all("input_schema" in c for c in cat)
     assert all(not str(c.get("implementation_id", "")).startswith("<") for c in cat)
 
 

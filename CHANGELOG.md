@@ -2,6 +2,43 @@
 
 ## v1.2.0 candidate（Unreleased）
 
+### P3 — Backup / Restore Automation
+
+> P3 原则：**Backup 是 Scientific State Snapshot，不是文件复制。**恢复后的
+> 系统必须是同一个科研系统——identity / sequence / lineage / replay 语义
+> 全部一致。
+
+- **BackupManifest**（`mra/backup.py`）：backup_id / created_at /
+  source_workspace_id / **ledger_head_seq / ledger_hash / snapshot_hash** /
+  schema_version / capability_registry_version / policy_version /
+  graph_snapshot_id / replay_summary（恢复等价性的判定基线）/ file_inventory
+  （逐文件 checksum）。
+- **内容边界**：只备份 events.jsonl + manifest.json（结构上无凭据/缓存/
+  runtime 可泄）；创建与恢复双侧对账本做凭据二次扫描（append 守卫外再一道，
+  Secret leakage in backup = 0）；工作区目录中的临时文件不进入备份。
+- **Full / Incremental**：full 为基础正确性目标；incremental 只备份
+  seq > from_seq 的段（引用 base_backup_id，段-基准衔接校验：首 seq 须为
+  from_seq+1），恢复 = base + 段拼接后整体校验。
+- **Restore fail-closed 流水线**：load manifest → schema 兼容判定
+  （compatible | **migration_required，禁止静默升级**；1.1→1.2 加性演进
+  兼容表）→ 逐文件 checksum → ledger_hash → staging 拷贝 → staging 上
+  **replay 摘要 + seq 严格连续性**验证 → 原子换入目标。任何一步失败 →
+  staging 丢弃、既有目标零改动（含回滚路径）。
+- **时间点语义**：恢复显式回到 manifest.ledger_head_seq；备份后的未来
+  事件不混入；恢复后新事件从 head+1 顺延（Sequence collision = 0），
+  历史事件零改写（Historical evidence mutation = 0）。
+- Cases A–E + 增量链 + 内容边界/凭据 8 用例（`tests/test_p3_backup_restore.py`）：
+  A 正常恢复逐事件等价（含 provenance）；B 篡改 ledger/manifest/checksum
+  三路拒绝且目标零污染；C schema 判定（同版/加性旧版 compatible、未知版
+  migration_required）；D 恢复后继续科研（新任务新 seq、历史前缀逐事件
+  不变、lineage 完好）；E 时间点恢复（head=备份点、未来事件不混入）。
+- 验收指标全锁死：Restore lineage/replay mismatch = 0；Corrupted backup
+  accepted = 0；Secret leakage in backup = 0；Sequence collision = 0；
+  Historical evidence mutation = 0。
+- P3 明确不做：多节点复制 / RAFT / 分布式数据库 / cloud orchestration
+  （single-host 可靠恢复）。
+- Tests：474 → **482 passed / 2 skipped**（+8 P3 用例）
+
 ### P2 — External Knowledge A–E Contract
 
 > P2 原则：**外部世界不可靠时系统守证据纪律。**目标不是加数据源数量，

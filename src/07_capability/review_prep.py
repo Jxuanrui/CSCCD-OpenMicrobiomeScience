@@ -61,7 +61,7 @@ _EXPLICIT = {
     "intervention": ["supplementation", "administration", "treated",
                      "supplemented", "gavage", "intake", "probiotic"],
     "geography": ["chinese", "china", "european", "japanese", "korean",
-                  "african", "indian", "population"],
+                  "african", "indian"],   # population≠geography（precision 一审移除）
     "endpoint": ["inflammation", "tumorigenesis", "barrier", "proliferation",
                  "survival", "dysbiosis", "colitis", "tumor"],
     "timepoint": ["weeks", "days", "months", "hours", "after"],
@@ -88,7 +88,14 @@ OBJECT_SIDE_GAPS = {
 
 def _hit(text: str, dim: str):
     t = text.lower()
-    return [k for k in _EXPLICIT.get(dim, []) if k.lower() in t] or None
+    import re
+    out = []
+    for k in _EXPLICIT.get(dim, []):
+        kl = k.lower()
+        # 词边界匹配（precision 一审：子串匹配致 translated→late 类假阳性）
+        if re.search(rf"(?<![a-z0-9]){re.escape(kl)}(?![a-z0-9])", t):
+            out.append(k)
+    return out or None
 
 
 def build_context(evidence_text: str, object_id: str, subject_id: str = "") -> dict:
@@ -216,8 +223,9 @@ def side_ev(idx, sid, pred, pmids: str):
 
 #: span 规范化契约（裁决第 4 项，冻结）：小写折叠 + 全部 Unicode 空白（含
 #: 换行/制表）折叠为单空格 + 首尾去除；不做 NFKC、不去标点、不剥引用标记、
-#: 不做句子边界切分。变更此算法必须 bump 版本并迁移 assertion_id。
-SPAN_NORMALIZATION_VERSION = "norm/0.1-lowercase-ws-collapse"
+#: 不做句子边界切分；基底 = evidence + sentence 拼接（0.1→0.2 基底变更）。
+#: 变更此算法必须 bump 版本并迁移 assertion_id。
+SPAN_NORMALIZATION_VERSION = "norm/0.2-lowercase-ws-collapse-basis-evd-plus-sent"
 
 
 def _norm_span(text: str) -> str:
@@ -248,7 +256,7 @@ def iter_atomic_ok_records():
                 continue
             if r.get("status") != "ok" or r.get("predicate") == "no_relation":
                 continue
-            span = _norm_span(r.get("evidence") or r.get("sentence") or "")
+            span = _norm_span(f"{r.get('evidence') or ''} {r.get('sentence') or ''}")
             key = (r["subject"]["id"], r["predicate"], r["object"]["id"],
                    str(r.get("pmid", "")), span)
             if key in seen_spans:   # recovery 重跑产生的重复原子 → 幂等去重
@@ -268,6 +276,7 @@ def build_relation_assertions(conflicted_pairs: set) -> dict:
         full_span_ids.append(aid)   # 完整 span 派生（列仅展示截断，不入 ID）
         ids.add(aid)
         div = "contextual_divergence_pending" if (sid, oid) in conflicted_pairs else ""
+        # 口径统一：context 抽取文本 == ID 的 span 基 == 存储列（evidence+sentence 拼接）
         text = f"{r.get('evidence') or ''} {r.get('sentence') or ''}"
         ctx = build_context(text, oid, sid)
         rows.append({
@@ -276,7 +285,7 @@ def build_relation_assertions(conflicted_pairs: set) -> dict:
             "direction": r.get("polarity", "neutral"),
             "confidence": r.get("confidence", ""),
             "evidence_pmid": pmid,
-            "evidence_span_norm": span[:180],
+            "evidence_span_norm": span[:1000],  # 完整 span（ID 始终用完整 span；此列供 precision QC 核验）
             "provenance": json.dumps({
                 "execution_id": r.get("execution_id", ""),
                 "capability_id": r.get("capability_id", ""),
@@ -444,13 +453,24 @@ def main():
             except (json.JSONDecodeError, TypeError):
                 continue
             for dim, spec in ctx.items():
+                span_text = str(r.get("evidence_span_norm", ""))
+                kw_anchor = ""
+                for kw in str(spec.get("value", "")).split(","):
+                    kw = kw.strip().lower()
+                    pos = span_text.find(kw) if kw else -1
+                    if pos >= 0:
+                        lo, hi = max(0, pos - 70), min(len(span_text), pos + 90)
+                        kw_anchor = ("..." if lo > 0 else "") + span_text[lo:hi] + \
+                                    ("..." if hi < len(span_text) else "")
+                        break
                 rec = {"assertion_id": r["assertion_id"], "dimension": dim,
                        "extracted_value": spec.get("value", ""),
                        "status": spec.get("status", ""),
                        "source": spec.get("source", ""),
                        "applicable": spec.get("applicable", ""),
                        "unknown_reason": spec.get("unknown_reason", ""),
-                       "evidence": r.get("evidence_span_norm", "")[:220],
+                       "evidence_anchor_window": kw_anchor or span_text[:160],
+                       "evidence_full_span_head": span_text[:120],
                        "human_supported_yes_no": "", "reviewer_note": ""}
                 if spec.get("status") == "explicit":
                     by_dim.setdefault(dim, []).append(rec)

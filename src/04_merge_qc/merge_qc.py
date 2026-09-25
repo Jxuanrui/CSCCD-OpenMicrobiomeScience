@@ -171,11 +171,19 @@ def main():
     annf=MERGED/'divergence_annotations.tsv'
     if annf.exists():
         annhash=_adapter.file_sha256(annf)
+    import json as _j2
+    _fm = {}
+    _fmp = MERGED/'finalize_metrics.json'
+    if _fmp.exists():
+        try:
+            _fm = _j2.loads(_fmp.read_text(encoding='utf-8')).get('assertion_counts', {})
+        except _j2.JSONDecodeError:
+            pass
     manifest=_adapter.write_snapshot_manifest(
         n_nodes=len(nodes), n_edges=len(edges), pending_review=len(review),
         conflicts=len(conflicts) if conflicts else 0,
         context_metrics=ctx_metrics, assertion_set_hash=ahash,
-        annotation_set_hash=annhash)
+        annotation_set_hash=annhash, assertion_counts=_fm)
     print(f"[snapshot] {manifest['snapshot_id']} registry_sha={manifest['source_registry_version'][:19]}… "
           f"materialized_to_neo4j={manifest['materialized_to_neo4j']}")
 

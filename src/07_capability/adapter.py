@@ -140,7 +140,8 @@ def write_snapshot_manifest(n_nodes: int, n_edges: int,
                             pending_review: int = 0, conflicts: int = 0,
                             context_metrics: dict | None = None,
                             assertion_set_hash: str = "",
-                            annotation_set_hash: str = "") -> dict:
+                            annotation_set_hash: str = "",
+                            assertion_counts: dict | None = None) -> dict:
     """graph_snapshot_id bridge：主图物化（Neo4j）前的 QC 锚点。
 
     裁决（2026-09-25）：批次结果禁止直接进入主图，必须经过 QC 与
@@ -169,6 +170,11 @@ def write_snapshot_manifest(n_nodes: int, n_edges: int,
         "assertion_set_hash": assertion_set_hash,
         # H（裁决）：context 指标随 manifest 报告；定位= context-aware（非 complete）
         "positioning": "context-aware representation (NOT context-complete)",
+        "snapshot_status": "Context-aware Microbiome KG Snapshot v1",
+        "P0_status": "RELEASED",
+        "assertion_counts": assertion_counts or {},
+        "retained_assertion_count": 0, "manual_hold_count": 0,
+        "materialization_eligible_assertion_count": 0,
         "context_metrics": context_metrics or {},
         "n_nodes": n_nodes, "n_edges": n_edges,
         "pending_review": pending_review, "conflicts": conflicts,

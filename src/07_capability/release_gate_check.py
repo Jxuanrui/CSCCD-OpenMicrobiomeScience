@@ -200,6 +200,23 @@ def main():
         summary["ontology_refinement_backlog"] == len(backlog)
     checks["final_hashes_present"] = bool(
         manifest["assertion_set_hash"]) and bool(manifest["annotation_set_hash"])
+    fm = json.loads((MERGED / "finalize_metrics.json").read_text(encoding="utf-8"))
+
+    # ---- Bookkeeping invariants（收口裁决 2026-09-25）----
+    os_ = fm["overall_sample"]
+    checks["review_sample_arithmetic_invariant"] = (
+        os_["confirmed_yes"] + os_["explicit_no"] + os_["unresolved_manual_hold"]
+        == os_["sample_size"])
+    ac = fm["assertion_counts"]
+    _a = pd.read_csv(MERGED / "relation_assertions.tsv", sep="\t").fillna("")
+    _live_hold = (_a["manual_hold"] != "").sum()
+    checks["assertion_count_invariant"] = (
+        ac["materialization_eligible_assertion_count"]
+        == ac["retained_assertion_count"] - ac["manual_hold_count"]
+        - ac["other_nonmaterializable_count"]
+        and ac["retained_assertion_count"] == len(_a)
+        and ac["manual_hold_count"] == _live_hold)
+
     checks["materialized_to_neo4j_false"] = manifest["materialized_to_neo4j"] is False
 
     # ---- 收口新增四项（裁决 5）----
@@ -252,7 +269,6 @@ def main():
             "Context Precision QC（context_precision_sample.tsv 人工复核）",
             "整体人工抽检（pending_review_sample.tsv + conflicts_review.tsv）"],
         "materialization_authorized": False}
-    fm = json.loads((MERGED / "finalize_metrics.json").read_text(encoding="utf-8"))
     def _v(cond):
         return "PASS" if cond else "BLOCKER"
     v1_report = {
@@ -275,6 +291,8 @@ def main():
             "Manifest/version/hash": _v(checks["manifest_versions_complete"] and checks["final_hashes_present"] and checks["assertion_count_consistent"]),
             "Neo4j materialization authorization": "MANUAL_REVIEW_REQUIRED"},
         "materialized_to_neo4j": False,
+        "snapshot_status": "Context-aware Microbiome KG Snapshot v1",
+        "P0_status": "RELEASED",
         "v1_release_conditions_met": all(
             v == "PASS" for v in {
                 _v(checks["zero_duplicate_assertion_id"]),

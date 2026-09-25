@@ -83,7 +83,29 @@ def main():
     ap.add_argument("--pmids", help="按指定 PMID 清单拉取（JSON 数组文件，优先于疾病域检索；"
                                     "用于并入外部高质量语料如 MicrobeScholar）")
     ap.add_argument("--batch-size", type=int, default=50)
+    ap.add_argument("--backfill-provenance", action="store_true",
+                    help="对既有语料幂等回填记录级 provenance（不重新拉取）")
     args = ap.parse_args()
+    if args.backfill_provenance:
+        import sys as _sys
+        _sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "07_capability"))
+        from adapter import stamp_provenance
+        OUT.mkdir(parents=True, exist_ok=True)
+        target = OUT / "articles.jsonl"
+        n, anom = 0, 0
+        lines_out = []
+        for line in target.open(encoding="utf-8"):
+            rec = json.loads(line)
+            if "_prov" not in rec:
+                stamp_provenance(rec, "pubtator3", "pubtator3@2026-09", backfill=True)
+                n += 1
+            anom += len(rec.get("_anomalies", []))
+            lines_out.append(json.dumps(rec, ensure_ascii=False))
+        tmp = target.with_suffix(".jsonl.tmp")
+        tmp.write_text("\n".join(lines_out) + "\n", encoding="utf-8")
+        tmp.replace(target)
+        print(f"[backfill] provenance 回填 {n} 条；未来日期 anomaly 累计 {anom} 条", flush=True)
+        return
     OUT.mkdir(parents=True, exist_ok=True)
     out = OUT / "articles.jsonl"
     session = requests.Session()
@@ -140,9 +162,20 @@ def main():
         fetched += len(batch)
         print(f"  PubTator: {min(i+args.batch_size,len(uniq))}/{len(uniq)} | 累计 {fetched} 篇", flush=True)
         time.sleep(0.5)
+    # P0（裁决 2026-09-25）：记录级 provenance——retrieved_at/raw_hash/source_version；
+    # 未来日期进 anomaly 标记，不自动修改原值。adapter 为 src/07_capability。
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "07_capability"))
+    from adapter import stamp_provenance
+    stamped = 0
+    for rec in existing.values():
+        if "_prov" not in rec:
+            stamp_provenance(rec, "pubtator3", "pubtator3@2026-09")
+            stamped += 1
     with out.open("w", encoding="utf-8") as f:
         for rec in existing.values():
             f.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    print(f"[prov] 新增记录级 provenance {stamped}/{len(existing)} 条", flush=True)
     print(f"[out] 合并去重后 {len(existing)} 篇 → {out}", flush=True)
 
 

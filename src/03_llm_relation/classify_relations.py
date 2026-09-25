@@ -14,6 +14,7 @@ import json
 import os
 import re
 import threading
+import time
 from collections import Counter
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
@@ -675,8 +676,27 @@ def demote_indirect_mechanism(rows):
     return n
 
 
+EXEC = {"capability_id": "", "execution_id": "", "started_at": ""}
+USAGE_REF = Path(__file__).resolve().parents[2] / "data/registry/resource_usage.jsonl"
+
+
 def snapshot(rows):
     OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+    # 裁决 2026-09-25（staging 字段）：created_at / execution_id / capability_id /
+    # resource_ref。旧记录显式标注 backfill（不伪造创建时间）；新记录真实时间戳。
+    for r in rows:
+        if r is None:
+            continue
+        if r.get("capability_id") != EXEC.get("capability_id"):
+            r["created_at"] = f"backfill@{EXEC['started_at']}"
+            r["execution_id"] = EXEC["execution_id"]
+            r["capability_id"] = EXEC["capability_id"]
+            r["resource_ref"] = str(USAGE_REF)
+        else:
+            r.setdefault("created_at", EXEC["started_at"])
+            r.setdefault("execution_id", EXEC["execution_id"])
+            r.setdefault("capability_id", EXEC["capability_id"])
+            r.setdefault("resource_ref", str(USAGE_REF))
     with OUTPUT.open("w", encoding="utf-8") as f:
         for r in rows:
             if r is None:
@@ -696,6 +716,16 @@ def main():
     model = os.getenv("OPENAI_MODEL", "glm-5.3")
     if not key or not base:
         raise SystemExit("请设置 OPENAI_API_KEY 和 OPENAI_BASE_URL")
+
+    # Capability Adapter v0.1：执行信封 + ResourceUsage 账本引用
+    import sys as _sys
+    _sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "07_capability"))
+    import adapter as _adapter
+    global EXEC, USAGE_REF
+    EXEC = _adapter.new_execution(_adapter.CAP_CLASSIFY)
+    USAGE_REF = _adapter.USAGE_LEDGER
+    _t0 = time.time()
+    print(f"[adapter] execution={EXEC['execution_id']} workspace={EXEC['workspace_id']}", flush=True)
 
     records = [json.loads(x) for x in INPUT.open(encoding="utf-8")]
     wanted = set()
@@ -846,6 +876,14 @@ def main():
     print(f"[out] 候选 {len(final)}；状态 {dict(st)}；正向存活 {len(ok_rows)}；API 调用 {api_calls}", flush=True)
     print(f"[pred] {dict(Counter(r['predicate'] for r in ok_rows))}", flush=True)
     print(f"[out] -> {OUTPUT}", flush=True)
+
+    # Capability Adapter v0.1：ResourceUsage 记账（token 维度当前中转未回报，
+    # 如实记 0 并标注；API 调用数为真实计数）
+    _adapter.append_usage(
+        EXEC, model_calls=int(api_calls), external_api_calls=0,
+        wall_duration_ms=(time.time() - _t0) * 1000,
+        note=f"pairs={len(final)}; ok={len(ok_rows)}; "
+             f"tokens=0(unreported-by-relay); judge={args.judge_model}")
 
 
 if __name__ == "__main__":

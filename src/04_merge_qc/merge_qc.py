@@ -70,6 +70,28 @@ def main():
             subject, obj=r['subject'],r['object']
             key=(subject['id'],r['predicate'],obj['id'])
             groups.setdefault(key,[]).append(r)
+        # P2 冲突契约（裁决 2026-09-25）：同一 (subject, object) 上存在对立谓词
+        # → 双方 evidence 保留、进 conflict_state、禁止自动选择（不自动并入主图）。
+        OPPOSITES={'alleviates':'aggravates','aggravates':'alleviates',
+                   'promotes_growth':'inhibits_growth','inhibits_growth':'promotes_growth'}
+        by_pair={}
+        for (sid,pred,oid) in groups:
+            by_pair.setdefault((sid,oid),[]).append(pred)
+        conflicted=set(); conflicts=[]
+        for (sid,oid),preds in by_pair.items():
+            for pred in set(preds):
+                opp=OPPOSITES.get(pred)
+                if opp and opp in preds and pred < opp:  # 规范序去重（每冲突组一行）
+                    conflicted.add((sid,pred,oid)); conflicted.add((sid,opp,oid))
+                    pm=lambda p: ';'.join(sorted({r.get('pmid','') for r in groups[(sid,p,oid)] if r.get('pmid')}))
+                    conflicts.append({'subject':sid,'object':oid,
+                                      'predicate_a':pred,'pmids_a':pm(pred),
+                                      'predicate_b':opp,'pmids_b':pm(opp),
+                                      'state':'conflict_state',
+                                      'resolution':'manual_review_required'})
+        if conflicts:
+            pd.DataFrame(conflicts).to_csv(MERGED/'conflicts.tsv',sep='\t',index=False)
+            print(f'[conflict] 对立谓词冲突 {len(conflicts)} 组——双方保留、待人工裁决（不自动入图）')
         for key,rs in groups.items():
             pmids=sorted({r.get('pmid','') for r in rs if r.get('pmid')})
             years=sorted({str(r.get('year','')) for r in rs if r.get('year')})
@@ -79,7 +101,9 @@ def main():
                  'confidence':max(float(r.get('confidence',0)) for r in rs),
                  'polarity':rs[0].get('polarity','neutral'),'last_updated':date.today().isoformat()}
             review.append(row)
-            if len(pmids)>=2:
+            if key in conflicted:
+                row['evidence_tier']='C'; row['conflict_state']=True
+            elif len(pmids)>=2:
                 row['evidence_tier']='B'; agg[key]=row
             else:
                 row['evidence_tier']='C'
@@ -113,5 +137,14 @@ def main():
     nodes.to_csv(MERGED/'merged_nodes.tsv',sep='\t',index=False)
     print(f'[out] 主图 nodes={len(nodes)} edges={len(edges)}; pending_review={len(review)}')
     print(f'[qc] 主图重复边={edges.duplicated(["subject","predicate","object"]).sum()}')
+    # Capability Adapter v0.1：snapshot manifest（裁决——主图物化必须经 QC 与 manifest）
+    import sys as _sys
+    _sys.path.insert(0, str(ROOT / 'src/07_capability'))
+    import adapter as _adapter
+    manifest=_adapter.write_snapshot_manifest(
+        n_nodes=len(nodes), n_edges=len(edges), pending_review=len(review),
+        conflicts=len(conflicts) if conflicts else 0)
+    print(f"[snapshot] {manifest['snapshot_id']} registry_sha={manifest['source_registry_version'][:19]}… "
+          f"materialized_to_neo4j={manifest['materialized_to_neo4j']}")
 
 if __name__=='__main__': main()

@@ -129,6 +129,20 @@ def main():
         add['evidence_tier']='B'
         edges=pd.concat([edges,add],ignore_index=True)
     edges=edges.drop_duplicates(subset=['subject','predicate','object'],keep='first')
+    # G（裁决 2026-09-25）：canonical = 派生视图，非事实层——
+    # 冲突 pair 的 canonical 边标 context_dependent 并挂 supporting assertions，
+    # 禁止跨 context majority vote 恢复唯一方向。
+    if 'relation_status' not in edges.columns: edges['relation_status']='context_supported'
+    if 'canonical_view' not in edges.columns: edges['canonical_view']='derived_summary'
+    confl_pairs=set()
+    cf=MERGED/'conflicts.tsv'
+    if cf.exists():
+        cdf=pd.read_csv(cf,sep='\t')
+        confl_pairs={(r['subject'],r['object']) for _,r in cdf.iterrows()}
+    if confl_pairs:
+        mask=edges.apply(lambda r:(r['subject'],r['object']) in confl_pairs,axis=1)
+        edges.loc[mask,'relation_status']='context_dependent'
+        print(f'[canonical] context_dependent canonical 边 {int(mask.sum())} 条（派生视图，方向不唯一）')
     # Phase 2 预备：source_ref/curator 元数据列（存量边按来源段回填，事实字段零改动）
     if 'source_ref' not in edges.columns: edges['source_ref']=''
     if 'curator' not in edges.columns: edges['curator']='automated_pipeline'
@@ -141,9 +155,27 @@ def main():
     import sys as _sys
     _sys.path.insert(0, str(ROOT / 'src/07_capability'))
     import adapter as _adapter
+    import json as _json
+    ctx_metrics={}
+    csum=MERGED/'contextual_divergence_summary.json'
+    if csum.exists():
+        try:
+            ctx_metrics=_json.loads(csum.read_text(encoding='utf-8')).get('context_metrics',{})
+        except _json.JSONDecodeError:
+            pass
+    ahash=''
+    art=MERGED/'relation_assertions.tsv'
+    if art.exists():
+        ahash=_adapter.file_sha256(art)
+    annhash=''
+    annf=MERGED/'divergence_annotations.tsv'
+    if annf.exists():
+        annhash=_adapter.file_sha256(annf)
     manifest=_adapter.write_snapshot_manifest(
         n_nodes=len(nodes), n_edges=len(edges), pending_review=len(review),
-        conflicts=len(conflicts) if conflicts else 0)
+        conflicts=len(conflicts) if conflicts else 0,
+        context_metrics=ctx_metrics, assertion_set_hash=ahash,
+        annotation_set_hash=annhash)
     print(f"[snapshot] {manifest['snapshot_id']} registry_sha={manifest['source_registry_version'][:19]}… "
           f"materialized_to_neo4j={manifest['materialized_to_neo4j']}")
 

@@ -137,7 +137,10 @@ def append_usage(execution: dict, **measured) -> dict:
 
 
 def write_snapshot_manifest(n_nodes: int, n_edges: int,
-                            pending_review: int = 0, conflicts: int = 0) -> dict:
+                            pending_review: int = 0, conflicts: int = 0,
+                            context_metrics: dict | None = None,
+                            assertion_set_hash: str = "",
+                            annotation_set_hash: str = "") -> dict:
     """graph_snapshot_id bridge：主图物化（Neo4j）前的 QC 锚点。
 
     裁决（2026-09-25）：批次结果禁止直接进入主图，必须经过 QC 与
@@ -154,6 +157,19 @@ def write_snapshot_manifest(n_nodes: int, n_edges: int,
         "snapshot_id": snapshot_id,
         "created_at": now_iso(),
         "workspace_id": workspace_id(),
+        # J（裁决）：冻结语义版本面——区分数据变化与知识表示规则变化
+        "kg_schema_version": "1.0-rc1",
+        "assertion_schema_version": "relation-assertion/0.5-atomic-content-addressed",
+        "divergence_taxonomy_version": "taxonomy/0.2",
+        "context_schema_version": "context/0.5-evidence-aware-15dim",
+        "context_extractor_version": "extractor/0.5-keyword-conservative",
+        "comparability_gate_version": "gate/0.5-inferred-no-upgrade",
+        "ontology_version": "ncbitaxon+mesh+lfs-food@2026-09",
+        "annotation_set_hash": annotation_set_hash,
+        "assertion_set_hash": assertion_set_hash,
+        # H（裁决）：context 指标随 manifest 报告；定位= context-aware（非 complete）
+        "positioning": "context-aware representation (NOT context-complete)",
+        "context_metrics": context_metrics or {},
         "n_nodes": n_nodes, "n_edges": n_edges,
         "pending_review": pending_review, "conflicts": conflicts,
         "merged_nodes_sha256": file_sha256(MERGED_DIR / "merged_nodes.tsv"),

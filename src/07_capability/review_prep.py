@@ -33,11 +33,15 @@ random.seed(20260925)
 
 #: 核心情境维度（裁决 3）
 CONTEXT_DIMS = ("strain", "host_species", "host_population", "geography",
-                "disease", "disease_stage", "diet", "intervention", "dose",
-                "experimental_model", "study_type", "endpoint", "timepoint")
-#: 可比性判定的关键维度（裁决 5）
-KEY_DIMS = ("strain", "host_species", "disease", "experimental_model",
-            "study_type", "endpoint", "intervention")
+                "disease", "disease_subtype", "disease_stage", "diet",
+                "intervention", "dose", "experimental_model", "study_type",
+                "endpoint", "timepoint", "anatomical_site")
+#: 可比性判定的关键维度（裁决 5 + E：anatomical_site）
+KEY_DIMS = ("strain", "host_species", "disease", "anatomical_site",
+            "experimental_model", "study_type", "endpoint", "intervention")
+
+#: 实体粒度不适用于所有 subject（C：applicable 判定）
+_IN_VITRO_MARKERS = ("in vitro", "organoid", "cell line")
 
 _EXPLICIT = {
     "strain": ["MMX", "MRE 600", "ETBF", "NTBF", "pks+", "K-12", "Nissle",
@@ -63,6 +67,19 @@ _EXPLICIT = {
     "timepoint": ["weeks", "days", "months", "hours", "after"],
     "dose": ["mg", "g/kg", "dose", "cfu"],
     "host_population": [],   # 无显式词表——默认 unknown（禁止模型补全）
+    "anatomical_site": ["gut", "intestinal", "colonic", "colon", "liver",
+                        "hepatic", "skin", "airway", "lung", "periodontal",
+                        "oral", "systemic", "blood", "brain", "joint"],
+    "disease_subtype": ["ulcerative", "crohn", "collagenous", "CAC", "NASH",
+                        "NAFLD", "atopic", "collitis-associated",
+                        "colitis-associated", "autoimmune", "hepatocellular"],
+}
+
+#: object 侧粗粒度本体 gap（F：不假设粒度问题只在 microbe/food 侧）
+OBJECT_SIDE_GAPS = {
+    "MESH:D007249": {"entity_granularity": "inflammation_to_anatomical"},
+    "MESH:D009369": {"entity_granularity": "cancer_to_specific_cancer"},
+    "MESH:D015179": {"entity_granularity": "cancer_to_specific_cancer"},
 }
 
 
@@ -71,47 +88,96 @@ def _hit(text: str, dim: str):
     return [k for k in _EXPLICIT.get(dim, []) if k.lower() in t] or None
 
 
-def build_context(evidence_text: str, object_id: str) -> dict:
-    """Evidence-aware context：每维 {value,status,source}；缺失显式 unknown。"""
+def build_context(evidence_text: str, object_id: str, subject_id: str = "") -> dict:
+    """Evidence-aware context v0.5：每维 {value,status,source,applicable,unknown_reason}。
+
+    C：unknown 细分 applicable/unknown_reason（in vitro 的 geography 与
+    human cohort 未采样不是同一种 unknown）；D：object 实体身份 =
+    structured_metadata（可确认 match），非 inferred。
+    """
     ctx = {}
+    t = evidence_text.lower()
     for dim in CONTEXT_DIMS:
         if dim == "disease":
-            if object_id.startswith("MESH:") or object_id.startswith("NCBITaxon:"):
-                ctx[dim] = {"value": object_id, "status": "inferred",
-                            "source": "metadata"}
+            if object_id.startswith(("MESH:", "NCBITaxon:")):
+                ctx[dim] = {"value": object_id, "status": "explicit",
+                            "source": "structured_metadata", "applicable": True,
+                            "unknown_reason": ""}
             else:
-                ctx[dim] = {"value": "", "status": "unknown", "source": ""}
+                ctx[dim] = _unknown(True, "not_extractable_from_entity_id")
             continue
         found = _hit(evidence_text, dim)
-        ctx[dim] = ({"value": ",".join(found[:2]), "status": "explicit",
-                     "source": "abstract_sentence"} if found
-                    else {"value": "", "status": "unknown", "source": ""})
+        if found:
+            ctx[dim] = {"value": ",".join(found[:2]), "status": "explicit",
+                        "source": "abstract_sentence", "applicable": True,
+                        "unknown_reason": ""}
+        else:
+            applicable, reason = _applicability(dim, subject_id, t)
+            ctx[dim] = _unknown(applicable, reason)
     return ctx
 
 
+def _unknown(applicable: bool, reason: str) -> dict:
+    return {"value": "", "status": "unknown",
+            "source": "",
+            "applicable": applicable,
+            "unknown_reason": reason if applicable else "not_applicable"}
+
+
+def _applicability(dim: str, subject_id: str, text: str) -> tuple[bool, str]:
+    """维度适用性（确定性规则；in vitro 的 population = not_applicable）。"""
+    if dim == "strain":
+        if subject_id.startswith("LFS:FOOD"):
+            return False, ""
+        return True, "not_present_in_available_evidence"
+    if dim in ("host_population", "geography"):
+        if any(m in text for m in _IN_VITRO_MARKERS):
+            return False, ""
+        return True, "not_present_in_available_evidence"
+    if dim == "dose":
+        if _hit(text, "intervention"):
+            return True, "not_present_in_available_evidence"
+        return False, ""
+    return True, "not_present_in_available_evidence"
+
+
 def context_completeness(ctx: dict) -> float:
-    known = sum(1 for d in CONTEXT_DIMS if ctx[d]["status"] != "unknown")
-    return round(known / len(CONTEXT_DIMS), 4)
+    """覆盖率分母 = applicable 维度（C：固定 13/15 维会人为放大 missingness）。"""
+    applicable = [d for d in CONTEXT_DIMS if ctx[d].get("applicable", True)]
+    known = sum(1 for d in applicable if ctx[d]["status"] != "unknown")
+    return round(known / max(len(applicable), 1), 4)
 
 
 def comparability_gate(ctx_a: dict, ctx_b: dict) -> tuple[str, str]:
-    """关键维度门：全匹配→comparable；任一 unknown→partially；已知不匹配→incomparable。"""
-    basis, incomparable, unknown = [], False, False
+    """关键维度门 v0.5（D）：inference 可以增加怀疑，不能制造确定性。
+
+    explicit / structured_metadata 双侧在场 → 可确认 match/mismatch；
+    inferred 只作 soft——可维持 partially 或提示检查，不得单独升级 comparable。
+    """
+    basis, incomparable, blocked = [], False, False
     for d in KEY_DIMS:
         a, b = ctx_a[d], ctx_b[d]
         if a["status"] == "unknown" or b["status"] == "unknown":
-            unknown = True
+            if not (a.get("applicable", True) and b.get("applicable", True)):
+                basis.append(f"{d}:not_applicable")
+                continue
+            blocked = True
             basis.append(f"{d}:unknown")
             continue
+        confirmable = all(x["status"] in ("explicit",)
+                          or x.get("source") == "structured_metadata"
+                          for x in (a, b))
         sa = {x.strip().lower() for x in a["value"].split(",") if x.strip()}
         sb = {x.strip().lower() for x in b["value"].split(",") if x.strip()}
         if sa & sb:
-            basis.append(f"{d}:match")
+            basis.append(f"{d}:match" if confirmable else f"{d}:soft_match(inferred)")
+            if not confirmable:
+                blocked = True   # soft 不能升级 comparable
         else:
             incomparable = True
-            basis.append(f"{d}:mismatch")
+            basis.append(f"{d}:mismatch" if confirmable else f"{d}:soft_mismatch(inferred)")
     status = ("incomparable" if incomparable
-              else "partially_comparable" if unknown else "comparable")
+              else "partially_comparable" if blocked else "comparable")
     return status, ";".join(basis)
 
 
@@ -140,21 +206,62 @@ def side_ev(idx, sid, pred, pmids: str):
     return " || ".join(out) if out else ""
 
 
-def build_relation_assertions(idx, conflicted_pairs: set) -> int:
-    """RelationAssertion 一等知识对象（裁决 7/8）：每条 ok 证据一个 assertion，
-    context 挂 assertion 级；canonical relation 只是派生摘要（不吞并 assertion）。"""
-    rows = []
-    for (sid, pred, pmid), r in sorted(idx.items()):
-        div = "contextual_divergence_pending" if (sid, r["object"]["id"]) in conflicted_pairs else ""
+def _norm_span(text: str) -> str:
+    return " ".join((text or "").lower().split())
+
+
+def _content_id(subject: str, predicate: str, object_: str,
+                pmid: str, span: str) -> str:
+    """内容寻址稳定 ID（B）：sha256(s·p·o·pmid·normalized_span)——
+    resume/replay/rerun 后同一证据单元同 identity；execution_id 只进 provenance。"""
+    import hashlib
+    canon = json.dumps([subject, predicate, object_, pmid, _norm_span(span)],
+                       ensure_ascii=False, separators=(",", ":"))
+    return "RA-" + hashlib.sha256(canon.encode("utf-8")).hexdigest()[:20]
+
+
+def iter_atomic_ok_records():
+    """A：原子单位 = subject+predicate+object+PMID+evidence span。
+
+    直接遍历 staging ok 行（不经 best-per-key 索引——那会吞掉同 PMID 的
+    其他 object/span，重新制造 context collapse）。"""
+    seen_spans = set()
+    with STAGING.open(encoding="utf-8") as f:
+        for line in f:
+            try:
+                r = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if r.get("status") != "ok" or r.get("predicate") == "no_relation":
+                continue
+            span = _norm_span(r.get("evidence") or r.get("sentence") or "")
+            key = (r["subject"]["id"], r["predicate"], r["object"]["id"],
+                   str(r.get("pmid", "")), span)
+            if key in seen_spans:   # recovery 重跑产生的重复原子 → 幂等去重
+                continue
+            seen_spans.add(key)
+            yield r, span
+
+
+def build_relation_assertions(conflicted_pairs: set) -> dict:
+    """RelationAssertion v0.5（A/B）：evidence-level atomic unit + 稳定 identity。"""
+    import hashlib
+    rows, ids = [], set()
+    for r, span in iter_atomic_ok_records():
+        sid, oid = r["subject"]["id"], r["object"]["id"]
+        pmid = str(r.get("pmid", ""))
+        aid = _content_id(sid, r["predicate"], oid, pmid, span)
+        ids.add(aid)
+        div = "contextual_divergence_pending" if (sid, oid) in conflicted_pairs else ""
         text = f"{r.get('evidence') or ''} {r.get('sentence') or ''}"
-        ctx = build_context(text, r["object"]["id"])
+        ctx = build_context(text, oid, sid)
         rows.append({
-            "assertion_id": f"RA-{pmid}-{abs(hash((sid, pred, r['object']['id']))) % 10**8:08d}",
-            "subject": sid, "predicate": pred, "object": r["object"]["id"],
+            "assertion_id": aid,
+            "subject": sid, "predicate": r["predicate"], "object": oid,
             "direction": r.get("polarity", "neutral"),
             "confidence": r.get("confidence", ""),
             "evidence_pmid": pmid,
-            "evidence_excerpt": (r.get("evidence") or r.get("sentence", ""))[:200],
+            "evidence_span_norm": span[:180],
             "provenance": json.dumps({
                 "execution_id": r.get("execution_id", ""),
                 "capability_id": r.get("capability_id", ""),
@@ -165,7 +272,14 @@ def build_relation_assertions(idx, conflicted_pairs: set) -> int:
             "divergence": div,
             "is_canonical_summary": False})
     pd.DataFrame(rows).to_csv(MERGED / "relation_assertions.tsv", sep="\t", index=False)
-    return len(rows)
+    digest = hashlib.sha256(
+        (MERGED / "relation_assertions.tsv").read_bytes()).hexdigest()
+    # I：Assertion Atomicity QC（构造性：一行=一原子；ID 无重复=无聚合）
+    n_rows = len(rows)
+    atomicity = {"n_assertions": n_rows, "duplicate_ids": n_rows - len(ids),
+                 "multi_pmid_per_assertion": 0,
+                 "status": "PASS" if n_rows == len(ids) else "FAIL"}
+    return {"n": n_rows, "sha256": "sha256:" + digest, "atomicity_qc": atomicity}
 
 
 def main():
@@ -185,8 +299,8 @@ def main():
         for _, c in pd.read_csv(cf, sep="\t").fillna("").iterrows():
             ev_a = side_ev(idx, c["subject"], c["predicate_a"], c["pmids_a"])
             ev_b = side_ev(idx, c["subject"], c["predicate_b"], c["pmids_b"])
-            ctx_a = build_context(ev_a, c["object"])
-            ctx_b = build_context(ev_b, c["object"])
+            ctx_a = build_context(ev_a, c["object"], c["subject"])
+            ctx_b = build_context(ev_b, c["object"], c["subject"])
             for ctx in (ctx_a, ctx_b):
                 for d in CONTEXT_DIMS:
                     ctx_stats[ctx[d]["status"]] += 1
@@ -214,6 +328,11 @@ def main():
         out = pd.DataFrame(rows)
         out.to_csv(MERGED / "conflicts_review.tsv", sep="\t", index=False)
         n_ann = (out["primary_divergence_type"] != "").sum()
+
+        # ---- RelationAssertion（A/B，先于 summary：hash 入 summary）----
+        ainfo = build_relation_assertions(conflicted_pairs)
+        print(f"[assertions] RelationAssertion {ainfo['n']} 条；sha={ainfo['sha256'][:19]}…")
+        print(f"[atomicity-qc] {ainfo['atomicity_qc']}")
 
         # ---- summary v2（五类 context 指标 + backlog 规范化分组计数）----
         ann_rows = out[out["primary_divergence_type"] != ""]
@@ -256,6 +375,9 @@ def main():
             "ontology_gap": gap_groups,
             "ontology_refinement_backlog": backlog,
             "true_biological_conflict": 0,  # 仅 comparable 且反向（gate 当前无 comparable → 0）
+            "assertion_set": {"n_assertions": ainfo["n"],
+                              "assertion_set_hash": ainfo["sha256"],
+                              "atomicity_qc": ainfo["atomicity_qc"]},
             "ai_first_pass": True, "human_review": "pending"}
         (MERGED / "contextual_divergence_summary.json").write_text(
             json.dumps(summary, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -263,9 +385,44 @@ def main():
         print(f"[context] {summary['context_metrics']}")
         print(f"[backlog] {backlog} 项（分组：{ {k: sum(v.values()) for k, v in gap_groups.items()} }）")
 
-    # ---- RelationAssertion ----
-    n_assert = build_relation_assertions(idx, conflicted_pairs)
-    print(f"[assertions] RelationAssertion {n_assert} 条（assertion 级 context/provenance）")
+    # ---- F：object 侧本体 gap 派生（不假设粒度问题只在 microbe/food 侧）----
+    if cf.exists():
+        out2 = pd.read_csv(MERGED / "conflicts_review.tsv", sep="\t").fillna("")
+        extra_gaps = 0
+        for i, r in out2.iterrows():
+            gap = OBJECT_SIDE_GAPS.get(r["object"])
+            if gap:
+                g = json.dumps(gap, ensure_ascii=False)
+                if g not in str(r["ontology_gap"]):
+                    out2.at[i, "ontology_gap"] = (str(r["ontology_gap"]) + ";" + g
+                                                  if str(r["ontology_gap"]) else g)
+                    extra_gaps += 1
+        out2.to_csv(MERGED / "conflicts_review.tsv", sep="\t", index=False)
+        print(f"[object-gap] object 侧粒度 gap 追加 {extra_gaps} 组")
+
+    # ---- I：Context Precision QC 分层抽样（explicit 抽样供人工核 precision）----
+    sample_rows = []
+    if cf.exists():
+        out3 = pd.read_csv(MERGED / "conflicts_review.tsv", sep="\t").fillna("")
+        for _, r in out3.iterrows():
+            for side in ("a", "b"):
+                try:
+                    ctx = json.loads(r[f"context_{side}"])
+                except (json.JSONDecodeError, TypeError):
+                    continue
+                for dim, spec in ctx.items():
+                    if spec.get("status") == "explicit":
+                        sample_rows.append({
+                            "subject": r["subject"], "object": r["object"],
+                            "dim": dim, "extracted_value": spec["value"],
+                            "source": spec["source"],
+                            "evidence": r[f"evidence_{side}"][:220],
+                            "supported?": ""})   # 人工：yes/no
+    if sample_rows:
+        random.shuffle(sample_rows)
+        pd.DataFrame(sample_rows[:40]).to_csv(
+            MERGED / "context_precision_sample.tsv", sep="\t", index=False)
+        print(f"[precision-qc] explicit context 抽样 {min(40, len(sample_rows))} 条待人工核")
 
     # ---- 既有抽检口径 ----
     pr = MERGED / "pending_review_edges.tsv"

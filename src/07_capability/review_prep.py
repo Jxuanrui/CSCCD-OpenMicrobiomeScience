@@ -70,6 +70,9 @@ _EXPLICIT = {
     "anatomical_site": ["gut", "intestinal", "colonic", "colon", "liver",
                         "hepatic", "skin", "airway", "lung", "periodontal",
                         "oral", "systemic", "blood", "brain", "joint"],
+    "disease": ["colitis", "cancer", "carcinoma", "tumor", "tumorigenesis",
+                "inflammation", "IBD", "dermatitis", "obesity", "diabetes",
+                "NASH", "NAFLD", "arthritis", "encephalomyelitis", "neoplasia"],
     "disease_subtype": ["ulcerative", "crohn", "collagenous", "CAC", "NASH",
                         "NAFLD", "atopic", "collitis-associated",
                         "colitis-associated", "autoimmune", "hepatocellular"],
@@ -99,12 +102,17 @@ def build_context(evidence_text: str, object_id: str, subject_id: str = "") -> d
     t = evidence_text.lower()
     for dim in CONTEXT_DIMS:
         if dim == "disease":
-            if object_id.startswith(("MESH:", "NCBITaxon:")):
-                ctx[dim] = {"value": object_id, "status": "explicit",
-                            "source": "structured_metadata", "applicable": True,
+            # 契约修正（裁决第 1 项）：host/background disease context——只由
+            # 证据文本/研究元数据填写；object/target 实体身份不得无条件复制进
+            # context（target≠context conflation：object=colitis 不代表研究
+            # 发生在 colitis 背景下）。object 疾病信息由 assertion.object 承载。
+            found = _hit(evidence_text, "disease")
+            if found:
+                ctx[dim] = {"value": ",".join(found[:2]), "status": "explicit",
+                            "source": "abstract_sentence", "applicable": True,
                             "unknown_reason": ""}
             else:
-                ctx[dim] = _unknown(True, "not_extractable_from_entity_id")
+                ctx[dim] = _unknown(True, "not_present_in_available_evidence")
             continue
         found = _hit(evidence_text, dim)
         if found:
@@ -206,6 +214,12 @@ def side_ev(idx, sid, pred, pmids: str):
     return " || ".join(out) if out else ""
 
 
+#: span 规范化契约（裁决第 4 项，冻结）：小写折叠 + 全部 Unicode 空白（含
+#: 换行/制表）折叠为单空格 + 首尾去除；不做 NFKC、不去标点、不剥引用标记、
+#: 不做句子边界切分。变更此算法必须 bump 版本并迁移 assertion_id。
+SPAN_NORMALIZATION_VERSION = "norm/0.1-lowercase-ws-collapse"
+
+
 def _norm_span(text: str) -> str:
     return " ".join((text or "").lower().split())
 
@@ -246,11 +260,12 @@ def iter_atomic_ok_records():
 def build_relation_assertions(conflicted_pairs: set) -> dict:
     """RelationAssertion v0.5（A/B）：evidence-level atomic unit + 稳定 identity。"""
     import hashlib
-    rows, ids = [], set()
+    rows, ids, full_span_ids = [], set(), []
     for r, span in iter_atomic_ok_records():
         sid, oid = r["subject"]["id"], r["object"]["id"]
         pmid = str(r.get("pmid", ""))
         aid = _content_id(sid, r["predicate"], oid, pmid, span)
+        full_span_ids.append(aid)   # 完整 span 派生（列仅展示截断，不入 ID）
         ids.add(aid)
         div = "contextual_divergence_pending" if (sid, oid) in conflicted_pairs else ""
         text = f"{r.get('evidence') or ''} {r.get('sentence') or ''}"
@@ -272,13 +287,17 @@ def build_relation_assertions(conflicted_pairs: set) -> dict:
             "divergence": div,
             "is_canonical_summary": False})
     pd.DataFrame(rows).to_csv(MERGED / "relation_assertions.tsv", sep="\t", index=False)
+    # replay 自检（裁决 4）：完整 span 重派生 ID 逐条一致（展示列截断不入 ID）
+    replay_ok = full_span_ids == [r["assertion_id"] for r in rows]
     digest = hashlib.sha256(
         (MERGED / "relation_assertions.tsv").read_bytes()).hexdigest()
     # I：Assertion Atomicity QC（构造性：一行=一原子；ID 无重复=无聚合）
     n_rows = len(rows)
     atomicity = {"n_assertions": n_rows, "duplicate_ids": n_rows - len(ids),
                  "multi_pmid_per_assertion": 0,
-                 "status": "PASS" if n_rows == len(ids) else "FAIL"}
+                 "replay_identity_stable": bool(replay_ok),
+                 "span_normalization_version": SPAN_NORMALIZATION_VERSION,
+                 "status": "PASS" if n_rows == len(ids) and replay_ok else "FAIL"}
     return {"n": n_rows, "sha256": "sha256:" + digest, "atomicity_qc": atomicity}
 
 
@@ -341,17 +360,39 @@ def main():
             "secondary_divergence_type"].value_counts().to_dict()
         res = ann_rows["resolution_action"].value_counts().to_dict()
         gap_groups: dict = {}
-        for g in ann_rows["ontology_gap"]:
-            if not g:
-                continue
+
+        def _add_gap(group_key: str, gap_json: str, origin: str, ledger: list):
             try:
-                d = json.loads(g)
-            except json.JSONDecodeError:
-                continue
+                d = json.loads(gap_json)
+            except (json.JSONDecodeError, TypeError):
+                return
             for k, v in d.items():
                 gap_groups.setdefault(k, {})
                 gap_groups[k][v] = gap_groups[k].get(v, 0) + 1
-        backlog = sum(sum(b.values()) for b in gap_groups.values())
+                ledger.append({"group": group_key, "gap_type": k, "dimension": v,
+                               "origin": origin,
+                               "record_id": f"{group_key}|{k}|{v}"})
+
+        backlog_ledger = []
+        for _, r0 in ann_rows.iterrows():
+            for g in str(r0["ontology_gap"]).split(";"):
+                if g.strip():
+                    _add_gap(f"{r0['subject']}|{r0['object']}", g.strip(),
+                             "manual_annotation", backlog_ledger)
+        # object 侧派生 gap 统一入账（与手工注记同台账、同去重键）
+        for _, r0 in out.iterrows():
+            og = OBJECT_SIDE_GAPS.get(r0["object"])
+            if og:
+                _add_gap(f"{r0['subject']}|{r0['object']}",
+                         json.dumps(og, ensure_ascii=False),
+                         "object_side_derived", backlog_ledger)
+        uniq = {r["record_id"]: r for r in backlog_ledger}
+        pd.DataFrame(sorted(uniq.values(), key=lambda r: r["record_id"])).to_csv(
+            MERGED / "ontology_backlog.tsv", sep="\t", index=False)
+        backlog = len(uniq)
+        backlog_qc = {"declared_count": backlog, "unique_records": len(uniq),
+                      "duplicates_merged": len(backlog_ledger) - len(uniq),
+                      "status": "PASS" if backlog == len(uniq) else "FAIL"}
         summary = {
             "phase": "contextual_divergence_review_v0.2",
             "total_divergence": len(out),
@@ -374,6 +415,7 @@ def main():
                 "unknown_rate": round(ctx_stats["unknown"] / max(ctx_stats["total"], 1), 4)},
             "ontology_gap": gap_groups,
             "ontology_refinement_backlog": backlog,
+            "ontology_backlog_qc": backlog_qc,
             "true_biological_conflict": 0,  # 仅 comparable 且反向（gate 当前无 comparable → 0）
             "assertion_set": {"n_assertions": ainfo["n"],
                               "assertion_set_hash": ainfo["sha256"],
@@ -385,44 +427,50 @@ def main():
         print(f"[context] {summary['context_metrics']}")
         print(f"[backlog] {backlog} 项（分组：{ {k: sum(v.values()) for k, v in gap_groups.items()} }）")
 
-    # ---- F：object 侧本体 gap 派生（不假设粒度问题只在 microbe/food 侧）----
-    if cf.exists():
-        out2 = pd.read_csv(MERGED / "conflicts_review.tsv", sep="\t").fillna("")
-        extra_gaps = 0
-        for i, r in out2.iterrows():
-            gap = OBJECT_SIDE_GAPS.get(r["object"])
-            if gap:
-                g = json.dumps(gap, ensure_ascii=False)
-                if g not in str(r["ontology_gap"]):
-                    out2.at[i, "ontology_gap"] = (str(r["ontology_gap"]) + ";" + g
-                                                  if str(r["ontology_gap"]) else g)
-                    extra_gaps += 1
-        out2.to_csv(MERGED / "conflicts_review.tsv", sep="\t", index=False)
-        print(f"[object-gap] object 侧粒度 gap 追加 {extra_gaps} 组")
+    # ---- F：object 侧 gap 已统一入 ontology_backlog.tsv 台账（口径单一）----
 
-    # ---- I：Context Precision QC 分层抽样（explicit 抽样供人工核 precision）----
-    sample_rows = []
-    if cf.exists():
-        out3 = pd.read_csv(MERGED / "conflicts_review.tsv", sep="\t").fillna("")
-        for _, r in out3.iterrows():
-            for side in ("a", "b"):
-                try:
-                    ctx = json.loads(r[f"context_{side}"])
-                except (json.JSONDecodeError, TypeError):
-                    continue
-                for dim, spec in ctx.items():
-                    if spec.get("status") == "explicit":
-                        sample_rows.append({
-                            "subject": r["subject"], "object": r["object"],
-                            "dim": dim, "extracted_value": spec["value"],
-                            "source": spec["source"],
-                            "evidence": r[f"evidence_{side}"][:220],
-                            "supported?": ""})   # 人工：yes/no
-    if sample_rows:
-        random.shuffle(sample_rows)
-        pd.DataFrame(sample_rows[:40]).to_csv(
+    # ---- I：Context Precision QC v2（precision≠coverage；assertion 级分层）----
+    try:
+        asserts = pd.read_csv(MERGED / "relation_assertions.tsv", sep="\t").fillna("")
+    except FileNotFoundError:
+        asserts = None
+    if asserts is not None:
+        sample_rows = []
+        by_dim: dict = {}
+        na_rows, np_rows = [], []
+        for _, r in asserts.iterrows():
+            try:
+                ctx = json.loads(r["context"])
+            except (json.JSONDecodeError, TypeError):
+                continue
+            for dim, spec in ctx.items():
+                rec = {"assertion_id": r["assertion_id"], "dimension": dim,
+                       "extracted_value": spec.get("value", ""),
+                       "status": spec.get("status", ""),
+                       "source": spec.get("source", ""),
+                       "applicable": spec.get("applicable", ""),
+                       "unknown_reason": spec.get("unknown_reason", ""),
+                       "evidence": r.get("evidence_span_norm", "")[:220],
+                       "human_supported_yes_no": "", "reviewer_note": ""}
+                if spec.get("status") == "explicit":
+                    by_dim.setdefault(dim, []).append(rec)
+                elif spec.get("status") == "unknown" and not spec.get("applicable", True) \
+                        and len(na_rows) < 5:
+                    na_rows.append(rec)
+                elif spec.get("status") == "unknown" and spec.get("applicable", True) \
+                        and spec.get("unknown_reason") == "not_present_in_available_evidence" \
+                        and len(np_rows) < 5:
+                    np_rows.append(rec)
+        # 每维度 ≤4 条 explicit（覆盖 anatomical/disease/subtype/strain/model/intervention）
+        for dim in sorted(by_dim):
+            sample_rows.extend(by_dim[dim][:4])
+        sample_rows.extend(na_rows)
+        sample_rows.extend(np_rows)
+        pd.DataFrame(sample_rows).to_csv(
             MERGED / "context_precision_sample.tsv", sep="\t", index=False)
-        print(f"[precision-qc] explicit context 抽样 {min(40, len(sample_rows))} 条待人工核")
+        print(f"[precision-qc] v2 分层抽样 {len(sample_rows)} 条"
+              f"（explicit×{ {d: min(4, len(v)) for d, v in sorted(by_dim.items())} }"
+              f" + not_applicable {len(na_rows)} + not_present {len(np_rows)}）")
 
     # ---- 既有抽检口径 ----
     pr = MERGED / "pending_review_edges.tsv"

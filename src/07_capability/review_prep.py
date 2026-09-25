@@ -43,6 +43,12 @@ KEY_DIMS = ("strain", "host_species", "disease", "anatomical_site",
 #: 实体粒度不适用于所有 subject（C：applicable 判定）
 _IN_VITRO_MARKERS = ("in vitro", "organoid", "cell line")
 
+#: 泛化/欠具体触发 token（1A 收口）：允许作 evidence signal，
+#: 但不得单独确认 context match（"60 mg/kg" vs "100 mg/kg" 不能因都是 mg 而 match）
+_GENERIC_VALUES = frozenset({"strain", "treated", "intake", "supplementation",
+                             "probiotic", "mg", "dose", "cfu", "g/kg", "after",
+                             "trial", "randomized"})
+
 _EXPLICIT = {
     "strain": ["MMX", "MRE 600", "ETBF", "NTBF", "pks+", "K-12", "Nissle",
                "engineered", "strain", "isolate", "clone", "derived from",
@@ -98,7 +104,8 @@ def _hit(text: str, dim: str):
     return out or None
 
 
-def build_context(evidence_text: str, object_id: str, subject_id: str = "") -> dict:
+def build_context(evidence_text: str, object_id: str, subject_id: str = "",
+                  object_name: str = "") -> dict:
     """Evidence-aware context v0.5：每维 {value,status,source,applicable,unknown_reason}。
 
     C：unknown 细分 applicable/unknown_reason（in vitro 的 geography 与
@@ -114,6 +121,14 @@ def build_context(evidence_text: str, object_id: str, subject_id: str = "") -> d
             # context（target≠context conflation：object=colitis 不代表研究
             # 发生在 colitis 背景下）。object 疾病信息由 assertion.object 承载。
             found = _hit(evidence_text, "disease")
+            if found and object_name:
+                # 1B：target≠background——排除与 object 自身名同形的命中词
+                # （"…aggravates colitis" 句中 colitis 是 target 不是研究背景）
+                obj_words = {w for w in object_name.lower().replace(",", " ").split()
+                             if len(w) > 3}
+                found = [f for f in found
+                         if not any(ow in f.lower() or f.lower() in ow
+                                    for ow in obj_words)] or None
             if found:
                 ctx[dim] = {"value": ",".join(found[:2]), "status": "explicit",
                             "source": "abstract_sentence", "applicable": True,
@@ -184,7 +199,13 @@ def comparability_gate(ctx_a: dict, ctx_b: dict) -> tuple[str, str]:
                           for x in (a, b))
         sa = {x.strip().lower() for x in a["value"].split(",") if x.strip()}
         sb = {x.strip().lower() for x in b["value"].split(",") if x.strip()}
-        if sa & sb:
+        matched = sa & sb
+        generic_only = bool(matched) and matched <= _GENERIC_VALUES
+        if matched and generic_only:
+            # 1A：交集仅含泛化 token → evidence signal，不确认 match
+            basis.append(f"{d}:generic_signal({','.join(sorted(matched))})")
+            blocked = True
+        elif matched:
             basis.append(f"{d}:match" if confirmable else f"{d}:soft_match(inferred)")
             if not confirmable:
                 blocked = True   # soft 不能升级 comparable
@@ -197,6 +218,8 @@ def comparability_gate(ctx_a: dict, ctx_b: dict) -> tuple[str, str]:
 
 
 def load_evidence_index():
+    """证据索引（v0.6 修复：key 必须含 object——缺维会把同 PMID 其他对象的
+    证据错配显示，曾导致抽检表 [94] 的假性实体错配）。"""
     idx = {}
     with STAGING.open(encoding="utf-8") as f:
         for line in f:
@@ -206,16 +229,17 @@ def load_evidence_index():
                 continue
             if r.get("status") != "ok" or r.get("predicate") == "no_relation":
                 continue
-            key = (r["subject"]["id"], r["predicate"], str(r.get("pmid", "")))
+            key = (r["subject"]["id"], r["predicate"], r["object"]["id"],
+                   str(r.get("pmid", "")))
             if key not in idx or float(r.get("confidence", 0)) > float(idx[key].get("confidence", 0)):
                 idx[key] = r
     return idx
 
 
-def side_ev(idx, sid, pred, pmids: str):
+def side_ev(idx, sid, pred, oid, pmids: str):
     out = []
     for pmid in [p for p in pmids.split(";") if p]:
-        r = idx.get((sid, pred, pmid))
+        r = idx.get((sid, pred, oid, pmid))
         if r:
             out.append(f"[{pmid}] {r.get('evidence') or r.get('sentence', '')[:160]}")
     return " || ".join(out) if out else ""
@@ -268,6 +292,14 @@ def iter_atomic_ok_records():
 def build_relation_assertions(conflicted_pairs: set) -> dict:
     """RelationAssertion v0.5（A/B）：evidence-level atomic unit + 稳定 identity。"""
     import hashlib
+    holds = {}
+    hold_path = MERGED / "manual_hold.tsv"
+    if hold_path.exists():
+        import csv
+        with hold_path.open(encoding="utf-8") as fh:
+            for row in csv.DictReader(fh, delimiter="\t"):
+                obj_id, _, pmid = row["object_pmid"].partition("@")
+                holds[(row["subject"], row["predicate"], obj_id, pmid)] = row.get("hold_reason", "")
     rows, ids, full_span_ids = [], set(), []
     for r, span in iter_atomic_ok_records():
         sid, oid = r["subject"]["id"], r["object"]["id"]
@@ -278,7 +310,7 @@ def build_relation_assertions(conflicted_pairs: set) -> dict:
         div = "contextual_divergence_pending" if (sid, oid) in conflicted_pairs else ""
         # 口径统一：context 抽取文本 == ID 的 span 基 == 存储列（evidence+sentence 拼接）
         text = f"{r.get('evidence') or ''} {r.get('sentence') or ''}"
-        ctx = build_context(text, oid, sid)
+        ctx = build_context(text, oid, sid, str(r.get("object", {}).get("name", "")))
         rows.append({
             "assertion_id": aid,
             "subject": sid, "predicate": r["predicate"], "object": oid,
@@ -294,6 +326,7 @@ def build_relation_assertions(conflicted_pairs: set) -> dict:
             "context": json.dumps(ctx, ensure_ascii=False),
             "context_completeness": context_completeness(ctx),
             "divergence": div,
+            "manual_hold": holds.get((sid, r["predicate"], oid, pmid), ""),
             "is_canonical_summary": False})
     pd.DataFrame(rows).to_csv(MERGED / "relation_assertions.tsv", sep="\t", index=False)
     # replay 自检（裁决 4）：完整 span 重派生 ID 逐条一致（展示列截断不入 ID）
@@ -325,10 +358,16 @@ def main():
     comp_dist = {}
     if cf.exists():
         for _, c in pd.read_csv(cf, sep="\t").fillna("").iterrows():
-            ev_a = side_ev(idx, c["subject"], c["predicate_a"], c["pmids_a"])
-            ev_b = side_ev(idx, c["subject"], c["predicate_b"], c["pmids_b"])
-            ctx_a = build_context(ev_a, c["object"], c["subject"])
-            ctx_b = build_context(ev_b, c["object"], c["subject"])
+            ev_a = side_ev(idx, c["subject"], c["predicate_a"], c["object"], c["pmids_a"])
+            ev_b = side_ev(idx, c["subject"], c["predicate_b"], c["object"], c["pmids_b"])
+            # object 名从 staging 记录解析（target≠background 的 1B 过滤用）
+            obj_name = ""
+            for (bs, bp, bo, bpm), r in idx.items():
+                if bs == c["subject"] and bo == c["object"]:
+                    obj_name = str(r["object"].get("name", ""))
+                    break
+            ctx_a = build_context(ev_a, c["object"], c["subject"], obj_name)
+            ctx_b = build_context(ev_b, c["object"], c["subject"], obj_name)
             for ctx in (ctx_a, ctx_b):
                 for d in CONTEXT_DIMS:
                     ctx_stats[ctx[d]["status"]] += 1
@@ -503,7 +542,7 @@ def main():
         rand_c = tier_c.sample(n=min(20, len(tier_c)), random_state=25)
         sample = pd.concat([top_b, conflicted, rand_c]).drop_duplicates(
             subset=["subject", "predicate", "object"])
-        sample["evidence"] = [side_ev(idx, r.subject, r.predicate, r.pmids)
+        sample["evidence"] = [side_ev(idx, r.subject, r.predicate, r.object, r.pmids)
                               for r in sample.itertuples()]
         sample["verdict"] = ""
         sample["sampled_at"] = date.today().isoformat()

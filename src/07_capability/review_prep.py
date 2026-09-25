@@ -42,6 +42,29 @@ def load_evidence_index():
     return idx
 
 
+_CTX_PATTERNS = [
+    ("model", ["mice", "mouse", "murine", "in vitro", "organoid", "CAC", "DSS",
+               "AOM", "EAE", "model", "cell line", "HCT-116", "HT-29"]),
+    ("host", ["patients", "human", "cohort", "children", "adults", "elderly",
+              "RCT", "randomized", "volunteers"]),
+    ("strain", ["MMX", "MRE 600", "ETBF", "NTBF", "pks+", "engineered", "strain",
+                "derived from", "genotypes", "K-12", "Nissle"]),
+    ("mechanism", ["LPS", "toxin", "membrane vesicles", "supernatant", "tRNA",
+                   "metabolite", "SCFA", "indole"]),
+]
+
+
+def _ctx_hints(ev_text: str) -> str:
+    """从证据句提取情境提示（首过粗粒度，人工复核列）。"""
+    t = ev_text.lower()
+    hits = []
+    for dim, kws in _CTX_PATTERNS:
+        found = [k for k in kws if k.lower() in t]
+        if found:
+            hits.append(f"{dim}:{','.join(found[:3])}")
+    return "; ".join(hits) if hits else ""
+
+
 def side_ev(idx, sid, pred, pmids: str):
     out = []
     for pmid in [p for p in pmids.split(";") if p]:
@@ -54,24 +77,44 @@ def side_ev(idx, sid, pred, pmids: str):
 def main():
     idx = load_evidence_index()
 
-    # 1) 冲突审阅表：双方证据并排 + 空裁决列
+    # 1) 情境分歧审阅表（v2 语义：conflict = knowledge context divergence signal）
+    #    裁决 2026-09-25：conflict ≠ error——目标不是消除矛盾，而是解释
+    #    "该关系在什么条件下成立"。divergence_type 六类 + resolution_action 五路径；
+    #    既有标注存 divergence_annotations.tsv（键=subject|object），重跑不丢。
     cf = MERGED / "conflicts.tsv"
+    ann_path = MERGED / "divergence_annotations.tsv"
+    ann = {}
+    if ann_path.exists():
+        _a = pd.read_csv(ann_path, sep="\t").fillna("")
+        for _, r in _a.iterrows():
+            ann[f"{r['subject']}|{r['object']}"] = r.to_dict()
     if cf.exists():
         df = pd.read_csv(cf, sep="\t").fillna("")
         rows = []
         for _, c in df.iterrows():
+            ev_a = side_ev(idx, c["subject"], c["predicate_a"], c["pmids_a"])
+            ev_b = side_ev(idx, c["subject"], c["predicate_b"], c["pmids_b"])
+            key = f"{c['subject']}|{c['object']}"
+            a = ann.get(key, {})
             rows.append({
                 "subject": c["subject"], "object": c["object"],
                 "side_a": f"{c['predicate_a']} (pmids: {c['pmids_a']})",
-                "evidence_a": side_ev(idx, c["subject"], c["predicate_a"], c["pmids_a"]),
+                "evidence_a": ev_a,
                 "side_b": f"{c['predicate_b']} (pmids: {c['pmids_b']})",
-                "evidence_b": side_ev(idx, c["subject"], c["predicate_b"], c["pmids_b"]),
-                "verdict": "",  # 人工：side_a / side_b / both / nei
-                "note": ""})
+                "evidence_b": ev_b,
+                "context_a": a.get("context_a", _ctx_hints(ev_a)),
+                "context_b": a.get("context_b", _ctx_hints(ev_b)),
+                "divergence_type": a.get("divergence_type", ""),
+                "resolution_action": a.get("resolution_action", ""),
+                "note": a.get("note", ""),
+                "annotated_by": a.get("annotated_by", "")})
         out = pd.DataFrame(rows)
         out.to_csv(MERGED / "conflicts_review.tsv", sep="\t", index=False)
+        n_ann = (out["divergence_type"] != "").sum()
         n_miss = (out["evidence_a"].str.contains("缺失")).sum() + (out["evidence_b"].str.contains("缺失")).sum()
-        print(f"[conflicts] {len(out)} 组冲突审阅表；证据句缺失 {n_miss} 侧")
+        print(f"[conflicts] {len(out)} 组情境分歧审阅表；已标注 {n_ann}；证据句缺失 {n_miss} 侧")
+        if n_ann:
+            print(f"[divergence] 分布 {dict(out[out.divergence_type != ''].divergence_type.value_counts())}")
 
     # 2) pending 分层抽样
     pr = MERGED / "pending_review_edges.tsv"

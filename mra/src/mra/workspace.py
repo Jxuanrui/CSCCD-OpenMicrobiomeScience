@@ -29,7 +29,8 @@ from typing import Any
 
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-from .resources import ResourceBudget, ResourceUsage, aggregate_usage, budget_verdict
+from .resources import (WORKSPACE_BUDGET_SCOPE, ResourceBudget, ResourceUsage,
+                        aggregate_usage, budget_verdict)
 
 SOURCE_TYPES = ("LOCAL_KG", "EXTERNAL_LIVE", "LITERATURE",
                 "METHOD_KNOWLEDGE", "CURRENT_STUDY")
@@ -289,6 +290,22 @@ class LoopEvent(BaseModel):
     at: str = Field(default_factory=_now)
 
 
+class CrossWorkspaceReference(BaseModel):
+    """P4 显式跨库证据引用：引用而非复制，携带授权与来源 provenance。
+
+    默认 Evidence 是 workspace-private；跨库使用的唯一合法形态是本记录
+    （由 isolation.cross_workspace_reference 在 read grant 校验后落账）。
+    """
+    model_config = ConfigDict(extra="forbid")
+    reference_id: str = Field(min_length=3)
+    evidence_id: str = Field(min_length=1)
+    source_workspace_id: str = Field(min_length=1)
+    target_workspace_id: str = Field(min_length=1)
+    approval: str = ""               # 批准者/理由（grant.authorization；避开凭据键名）
+    provenance: str = ""             # 引用动机与上下文
+    created_at: str = Field(default_factory=_now)
+
+
 class GovernanceDecision(BaseModel):
     """Scientific Ledger 可验证的正式治理裁决（一等账本对象）。
 
@@ -336,6 +353,7 @@ class WorkspaceState(BaseModel):
     loop_events: int = 0
     resource_usages: int = 0            # P1 计量记录数
     budgets: int = 0                     # P1 预算记录数
+    cross_workspace_references: int = 0  # P4 显式跨库引用数
     narrative_version: str = ""
     canonical_refs: dict[str, str] = Field(default_factory=dict)
 
@@ -346,7 +364,9 @@ _RECORD_TYPES = {"ResearchTask": ResearchTask, "KnowledgeProvenance": KnowledgeP
                  "GovernanceDecision": GovernanceDecision,
                  "ResearchPlan": ResearchPlan, "LoopEvent": LoopEvent,
                  # P1 Budget/Resource Metering（v1.2.0 candidate 加性记录类型）
-                 "ResourceUsage": ResourceUsage, "ResourceBudget": ResourceBudget}
+                 "ResourceUsage": ResourceUsage, "ResourceBudget": ResourceBudget,
+                 # P4 Multi-workspace Isolation（加性记录类型）
+                 "CrossWorkspaceReference": CrossWorkspaceReference}
 
 
 class Workspace:
@@ -470,6 +490,8 @@ class Workspace:
                 state.resource_usages += 1
             elif rtype == "ResourceBudget":
                 state.budgets += 1
+            elif rtype == "CrossWorkspaceReference":
+                state.cross_workspace_references += 1
             elif rtype == "Evidence":
                 evidence_by_id[rec["evidence_id"]] = rec  # 后写覆盖=修订可追溯
         state.evidence = list(evidence_by_id.values())
@@ -568,10 +590,32 @@ class Workspace:
         """按任务聚合资源用量 + 有效预算 + 门控判定（P1 observability 出口）。
 
         totals 永远由账本重建（restart/replay 后预算不重置的构造性保证）；
-        预算继承：自有 → parent_task_id 链（include_children 聚合子任务用量
-        到父任务口径，防 child 分裂计量）。
+        预算继承：自有 → parent_task_id 链。
+        P4：research_task_id == WORKSPACE_BUDGET_SCOPE 时返回 workspace 级
+        汇总——全部 ResourceUsage 合计（child task 无法分裂绕过）+
+        workspace 级预算（scope 哨兵声明的 ResourceBudget）。
         """
         events = self.events()
+        if research_task_id == WORKSPACE_BUDGET_SCOPE:
+            usages = [e["record"] for e in events
+                      if e["record_type"] == "ResourceUsage"]
+            totals = aggregate_usage(usages)
+            own = [e["record"] for e in events
+                   if e["record_type"] == "ResourceBudget"
+                   and e["record"].get("research_task_id") == WORKSPACE_BUDGET_SCOPE]
+            budget = None
+            if own:
+                superseded = {b.get("supersedes_budget_id") for b in own}
+                latest = [b for b in own if b.get("budget_id") not in superseded]
+                budget = (latest or own)[-1]
+            return {"research_task_id": WORKSPACE_BUDGET_SCOPE,
+                    "usage_scope": [self.study_dir.name],
+                    "totals": totals,
+                    "by_capability": _group_usage(usages, "capability_id"),
+                    "by_model": _group_usage(usages, "model_id"),
+                    "budget": budget, "budget_inherited_via": [],
+                    "verdict": budget_verdict(budget, totals),
+                    "reusable": {}}
         task_record = next((e["record"] for e in events
                             if e["record_type"] == "ResearchTask"
                             and e["record"].get("task_id") == research_task_id), None)

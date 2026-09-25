@@ -48,6 +48,10 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+#: workspace 级预算的 task-scope 哨兵（P4：约束全 workspace 合计用量）
+WORKSPACE_BUDGET_SCOPE = "__workspace__"
+
+
 class ResourceUsage(BaseModel):
     """一等计量对象：一次真实执行的资源消耗事实（+ 派生成本）。
 

@@ -2,6 +2,47 @@
 
 ## v1.2.0 candidate（Unreleased）
 
+### P4 — Multi-workspace Isolation
+
+> P4 验收标准：两个项目同时存在时，系统**不知道、不读取、不修改**另一个
+> 项目不应该看到的科研事实。workspace 成为真正的安全边界，不是文件夹名。
+
+- **隔离层**（`mra/isolation.py`）：`CrossWorkspaceGrant`（source→target ×
+  scope=read/write/mutate/backup，authorization+provenance）+
+  `IsolationRegistries`（grants / KG 可见性 / 凭据 scope，落位
+  `<root>/_isolation/*.json`——不属于任何 study 账本，天然不进 per-study 备份）。
+- **capability 写入守卫（ctx 激活式）**：`record_evidence /
+  record_execution / revise / downgrade / refute / set_canonical` 统一经
+  `guard_workspace_write`——ctx 绑定 workspace_id 且目标 study 不同且无匹配
+  scope grant → 拒绝；ctx 无 workspace_id = legacy 单信任域（全部既有行为
+  零变化）。scope 精确匹配：write grant 不开 mutation，反之亦然。
+- **跨库证据引用**：默认 workspace-private；跨库唯一合法形态 =
+  `CrossWorkspaceReference` 记录（source/target workspace + approval +
+  provenance，**引用而非复制**——源证据不离开源账本）；grant 必须**真实
+  登记在注册表**（形状正确 ≠ 已授权，伪造授权字典被拒）。
+- **KG 可见性**：snapshot identity ≠ access permission——shared（默认，
+  向后兼容）/ private（workspace 归属）/ restricted（permission）；
+  loop 显式快照须过权限检查（他人 private → IsolationError），自动解析
+  只取当前 workspace 可见的最新快照（全部不可见 → 不使用任何快照）。
+- **凭据边界**：workspace auth_scope 注册表（允许的外部 source 集合，
+  未登记=legacy 全域）；`query_with_scope` 查询前强制 check
+  （Credential scope violation = 0）。
+- **workspace 预算池**：`ResourceBudget` 以 `__workspace__` scope 声明即约束
+  全 workspace 所有 task 的合计用量（`resource_usage(__workspace__)` 汇总）；
+  loop 预算门叠加 workspace 池判定（`workspace:` 前缀标识），child task
+  无法分裂绕过（Budget escape across workspace = 0）。
+- Cases A–G + 指标 10 用例（`tests/test_p4_multi_workspace.py`）：A 双库并行
+  独立；B 跨库引用须登记 grant（伪造拒绝）、引用≠复制；C 跨库 mutation
+  拒绝（read grant 也不行，write/mutate scope 分离）；D shared KG 允许但
+  Evidence 不共享；E private KG 不可见（显式/自动解析双路径）；F backup
+  不含他库数据；G workspace 池耗尽后 task/child 均被拦；凭据 scope 违例
+  拦截；replay 零污染。
+- 验收指标全锁死：Cross-workspace data leakage / Unauthorized evidence
+  access / Unauthorized mutation / Replay contamination / Credential scope
+  violation / Backup scope violation / Budget escape = 0。
+- P4 明确不做：多租户 SaaS / 用户管理系统 / RBAC 全平台 / 网络隔离 / 云部署。
+- Tests：482 → **492 passed / 2 skipped**（+10 P4 用例）
+
 ### P3 — Backup / Restore Automation
 
 > P3 原则：**Backup 是 Scientific State Snapshot，不是文件复制。**恢复后的

@@ -24,7 +24,7 @@ from typing import Any, Callable
 
 from ..capability import CapabilityRegistry, default_registry
 from ..governance import evaluate_candidate
-from ..resources import ResourceBudget, ResourceUsage
+from ..resources import WORKSPACE_BUDGET_SCOPE, ResourceBudget, ResourceUsage
 from ..workspace import (CandidateResult, LoopEvent, ResearchPlan,
                          ResearchTask, Workspace)
 
@@ -99,19 +99,38 @@ class ScientificLoop:
 
     def __init__(self, study_id: str, registry: CapabilityRegistry | None = None,
                  workspace_root=None, executor: Callable[..., dict] | None = None,
-                 graph_snapshot_id: str | None = None):
+                 graph_snapshot_id: str | None = None,
+                 kg_visibility=None):
         self.study_id = study_id
         self.registry = registry or default_registry()
         self.ws = Workspace(study_id, root=workspace_root)
         self._executor = executor  # 可注入执行器（默认 registry.invoke）
         self._graph_snapshot_id = graph_snapshot_id  # None=从 kg 快照解析；""=显式无图谱
+        self._kg_visibility = kg_visibility  # P4：IsolationRegistries（None=不启用）
 
     def _snapshot_id(self) -> str:
-        """本 loop 的知识上下文（KG 快照 id）——进候选与证据 provenance（v1.1.0）。"""
+        """本 loop 的知识上下文（KG 快照 id）——进候选与证据 provenance（v1.1.0）。
+
+        P4：snapshot identity ≠ access permission——启用可见性注册表时，
+        显式 override 须通过权限检查，自动解析只取当前 workspace 可见的
+        最新快照（private/restricted 不可见则跳过）。
+        """
         if self._graph_snapshot_id is not None:
+            if self._kg_visibility is not None and not self._kg_visibility.check_kg_access(
+                    self.study_id, self._graph_snapshot_id):
+                from ..isolation import IsolationError
+                raise IsolationError(
+                    f"KG 快照 {self._graph_snapshot_id} 对 workspace "
+                    f"{self.study_id} 不可见（private/restricted）")
             return self._graph_snapshot_id
         try:
-            from ..kg.snapshot import latest_snapshot
+            from ..kg.snapshot import latest_snapshot, list_snapshots
+            if self._kg_visibility is not None:
+                for snap in reversed(list_snapshots()):
+                    if self._kg_visibility.check_kg_access(self.study_id,
+                                                           snap["snapshot_id"]):
+                        return snap["snapshot_id"]
+                return ""
             return latest_snapshot().name
         except Exception:
             return ""
@@ -292,7 +311,8 @@ class ScientificLoop:
                         "method_rules_applied": [], "candidate_id": candidate.analysis_id,
                         "graph_snapshot_id": self._snapshot_id()},
              "decision_id": decision.decision_id},
-            context={"workspace_root": self._root()})
+            context={"workspace_root": self._root(),
+                     "workspace_id": self.study_id})  # P4：绑定 workspace 边界
 
     def complete(self, task_id: str, detail: str = "") -> None:
         self._emit(task_id, "terminal", verdict="task_completed", detail=detail)
@@ -322,9 +342,21 @@ class ScientificLoop:
         return self.ws.append(usage)
 
     def _usage_gate(self, task_id: str) -> dict:
-        """Pre-execution 门 + 当前 totals（账本重建，restart 后不重置）。"""
+        """Pre-execution 门 + 当前 totals（账本重建，restart 后不重置）。
+
+        P4：task 预算之上叠加 workspace 预算池（scope=__workspace__ 的
+        ResourceBudget 约束全 workspace 合计）——child task 不能分裂绕过。
+        """
         ru = self.ws.resource_usage(task_id)
-        return {"verdict": ru["verdict"], "totals": ru["totals"], "report": ru}
+        exhausted = list(ru["verdict"].get("exhausted") or [])
+        ws_ru = self.ws.resource_usage(WORKSPACE_BUDGET_SCOPE)
+        if ws_ru.get("budget") is not None and not ws_ru["verdict"]["allow"]:
+            exhausted = [f"workspace:{x}" for x in ws_ru["verdict"]["exhausted"]]
+            return {"verdict": {"allow": False, "exhausted": exhausted},
+                    "totals": ru["totals"], "report": ru,
+                    "workspace_totals": ws_ru["totals"]}
+        return {"verdict": ru["verdict"], "totals": ru["totals"], "report": ru,
+                "workspace_totals": ws_ru["totals"]}
 
     def _emit_usage(self, task: ResearchTask, plan: ResearchPlan, step,
                     wall_ms: float, compute_only: bool,

@@ -185,7 +185,9 @@ def _fn_literature_search(payload, ctx):
 
 
 def _fn_workspace_record_execution(payload, ctx):
+    from .isolation import guard_workspace_write
     from .workspace import ToolExecution, Workspace
+    guard_workspace_write(payload["study_id"], ctx, scope="write_evidence")
     ws = Workspace(payload["study_id"], root=ctx.get("workspace_root"))
     ws.append(ToolExecution(**payload["record"]))
     return {"study_id": payload["study_id"], "committed": True}
@@ -253,7 +255,9 @@ def _latest_evidence_event(ws, evidence_id):
 
 
 def _mutate_evidence(payload, ctx, *, falsification=None, canonical=None):
+    from .isolation import guard_workspace_write
     from .workspace import Workspace
+    guard_workspace_write(payload["study_id"], ctx, scope="mutate_evidence")
     ws = Workspace(payload["study_id"], root=ctx.get("workspace_root"))
     prev = _latest_evidence_event(ws, payload["evidence_id"])
     if prev is None:
@@ -575,7 +579,9 @@ def build_default_registry() -> CapabilityRegistry:
         return decision
 
     def _fn_record_evidence_gated(payload, ctx):
+        from .isolation import guard_workspace_write
         from .workspace import Workspace
+        guard_workspace_write(payload["study_id"], ctx, scope="write_evidence")
         ws = Workspace(payload["study_id"], root=ctx.get("workspace_root"))
         if not payload.get("decision_id"):
             raise ValueError("record_evidence 须提供 decision_id（账本六验；"

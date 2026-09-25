@@ -104,17 +104,50 @@ def main():
                 "evidence_b": ev_b,
                 "context_a": a.get("context_a", _ctx_hints(ev_a)),
                 "context_b": a.get("context_b", _ctx_hints(ev_b)),
-                "divergence_type": a.get("divergence_type", ""),
+                "primary_divergence_type": a.get("primary_divergence_type", ""),
+                "secondary_divergence_type": a.get("secondary_divergence_type", ""),
+                "context_match_status": a.get("context_match_status", ""),
+                "ontology_gap": a.get("ontology_gap", ""),
                 "resolution_action": a.get("resolution_action", ""),
                 "note": a.get("note", ""),
                 "annotated_by": a.get("annotated_by", "")})
         out = pd.DataFrame(rows)
         out.to_csv(MERGED / "conflicts_review.tsv", sep="\t", index=False)
-        n_ann = (out["divergence_type"] != "").sum()
+        n_ann = (out["primary_divergence_type"] != "").sum()
         n_miss = (out["evidence_a"].str.contains("缺失")).sum() + (out["evidence_b"].str.contains("缺失")).sum()
         print(f"[conflicts] {len(out)} 组情境分歧审阅表；已标注 {n_ann}；证据句缺失 {n_miss} 侧")
-        if n_ann:
-            print(f"[divergence] 分布 {dict(out[out.divergence_type != ''].divergence_type.value_counts())}")
+        # Contextual resolution metrics（裁决 v0.1）+ summary JSON（snapshot 发布依据）
+        ann_rows = out[out["primary_divergence_type"] != ""]
+        types = ann_rows["primary_divergence_type"].value_counts().to_dict()
+        sec = ann_rows[ann_rows["secondary_divergence_type"] != ""]["secondary_divergence_type"].value_counts().to_dict()
+        res = ann_rows["resolution_action"].value_counts().to_dict()
+        match = ann_rows["context_match_status"].value_counts().to_dict()
+        gaps = {}
+        for g in ann_rows["ontology_gap"]:
+            if g:
+                gaps[g] = gaps.get(g, 0) + 1
+        summary = {
+            "phase": "contextual_divergence_review_v0.1",
+            "total_divergence": len(out),
+            "classified": int(n_ann),
+            "classification_completeness": round(n_ann / max(len(out), 1), 4),
+            "types": {str(k): int(v) for k, v in types.items()},
+            "secondary_types": {str(k): int(v) for k, v in sec.items()},
+            "multi_label_count": int((ann_rows["secondary_divergence_type"] != "").sum()),
+            "context_match": {str(k): int(v) for k, v in match.items()},
+            "resolution": {str(k): int(v) for k, v in res.items()},
+            "resolution_path_completeness": round(
+                (ann_rows["resolution_action"] != "").sum() / max(n_ann, 1), 4),
+            "ontology_gap": gaps,
+            "ontology_refinement_backlog": int(sum(gaps.values())),
+            "true_biological_conflict": int(types.get("true_biological_conflict", 0)),
+            "ai_first_pass": True,
+            "human_review": "pending"}
+        (MERGED / "contextual_divergence_summary.json").write_text(
+            json.dumps(summary, ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"[summary] types={summary['types']}")
+        print(f"[summary] multi_label={summary['multi_label_count']} "
+              f"match={summary['context_match']} backlog={summary['ontology_refinement_backlog']}")
 
     # 2) pending 分层抽样
     pr = MERGED / "pending_review_edges.tsv"

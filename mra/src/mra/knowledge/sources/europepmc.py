@@ -32,7 +32,15 @@ _MAX_PAGE_SIZE = 1000
 
 
 class EuropePmcError(RuntimeError):
-    """Raised when Europe PMC cannot return a usable result set."""
+    """Raised when Europe PMC cannot return a usable result set.
+
+    ``status_hint``（P2 统一失败分类法）：timeout / rate_limited / malformed /
+    unavailable——区分"系统状态"与"知识结果"，禁止一切失败折叠为"无证据"。
+    """
+
+    def __init__(self, message: str, status_hint: str = "unavailable") -> None:
+        super().__init__(message)
+        self.status_hint = status_hint
 
 
 def _now() -> str:
@@ -62,8 +70,18 @@ class EuropePmcAdapter:
         try:
             with urllib.request.urlopen(url, timeout=self.timeout_s) as response:
                 return response.read()
-        except (urllib.error.URLError, TimeoutError, OSError) as exc:
-            raise EuropePmcError(f"Europe PMC request failed: {exc}") from None
+        except urllib.error.HTTPError as exc:
+            if exc.code == 429 or "Too Many Requests" in str(exc):
+                raise EuropePmcError(f"Europe PMC rate limited: {exc}",
+                                     status_hint="rate_limited") from None
+            raise EuropePmcError(f"Europe PMC HTTP {exc.code}: {exc}",
+                                 status_hint="unavailable") from None
+        except TimeoutError as exc:
+            raise EuropePmcError(f"Europe PMC timeout: {exc}",
+                                 status_hint="timeout") from None
+        except (urllib.error.URLError, OSError) as exc:
+            raise EuropePmcError(f"Europe PMC request failed: {exc}",
+                                 status_hint="unavailable") from None
 
     def describe(self) -> SourceDescriptor:
         """Describe Europe PMC as an unverified candidate-grade source."""
@@ -122,13 +140,15 @@ class EuropePmcAdapter:
         payload = self._fetch_payload(self.build_url(query, page_size))
         results = payload["resultList"].get("result", [])
         if not isinstance(results, list):
-            raise EuropePmcError("Europe PMC resultList.result was not a list")
+            raise EuropePmcError("Europe PMC resultList.result was not a list",
+                                status_hint="malformed")
         retrieved_at = _now()
         candidates: list[CandidateEvidence] = []
         for result in results:
             if not isinstance(result, dict):
                 # Fail visible rather than silently dropping a malformed record.
-                raise EuropePmcError("Europe PMC returned a non-object result")
+                raise EuropePmcError("Europe PMC returned a non-object result",
+                                status_hint="malformed")
             candidates.append(self._to_candidate(result, query, retrieved_at))
         return candidates
 
@@ -139,16 +159,20 @@ class EuropePmcAdapter:
         try:
             payload = json.loads(bytes(raw).decode("utf-8"))
         except (UnicodeDecodeError, json.JSONDecodeError):
-            raise EuropePmcError("Europe PMC returned invalid JSON") from None
+            raise EuropePmcError("Europe PMC returned invalid JSON",
+                                status_hint="malformed") from None
         if not isinstance(payload, dict):
-            raise EuropePmcError("Europe PMC returned an unexpected payload")
+            raise EuropePmcError("Europe PMC returned an unexpected payload",
+                                status_hint="malformed")
         # Europe PMC reports failures inside HTTP 200: errCode and no resultList.
         if "resultList" not in payload:
             code = payload.get("errCode", "unknown")
             message = payload.get("errMsg", "missing resultList")
-            raise EuropePmcError(f"Europe PMC error {code}: {message}")
+            raise EuropePmcError(f"Europe PMC error {code}: {message}",
+                                status_hint="unavailable")
         if not isinstance(payload["resultList"], dict):
-            raise EuropePmcError("Europe PMC resultList was not an object")
+            raise EuropePmcError("Europe PMC resultList was not an object",
+                                status_hint="malformed")
         return payload
 
     def _to_candidate(
@@ -158,7 +182,8 @@ class EuropePmcAdapter:
         record_id = _optional(result.get("id"))
         if record_id is None:
             # Without an id the evidence key would collide; fail visible.
-            raise EuropePmcError("Europe PMC record is missing an id")
+            raise EuropePmcError("Europe PMC record is missing an id",
+                                status_hint="malformed")
         doi = _optional(result.get("doi"))
         excerpt = _optional(result.get("abstractText"))
         if excerpt is not None and self.max_excerpt > 0:

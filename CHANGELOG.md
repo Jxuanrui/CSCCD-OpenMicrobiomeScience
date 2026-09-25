@@ -1,6 +1,54 @@
 # Changelog
 
-## v1.2.0 candidate（Unreleased）— P1 Budget / Resource Metering
+## v1.2.0 candidate（Unreleased）
+
+### P2 — External Knowledge A–E Contract
+
+> P2 原则：**外部世界不可靠时系统守证据纪律。**目标不是加数据源数量，
+> 而是验证外部知识源数量增加、可靠性下降、结果冲突时，科研纪律不破。
+
+### P2 落地内容（Production Hardening Phase 2 · P2）
+
+- **统一契约层**（`mra/knowledge/sources/contract.py`）：任何外部知识源接入
+  前必须满足五件套——Provenance / Retrieved_at / Raw identity+hash /
+  Failure taxonomy / Cache semantics。
+- **失败分类法（集中权威）**：六态封闭 `success / empty / timeout /
+  rate_limited / malformed / unavailable`；**valid empty=知识结果，
+  unavailable=系统状态**，不得混淆；信封不变式结构性强制（失败态不得带
+  证据、正当结果不得带 error、状态集封闭）。无 status_hint 的原始异常由
+  `classify_exception` 按类型判定（TimeoutError→timeout、HTTP 429→
+  rate_limited、JSONDecodeError→malformed、其余→unavailable）。
+- **ExternalQueryResult 统一信封**：source_id / query / retrieved_at /
+  raw_hash / evidence_items / provenance（source_version/evidence_origin/
+  retrieval_path）/ from_cache / cache_fallback_after / error。
+- **适配器接入**：EuropePMC 与 OmniPath 的错误对象携带 `status_hint`
+  （向后兼容——既有 185 个 knowledge 测试零改动全绿）；litread（PubMed）
+  的 A–E 已在 v1.1.0 前锁定。
+- **CachedSource 缓存包装（五件套第 5 条）**：只缓存正当结果（success/
+  empty）；失败态零入缓存；live 失败 + 缓存在场 → `from_cache=True` +
+  `cache_fallback_after=<失败态>` + 原始 retrieved_at/raw_hash——**cache hit
+  ≠ live retrieval success**，绝不伪装刚刚检索成功。
+- **multi_query 多源编排**：逐源保留状态（silent masking = 0）；部分源
+  失败不拖垮整体（`has_usable_evidence` 只看正当结果），也不静默丢弃失败源。
+- **detect_conflicts 冲突检测**：同 key 跨源不同结论 → conflict state
+  （双方证据全保留、完整 provenance、`resolution=manual_review_required`、
+  `auto_resolution=disabled`）——不自动裁决、不平均、不隐藏（裁决权在人工）。
+
+### 对抗 Cases A–E + 验收指标（`tests/knowledge/test_external_contract.py`，10 用例）
+
+- A 部分源失败 ≠ 无证据（timeout ≠ empty 语义分离实测）
+- B 缓存兜底明示（from_cache + 覆盖的失败态 + 原始时间/hash 保留）
+- C 跨源冲突 → conflict state（不自动选择；无冲突不误报）
+- D malformed 零进入 cache/provenance/evidence（恢复后无脏缓存）
+- E rate limit 后恢复（失败零入缓存、lineage 完整、候选级不变）
+- 指标：provenance completeness=100%、Timeout-as-negative-error=0、
+  Malformed ingestion=0、Cache/live confusion=0、Silent masking=0、
+  Unauthorized promotion=0（全部 candidate 级，升级只走 curated ingestion）。
+
+- Tests：464 → **474 passed / 2 skipped**（+10 P2 用例）
+- P2 明确不做：自动可信度排序、自动冲突消解、替代人工领域判断。
+
+### P1 — Budget / Resource Metering
 
 > v1.1.0 为不可变发布基线；P1 及后续行为变化进入本 candidate。
 > 核心原则：**预算耗尽必须让 Agent 学会停下来，而不是学会绕过预算

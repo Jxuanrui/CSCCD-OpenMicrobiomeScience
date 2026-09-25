@@ -29,7 +29,15 @@ _SOURCE_VERSION = "2026-09-15"
 
 
 class OmniPathError(RuntimeError):
-    """Raised when OmniPath cannot return a usable result set."""
+    """Raised when OmniPath cannot return a usable result set.
+
+    ``status_hint``（P2 统一失败分类法）：timeout / rate_limited / malformed /
+    unavailable——区分"系统状态"与"知识结果"。
+    """
+
+    def __init__(self, message: str, status_hint: str = "unavailable") -> None:
+        super().__init__(message)
+        self.status_hint = status_hint
 
 
 def _now() -> str:
@@ -59,8 +67,18 @@ class OmniPathAdapter:
         try:
             with urllib.request.urlopen(url, timeout=self.timeout_s) as response:
                 return response.read()
-        except (urllib.error.URLError, TimeoutError, OSError) as exc:
-            raise OmniPathError(f"OmniPath request failed: {exc}") from None
+        except urllib.error.HTTPError as exc:
+            if exc.code == 429 or "Too Many Requests" in str(exc):
+                raise OmniPathError(f"OmniPath rate limited: {exc}",
+                                    status_hint="rate_limited") from None
+            raise OmniPathError(f"OmniPath HTTP {exc.code}: {exc}",
+                                status_hint="unavailable") from None
+        except TimeoutError as exc:
+            raise OmniPathError(f"OmniPath timeout: {exc}",
+                                status_hint="timeout") from None
+        except (urllib.error.URLError, OSError) as exc:
+            raise OmniPathError(f"OmniPath request failed: {exc}",
+                                status_hint="unavailable") from None
 
     def describe(self) -> SourceDescriptor:
         return SourceDescriptor(
@@ -114,7 +132,8 @@ class OmniPathAdapter:
 
         payload = self._fetch_payload(self.build_url(query, page_size))
         if not isinstance(payload, list):
-            raise OmniPathError("OmniPath returned an unexpected payload")
+            raise OmniPathError("OmniPath returned an unexpected payload",
+                               status_hint="malformed")
         retrieved_at = _now()
         candidates: list[CandidateEvidence] = []
         for index, item in enumerate(payload):
@@ -130,7 +149,8 @@ class OmniPathAdapter:
         try:
             return json.loads(bytes(raw).decode("utf-8"))
         except (UnicodeDecodeError, json.JSONDecodeError):
-            raise OmniPathError("OmniPath returned invalid JSON") from None
+            raise OmniPathError("OmniPath returned invalid JSON",
+                               status_hint="malformed") from None
 
     def _to_candidate(
         self,

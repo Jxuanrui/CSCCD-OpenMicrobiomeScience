@@ -91,7 +91,8 @@ def test_case_b_cache_fallback_labeled_not_live(tmp_path):
             return _EPMC_OK
         raise TimeoutError("source down")
 
-    cached = CachedSource(_epmc(fetcher=flaky), tmp_path / "cache")
+    cached = CachedSource(_epmc(fetcher=flaky), tmp_path / "cache",
+                           policy="fallback")
     live = cached.query("fiber and microbiome")
     assert live.status == "success" and not live.from_cache
     fallback = cached.query("fiber and microbiome")
@@ -169,7 +170,8 @@ def test_case_e_rate_limit_recovery_no_pollution(tmp_path):
             _http_429(url)
         return _EPMC_OK
 
-    cached = CachedSource(_epmc(fetcher=flaky), tmp_path / "cache")
+    cached = CachedSource(_epmc(fetcher=flaky), tmp_path / "cache",
+                           policy="fallback")
     limited = cached.query("recovery probe")
     assert limited.status == "rate_limited"                     # access restricted
     assert limited.status not in RESULT_OK and not limited.evidence_items

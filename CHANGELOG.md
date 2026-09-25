@@ -1,6 +1,58 @@
 # Changelog
 
-## v1.2.0 candidate（Unreleased）
+## v1.2.0 (2026-09-25) — Production Hardening（资源治理·外部契约·备份恢复·多库隔离·外部写准入）
+
+> **正式定位**：Scientific Research Harness v1.2.0。
+> Production-ready for：v1.1.0 全部范围 **+ 可验证备份/恢复 + single-host
+> multi-workspace isolation + 全维资源预算治理 + 外部知识 A–E 契约 +
+> EXTERNAL_WRITE 准入框架（框架 READY，execution 不开放——registry 实现
+> 数仍为 0，首个能力注册须单独 capability review + recovery/governance/
+> integration tests）**。
+> Not yet production-ready for：EXTERNAL_WRITE execution / untrusted
+> multi-user / SaaS multi-tenancy / distributed execution / H6 自主能力。
+> 评审：Production Hardening Review 五项复核全过（见
+> PRODUCTION_READINESS_REVIEW.md v1.2.0 节）；最终门禁 **505 passed /
+> 2 skipped**。
+
+### Migration / Compatibility（v1.1.0 → v1.2.0）
+
+- **加性记录类型 ×4**（旧账本完全可读可 replay，缺省兼容）：
+  `ResourceUsage` / `ResourceBudget`（P1）、`CrossWorkspaceReference`（P4）、
+  `ExternalWriteRecord`（P5）；WorkspaceState 对应计数器加性新增。
+- **加性字段**：无破坏性字段变更（预算/隔离/外部写均经新记录类型与 ctx
+  挂接，frozen ResearchTask v1 顶层语义零改动）。
+- **行为变化**（v1 versioning policy 据此进入 v1.2.0）：
+  1. `execute_step` 增加前置预算门——预算耗尽（task 或 workspace 池）→
+     `resource_budget_exhausted` 新合法停止（未配置预算 = unbounded 不受影响）；
+  2. capability 写入面增加 ctx 激活式跨库守卫——ctx 携带 workspace_id 且
+     目标不同且无 grant 时拒绝（legacy ctx 无绑定，行为不变）；
+  3. 外部写域默认拒绝（新增能力面，v1.1.0 无此路径故无存量影响）；
+  4. `CachedSource` 默认 hit_first（同参数重复查询零 API；fallback 显式
+     选择）。adapter 缓存为 P2 新增面，无存量影响。
+- **升级动作**：无（加性演进，无 schema 迁移；备份/恢复跨 v1.1↔v1.2
+  兼容——schema 兼容表内）。
+
+### Known Limitations（v1.2.0）
+
+- planner/dsh 侧 model 调用计量经公开入口 `loop.record_usage()` 注入
+  （loop 执行面已自动计量；capability 内自发外部调用经 resource_usage
+  扩展上报，literature.* 已接，其余待逐个接线）；
+- H6（自主假设/跨会话记忆/多 Agent 协作）未启动；
+- multi-tenant/SaaS、分布式执行、网络隔离明确排除；
+- 首个 EXTERNAL_WRITE capability 落地时自动成为 release blocker（须携
+  契约 + 三分类恢复 + 治理 + 集成测试）。
+
+### Production Hardening Review（发布前复核，5 用例 + 故障矩阵）
+
+- 整合复核：Governance 全链 / Reproducibility / Isolation 合并口径 /
+  Resource Governance——四维各一 E2E 用例（`tests/test_production_hardening_review.py`）；
+- **统一故障矩阵**（七行代码锁定）：ledger corruption→fail closed /
+  checksum mismatch→reject restore / external timeout→unknown-unavailable /
+  malformed source→reject evidence / budget exhaustion→legal stop /
+  workspace violation→reject / external unknown state→recovery_requires_review；
+- 评审发现并修复：① backup replay_summary 补 P4/P5 记录类型计数（两侧
+  同口径）；② CachedSource 缓存策略显式化（hit_first 默认 / fallback 可选）。
+- Tests：500 → **505 passed / 2 skipped**（+5 PHR 用例）
 
 ### P5 — EXTERNAL_WRITE Recovery Framework
 

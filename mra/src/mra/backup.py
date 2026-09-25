@@ -97,7 +97,9 @@ def _ledger_facts(ws: Workspace) -> dict[str, Any]:
                       "governance_decisions": st.governance_decisions,
                       "evidence": len(st.evidence),
                       "resource_usages": st.resource_usages,
-                      "budgets": st.budgets, "loop_events": st.loop_events}
+                      "budgets": st.budgets, "loop_events": st.loop_events,
+                      "cross_workspace_references": st.cross_workspace_references,
+                      "external_write_records": st.external_write_records}
     return {"policy_version": policy, "graph_snapshot_id": snapshot,
             "replay_summary": replay_summary}
 
@@ -215,7 +217,9 @@ def _validate_staged(staged_study_dir: Path, manifest: dict) -> None:
               "governance_decisions": st.governance_decisions,
               "evidence": len(st.evidence),
               "resource_usages": st.resource_usages,
-              "budgets": st.budgets, "loop_events": st.loop_events}
+              "budgets": st.budgets, "loop_events": st.loop_events,
+              "cross_workspace_references": st.cross_workspace_references,
+              "external_write_records": st.external_write_records}
     if actual != expect:
         raise BackupError(f"replay 摘要不符（恢复 {actual} vs 备份 {expect}）")
 

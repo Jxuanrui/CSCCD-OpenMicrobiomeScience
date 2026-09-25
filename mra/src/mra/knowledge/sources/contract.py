@@ -127,14 +127,23 @@ def query(adapter: Any, query_str: str, page_size: int = 25) -> ExternalQueryRes
 class CachedSource:
     """缓存包装（五件套第 5 条）：cache hit ≠ live success。
 
-    只缓存正当知识结果（success/empty）；失败态零入缓存。live 失败且有缓存
-    → 返回缓存并显式标注（from_cache=True + cache_fallback_after=<失败态>），
-    绝不伪装成刚刚检索成功。无缓存则如实失败。
+    只缓存正当知识结果（success/empty）；失败态零入缓存。命中/兜底均显式
+    from_cache=True + 原始 retrieved_at/raw_hash——绝不伪装成刚刚检索成功。
+
+    policy（PHR 复核显式化）：
+    - "hit_first"（默认，litread 先例）：缓存命中即返回（同参数重复调用零
+      API），miss 才走 live 并写缓存；
+    - "fallback"（韧性）：总是先 live；live 失败且有缓存 → 兜底并标注
+      cache_fallback_after=<失败态>。
     """
 
-    def __init__(self, inner: Any, cache_dir: Path | str) -> None:
+    def __init__(self, inner: Any, cache_dir: Path | str,
+                 policy: str = "hit_first") -> None:
+        if policy not in ("hit_first", "fallback"):
+            raise ValueError(f"未知缓存策略 {policy}")
         self.inner = inner
         self.cache_dir = Path(cache_dir)
+        self.policy = policy
 
     def describe(self) -> Any:
         return self.inner.describe()
@@ -142,28 +151,39 @@ class CachedSource:
     def search(self, query_str: str, page_size: int = 25) -> list[CandidateEvidence]:
         return self.inner.search(query_str, page_size)  # 透传（不缓存）
 
-    def query(self, query_str: str, page_size: int = 25) -> ExternalQueryResult:
+    def _cache_path(self, query_str: str, page_size: int) -> Path:
         desc = self.inner.describe()
         key = hashlib.sha256(
             f"{desc.source_id}|{query_str}|{page_size}".encode("utf-8")).hexdigest()[:20]
-        cache = self.cache_dir / f"{key}.json"
+        return self.cache_dir / f"{key}.json"
+
+    @staticmethod
+    def _serve(cache: Path) -> ExternalQueryResult:
+        cached = ExternalQueryResult.from_dict(
+            json.loads(cache.read_text(encoding="utf-8")))
+        return ExternalQueryResult(
+            status=cached.status, source_id=cached.source_id,
+            query=cached.query, retrieved_at=cached.retrieved_at,
+            raw_hash=cached.raw_hash, evidence_items=cached.evidence_items,
+            provenance=cached.provenance, from_cache=True)
+
+    def _store(self, cache: Path, result: ExternalQueryResult) -> None:
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
+        cache.write_text(json.dumps(result.to_dict(), ensure_ascii=False, indent=1),
+                         encoding="utf-8")
+
+    def query(self, query_str: str, page_size: int = 25) -> ExternalQueryResult:
+        cache = self._cache_path(query_str, page_size)
+        if self.policy == "hit_first" and cache.is_file():
+            return self._serve(cache)  # 命中：零 API，明示 from_cache
         live = query(self.inner, query_str, page_size)
         if live.status in RESULT_OK:
-            self.cache_dir.mkdir(parents=True, exist_ok=True)
-            cache.write_text(json.dumps(live.to_dict(), ensure_ascii=False, indent=1),
-                             encoding="utf-8")
-            return live  # live 成功：from_cache=False（默认）
+            self._store(cache, live)
+            return live  # live 成功：from_cache=False
         if cache.is_file():  # live 失败 + 缓存在场：明示缓存兜底
-            cached = ExternalQueryResult.from_dict(
-                json.loads(cache.read_text(encoding="utf-8")))
-            # live 失败态由 cache_fallback_after 承载（正当结果不带 error）；
-            # from_cache=True + 原始 retrieved_at/raw_hash 保留——绝不伪装 live
-            return ExternalQueryResult(
-                status=cached.status, source_id=cached.source_id,
-                query=cached.query, retrieved_at=cached.retrieved_at,
-                raw_hash=cached.raw_hash, evidence_items=cached.evidence_items,
-                provenance=cached.provenance, from_cache=True,
-                cache_fallback_after=live.status)
+            served = self._serve(cache)
+            served.cache_fallback_after = live.status
+            return served
         return live  # 无缓存 → 如实失败
 
 

@@ -226,3 +226,77 @@ Conditional Go 的两项 release blocker 已补齐且全回归绿 → **v1.1.0 r
 P1 Budget/resource metering → P2 External knowledge expansion + A–E fault
 contract → P3 Backup/restore automation → P4 Multi-workspace/project
 isolation → P5 EXTERNAL_WRITE recovery framework → 再评估 v1.2 或 H6。
+
+---
+
+# Production Hardening Review（v1.2.0，2026-09-25）
+
+评审问题：**这套科研基础设施在真实失败、边界冲突、资源限制、外部不确定性
+下，是否仍然保持正确。**不新增功能；证据基线 **505 passed / 2 skipped**
+（含 PHR 整合复核 5 用例 + 统一故障矩阵）。
+
+## 五项复核结论
+
+### Review 1 — Governance 全链 ✅
+Evidence provenance 完整（decision 链接 + graph_snapshot_id 随行）、mutation
+lineage 完整、裸提交（无 decision_id）结构性拒绝、replay 零新裁决、
+ExternalWrite 未授权不可达 submitted。Unauthorized governance transition = 0。
+
+### Review 2 — Reproducibility ✅
+同 task/snapshot/capability/policy 版本 → lineage 逐项一致；backup/restore
+前后 ledger hash / replay summary / lineage 一致（独立运行间仅易变时间戳差异，
+语义投影相等）；外部知识缓存/live/失败差异**显式**（from_cache 标记）。
+
+### Review 3 — Isolation ✅
+Task（B4）/ Workspace（P4）/ Backup（P3）/ External Scope（P5）四层合并口径：
+cross-task contamination = 0；cross-workspace leakage = 0；
+unauthorized external action = 0。
+
+### Review 4 — Resource Governance ✅
+budget bypass = 0；restart 后预算一致（账本重建）；幂等 retry 零重复计费；
+child task 不绕过 workspace 池。
+
+### Review 5 — Failure Matrix ✅（代码锁定）
+
+| Failure | Expected | 承载 |
+|---|---|---|
+| ledger corruption | fail closed | `test_review5_failure_matrix` 行 1 |
+| checksum mismatch | reject restore | 行 2 |
+| external timeout | unknown/unavailable（≠empty） | 行 3 |
+| malformed source | reject evidence（零入 items/cache） | 行 4 |
+| budget exhaustion | legal stop（resource_budget_exhausted） | 行 5 |
+| workspace violation | reject | 行 6 |
+| external unknown state | recovery_requires_review（无自动重试） | 行 7 |
+
+## 评审发现与修复（本轮真实产出）
+
+1. **backup replay_summary 覆盖缺口**：P3 的摘要未计入 P4/P5 新记录类型
+   （cross_workspace_references / external_write_records）——两侧一致所以
+   恢复不坏，但评审口径不完整。已两侧同步补齐。
+2. **CachedSource 策略不对称**：P2 的适配器缓存是 fallback-only（成功查询
+   每次仍打网络），与 litread 的 hit-first（同参数零 API）及五件套语义
+   不一致。已显式化为 `policy="hit_first"|"fallback"`（默认 hit_first），
+   两种语义都保持 from_cache 明示。
+
+## 范围升级（相对 v1.1.0 评审）
+
+| 项 | v1.1.0 | v1.2.0 |
+|---|---|---|
+| 损坏账本恢复 | READY WITH GUARDRAIL（人工+备份） | **READY**（P3 可验证/可重复/可审计恢复） |
+| Multi-workspace | NOT READY（FUTURE WORK） | **READY**（single-host 多库隔离；SaaS/多租户仍排除） |
+| EXTERNAL_WRITE | NOT APPLICABLE / BLOCKER | **READY FOR FRAMEWORK**（准入门槛就位；首个能力注册仍须单独 review+tests；execution 仍不开放） |
+| OS 级崩溃丢尾部 | Guardrail（未 fsync） | **READY**（v1.1.0 起 durable append 默认） |
+| 资源治理 | Guardrail（仅 LLM 计数闸） | **READY WITH GUARDRAIL**（P1 全维计量+预算；planner 侧注入待扩） |
+
+## v1.2.0 Release Gate
+
+- [x] 全量测试 505 passed / 2 skipped
+- [x] Golden benchmark / B3 recovery / B4 isolation regression（套件内全绿）
+- [x] P1 budget / P2 external knowledge / P3 restore / P4 workspace / P5 external write regression（各 phase 套件全绿）
+- [x] PHR 整合复核 + 统一故障矩阵（`tests/test_production_hardening_review.py` 5/5）
+- [x] CHANGELOG v1.2.0 定稿（定位/migration/compatibility/scope/known limitations）
+- [x] annotated tag v1.2.0 + main/dev 同步 + 双远端 push + 发布验证
+- [x] declared production scope 内无 critical blocker
+
+**评审结论**：v1.2.0 达到 release 条件。H6（autonomous hypothesis /
+multi-agent / cross-session memory）暂不启动——先确认基础设施稳定。

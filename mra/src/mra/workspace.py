@@ -306,6 +306,32 @@ class CrossWorkspaceReference(BaseModel):
     created_at: str = Field(default_factory=_now)
 
 
+class ExternalWriteRecord(BaseModel):
+    """P5 外部写生命周期事件（append-only；每次状态迁移一条，replay 取最新）。
+
+    intent/authorization（decision_id+approval）/result（digest）/verification
+    全随行——Case F：replay 只重建状态，永不重新执行真实写（transport 不在
+    Workspace 内是结构性保证）。
+    """
+    model_config = ConfigDict(extra="forbid")
+    write_id: str = Field(min_length=3)
+    research_task_id: str = ""
+    capability_id: str = Field(min_length=1)
+    target_system: str = Field(min_length=1)
+    write_type: str = Field(min_length=1)     # idempotent | queryable | irreversible
+    idempotency_key: str = ""                  # Type A：账本派生，restart 稳定
+    intent: dict[str, Any] = Field(default_factory=dict)
+    decision_id: str = ""                      # GovernanceDecision（授权 lineage）
+    approval: str = ""
+    state: str = Field(min_length=1)           # external_write.LIFECYCLE
+    payload_digest: str = ""
+    result_digest: str = ""
+    verification: str = ""
+    error: str = ""
+    note: str = ""
+    created_at: str = Field(default_factory=_now)
+
+
 class GovernanceDecision(BaseModel):
     """Scientific Ledger 可验证的正式治理裁决（一等账本对象）。
 
@@ -354,6 +380,7 @@ class WorkspaceState(BaseModel):
     resource_usages: int = 0            # P1 计量记录数
     budgets: int = 0                     # P1 预算记录数
     cross_workspace_references: int = 0  # P4 显式跨库引用数
+    external_write_records: int = 0       # P5 外部写生命周期事件数
     narrative_version: str = ""
     canonical_refs: dict[str, str] = Field(default_factory=dict)
 
@@ -366,7 +393,9 @@ _RECORD_TYPES = {"ResearchTask": ResearchTask, "KnowledgeProvenance": KnowledgeP
                  # P1 Budget/Resource Metering（v1.2.0 candidate 加性记录类型）
                  "ResourceUsage": ResourceUsage, "ResourceBudget": ResourceBudget,
                  # P4 Multi-workspace Isolation（加性记录类型）
-                 "CrossWorkspaceReference": CrossWorkspaceReference}
+                 "CrossWorkspaceReference": CrossWorkspaceReference,
+                 # P5 EXTERNAL_WRITE Recovery（加性记录类型）
+                 "ExternalWriteRecord": ExternalWriteRecord}
 
 
 class Workspace:
@@ -492,6 +521,8 @@ class Workspace:
                 state.budgets += 1
             elif rtype == "CrossWorkspaceReference":
                 state.cross_workspace_references += 1
+            elif rtype == "ExternalWriteRecord":
+                state.external_write_records += 1
             elif rtype == "Evidence":
                 evidence_by_id[rec["evidence_id"]] = rec  # 后写覆盖=修订可追溯
         state.evidence = list(evidence_by_id.values())

@@ -2,6 +2,50 @@
 
 ## v1.2.0 candidate（Unreleased）
 
+### P5 — EXTERNAL_WRITE Recovery Framework
+
+> P5 不开放外部写。它建立**任何未来 EXTERNAL_WRITE capability 的准入标准**：
+> 系统知道什么时候可以写、写失败后发生什么、什么时候绝不能自动重试。
+> 内部 Workspace 的 exactly-once 语义**不得外推**到外部世界。
+
+- **ExternalWriteContract**（`mra/external_write.py`）：capability_id /
+  target_system / write_type / idempotency_support / verification_support /
+  rollback_support / side_effect_level / approval_requirement；
+  **类型-能力一致性准入校验**——idempotent 须声明幂等支持、queryable 须
+  声明可查询、irreversible 不得声明两者（Missing recovery policy = 0）。
+- **三分类恢复策略（固化）**：Type A idempotent（账本派生幂等键，restart
+  后稳定，同键重试结果等价）；Type B queryable（**unknown 先 verify 再
+  决定**，verify 不可用/仍未知 → 保持 unknown 禁止盲重试；verify=failed
+  才允许重试）；Type C irreversible/unknown（**不自动重试** →
+  `recovery_requires_review` 吸收态，唯一出口是人工 `resolve_review`
+  （须署名 reviewer））。
+- **生命周期状态机**：planned → authorized → submitted → acknowledged →
+  verified → completed；任意点可 → unknown（一等公民，非 success/failed
+  二值）；failed → submitted（明确失败后的新尝试）；非法迁移硬拒。
+- **治理铁律**：默认不可执行——authorize = GovernanceDecision 裁决（须在
+  账本且允许）+ **workspace 外部写域**（P4 IsolationRegistries 新增
+  `check_external_write_scope`，**默认拒绝**，capability 注册存在 ≠ 允许
+  写）双闸；approval lineage（decision_id + approval）随记录前向携带。
+- **ExternalWriteRecord**（新账本记录类型）：write_id / 幂等键 / intent /
+  decision_id / approval / state / payload-result digest / verification /
+  error / note——每次迁移 append-only，全部既有事实前向携带。
+- **Replay 零重执行（结构性）**：transport 不在 Workspace 内——replay/
+  restore 只重建状态（Case F：restore 到全新 root 后 writes() 完整重建，
+  transport 调用数不变）。
+- Cases A–F + 指标 8 用例（`tests/test_p5_external_write.py`）：A 幂等重试
+  零重复副作用；B ACK 丢失 + restart 同键恢复；C queryable 先查再决（盲
+  重试 = 0）；D irreversible 进人工处置（自动路径全封死、缺署名拒绝）；
+  E workspace 写域边界（A 允许 B 拒绝 + 未授权不可执行）；F backup/replay
+  记录完整 + 零重执行；契约一致性拒绝；同 intent 重复计划拒绝。
+- 验收指标全锁死：Unauthorized external write / Blind retry on unknown
+  state / Duplicate external side effect / Missing recovery policy /
+  Missing approval lineage / Replay-triggered external execution = 0。
+- P5 明确不做：自动发布/部署系统、自动修改第三方数据库、自动发送不可
+  撤销消息——安全框架，不是开放写权限。
+- **注册表 EXTERNAL_WRITE 实现数仍为 0**（准入门槛就位，首个能力落地须
+  携带契约 + 三分类恢复测试）。
+- Tests：492 → **500 passed / 2 skipped**（+8 P5 用例）
+
 ### P4 — Multi-workspace Isolation
 
 > P4 验收标准：两个项目同时存在时，系统**不知道、不读取、不修改**另一个

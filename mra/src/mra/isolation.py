@@ -130,6 +130,27 @@ class IsolationRegistries:
         (self.dir / "auth_scopes.json").write_text(
             json.dumps(scopes, ensure_ascii=False, indent=1), encoding="utf-8")
 
+
+    # ---- 外部写域（P5：EXTERNAL_WRITE 默认拒绝，显式登记才允许） ----
+    def set_external_write_scope(self, workspace_id: str,
+                                 allowed_targets: list[str]) -> None:
+        scopes = _load_json(self.dir / "external_write_scopes.json", {})
+        scopes[workspace_id] = allowed_targets
+        (self.dir / "external_write_scopes.json").write_text(
+            json.dumps(scopes, ensure_ascii=False, indent=1), encoding="utf-8")
+
+    def check_external_write_scope(self, workspace_id: str, target_system: str) -> None:
+        """外部写与读相反：**默认拒绝**——未登记 workspace / 未列目标一律拒绝。
+
+        capability 注册存在 ≠ 允许写（P5 铁律）。
+        """
+        scopes = _load_json(self.dir / "external_write_scopes.json", {})
+        allowed = scopes.get(workspace_id)
+        if allowed is None or ("*" not in allowed and target_system not in allowed):
+            raise IsolationError(
+                f"外部写域拒绝：workspace {workspace_id} 无权写 "
+                f"{target_system}（EXTERNAL_WRITE 默认拒绝，须显式登记）")
+
     def check_credential_scope(self, workspace_id: str, source_id: str) -> None:
         scopes = _load_json(self.dir / "auth_scopes.json", {})
         allowed = scopes.get(workspace_id)

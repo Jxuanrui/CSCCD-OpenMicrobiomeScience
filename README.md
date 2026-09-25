@@ -7,7 +7,12 @@
 1. 每一个步骤遵循：**执行计划概述 → 执行 → 执行后审核**；
 2. 优先调研市面上成熟、先进的项目，优先融合或借鉴，**不自己重头造轮子**；
 3. 新建路径、新建脚本、新建说明文档必须先报审，经同意后才可建立；全项目只维护本 README 一份说明文档，保持路径整洁；
-4. 先 MVP 验证流程稳定性，MVP 通过后立即全量执行。
+4. 先 MVP 验证流程稳定性，MVP 通过后立即全量执行；
+5. **GLM 模型分工（按官方定位，2026-09-25 起，MCP 通道已连通验证）**：
+   - **GLM5.3 承担规划**——用户沟通、需求梳理、任务拆解、方案取舍与审核判定，由 ZCode 主会话承担；
+   - **GLM5.3Flash 承担执行**——代码编写、脚本指令、数据处理等具体执行，优先经 MCP 通道（`glm_flash`）派发；不得把规划与执行角色混写进同一次调用；
+   - **通道边界**——Flash 通道只传文本：落盘与命令运行由主会话完成，报错回传 Flash 修复；一行小修、读文件确认等琐碎操作可主会话直执；
+   - **交付记录**——commit message 尾注注明执行模型：`Executor: GLM5.3Flash via MCP` 或 `Executor: 主会话直执`。
 
 ## 技术栈（已批准，2026-09）
 
@@ -94,6 +99,19 @@ Knowledge_Graph/
 
 **铁律**：①当前研究 association/effect size/p value/atlas result/findings 永不自动入图；②模型预测可提名候选但不得自动提升知识等级（prediction→candidate_evidence→manual review→approved）；③无登记来源的知识不得进入 KG（`data/registry/source_registry.tsv` 闸门已装于 merge_qc，未登记来源拒绝合并）；④一切 relation 必须可回答"来自哪里"（Phase 2 补全 source_id/retrieved_at/version/curator）。
 
+## KG Capability Adapter 架构裁决（2026-09-25，评估通过）
+
+**结论**：不替换现有 Adapter，不引入新 KG 平台——**Scientific Harness 是治理操作系统**，成熟项目作为底层组件吸收（W3C PROV 思想统一 provenance / SHACL-like validation 分流 merge_qc 人工规则 / Neo4j 仅作 materialization 层 / MLflow-OpenLineage 式运行追踪）。项目定位与传统 KG 的差别：不是"把知识放进去"，而是**证明每一条知识为什么可以被放进去**。
+
+路线（v0.1 已落地 provenance/resource/governance/conflict/snapshot 五件）：
+- **P0** 当前 snapshot 发布：pending/conflict/high-degree 抽检（`review_prep.py` 自动备表）→ 批准后 Neo4j materialization（`materialized_to_neo4j` 闸门）
+- **P1** Capability SDK 第一版（任何 pipeline 接入自动获得 provenance/resource/workspace/logging）
+- **P2** Provenance 标准化（Entity/Activity/Agent 映射至 W3C PROV）
+- **P3** Graph validation（SHACL-like：Edge 必备 source/retrieved_at/raw_hash/evidence，缺则 reject）
+- **P4** 扩量 56k → 13 万
+
+**明确排除**：GraphRAG 类（检索增强 ≠ 可信生产）、通用 KG 构建框架接管（其"文本→实体→关系→入库"链路缺少证据/治理/冲突/人工批准环节）。
+
 ## 进展日志
 
 - 2026-09-15 骨架、README、LinkML schema 建立。
@@ -130,3 +148,5 @@ Knowledge_Graph/
 - 2026-09-19 **第四轮人工校准（裁判层假阴性）落地 + 校准重审完成**。用户抽检 top-30 发现边本身大多成立、问题在裁判层系统性假阴性，五条校准准则已注入抽取与 judge 双端 prompt：①定语/同位语/背景从句中的事实性陈述受支持；②affects 弱谓词宽容（enhances/reduces/lowers 逻辑真包含）；③受控词表同义映射有效（SCFA↔Fatty Acids, Volatile、glycans↔Polysaccharides）；④实体粒度问题标注"实体抽取不规范"（如 Death→Pneumonia/Mortality）；⑤相关 vs 因果判据一致（risk factor 类不支持强因果谓词→NEI）。校准重审 421 条 dropped_judge：17 条假阴性翻转为 ok（ok 948→965、Tier-B 86→88，原裁决保留 judge_prior_verdict 供审计），其余维持原判。主图刷新后见 merge 输出。同期：语料扩量拉取完成 48,636 篇（12 域×5000 去重，Food 三域首战），待用户抽检终判后启动 v2 全量（将使用校准后 prompt）。
 - 2026-09-19 **抽检终判通过 + 跨 agent 技能验证闭环：MicrobeScholar 删除门槛正式达成**。用户对 top-30 风险排序抽检的终判：边级质量确认（≥85%，第四轮校准聚焦裁判层假阴性而非边错误，17 条误杀已翻转恢复）；Claude Code 侧按 VALIDATION.md 清单验证通过——技能三端状态：ZCode ✅ / Claude Code ✅ / Codex 官方支持文档化。**删除门槛全项达成**（迁移清单 100% 处置、git bundle 归档、23 技能三端验证、语料并入且判定完成、四轮人工校准闭环、merge/Neo4j 终版）——删除动作依约定由用户执行。同期双轨运行中：48,636 篇校准后全量（26,941 新对，~49h）+ 三基线评估。
 - 2026-09-21 **MicrobeScholar 源项目删除执行（吸收闭环终局）**：用户确认删除。删除前验证：我方项目内吸收资产完整（`data/sources/MicrobeScholar/` 7.1GB：knowledge 全量/语料/ready 模块/3 个 conda-pack 环境包/git bundle 全仓归档），23 技能在 `skills/` 正常，四轮校准与语料并入早已完成。项目融合正式收官——单一仓库 `Knowledge_Graph` 承载全部资产，GitHub 双分支同步运行。
+
+- 2026-09-25 **KG Capability Adapter v0.1 落地 + 架构评估通过**。观察报告暴露的接入缺口当日修复：记录级 provenance（56,629 篇回填，retrieved_at/raw_hash/source_version；未来日期 anomaly 435 条只标记不改值）；staging 执行信封字段（created_at/execution_id/capability_id/resource_ref，旧记录显式 backfill 标注）；ResourceUsage 兼容账本（data/registry/resource_usage.jsonl，凭据扫描同 mra 口径）；生产日志库 data/logs/（/tmp 禁用，收口链自动归档）；merge_qc 冲突契约（对立谓词 48 组双方保留 conflict_state/manual_review_required，禁自动入图）；snapshot manifest（内容 sha256 + source_registry 版本哈希 + materialized_to_neo4j=False 闸门——主图物化必须经 QC 与抽检）。批次收口链自动化（judge→日志归档→error 回收→merge→manifest→抽检备表，止步 Neo4j 前）；抽检表含冲突双方证据句并排（review_prep.py）。56,629 篇批次 judge 阶段运行中（S3 ~31%，预计当日完成）。

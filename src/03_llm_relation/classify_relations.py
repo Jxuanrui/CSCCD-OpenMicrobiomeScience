@@ -127,6 +127,11 @@ produces 与 biotransforms 的严格区分（最重要）：
 - "remodels/alters 谱图"类表述默认为间接调控而非直接转化；
 - 客体粒度：Death/存活率等终末事件应建模为具体疾病或 Mortality 风险概念，禁止把 Death 当可加重的疾病实体；
 - Food→Microbe 谓词：膳食暴露促进该菌生长/富集用 promotes_growth，抑制用 inhibits_growth，仅相关表述用 affects 或 no_relation；
+- Food 领域校准（第五轮人工抽检确立，严格执行）：
+  ① 食品微生态≠宿主调控：句子若描述食品自身的微生物组成（发酵剂/starter culture、优势菌种/dominant species、食品基质演替/food matrix、contains/harbors/isolated from food），Food→Microbe 一律 no_relation——本图谱只记录"膳食摄入对宿主肠道菌群的影响"；
+  ② 实体歧义：milk 出现在 breast/human/maternal 语境=母乳（垂直传递）≠ dairy product，判 no_relation；肉类作为病原来源/载体（source of/carrier/foodborne/contamination）=食品安全语义，判 no_relation；
+  ③ 证据强度：仅"检出/存在"（were found/detected/present）或"罕见利用"（uncommon/rare）不足以支撑 promotes_growth，至多 affects；方法学选取语境（were selected/to investigate/for testing）一律 no_relation；
+  ④ 植物提取物/纯化合物的体外抗菌活性不归入全食物组关系；
 - 强因果谓词（aggravates/alleviates）仅限实验性因果证据（干预/定植/清除实验），纯相关表述（risk factor、elevated in disease）只可产 no_relation 或关联型弱谓词。"""
 
 CUES = ("microbiota", "microbiome", "bacter", "species", "strain", "abundance",
@@ -644,6 +649,12 @@ def mediated_by_subject(mention, sent):
     return False
 
 
+
+# 第五轮校准：食品微生态/歧义/载体三类确定性拦截（Food 主体边）
+FOOD_ECOLOGY = re.compile(r"starter culture|dominant species|food matrix|fermented by|harbou?rs?|isolated from .{0,20}food|enriched with .{0,25}(bacteri|lactobacill)", re.I)
+BREAST_MILK = re.compile(r"breast\s*milk|human\s*milk|maternal\s*milk", re.I)
+CARRIER_SEM = re.compile(r"foodborne|source of contamination|carrier of|transmission", re.I)
+
 def demote_indirect_mechanism(rows):
     """间接/介导机制不得映射为直接代谢谓词（人工抽检第二轮 3 案例的确定性编码）。
 
@@ -660,6 +671,14 @@ def demote_indirect_mechanism(rows):
         pred, sent = r["predicate"], r.get("sentence", "")
         men = r.get("subject_mention", "")
         why = None
+        # Food 主体专用拦截（第五轮校准）
+        if r["subject"].get("category") == "Food":
+            if FOOD_ECOLOGY.search(sent):
+                r["status"] = "dropped_check"; r["check_fail"] = "food_ecology_not_host"; n += 1; continue
+            if BREAST_MILK.search(sent):
+                r["status"] = "dropped_check"; r["check_fail"] = "breast_milk_not_dairy"; n += 1; continue
+            if CARRIER_SEM.search(sent):
+                r["status"] = "dropped_check"; r["check_fail"] = "carrier_not_dietary"; n += 1; continue
         if pred in ("produces", "biotransforms", "consumes") and POSTBIOTIC_MARKERS.search(f"{men} {sent}"):
             why = "postbiotic_indirect"
         elif pred == "consumes" and re.search(r"desulf\w*|sulfatase", sent, re.I):

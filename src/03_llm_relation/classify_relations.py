@@ -127,6 +127,13 @@ produces 与 biotransforms 的严格区分（最重要）：
 - "remodels/alters 谱图"类表述默认为间接调控而非直接转化；
 - 客体粒度：Death/存活率等终末事件应建模为具体疾病或 Mortality 风险概念，禁止把 Death 当可加重的疾病实体；
 - Food→Microbe 谓词：膳食暴露促进该菌生长/富集用 promotes_growth，抑制用 inhibits_growth，仅相关表述用 affects 或 no_relation；
+- Food 蕴含判定铁律（第六轮校准）：唯一标准是"句子是否直接陈述该三元组"，禁止任何生物学合理化补全（Evidence first, plausibility second）：
+  ① X 降解/发酵/利用某食物成分（degrades/ferments/utilizes/metabolizes）≠ 该成分促进 X 生长——此类句子对 promotes_growth 一律 no_relation；
+  ② 菌是食物效应的介导者/关键菌（mediates/mediator/key player/responsible for the effect）≠ food affects 该菌；
+  ③ 饮食改变的是微生物代谢物水平（metabolite/SCFA levels changed）≠ 改变微生物本身（丰度/生长/组成）；
+  ④ signature/associated/biomarker 菌至多支持 affects 且需句子明说丰度或组成变化，禁止升级 promotes_growth；
+  ⑤ promotes_growth 证据标准：句子必须直接陈述"摄入/添加该食物后该菌丰度/数量/生长显著增加"（increased abundance/enriched/stimulated the growth of X upon consumption），否则降级 affects 或 no_relation；
+  ⑥ 食物组归一必须与原文措辞一致，禁止上位/近义映射（如 western diet ≠ high-fat diet）。
 - Food 领域校准（第五轮人工抽检确立，严格执行）：
   ① 食品微生态≠宿主调控：句子若描述食品自身的微生物组成（发酵剂/starter culture、优势菌种/dominant species、食品基质演替/food matrix、contains/harbors/isolated from food），Food→Microbe 一律 no_relation——本图谱只记录"膳食摄入对宿主肠道菌群的影响"；
   ② 实体歧义：milk 出现在 breast/human/maternal 语境=母乳（垂直传递）≠ dairy product，判 no_relation；肉类作为病原来源/载体（source of/carrier/foodborne/contamination）=食品安全语义，判 no_relation；
@@ -541,7 +548,10 @@ def judge_triple(base_url, api_key, judge_model, pair, predicate):
              '{"verdict":"SUPPORTED|REFUTED|NEI","subject_binding_ok":true或false,"reason":"≤30字"}。'
              "若论断谓词为 produces：仅当前提明确该菌自身合成/分泌该代谢物时才 SUPPORTED；"
              "底物转化反应应为 biotransforms 而非 produces；宿主体内/粪便代谢物丰度升高（cross-feeding/群落效应）不支持 produces。"
-             "若论断谓词为 produces/biotransforms/consumes：核查是否为该菌活菌自身的酶促反应——"
+             "Food 蕴含铁律（第六轮校准）：你检验的是句子是否蕴含三元组，不是寻找生物学解释让它说得通（Evidence first, plausibility second）。"
+             "以下推理链一律 REFUTED：degrades/ferments/utilizes 底物→promotes_growth；mediator/key player→food affects 该菌；"
+             "代谢物水平变化→微生物变化；signature/associated 菌→promotes_growth；western diet 等近义饮食模式互换。"
+"若论断谓词为 produces/biotransforms/consumes：核查是否为该菌活菌自身的酶促反应——"
              "介导性产生（X-mediated production）、灭活制剂的宿主轴调控（pasteurized/postbiotic）、"
              "修饰反应（desulfation/sulfatase 切大分子基团）均不支持这三个谓词。"
              "若论断主语层级与前提不符（前提明确到种而论断用属，或相反）则 REFUTED。"
@@ -679,6 +689,14 @@ def demote_indirect_mechanism(rows):
                 r["status"] = "dropped_check"; r["check_fail"] = "breast_milk_not_dairy"; n += 1; continue
             if CARRIER_SEM.search(sent):
                 r["status"] = "dropped_check"; r["check_fail"] = "carrier_not_dietary"; n += 1; continue
+            # 第六轮铁律的确定性版
+            GROWTH_OK = re.search(r"(increas|enrich|stimulat|promot)\w*[^.]{0,40}(abundance|growth|levels?\s+of|population)", sent, re.I)
+            if pred == "promotes_growth" and re.search(r"\b(degrad|ferment|utiliz|metaboliz)\w*", sent, re.I) and not GROWTH_OK:
+                r["status"] = "dropped_check"; r["check_fail"] = "substrate_utilization_not_promotion"; n += 1; continue
+            if pred in ("affects", "promotes_growth") and re.search(r"mediat\w+ by|\bmediator\b|key player|responsible for the", sent, re.I) and not GROWTH_OK:
+                r["status"] = "dropped_check"; r["check_fail"] = "mediator_not_target"; n += 1; continue
+            if re.search(r"metabolit\w*\s+(levels?|concentration|production)\s+[^.]{0,30}(chang|increas|decreas|alter)", sent, re.I) and not GROWTH_OK:
+                r["status"] = "dropped_check"; r["check_fail"] = "metabolite_level_not_microbe"; n += 1; continue
         if pred in ("produces", "biotransforms", "consumes") and POSTBIOTIC_MARKERS.search(f"{men} {sent}"):
             why = "postbiotic_indirect"
         elif pred == "consumes" and re.search(r"desulf\w*|sulfatase", sent, re.I):

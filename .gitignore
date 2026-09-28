@@ -10,3 +10,9 @@ __pycache__/
 .vscode/
 # 本地环境
 .env
+
+# 运行时状态（vecstore 索引/LLM 预算/审计账本/执行注册表台账）——本机生成，不入库
+var/vecstore/
+var/llm_budget.json
+var/exec_registry/audit.db
+var/exec_registry/registry.json

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">APPEND-ONLY EVIDENCE</p><h1>审计账本</h1></div></div>
+<form class="filters" method="get" action="/audit">
+  <label>操作<select name="action"><option value="">全部操作</option>{% for value in ["read_projection", "execute_task", "promote_result", "export_data", "manage_policy", "approve_request"] %}<option value="{{ value }}"{% if selected_action == value %} selected{% endif %}>{{ value }}</option>{% endfor %}</select></label>
+  <label>决定<select name="decision"><option value="">全部决定</option>{% for value in ["allow", "approval_required", "deny"] %}<option value="{{ value }}"{% if selected_decision == value %} selected{% endif %}>{{ value }}</option>{% endfor %}</select></label>
+  <button type="submit">筛选</button>
+</form>
+<section class="panel">
+  <div class="section-heading"><h2>事件（最多 200 条，倒序）</h2><span class="muted">{{ events|length }} 条</span></div>
+  {% if events %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>时间</th><th>操作</th><th>决定</th><th>请求 ID</th><th>主体</th><th>原因</th><th>输入摘要</th></tr></thead>
+    <tbody>{% for event in events %}<tr>
+      <td>{{ event.ts }}</td><td>{{ event.action }}</td><td><span class="status status-{{ event.decision }}">{{ event.decision }}</span></td>
+      <td>{% if event.request_id %}<a href="/runs/{{ event.request_id }}">{{ event.request_id|prefix(16) }}</a>{% else %}-{% endif %}</td>
+      <td><code>{{ event.subject_hash|prefix(12) }}</code></td><td>{{ event.reason_codes|reason_codes }}</td><td><code>{{ event.input_digest|prefix(12) }}</code></td>
+    </tr>{% endfor %}</tbody>
+  </table></div>
+  {% else %}<p class="empty">没有匹配的审计事件。</p>{% endif %}
+</section>
+{% endblock %}

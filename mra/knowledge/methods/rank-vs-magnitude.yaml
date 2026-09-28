@@ -1,0 +1,18 @@
+id: method-rank-vs-magnitude-001
+package: methods
+title: 秩变换会压缩幅度驱动信号，双口径不一致时先诊断变换再下结论
+version: 1
+evidence_level: confirmed_rule
+applicability: 秩相关（Spearman/秩残差偏相关）与对数线性模型（MaAsLin3 等）结论冲突的场合。
+source:
+  - {kind: internal, ref: 'AgentLab/food_pathway_phage/method_discrepancy_diagnosis.tsv', date: '2026-09-24'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  trigger: 两方法系数方向一致率<50% 或 Spearman(系数A,系数B)≤0。
+  risk: 把统计口径差异误判为生物学不复现（实测 Pattern3×通路：秩法 -0.151 vs 线性-LOG +0.398）。
+  action: 固定样本/协变量/检验集做变换×过滤交叉诊断；区分"变换敏感性"与"方法间根本不一致"（预注册判定阈值）。
+  contraindication: 禁止用单一口径的显著性直接宣布另一口径"不复现"；禁止为救回某结论而挑口径。
+  evidence_source: 预注册判定执行实录（判定=统计敏感性：秩×泛存通路集交互）。
+  validation_status: validated_in_real_study。
+  provenance: {repo: Knowledge_Graph-mra, study: Food-Pathway-Phage, date: '2026-09-24'}

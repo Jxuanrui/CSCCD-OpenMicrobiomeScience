@@ -1,0 +1,18 @@
+id: method-negative-evidence-downgrade-001
+package: methods
+title: 敏感性证据一旦推翻初始判定，立即降级并改写全部下游表述
+version: 1
+evidence_level: confirmed_rule
+applicability: 任何经过敏感性/消费者子集/分层复核的初始结论。
+source:
+  - {kind: internal, ref: 'AgentLab/food_pathway_phage/fermented_dairy_sensitivity.tsv（闭环→双臂开口链）', date: '2026-09-24'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  trigger: 敏感性检验与初始判定冲突（实测：发酵乳噬菌体臂消费者内归零）。
+  risk: 保留旧漂亮表述+脚注的做法被明确禁止——展示层不得再称闭环。
+  action: 结论按敏感性结果重写；三句话固定口径入叙事卡；旧版本标记 superseded 不删除（可追溯）。
+  contraindication: 禁止"闭环+注脚"式折中表述；禁止选择性报告只保留显著侧。
+  evidence_source: 发酵乳链降级实录 + atlas v3 superseded 标记实践。
+  validation_status: validated_in_real_study。
+  provenance: {repo: Knowledge_Graph-mra, study: Food-Pathway-Phage, date: '2026-09-24'}

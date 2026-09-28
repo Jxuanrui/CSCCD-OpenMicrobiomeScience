@@ -1,0 +1,19 @@
+id: method-deterministic-tiebreak-001
+package: methods
+title: 特征选择在并列值上必须确定性破断并披露
+version: 1
+evidence_level: confirmed_rule
+applicability: 按 prevalence/丰度等排序取 top-N 特征进入检验的任何扫描器。
+source:
+  - {kind: internal, ref: 'atlas top200 在 prevalence=1.00 并列任意取 200 条的诊断', date: '2026-09-24'}
+  - {kind: internal, ref: 'commit 3289bb6 三级破断', date: '2026-09-24'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  trigger: 排序键存在大量并列（如泛存通路 prevalence 全=1.00）。
+  risk: top200 实为任意子集，检验范围声明失真且不可复现。
+  action: 三级确定性破断（主键↓/非零中位丰度↓/名称↑）+ 并列情况写入运行摘要。
+  contraindication: 依赖默认 sort 的任意并列序进入正式结果。
+  evidence_source: v3→v4 delta（563 条零漂移、33 条进出全因成员轮换）。
+  validation_status: validated_in_real_study。
+  provenance: {repo: Knowledge_Graph-mra, commit: 3289bb6, study: Food-Pathway-Phage, date: '2026-09-24'}

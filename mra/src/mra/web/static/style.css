@@ -1,0 +1,66 @@
+:root {
+  color-scheme: light;
+  font-family: system-ui, -apple-system, sans-serif;
+  color: #20252b;
+  background: #f5f6f7;
+}
+* { box-sizing: border-box; }
+body { margin: 0; line-height: 1.45; }
+a { color: #155e75; text-decoration: none; }
+a:hover { text-decoration: underline; }
+.site-header {
+  display: flex; align-items: center; justify-content: space-between; gap: 1rem;
+  padding: .85rem max(1rem, calc((100vw - 1180px) / 2));
+  background: #fff; border-bottom: 1px solid #dfe3e6;
+}
+.brand { color: #20252b; font-weight: 700; }
+nav { display: flex; flex-wrap: wrap; gap: 1rem; font-size: .92rem; }
+.container { width: min(1180px, calc(100% - 2rem)); margin: 0 auto; padding: 2rem 0 4rem; }
+.page-heading, .section-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; }
+.page-heading { margin-bottom: 1.25rem; }
+h1, h2 { margin: 0; line-height: 1.2; }
+h1 { font-size: clamp(1.7rem, 4vw, 2.35rem); }
+h2 { font-size: 1.05rem; }
+.eyebrow { margin: 0 0 .35rem; color: #64727b; font-size: .72rem; font-weight: 700; letter-spacing: .08em; }
+.lead { color: #64727b; margin: .5rem 0 0; }
+.metric-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem; margin-bottom: 1rem; }
+.metric, .panel { background: #fff; border: 1px solid #dfe3e6; border-radius: 6px; }
+.metric { padding: 1rem 1.15rem; }
+.metric span, .muted { color: #64727b; font-size: .86rem; }
+.metric strong { display: block; margin-top: .2rem; font-size: 2rem; }
+.panel { margin-top: 1rem; padding: 1rem; }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: .9rem; }
+th, td { padding: .65rem .55rem; border-bottom: 1px solid #edf0f2; text-align: left; vertical-align: top; white-space: nowrap; }
+th { color: #4e5a62; font-weight: 650; }
+tbody tr:last-child td, tbody tr:last-child th { border-bottom: 0; }
+code { font-family: ui-monospace, SFMono-Regular, Consolas, monospace; font-size: .86em; }
+.status { display: inline-block; padding: .16rem .42rem; border-radius: 4px; font-size: .76rem; font-weight: 700; }
+.status-allow { color: #146c43; background: #d9f2e3; }
+.status-approval_required { color: #895b00; background: #fff0c2; }
+.status-deny { color: #9c2c2c; background: #fde0e0; }
+.button, button { display: inline-block; border: 1px solid #155e75; border-radius: 4px; padding: .48rem .7rem; color: #fff; background: #155e75; font: inherit; cursor: pointer; }
+.button:hover, button:hover { background: #0e4b5d; text-decoration: none; }
+.filters, .approve-form { display: flex; align-items: end; flex-wrap: wrap; gap: .65rem; }
+.filters { margin-bottom: 1rem; }
+.filters label, .approve-form label { display: grid; gap: .2rem; color: #4e5a62; font-size: .82rem; }
+select, input { border: 1px solid #c6cdd2; border-radius: 4px; padding: .45rem .5rem; background: #fff; font: inherit; }
+.empty { margin: .75rem 0 0; color: #64727b; }
+.error { margin: .6rem 0; color: #9c2c2c; font-weight: 600; }
+.event-chain { display: grid; gap: .8rem; margin-top: .8rem; }
+.event { border-left: 3px solid #b9c5ca; padding: .65rem .8rem; background: #fafbfb; }
+.event-meta { display: flex; align-items: center; flex-wrap: wrap; gap: .65rem; }
+.event-meta time { color: #64727b; font-size: .82rem; }
+dl { display: grid; grid-template-columns: minmax(80px, 110px) 1fr; gap: .25rem .8rem; margin: .65rem 0 0; font-size: .86rem; }
+dt { color: #64727b; }
+dd { margin: 0; overflow-wrap: anywhere; }
+.tag { display: inline-block; margin: .15rem .35rem .15rem 0; padding: .25rem .5rem; border: 1px solid #c6cdd2; border-radius: 4px; font-size: .84rem; }
+.sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+@media (max-width: 640px) {
+  .site-header { align-items: flex-start; flex-direction: column; }
+  .container { width: min(100% - 1rem, 1180px); padding-top: 1.25rem; }
+  .page-heading { align-items: flex-start; flex-direction: column; }
+  th, td { padding: .5rem .4rem; }
+  dl { grid-template-columns: 1fr; gap: .1rem; }
+  dd { margin-bottom: .35rem; }
+}

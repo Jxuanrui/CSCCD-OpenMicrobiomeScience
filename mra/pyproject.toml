@@ -1,0 +1,41 @@
+[project]
+name = "mra"
+version = "0.0.1"
+description = "MicrobiomeResearchAgent：模型可插拔、知识可审计、权限可控的肠道菌群科研 Agent 平台（见 PLANNING.md）"
+requires-python = ">=3.10"
+dependencies = [
+    # ModelRuntime MVP（Q12 确认，Reuse Review 2026-09-10-modelruntime-adapter-libs）
+    "openai==3.11.0",
+    "pydantic==2.13.5",
+    "numpy>=1.24",
+    "pyyaml>=6", # 能力表/价格快照 yaml 加载
+    # 后续依赖在对应接口设计定稿并完成 Reuse Review 后逐项添加（PLANNING.md 3.4）
+    "scipy>=1.15.3",
+    "statsmodels>=0.15.0",
+    "pandas>=2.3.3",
+    "fastapi>=0.141.1",
+    "uvicorn>=0.52.4",
+    "jinja2>=3.1.6",
+    "python-multipart>=0.0.32",
+    "jieba>=0.42.1",
+    "mcp>=2.2.0",
+    "lancedb>=0.39.0",
+    "fastembed>=0.8.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest",
+    "respx",  # httpx  mocking，适配器单测用
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/mra"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+norecursedirs = ["var", ".venv"]

@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-heading">
+  <div><p class="eyebrow">WORKBENCH</p><h1>概览</h1></div>
+  <a class="button" href="/audit">查看审计账本</a>
+</div>
+<section class="metric-grid" aria-label="概览指标">
+  <div class="metric"><span>待审批</span><strong>{{ pending_count }}</strong></div>
+  <div class="metric"><span>审计事件</span><strong>{{ event_count }}</strong></div>
+</section>
+<section class="panel">
+  <div class="section-heading"><h2>最近事件</h2><a href="/audit">全部事件</a></div>
+  {% if recent_events %}
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>时间</th><th>操作</th><th>决定</th><th>请求</th><th>原因</th></tr></thead>
+      <tbody>{% for event in recent_events %}<tr>
+        <td>{{ event.ts }}</td><td>{{ event.action }}</td>
+        <td><span class="status status-{{ event.decision }}">{{ event.decision }}</span></td>
+        <td>{% if event.request_id %}<a href="/runs/{{ event.request_id }}">{{ event.request_id|prefix(16) }}</a>{% else %}-{% endif %}</td>
+        <td>{{ event.reason_codes|reason_codes }}</td>
+      </tr>{% endfor %}</tbody>
+    </table>
+  </div>
+  {% else %}<p class="empty">暂无审计事件。</p>{% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-heading">
+  <div><p class="eyebrow">EVIDENCE TRACE</p><h1>运行详情</h1><p class="lead"><code>{{ request_id }}</code></p></div>
+  <a class="button" href="/runs">返回运行列表</a>
+</div>
+<section class="panel">
+  <div class="section-heading"><h2>完整审计事件链</h2><span class="muted">{{ events|length }} 条</span></div>
+  <div class="event-chain">{% for event in events %}
+    <article class="event">
+      <div class="event-meta"><time>{{ event.ts }}</time><span class="status status-{{ event.decision }}">{{ event.decision }}</span><strong>{{ event.action }}</strong></div>
+      <dl>
+        <dt>事件 ID</dt><dd><code>{{ event.id }}</code></dd>
+        <dt>主体</dt><dd>{{ event.principal_type }} / {{ event.principal_id }}{% if event.subject_hash %} / <code>{{ event.subject_hash|prefix(16) }}</code>{% endif %}</dd>
+        <dt>资源</dt><dd>{{ event.resource_kind }}{% if event.resource_id %} / <code>{{ event.resource_id }}</code>{% endif %}</dd>
+        <dt>原因</dt><dd>{{ event.reason_codes|reason_codes }}</dd>
+        <dt>摘要</dt><dd>输入 <code>{{ event.input_digest or "-" }}</code> · 输出 <code>{{ event.output_digest or "-" }}</code></dd>
+      </dl>
+    </article>
+  {% endfor %}</div>
+</section>
+{% endblock %}

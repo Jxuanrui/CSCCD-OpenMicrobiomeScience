@@ -1,0 +1,18 @@
+id: method-specificity-control-001
+package: methods
+title: 表面层间联系必须过非主轴模块+非主轴宿主双特异性对照
+version: 1
+evidence_level: confirmed_rule
+applicability: 声称"A 层与 B 层存在联系/通路"前（pathway–host、diet–taxa、跨域耦合）。
+source:
+  - {kind: internal, ref: 'AgentLab/food_pathway_phage/interlayer_pathway_host.tsv', date: '2026-09-24'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  trigger: 主检验方向一致、显著性极强（实测 q=1e-27）且拟升级结论层级的场合。
+  risk: 强显著+零衰减的"完美"结果恰是广谱因子的典型指纹；无对照即升级=假阳性入主线。
+  action: 非主轴功能模块对照 + 非主轴生物类群对照；任一对照同样显著即否决"特异性"升级。
+  contraindication: 对照设计跑前必须预注册判定阈值，禁止事后挑选宽容阈值。
+  evidence_source: 降解/发酵模块+Bacteroides 双对照否决 +0.33 升级的实录。
+  validation_status: validated_in_real_study。
+  provenance: {repo: Knowledge_Graph-mra, study: Food-Pathway-Phage, date: '2026-09-24'}

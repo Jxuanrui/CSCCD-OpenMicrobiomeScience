@@ -1,0 +1,22 @@
+name: mra-tests
+on:
+  push:
+    paths: ["mra/**", ".github/workflows/mra-tests.yml"]
+  pull_request:
+    paths: ["mra/**"]
+jobs:
+  pytest:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: mra
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.10"
+      - run: uv sync
+      - run: uv run pytest -q
+        env:
+          # 行为检查里跳过依赖宿主/网络/凭据的用例（与本地 skip 口径一致）
+          ARK_API_KEY: ""

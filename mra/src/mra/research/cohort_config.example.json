@@ -1,0 +1,17 @@
+{
+  "exposures": {
+    "exposure_table_a": "/abs/path/to/exposures_a.tsv",
+    "exposure_table_b": "/abs/path/to/exposures_b.tsv"
+  },
+  "features": {
+    "species": "/abs/path/to/species_abundance.tsv",
+    "pathway": "/abs/path/to/pathway_abundance.tsv",
+    "kingdom_b": "/abs/path/to/other_kingdom.tsv"
+  },
+  "metadata": "/abs/path/to/metadata.tsv",
+  "default_covariates": ["Age", "Gender", "Energy", "Batch"],
+  "atlas_exposure_cols": {
+    "exposure_table_a": null,
+    "exposure_table_b": ["index_total"]
+  }
+}

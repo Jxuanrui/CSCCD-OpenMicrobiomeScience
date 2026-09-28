@@ -1,0 +1,18 @@
+id: method-module-score-axis-001
+package: methods
+title: 聚合模块分可能是广谱幅度轴，必须做正交化/对照检查
+version: 1
+evidence_level: confirmed_rule
+applicability: 用"成员均值/加和"构建 pathway score、module score 再与他层变量关联的一切分析。
+source:
+  - {kind: internal, ref: 'AgentLab/food_pathway_phage/interlayer_pathway_host.tsv 特异性诊断', date: '2026-09-24'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  trigger: 模块分与对照模块分样本级互相关极高（实测 0.98），或与任一泛存单通路相关很强。
+  risk: "合成模块×宿主 +0.33"类结果实为样本级功能幅度/检出结构，不是模块特异重塑。
+  action: 三查——模块分互相关；对照模块同检验；正交化后增量（实测增量 +0.033≈0 即判非特异）。
+  contraindication: 未过三查的模块分关联不得写成"重塑/remodeling 特异联系"。
+  evidence_source: 层间联系主检验特异性对照否决实录。
+  validation_status: validated_in_real_study。
+  provenance: {repo: Knowledge_Graph-mra, study: Food-Pathway-Phage, date: '2026-09-24'}

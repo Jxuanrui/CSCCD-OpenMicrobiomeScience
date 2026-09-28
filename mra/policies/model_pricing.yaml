@@ -1,0 +1,18 @@
+# 模型价格快照（平台计费唯一事实源）
+# 规则：金额由 ModelRuntime 按本表计算，不依赖第三方实时价格表；
+#       回填前必须经 arkcli pricing 或官方价格页核实并记录快照日期与来源。
+#       快照缺失的模型 cost_cny 记 None（不估算、不猜测）。
+
+schema_version: 1
+currency: CNY
+unit: per_million_tokens
+
+prices: []
+  # 示例（回填时删除本注释）：
+  # - provider: ark
+  #   model: doubao-seed-2.0-lite
+  #   version: unverified
+  #   input: 0.0    # 待核实（UNVERIFIED）
+  #   output: 0.0   # 待核实（UNVERIFIED）
+  #   snapshot_at: "YYYY-MM-DD"
+  #   source: "arkcli pricing / 官方价格页 URL"

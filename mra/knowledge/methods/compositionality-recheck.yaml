@@ -1,0 +1,19 @@
+id: method-compositionality-recheck-001
+package: methods
+title: 组成型数据的关联结论必须过 CLR/ILR 复核（预注册三档判定）
+version: 1
+evidence_level: confirmed_rule
+applicability: 相对丰度/占比型特征的一切关联与"功能轴"结论；与 compositional-zero-001（零值策略）配套。
+source:
+  - {kind: literature, ref: 'Gloor et al. compositional data analysis microbiome', date: '2017-01-01'}
+  - {kind: internal, ref: 'AgentLab/food_pathway_phage/findings.md CLR/ILR 预注册判定', date: '2026-09-24'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  trigger: 用非组成学口径（原始秩/log均值/简单加和）得到跨层或跨域关联并拟写入叙事。
+  risk: 组分约束产生伪相关与伪轴（实测：mean-of-logs 模块分互相关 0.98）。
+  action: 预注册三档判定——消失=归档伪结构不进主叙事；衰减保留=仅称 broad association；稳定保留=可作独立结果但仍不接回机制链。
+  contraindication: 复核目标是判真伪不是救回结论；复核前表述必须带 "pending compositional re-evaluation"。
+  evidence_source: 本课题层间联系检验的预注册流程（findings.md v4）。
+  validation_status: pre_registered（待图谱侧 Food 节点后执行）。
+  provenance: {repo: Knowledge_Graph-mra, study: Food-Pathway-Phage, date: '2026-09-24'}

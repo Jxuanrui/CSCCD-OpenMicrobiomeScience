@@ -1,0 +1,19 @@
+id: method-zero-variance-guard-001
+package: methods
+title: 常数/零方差列必须在统计前拒绝（四道冗余闸）
+version: 1
+evidence_level: confirmed_rule
+applicability: 任何把暴露列或特征列送入相关/回归检验的管线（atlas、研究循环、批处理扫描）。
+source:
+  - {kind: internal, ref: 'atlas 2026-09-21 伪相关事故复盘（190/767 假命中）', date: '2026-09-23'}
+  - {kind: internal, ref: 'commit 2f073fa 四道闸 + 6 项回归测试', date: '2026-09-23'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  trigger: 暴露列非缺失唯一值<2（如全员为 0 的 avocado/cranberry），或特征列常数。
+  risk: 常数列的 lm 秩残差为浮点尘埃，Spearman 对尘埃排序产出结构性伪显著（实测 rho=-0.24、q=4e-13）。
+  action: 四道冗余闸——Python 前置 ValueError；R 脚本 stop/整行剔除；治理门 deny 入账；扫描器列过滤并在 summary 记 skipped_constant_columns。
+  contraindication: 任何一层单独存在都不够（历史教训：审计层当时只有软提示 REVIEW）。
+  evidence_source: 真实数据复现 + v3/v4 重跑账目核对（767→577/582，rho 零漂移）。
+  validation_status: validated_in_real_study。
+  provenance: {repo: Knowledge_Graph-mra, commit: 2f073fa, study: Food-Pathway-Phage, date: '2026-09-23'}

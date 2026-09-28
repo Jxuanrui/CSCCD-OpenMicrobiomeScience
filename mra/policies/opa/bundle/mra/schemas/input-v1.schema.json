@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["principal", "action", "resource", "context"],
+  "properties": {
+    "principal": {
+      "type": "object", "additionalProperties": false, "required": ["type", "id"],
+      "properties": {"type": {"enum": ["human", "agent"]}, "id": {"type": "string", "minLength": 1}}
+    },
+    "action": {"enum": ["read_projection", "execute_task", "promote_result", "export_data", "manage_policy", "approve_request"]},
+    "resource": {
+      "type": "object", "additionalProperties": false, "required": ["type"],
+      "properties": {
+        "type": {"enum": ["projection", "task", "result", "data", "policy", "request"]},
+        "project_id": {"type": "string"}, "classification": {"type": "string"}, "id": {"type": "string"}
+      }
+    },
+    "context": {
+      "type": "object", "additionalProperties": false,
+      "properties": {
+        "task_id": {"type": "string"}, "request_id": {"type": "string"}, "subject_hash": {"type": "string"},
+        "execution": {
+          "type": "object", "additionalProperties": false,
+          "properties": {"network_mode": {"enum": ["deny", "allow"]}, "credential_refs": {"type": "array", "items": {"type": "string"}}}
+        }
+      }
+    },
+    "approval_receipt": {
+      "type": "object", "additionalProperties": false,
+      "required": ["request_id", "subject_hash", "approver", "status", "policy_revision"],
+      "properties": {
+        "request_id": {"type": "string"}, "subject_hash": {"type": "string"}, "status": {"enum": ["approved", "rejected", "pending"]}, "policy_revision": {"type": "string"},
+        "approver": {"type": "object", "additionalProperties": false, "required": ["type"], "properties": {"type": {"enum": ["human", "agent"]}, "label": {"type": "string"}}}
+      }
+    }
+  }
+}

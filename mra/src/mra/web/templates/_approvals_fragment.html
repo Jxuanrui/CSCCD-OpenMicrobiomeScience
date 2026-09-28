@@ -1,0 +1,26 @@
+{% if error %}<p class="error" role="alert">{{ error }}</p>{% endif %}
+<section class="panel">
+  <div class="section-heading"><h2>待审批</h2><span class="muted">{{ pending|length }} 项</span></div>
+  {% if pending %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>请求 ID</th><th>操作</th><th>主题哈希</th><th>时间</th><th>标签与操作</th></tr></thead>
+    <tbody>{% for item in pending %}<tr>
+      <td><code>{{ item.request_id }}</code></td><td>{{ item.action }}</td>
+      <td><code>{{ item.subject_hash|prefix(12) }}</code></td><td>{{ item.created_at or "-" }}</td>
+      <td><form class="approve-form" hx-post="/approvals/{{ item.request_id }}/approve" hx-target="#approvals-content" hx-swap="innerHTML">
+        <label><span class="sr-only">审批标签</span><input name="label" required placeholder="审批标签"></label>
+        <button type="submit">批准</button>
+      </form></td>
+    </tr>{% endfor %}</tbody>
+  </table></div>
+  {% else %}<p class="empty">暂无待审批请求。</p>{% endif %}
+</section>
+<section class="panel">
+  <div class="section-heading"><h2>最近已审批</h2></div>
+  {% if approved %}
+  <div class="table-wrap"><table>
+    <thead><tr><th>请求 ID</th><th>操作</th><th>标签</th><th>审批人</th><th>时间</th></tr></thead>
+    <tbody>{% for item in approved %}<tr><td><code>{{ item.request_id }}</code></td><td>{{ item.action }}</td><td>{{ item.label or "-" }}</td><td>{{ item.approver_id or "-" }}</td><td>{{ item.approved_at or "-" }}</td></tr>{% endfor %}</tbody>
+  </table></div>
+  {% else %}<p class="empty">暂无已审批请求。</p>{% endif %}
+</section>

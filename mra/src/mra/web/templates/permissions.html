@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="page-heading"><div><p class="eyebrow">POLICY SNAPSHOT</p><h1>权限矩阵</h1></div></div>
+{% if policy %}
+<section class="panel">
+  <div class="section-heading"><h2>动作 × 主体（策略输入域）</h2><span class="muted">策略版本 {{ policy.meta.revision if policy.meta else "-" }}</span></div>
+  <div class="table-wrap"><table>
+    <thead><tr><th>动作</th>{% for principal in policy.principal_types or [] %}<th>{{ principal }}</th>{% endfor %}</tr></thead>
+    <tbody>{% for action in policy.actions or [] %}<tr><th>{{ action }}</th>{% for principal in policy.principal_types or [] %}<td>可评估</td>{% endfor %}</tr>{% endfor %}</tbody>
+  </table></div>
+</section>
+<section class="panel">
+  <div class="section-heading"><h2>granted_scope</h2></div>
+  {% if policy.granted_scope %}<div class="table-wrap"><table><thead><tr><th>项目</th><th>分类</th><th>资源类型</th></tr></thead><tbody>{% for scope in policy.granted_scope %}<tr><td>{{ scope.project_id }}</td><td>{{ scope.classifications|join(", ") }}</td><td>{{ scope.resource_types|join(", ") }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<p class="empty">暂无授权范围。</p>{% endif %}
+</section>
+<section class="panel">
+  <div class="section-heading"><h2>registered_tasks</h2></div>
+  {% if policy.registered_tasks %}<div class="table-wrap"><table><thead><tr><th>任务</th><th>最大内存（MB）</th><th>超时（秒）</th></tr></thead><tbody>{% for task, constraints in policy.registered_tasks.items() %}<tr><td><code>{{ task }}</code></td><td>{{ constraints.max_memory_mb }}</td><td>{{ constraints.timeout_s }}</td></tr>{% endfor %}</tbody></table></div>{% else %}<p class="empty">暂无已注册任务。</p>{% endif %}
+</section>
+<section class="panel">
+  <div class="section-heading"><h2>资源分类</h2></div>
+  <p class="classification-list"><strong>资源类型</strong> {% for resource_type in policy.resource_types or [] %}<span class="tag">{{ resource_type }}</span>{% else %}<span class="muted">暂无资源类型。</span>{% endfor %}</p>
+  <p class="classification-list"><strong>数据分级</strong> {% for classification in policy.classifications or [] %}<span class="tag">{{ classification }}</span>{% else %}<span class="muted">暂无数据分级。</span>{% endfor %}</p>
+</section>
+{% else %}<p class="empty">策略数据不可用。</p>{% endif %}
+{% endblock %}

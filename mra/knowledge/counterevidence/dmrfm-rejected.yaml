@@ -1,0 +1,12 @@
+id: counter-dmrfm-rejected-001
+package: counterevidence
+title: DMR-FM 假说被 donor-level 分析推翻
+version: 1
+evidence_level: confirmed_counterevidence
+applicability: 适用于评估跨供体菌群差异机制时，避免把总体显著性当作个体内机制。
+source:
+  - {kind: internal, ref: PLANNING.md 第1章与第7章, date: '2026-09-12'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  Project04 经验显示，DMR-FM 假说在 donor-level 分析中被推翻。跨供体总体关联不能替代供体内重复验证；任何机制解释都必须检查统计单位、零模型和替代解释。

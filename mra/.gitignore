@@ -1,0 +1,54 @@
+# MicrobiomeResearchAgent .gitignore
+# 依据 PLANNING.md 5.9：Git 只保存源码、配置、lockfile、镜像 digest、参数 schema、小型测试夹具
+
+# Python 环境与缓存
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# R（renv 引入后生效）
+renv/library/
+renv/staging/
+
+# 容器制品与缓存（项目内只保存清单：来源/版本/哈希/签名/许可证，见 PLANNING.md 5.14-Q2）
+*.sif
+.apptainer/
+.singularity/
+
+# 大体量制品：参考数据库、向量索引缓存、真实数据（外部受控目录存放，路径另行审批）
+data/
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+
+# 本地运行产物
+staging/
+logs/
+*.log
+.DS_Store
+
+# 外部二进制与运行产物区（Q10 批准；保留目录结构但不入库内容）
+tools/*
+!tools/.gitkeep
+!tools/README.md
+!tools/fetch_tools.sh
+var/staging/*
+var/results/*
+var/audit/*
+!var/**/.gitkeep
+
+# KG 快照与评测产物（运行时再生，不入库）
+var/kg_snapshots/
+var/eval/
+var/research/
+var/cohort_config.json
+PLANNING.md
+knowledge/context/project01-*.yaml
+var/exec_registry/
+var/vecstore/
+var/litread/
+var/workspace/

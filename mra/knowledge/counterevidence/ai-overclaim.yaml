@@ -1,0 +1,12 @@
+id: counter-ai-overclaim-001
+package: counterevidence
+title: 流畅的 AI 机制解释不等于科学证据
+version: 1
+evidence_level: confirmed_counterevidence
+applicability: 适用于 Agent 生成机制解释、文献摘要和候选发现。
+source:
+  - {kind: internal, ref: PLANNING.md 第7章 Kosmos 审计纠正, date: '2026-09-12'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  AI 输出的语言流畅性不能证明假说成立。必须把相关性、方向性、必要性、充分性和因果性分开，并要求原始来源定位；摘要或模型生成解释不能自动升级为内部知识。

@@ -1,0 +1,18 @@
+id: method-pseudocount-floor-001
+package: methods
+title: 伪计数支配区的低丰度特征系数不可信
+version: 1
+evidence_level: confirmed_rule
+applicability: 对相对丰度做 log(x+eps) 类变换后建模/相关的任何管线。
+source:
+  - {kind: internal, ref: 'AgentLab/food_pathway_phage/method_discrepancy_diagnosis.tsv 五条可疑通路画像', date: '2026-09-24'}
+approval: {status: approved, by: human, revision: seed-v1}
+retired: false
+content: |
+  trigger: 特征非零中位丰度 ≤ 伪计数 eps（实测 1e-7~1e-6 vs eps=1e-6，两条零值率>87%）。
+  risk: log 值由伪计数主导而非生物信号，产出大系数假命中（尼龙降解/工程菌乙烯类罕见通路）。
+  action: 检验前报告非零中位丰度与 eps 比值；比值≤1 的特征列入可疑集单独标注，不进正式命中。
+  contraindication: 不得把伪计数支配区命中当作复现证据或机制线索。
+  evidence_source: 五通路画像审计（中位 1e-7~1e-6、最大 ~1e-5）。
+  validation_status: validated_in_real_study。
+  provenance: {repo: Knowledge_Graph-mra, study: Food-Pathway-Phage, date: '2026-09-24'}

@@ -25,7 +25,7 @@ def test_1b_ibd_family_and_abbreviation():
 
 
 def test_1b_colitis_object_keeps_unrelated_cancer():
-    ctx = build_context("bacteria x aggravates colitis and promotes cancer in mice",
+    ctx = build_context("bacteria x studied in colitis and cancer models in mice",
                         "MESH:D003092", "NCBITaxon:1", object_name="Colitis")
     # colitis（target 同形）被滤除；cancer 与 object 无关 → 保留为 background
     assert ctx["disease"]["status"] == "explicit"
@@ -72,3 +72,30 @@ def test_1a_derived_from_is_generic():
     ctx = build_context("probiotic bacteria derived from the genera lactobacillus are effective",
                         "MESH:D000", "NCBITaxon:1", object_name="X")
     assert ctx["strain"]["status"] == "inferred", "derived from 是泛化描述符不得 explicit"
+
+
+def test_final_subclass_target_fragment_filtered():
+    ctx = build_context("helicobacter hepaticus triggers crohn's-like symptoms in mice",
+                        "MESH:D003429", "NCBITaxon:1", object_name="Crohn Disease")
+    assert ctx["disease_subtype"]["status"] != "explicit", "crohn 是 object 名碎片，终审#2"
+
+def test_final_stage_fragment_filtered():
+    ctx = build_context("f. nucleatum promotes the development of acute liver failure",
+                        "MESH:X", "NCBITaxon:1", object_name="Liver Failure, Acute")
+    assert ctx["disease_stage"]["status"] != "explicit", "acute 是 object 名碎片，终审#8"
+
+def test_final_outcome_not_background_disease():
+    ctx = build_context("children with cld, leading to increased inflammation",
+                        "MESH:X", "NCBITaxon:1", object_name="Bacteroides")
+    assert ctx["disease"]["status"] != "explicit", "leading to increased inflammation 是结局，终审#21"
+
+def test_final_route_not_site():
+    ctx = build_context("oral administration of lactobacillus alleviates colitis in mice",
+                        "MESH:D003092", "NCBITaxon:1", object_name="Colitis")
+    assert ctx["anatomical_site"]["status"] != "explicit" or \
+        "oral" not in ctx["anatomical_site"]["value"], "oral administration 是途径，终审#9"
+
+def test_final_isolated_from_not_host():
+    ctx = build_context("s. aureus strain isolated from atopic dermatitis patients tested in vitro",
+                        "MESH:X", "NCBITaxon:1", object_name="X")
+    assert "patients" not in ctx["host_species"]["value"], "isolated from patients 是来源归属，终审#36"

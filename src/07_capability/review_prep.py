@@ -48,7 +48,7 @@ _IN_VITRO_MARKERS = ("in vitro", "organoid", "cell line")
 #: 但不得单独确认 context match（"60 mg/kg" vs "100 mg/kg" 不能因都是 mg 而 match）
 _GENERIC_VALUES = frozenset({"strain", "treated", "intake", "supplementation",
                              "probiotic", "mg", "dose", "cfu", "g/kg", "after",
-                             "trial", "randomized", "derived from"})
+                             "trial", "randomized", "derived from", "isolate"})
 
 #: 1B 收口（2026-09-29 监工令 P0-2）：疾病 object 的同义/缩写形式族——
 #: target≠background 过滤此前只排除与 object 名同形的词，同义词族全漏
@@ -93,21 +93,85 @@ _HOST_EPITHET_RE = re.compile(
     r"(commensal|intestinal|gut|symbiotic|associated|derived|specific|"
     r"oral|stomach|nasal|skin|microbiome|colonizes)\b")
 
+#: 终审缺陷类 4（2026-09-29）："isolated from … patients" 类来源归属——
+#: 菌株来源宿主不是研究宿主（终审实证 #36）。
+_ISOLATED_FROM_RE = re.compile(
+    r"isolated\s+from[^.\n]{0,60}?\b(patients|humans|human|mice|rats|children)\b")
+
+#: 终审缺陷类 2：结局动词语境中的共享词表 token（disease∩endpoint）不是背景病
+#: （"leading to increased inflammation" / "inflammation elicited by"，终审实证 #21/#27）。
+_OUTCOME_PRE_RE = re.compile(
+    r"\b(?:leading to|leads to|resulting in|increased|decreased|reduced|elevated|"
+    r"promotes?|promoted|induces?|induced|triggers?|triggered|causes?|caused|"
+    r"drives?|counteract)\s+(?:an?\s+)?(?:increased\s+|decreased\s+|reduced\s+|"
+    r"elevated\s+)?([a-z\-]+)")
+_OUTCOME_POST_RE = re.compile(
+    r"\b([a-z\-]+)\s+(?:elicited|induced|triggered|observed)\s+by\b")
+
+#: 终审缺陷类 3：给药途径不是解剖部位（"oral administration"，终审实证 #9/#34）。
+_ROUTE_PHRASE_RE = re.compile(
+    r"\b(oral|intragastric|intravenous|subcutaneous|topical|nasal)\s+"
+    r"(administration|gavage|dosing|delivery|supplementation)\b")
+
 
 def _host_species_hit(evidence_text: str):
-    """host_species 专用命中：剔除定语用法后判定（仅剩定语证据 → None）。"""
+    """host_species 专用命中：按 token 剔除定语/来源归属用法（该 token 的全部
+    出现均为定语/归属 → 从命中中移除）。"""
     found = _hit(evidence_text, "host_species")
     if not found:
         return None
-    import re as _re
-    epithets = _HOST_EPITHET_RE.findall(evidence_text.lower())
-    if epithets:
-        # 定语短语中的物种词出现次数（粗粒度：每个定语短语计一次）
-        n_epithet = sum(1 for _ in _HOST_EPITHET_RE.finditer(evidence_text.lower()))
-        n_total = sum(len(_re.findall(rf"\b{(_re.escape(f.lower()))}\b", evidence_text.lower()))
-                      for f in found)
-        if n_epithet >= n_total:
-            return None  # 全部出现都是定语用法
+    low = evidence_text.lower()
+    attributed = {}
+    for m in _HOST_EPITHET_RE.finditer(low):
+        attributed[m.group(1)] = attributed.get(m.group(1), 0) + 1
+    for m in _ISOLATED_FROM_RE.finditer(low):
+        attributed[m.group(1)] = attributed.get(m.group(1), 0) + 1
+    if not attributed:
+        return found
+    kept = []
+    for f in found:
+        fl = f.lower()
+        n_total = len(re.findall(rf"\b{re.escape(fl)}\b", low))
+        if n_total > attributed.get(fl, 0):
+            kept.append(f)
+    return kept or None
+
+
+def _anatomical_site_hit(evidence_text: str):
+    """anatomical_site 专用命中：给药途径短语中的部位词不计（全部出现均为途径 → 剔除）。"""
+    found = _hit(evidence_text, "anatomical_site")
+    if not found:
+        return None
+    low = evidence_text.lower()
+    route_words = [m.group(1) for m in _ROUTE_PHRASE_RE.finditer(low)]
+    if route_words:
+        kept = []
+        for f in found:
+            fl = f.lower()
+            n_route = sum(1 for w in route_words if w == fl)
+            n_total = len(re.findall(rf"\b{re.escape(fl)}\b", low))
+            if n_route < n_total:
+                kept.append(f)
+        return kept or None
+    return found
+
+
+def _disease_background_hit(evidence_text: str, object_name: str):
+    """disease 维度专用命中：1B 同义族 + object 名碎片 + 结局语境三重过滤。"""
+    found = _hit(evidence_text, "disease")
+    if not found:
+        return None
+    low = evidence_text.lower()
+    if object_name:
+        obj_forms = _object_disease_forms(object_name)
+        found = [f for f in found
+                 if not any(of in f.lower() or f.lower() in of for of in obj_forms)] or None
+        if not found:
+            return None
+    outcome_tokens = {m.group(1) for m in _OUTCOME_PRE_RE.finditer(low)}
+    outcome_tokens |= {m.group(1) for m in _OUTCOME_POST_RE.finditer(low)}
+    if outcome_tokens:
+        found = [f for f in found if f.lower() not in outcome_tokens] or None
     return found
 
 _EXPLICIT = {
@@ -177,18 +241,10 @@ def build_context(evidence_text: str, object_id: str, subject_id: str = "",
     t = evidence_text.lower()
     for dim in CONTEXT_DIMS:
         if dim == "disease":
-            # 契约修正（裁决第 1 项）：host/background disease context——只由
-            # 证据文本/研究元数据填写；object/target 实体身份不得无条件复制进
-            # context（target≠context conflation：object=colitis 不代表研究
-            # 发生在 colitis 背景下）。object 疾病信息由 assertion.object 承载。
-            found = _hit(evidence_text, "disease")
-            if found and object_name:
-                # 1B：target≠background——排除 object 自身名及其同义/缩写形式族
-                # （P0-2 收口：同形词过滤扩展到同义词族，如 Neoplasms↔tumorigenesis）
-                obj_forms = _object_disease_forms(object_name)
-                found = [f for f in found
-                         if not any(of in f.lower() or f.lower() in of
-                                    for of in obj_forms)] or None
+            # 契约修正（裁决第 1 项）+ 终审缺陷类 1/2（2026-09-29）：disease background
+            # 三重过滤——1B 同义族 + object 名碎片 + 结局动词语境（共享词表 token
+            # 在 "leading to increased X"/"X elicited by" 中是结局不是背景病）。
+            found = _disease_background_hit(evidence_text, object_name)
             if found:
                 ctx[dim] = {"value": ",".join(found[:2]), "status": "explicit",
                             "source": "abstract_sentence", "applicable": True,
@@ -199,6 +255,16 @@ def build_context(evidence_text: str, object_id: str, subject_id: str = "",
         found = _hit(evidence_text, dim)
         if dim == "host_species":
             found = _host_species_hit(evidence_text)
+        elif dim == "anatomical_site":
+            # 终审缺陷类 3：给药途径（oral administration/gavage）不是解剖部位
+            found = _anatomical_site_hit(evidence_text)
+        elif dim in ("disease_subtype", "disease_stage") and object_name:
+            # 终审缺陷类 1：object 名碎片从 subtype/stage 维度漏入
+            # （object="Crohn Disease"→subtype 不得取 crohn；"Liver Failure, Acute"→stage 不得取 acute）
+            own = {w for w in object_name.lower().replace(",", " ").split() if len(w) > 3}
+            if found:
+                found = [f for f in found
+                         if not any(ow in f.lower() or f.lower() in ow for ow in own)] or None
         if found:
             # 1A 收口（P0-2）：命中全部为泛化 token → 存为 inferred signal，
             # 不得标 explicit（batch1 实证 strain="strain" 以 explicit 入库）

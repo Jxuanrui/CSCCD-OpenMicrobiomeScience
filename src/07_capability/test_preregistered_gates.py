@@ -9,7 +9,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from release_gate_check import PRE_REGISTERED_GATES, check_preregistered  # noqa: E402
 
-# 冻结快照（2026-09-29 默认值；用户确认冻结后如需变更须两处同步+监工审）
+# 冻结快照（用户 2026-09-29 确认冻结；变更须两处同步+用户与监工双签）
 FROZEN = {
     "v6_closure": {
         "s2_votes_required_ratio": 1.0,

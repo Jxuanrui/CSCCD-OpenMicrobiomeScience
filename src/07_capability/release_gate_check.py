@@ -21,7 +21,7 @@ MERGED = ROOT / "data/merged"
 
 # ==== P0-G 预注册门禁（2026-09-29 监工排程令：v6 结果可见前冻结）====
 # batch1 教训制度化：门禁定义写死在 gate 代码（测试锁定），禁止报告层自由填写。
-# 数值状态：默认值已按项目历史设定，待用户确认后即冻结（test_preregistered_gates 锁定）。
+# 数值状态：用户 2026-09-29 确认默认值，**已冻结**（test_preregistered_gates 锁定；变更须用户+监工双签）。
 PRE_REGISTERED_GATES = {
     "v6_closure": {
         "s2_votes_required_ratio": 1.0,     # S2 全部 2,142 票投完

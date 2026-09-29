@@ -92,8 +92,9 @@ def test_final_outcome_not_background_disease():
 def test_final_route_not_site():
     ctx = build_context("oral administration of lactobacillus alleviates colitis in mice",
                         "MESH:D003092", "NCBITaxon:1", object_name="Colitis")
-    assert ctx["anatomical_site"]["status"] != "explicit" or \
-        "oral" not in ctx["anatomical_site"]["value"], "oral administration 是途径，终审#9"
+    val = ctx["anatomical_site"].get("value") or ""
+    assert ctx["anatomical_site"]["status"] != "explicit" or "oral" not in val, \
+        f"oral administration 是途径，终审#9（实际值 {val!r}）"
 
 def test_final_isolated_from_not_host():
     ctx = build_context("s. aureus strain isolated from atopic dermatitis patients tested in vitro",
@@ -123,7 +124,48 @@ def test_v3_stage_outcome_modifier_filtered():
     assert "severe" not in (ctx["disease_stage"].get("value") or ""), "more severe 是结局修饰，v3-#31"
 
 def test_v3_dangling_subtype_inferred():
+    # 非空转：先证明该词可命中 subtype 词表，再断言悬挂场景下降级
+    base = build_context("hepatocellular carcinoma and gut microbiota",
+                         "MESH:X", "NCBITaxon:1", object_name="X")
+    assert "hepatocellular" in (base.get("disease_subtype", {}).get("value") or ""), "前置：词表可命中"
     ctx = build_context("lactobacillus alleviates dili via indole-3-lactic acid in hepatocellular assays",
                         "MESH:X", "NCBITaxon:1", object_name="X")
-    if "hepatocellular" in (ctx.get("disease_subtype", {}).get("value") or ""):
-        assert ctx["disease_subtype"]["status"] == "inferred", "悬挂 subtype 须降 inferred，v3-#17/18"
+    sub = ctx.get("disease_subtype", {})
+    assert sub.get("status") in ("inferred", "unknown"), "悬挂 subtype 须降 inferred/unknown，v3-#17/18"
+
+
+def test_2nd_decreasing_outcome_verbs():
+    ctx = build_context("l. reuteri ucc118 dampens inflammation in the gut",
+                        "MESH:X", "NCBITaxon:1", object_name="X")
+    assert ctx["disease"]["status"] != "explicit", "dampens inflammation 是结局（减弱向），二次终审#7"
+
+def test_2nd_stage_non_pathology_headword():
+    for text in ("promotes microbiota recovery after antibiotics",
+                 "hypertension induced by chronic nitric oxide blockade",
+                 "chronic cocaine use-associated inflammation"):
+        ctx = build_context(text, "MESH:X", "NCBITaxon:1", object_name="X")
+        assert ctx["disease_stage"]["status"] != "explicit", f"非病理中心词：{text}"
+
+def test_2nd_hyphen_compound_fragment():
+    ctx = build_context("b. fragilis protects in colitis-associated crc animals",
+                        "MESH:X", "NCBITaxon:1", object_name="X")
+    assert ctx["disease"]["status"] != "explicit", "colitis-associated 是复合词碎片，二次终审#10"
+    ctx2 = build_context("psoralen acts across the blood-brain barrier",
+                         "MESH:X", "NCBITaxon:1", object_name="X")
+    assert "blood" not in (ctx2["anatomical_site"].get("value") or ""), "blood-brain 复合词，二次终审#30"
+
+def test_2nd_host_vocab_no_in_vitro():
+    ctx = build_context("growth of two f. prausnitzii strains in vitro",
+                        "MESH:X", "NCBITaxon:1", object_name="X")
+    assert ctx["host_species"]["status"] != "explicit", "in vitro 不是物种，二次终审类D"
+
+def test_2nd_site_habitat_epithet():
+    ctx = build_context("the gut commensal agathobacter alleviates neuroinflammation",
+                        "MESH:X", "NCBITaxon:1", object_name="X")
+    assert ctx["anatomical_site"].get("status") != "explicit" or \
+        "gut" not in ctx["anatomical_site"]["value"], "gut commensal 是栖息地定语，二次终审#16"
+
+def test_2nd_administration_is_generic():
+    ctx = build_context("oral administration of lactobacillus to wild-type mice",
+                        "MESH:X", "NCBITaxon:1", object_name="X")
+    assert ctx["intervention"].get("status") != "explicit", "administration 须泛化 inferred，二次终审保留意见"

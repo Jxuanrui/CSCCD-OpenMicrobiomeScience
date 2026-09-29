@@ -48,7 +48,7 @@ _IN_VITRO_MARKERS = ("in vitro", "organoid", "cell line")
 #: 但不得单独确认 context match（"60 mg/kg" vs "100 mg/kg" 不能因都是 mg 而 match）
 _GENERIC_VALUES = frozenset({"strain", "treated", "intake", "supplementation",
                              "probiotic", "mg", "dose", "cfu", "g/kg", "after",
-                             "trial", "randomized", "derived from", "isolate"})
+                             "trial", "randomized", "derived from", "isolate", "administration"})
 
 #: 1B 收口（2026-09-29 监工令 P0-2）：疾病 object 的同义/缩写形式族——
 #: target≠background 过滤此前只排除与 object 名同形的词，同义词族全漏
@@ -104,8 +104,9 @@ _ISOLATED_FROM_RE = re.compile(
 _OUTCOME_PRE_RE = re.compile(
     r"\b(?:leading to|leads to|resulting in|increased|decreased|reduced|elevated|"
     r"promotes?|promoted|induces?|induced|triggers?|triggered|causes?|caused|"
-    r"drives?|counteract)\s+(?:an?\s+)?(?:increased\s+|decreased\s+|reduced\s+|"
-    r"elevated\s+)?([a-z\-]+)")
+    r"drives?|counteract|dampens?|dampened|alleviates?|ameliorates?|attenuates?|"
+    r"improves?|reduces?|suppresses?|prevents?)\s+(?:an?\s+)?(?:increased\s+|"
+    r"decreased\s+|reduced\s+|elevated\s+)?([a-z\-]+)")
 _OUTCOME_POST_RE = re.compile(
     r"\b([a-z\-]+)\s+(?:elicited|induced|triggered|observed)\s+by\b")
 
@@ -135,7 +136,25 @@ def _disease_stage_hit(evidence_text: str):
         bad.add(m.group(2))
     if bad:
         found = [f for f in found if f.lower() not in bad] or None
-    return found
+        if not found:
+            return None
+    # 二次终审缺陷类 B：分期词邻接非病理中心词（microbiota recovery /
+    # chronic nitric oxide blockade / chronic cocaine use）→ 不作 disease_stage
+    _non_patho = ("microbiota", "recovery", "blockade", "cocaine", "nitric",
+                  "oxide", "use", "consumption", "intake", "exposure",
+                  "treatment", "administration", "care", "onset", "phase",
+                  "stationary", "proteins", "protein", "syndrome")
+    kept = []
+    for f in (found or []):
+        occ = list(re.finditer(rf"\b{re.escape(f.lower())}\b", low))
+        bad_occ = 0
+        for m in occ:
+            window = low[max(0, m.start()-25):m.end()+25].split()
+            if any(h in window for h in _non_patho):
+                bad_occ += 1
+        if bad_occ < len(occ):
+            kept.append(f)
+    return kept or None
 
 
 _ROUTE_PHRASE_RE = re.compile(
@@ -173,16 +192,19 @@ def _anatomical_site_hit(evidence_text: str):
         return None
     low = evidence_text.lower()
     route_words = [m.group(1) for m in _ROUTE_PHRASE_RE.finditer(low)]
-    if route_words:
-        kept = []
-        for f in found:
-            fl = f.lower()
-            n_route = sum(1 for w in route_words if w == fl)
-            n_total = len(re.findall(rf"\b{re.escape(fl)}\b", low))
-            if n_route < n_total:
-                kept.append(f)
-        return kept or None
-    return found
+    _site_epithet_re = re.compile(
+        r"\b(gut|skin|oral|intestinal|colonic|nasal|periodontal|fecal)\s+"
+        r"(?:[a-z\-]+\s+){0,2}(commensal|bacterium|bacteria|microbiota|"
+        r"microbiome|pathobiont|symbiont|inhabitant)\b")
+    ep_sites = [m.group(1) for m in _site_epithet_re.finditer(low)]
+    kept = []
+    for f in found:
+        fl = f.lower()
+        n_att = sum(1 for w in route_words if w == fl) + sum(1 for w in ep_sites if w == fl)
+        n_total = len(re.findall(rf"\b{re.escape(fl)}\b", low))
+        if n_total > n_att:
+            kept.append(f)
+    return kept or None
 
 
 def _disease_background_hit(evidence_text: str, object_name: str):
@@ -201,14 +223,14 @@ def _disease_background_hit(evidence_text: str, object_name: str):
     outcome_tokens |= {m.group(1) for m in _OUTCOME_POST_RE.finditer(low)}
     if outcome_tokens:
         found = [f for f in found if f.lower() not in outcome_tokens] or None
-    return found
+    return _hyphen_compound_hit(evidence_text, found) if found else found
 
 _EXPLICIT = {
     "strain": ["MMX", "MRE 600", "ETBF", "NTBF", "pks+", "K-12", "Nissle",
                "engineered", "strain", "isolate", "clone", "derived from",
                "genotypes", "CD-SpA"],
     "host_species": ["mice", "mouse", "murine", "human", "patients", "rats",
-                     "children", "adults", "in vitro", "organoid"],
+                     "children", "adults"],
     "experimental_model": ["DSS", "AOM", "CAC", "EAE", "in vitro", "organoid",
                            "cell line", "HCT-116", "HT-29", "gnotobiotic",
                            "germ-free"],
@@ -258,6 +280,22 @@ def _hit(text: str, dim: str):
     return out or None
 
 
+def _hyphen_compound_hit(evidence_text: str, found):
+    """二次终审缺陷类 C：连字符复合词拆碎片（colitis-associated→colitis、
+    blood-brain→blood）。token 的全部出现均在连字符复合词内 → 剔除。"""
+    if not found:
+        return found
+    low = evidence_text.lower()
+    kept = []
+    for f in found:
+        fl = re.escape(f.lower())
+        n_total = len(re.findall(rf"(?<![a-z0-9]){fl}(?![a-z0-9])", low))
+        n_compound = len(re.findall(rf"(?<=[a-z]-){fl}(?![a-z0-9])|(?<![a-z0-9-]){fl}(?=-[a-z])", low))
+        if n_total > n_compound:
+            kept.append(f)
+    return kept or None
+
+
 def build_context(evidence_text: str, object_id: str, subject_id: str = "",
                   object_name: str = "") -> dict:
     """Evidence-aware context v0.5：每维 {value,status,source,applicable,unknown_reason}。
@@ -285,10 +323,13 @@ def build_context(evidence_text: str, object_id: str, subject_id: str = "",
         if dim == "host_species":
             found = _host_species_hit(evidence_text)
         elif dim == "anatomical_site":
-            # 终审缺陷类 3：给药途径（oral administration/gavage）不是解剖部位
+            # 终审缺陷类 3 + 二次终审#16：给药途径与栖息地定语（gut commensal X）
             found = _anatomical_site_hit(evidence_text)
         elif dim == "disease_stage":
             found = _disease_stage_hit(evidence_text)
+        if found:
+            # 二次终审缺陷类 C：连字符复合词碎片（全出现均在复合词内 → 剔除）
+            found = _hyphen_compound_hit(evidence_text, found)
         if dim == "disease_subtype" and found and \
                 ctx.get("disease", {}).get("status") not in ("explicit", None):
             # 悬挂 subtype：父疾病维度未确认（unknown）时降 inferred，避免无父孤悬

@@ -18,6 +18,47 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
 MERGED = ROOT / "data/merged"
+
+# ==== P0-G 预注册门禁（2026-09-29 监工排程令：v6 结果可见前冻结）====
+# batch1 教训制度化：门禁定义写死在 gate 代码（测试锁定），禁止报告层自由填写。
+# 数值状态：默认值已按项目历史设定，待用户确认后即冻结（test_preregistered_gates 锁定）。
+PRE_REGISTERED_GATES = {
+    "v6_closure": {
+        "s2_votes_required_ratio": 1.0,     # S2 全部 2,142 票投完
+        "error_residual_max": 20,           # error 残余上限（历史收口惯例）
+        "flip_rate_max": 0.15,              # v6 翻转率上限（vs 7,945 Food 基线；默认值待用户冻结确认）
+        "sampling_pass_line": 0.85,         # top-30 + 随机 30-50 抽检线（MVP 验收惯例）
+        "_frozen_before": "v6-S2<10%（实际冻结于 S2≈4%，先于结果可见）",
+    },
+    "phase_v_prime": {
+        "context_precision_min": 0.85,      # 恢复 batch1 原预注册 gate_3（换指标违规的反向修复）
+        "orphan_assertions_max": 0,
+        "duplicate_assertions_max": 0,
+        "manual_hold_leak_max": 0,
+        "provenance_quartet_min": 1.0,      # 四件套完备率（已达成 100% 基线）
+        "gate_all_pass": True,
+        "two_key_authorization": True,      # 授权物化/授权发布两把独立授权键
+    },
+}
+
+
+def check_preregistered(stage: str, metrics: dict) -> dict:
+    """按预注册常量判定（报告层无权改阈值）。stage ∈ {v6_closure, phase_v_prime}。"""
+    gates = PRE_REGISTERED_GATES[stage]
+    out = {}
+    for k, limit in gates.items():
+        if k.startswith("_") or isinstance(limit, bool):
+            continue
+        val = metrics.get(k)
+        if val is None:
+            out[k] = "MISSING"
+        elif ("max" in k) and val > limit:
+            out[k] = f"FAIL({val}>{limit})"
+        elif (("min" in k) or ("required" in k) or ("line" in k)) and val < limit:
+            out[k] = f"FAIL({val}<{limit})"
+        else:
+            out[k] = "PASS"
+    return out
 STAGING = ROOT / "data/staging/llm_relations.jsonl"
 
 # v0.4 语义（历史复核用，只读重算）

@@ -20,6 +20,14 @@
 
 Claude Code（claude-opus-5-5，经 4router.net 中转，人格定义见 `.claude/agents/supervisor.md`）为项目监工与裁判：**只审不干**（仅 Read/Grep/Glob），不承担任何执行任务。阶段关口必审：①阶段完成 ②方向决策前 ③新数据入库/新路径创建前 ④打回整改复审；由执行者在项目根目录以 `claude -p --agent supervisor "<阶段总结与审核请求>"` 调用，裁决结论并入阶段汇报。质量门禁（阶段通过/release gate/物化放行）监工有否决权；方向级变更（技术路线/数据源/阶段目标/重要路径）监工仅建议权，最终由用户拍板；监工报告的"待用户拍板"表格必须原样呈报用户，不得截留；打回的成果必须整改后复审。监工输出的外部事实默认 candidate_research。
 
+## 安全事件与整改记录（2026-09-29 R1，详细版见 git 历史 docs/security 归档提交）
+
+- **事件**：Neo4j 密码明文进入 README（引入 0ef76ac@2026-09-25，历史重写后 32e44a3）；实际暴露面更大——实例 auth_enabled=false 且监听全网卡（9/25 所称"密码重置"从未生效，auth.ini 不存在）。
+- **处置**：密码轮换（新凭据仅存 .env，600 权限，gitignored）；auth 开启+监听收紧 127.0.0.1；README 脱敏；git filter-repo 全历史重写+双远端推送（**GitHub 内容级验证从未收到含密历史=零公开暴露**；含密残留 ref 已强推清理+裸仓 gc）；pre-commit secret 扫描钩子（.githooks，克隆后须 `git config core.hooksPath .githooks` 启用）。
+- **过程教训**：①容器入口点会把 NEO4J_PASSWORD 环境变量物化为 conf 明文——启动命令必须 `env -u NEO4J_PASSWORD`；②5.x 用户库存于 system 库，auth.ini 仅首次引导——轮换走了 system 库外科重建（旧库备份 data/neo4j-data/system_db_backup_20260929/，30 天后清理）。
+- **同日次生**：crontab 中另发现明文 API key（另一操作者注册的定时审计脚本），已移除并记录 data/logs/security/；该 LLM key 三处明文（/tmp/v6_food_cycle.sh、crontab、聊天历史），**建议用户在中转商处轮换**。
+- 重写前全量备份 bundle（含旧密历史，本地文件）：`/data/LYteamwork/JiXuanRui/Project/kg-pre-rewrite-backup-20260929.bundle`——双远端核查完成，待用户确认删除。
+
 ## 技术栈（已批准，2026-09）
 
 | 层 | 选型 | 依据 |

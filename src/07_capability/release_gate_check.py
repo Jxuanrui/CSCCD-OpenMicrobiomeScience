@@ -39,6 +39,15 @@ PRE_REGISTERED_GATES = {
         "gate_all_pass": True,
         "two_key_authorization": True,      # 授权物化/授权发布两把独立授权键
     },
+    "route_eval": {
+        "overall_precision_min": 0.85,
+        "disease_role_min": 0.80,
+        "disease_stage_min": 0.75,
+        "blind_vs_confirmed_agreement_min": 0.75,
+        "recall_reported": True,
+        "cost_latency_reported": True,
+        "_frozen": "用户+监工双签（2026-09-29 按监工建议执行授权；数值为默认草案，T1 双签终定）",
+    },
 }
 
 
@@ -232,14 +241,25 @@ def main():
         summary["assertion_set"]["atomicity_qc"]["replay_identity_stable"]
     checks["unknown_never_treated_as_match"] = summary["comparability"].get("comparable", 0) >= 0 \
         and "unknown:match" not in json.dumps(summary)  # gate 语义：unknown 只能 block
+    # P0 修复（2026-09-29 监工令）：原 `... == 0 or True` 恒真——漏检。
+    # 语义：comparable 必须为 0（gate 语义下任何 comparable 都须人工复核）
     checks["inferred_cannot_upgrade_comparable"] = \
-        summary["comparability"].get("comparable", 0) == 0 or True
-    checks["not_applicable_distinguished_from_unknown"] = \
-        summary["context_metrics"]["inferred_rate"] >= 0  # schema 字段存在性由生成器保证
+        summary["comparability"].get("comparable", 0) == 0
+    # P0 修复：原 `>= 0` 恒真。改为数据实算：断言 context 中须存在
+    # applicable=false 的 not_applicable 维度（与 not_present 的 unknown 语义分离有据）
+    _n_na = 0
+    for _, _r in a_df.head(500).iterrows():
+        try:
+            _ctx = json.loads(_r.get("context") or "{}")
+        except (json.JSONDecodeError, TypeError):
+            continue
+        _n_na += sum(1 for v in _ctx.values()
+                     if isinstance(v, dict) and v.get("applicable") is False)
+    checks["not_applicable_distinguished_from_unknown"] = _n_na > 0
     checks["object_side_gap_covered"] = "inflammation_to_anatomical" in json.dumps(
         summary["ontology_gap"]) or (backlog["gap_type"] == "entity_granularity").any()
-    checks["anatomical_site_covered"] = any(
-        "anatomical" in str(v) for v in backlog["dimension"].unique()) or True
+    # P0 修复：原第一处 `any(...) or True` 恒真（被第二行覆盖前始终误导）。
+    # 判定以抽样覆盖为准：样本必须覆盖 anatomical_site 维度
     ctx_dims_in_sample = pd.read_csv(MERGED / "context_precision_sample.tsv",
                                      sep="\t")["dimension"].unique()
     checks["anatomical_site_covered"] = "anatomical_site" in set(ctx_dims_in_sample)

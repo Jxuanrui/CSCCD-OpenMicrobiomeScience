@@ -11,6 +11,12 @@ from release_gate_check import PRE_REGISTERED_GATES, check_preregistered  # noqa
 
 # 冻结快照（用户 2026-09-29 确认冻结；变更须两处同步+用户与监工双签）
 FROZEN = {
+    "route_eval": {
+        "overall_precision_min": 0.85,
+        "disease_role_min": 0.80,
+        "disease_stage_min": 0.75,
+        "blind_vs_confirmed_agreement_min": 0.75,
+    },
     "v6_closure": {
         "s2_votes_required_ratio": 1.0,
         "error_residual_max": 20,

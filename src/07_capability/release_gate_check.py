@@ -73,7 +73,9 @@ def _gate_v04(ev_a: str, ev_b: str, object_id: str) -> str:
 
 def transition_report():
     cur = pd.read_csv(MERGED / "conflicts_review.tsv", sep="\t").fillna("")
-    pre = pd.read_csv("/tmp/conflicts_review_prefix.tsv", sep="\t").fillna("")
+    _prefix = MERGED / "conflicts_review_prefix.tsv"
+    pre = (pd.read_csv(_prefix, sep="\t").fillna("") if _prefix.exists()
+           else pd.DataFrame(columns=["subject", "object", "context_match_status"]))
     pre_map = {f"{r['subject']}|{r['object']}": r for _, r in pre.iterrows()}
     rows = []
     for _, r in cur.iterrows():
@@ -153,6 +155,24 @@ def canonical_check():
     return checks
 
 
+def _materialization_phase_check(manifest) -> bool:
+    """P0-3（2026-09-29）：物化前/后两套口径。
+
+    物化前（materialized_to_neo4j=False）：本检查放行——gate 守卫的是发布就绪态。
+    物化后（True）：要求 neo4j_materialization_result.json 在场、带 execution_id、
+    orphan=0 且 eligible 计数与 manifest 一致——否则 FAIL（防"标记已物化但无留痕"）。
+    """
+    if not manifest.get("materialized_to_neo4j"):
+        return True
+    res_path = MERGED / "neo4j_materialization_result.json"
+    if not res_path.exists():
+        return False
+    res = json.loads(res_path.read_text(encoding="utf-8"))
+    return (bool(res.get("execution_id"))
+            and res.get("orphan_assertions") == 0
+            and res.get("assertion_nodes") == manifest.get("eligible_assertions"))
+
+
 def main():
     trans = transition_report()
     base = assertion_baseline()
@@ -217,7 +237,7 @@ def main():
         and ac["retained_assertion_count"] == len(_a)
         and ac["manual_hold_count"] == _live_hold)
 
-    checks["materialized_to_neo4j_false"] = manifest["materialized_to_neo4j"] is False
+    checks["materialized_to_neo4j_phase_consistent"] = _materialization_phase_check(manifest)
 
     # ---- 收口新增四项（裁决 5）----
     import sys as _sys
@@ -250,11 +270,23 @@ def main():
                  if (r["subject"], r["predicate"]) in dm_ids
                  and "increases in Clostridium" in str(r.get("evidence_span_norm", "")))
     checks["dropped_manual_excluded"] = leaked == 0
-    # manual_hold 已隔离（标记在案且不进 canonical 输入）
-    holds = pd.read_csv(MERGED / "manual_hold.tsv", sep="\t")
+    # manual_hold 已隔离（P0-3 语义修正：在场登记 hold 必须全部带 hold 标记；
+    # 缺席者须有逐条"不在集合中"证据文件——计数比较不再作为判据）
+    mh_reg = pd.read_csv(MERGED / "manual_hold.tsv", sep="\t")
     a_h = pd.read_csv(MERGED / "relation_assertions.tsv", sep="\t").fillna("")
-    flagged = (a_h["manual_hold"] != "").sum() if "manual_hold" in a_h else 0
-    checks["manual_hold_quarantined"] = flagged >= len(holds) - 1  # 允许1条pmid未命中
+    _tsv_keys = {(r["subject"], r["predicate"], r["object"], str(r["evidence_pmid"]))
+                 for _, r in a_h.iterrows()}
+    _leak = 0
+    for _, h in mh_reg.iterrows():
+        _obj, _pmid = str(h["object_pmid"]).split("@")
+        k = (h["subject"], h["predicate"], _obj, _pmid)
+        if k in _tsv_keys:
+            row = a_h[(a_h["subject"] == h["subject"]) & (a_h["predicate"] == h["predicate"])
+                      & (a_h["evidence_pmid"].astype(str) == _pmid)]
+            if not (row["manual_hold"] != "").any():
+                _leak += 1
+    _absent_ev = (MERGED / "restored_baseline_hold_absence_evidence.json").exists()
+    checks["manual_hold_quarantined"] = _leak == 0 and _absent_ev
         
 
 
@@ -272,7 +304,7 @@ def main():
     def _v(cond):
         return "PASS" if cond else "BLOCKER"
     v1_report = {
-        "candidate": "Context-aware Microbiome KG Snapshot v1",
+        "candidate": str(manifest.get("snapshot_id", "unknown-snapshot")),
         "items": {
             "Batch completion": "PASS",
             "Atomicity": _v(checks["zero_duplicate_assertion_id"] and checks["zero_multi_pmid_atomic_assertions"]),
@@ -290,9 +322,10 @@ def main():
             "Canonical derivation": _v(checks["canonical_view_is_derived"] and checks["no_cross_context_majority_vote"]),
             "Manifest/version/hash": _v(checks["manifest_versions_complete"] and checks["final_hashes_present"] and checks["assertion_count_consistent"]),
             "Neo4j materialization authorization": "MANUAL_REVIEW_REQUIRED"},
-        "materialized_to_neo4j": False,
-        "snapshot_status": "Context-aware Microbiome KG Snapshot v1",
-        "P0_status": "RELEASED",
+        "materialized_to_neo4j": bool(manifest.get("materialized_to_neo4j")),
+        "snapshot_status": str(manifest.get("snapshot_id", "unknown-snapshot")),
+        # P0-3（2026-09-29 监工令）：去除硬编码 RELEASED——状态由检查项推导
+        "P0_status": "PENDING_RELEASE_CHECKS",
         "v1_release_conditions_met": all(
             v == "PASS" for v in {
                 _v(checks["zero_duplicate_assertion_id"]),
@@ -301,9 +334,11 @@ def main():
                 _v(checks["disease_target_context_separated"]),
                 _v(checks["dropped_manual_excluded"]),
                 _v(checks["manual_hold_quarantined"]),
+                _v(checks["materialized_to_neo4j_phase_consistent"]),
             } or [True]) and fm["precision_confirmed_explicit"] >= 0.8,
-        "note": "v1 标记条件满足（除 Neo4j 物化须单独人工授权）；"
-                "人工终审项：conflicts_review 已机器一致性核验+AI标注终审"}
+        "note": "状态由 automated checks 推导（2026-09-29 去硬编码）；"
+                "materialized_to_neo4j 采用物化前/后两套口径一致性判定；"
+                "人工终审项：conflicts_review 机器一致性核验 + 用户终审"}
     (MERGED / "v1_release_gate_report.json").write_text(
         json.dumps(v1_report, ensure_ascii=False, indent=1), encoding="utf-8")
     (MERGED / "release_gate_report.json").write_text(

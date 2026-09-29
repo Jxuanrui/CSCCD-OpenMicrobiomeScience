@@ -222,3 +222,24 @@ class EuropePmcAdapter:
 
 
 __all__ = ["EuropePmcAdapter", "EuropePmcError"]
+
+
+# ---- Phase F'（P0-K，2026-09-29 用户拍板#5）：全文可重用许可证保守白名单 ----
+# 政策：第一阶段只收 CC BY / CC0 / 明确 Public Domain；NC/SA/ND/未标注/free-to-read
+# 一律不进入可重用抽取流水线（建立无许可歧义的干净数据链；后续放宽须单独评审）。
+FULLTEXT_REUSE_LICENSE_WHITELIST = frozenset({
+    "cc by", "cc by 4.0", "cc by 3.0", "cc by 2.0", "cc-by",
+    "cc0", "cc0 1.0", "public domain", "pd",
+})
+
+
+def is_reusable_fulltext(license_str: str) -> bool:
+    """判断 Europe PMC 全文许可是否落入第一阶段白名单（大小写/前后缀宽容匹配）。"""
+    if not license_str:
+        return False
+    low = license_str.strip().lower()
+    if any(tok in low for tok in ("-nc", "-nd", "-sa", "noncommercial", "noderivs",
+                                  "sharealike")):
+        return False
+    return any(w == low or low.startswith(w) or f"({w})" in low or w in low.split()
+               for w in FULLTEXT_REUSE_LICENSE_WHITELIST)

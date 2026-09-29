@@ -59,6 +59,30 @@ def kg_edge_evidence(subject: str, object: str) -> str:
         {"subject": subject, "object": object}), ensure_ascii=False)
 
 
+_SDK = None
+
+
+def _sdk():
+    """Capability SDK 惰性实例（Phase U' P0-I：两新工具只做 SDK 包装，不重复实现）。"""
+    global _SDK
+    if _SDK is None:
+        from .kg.capability_sdk import KGCapabilitySDK
+        _SDK = KGCapabilitySDK(os.environ.get("KG_MERGED_DIR"))
+    return _SDK
+
+
+@mcp.tool(description=("查询实体对应的 evidence-level 断言（RelationAssertion：含 15 维 context、"
+                       "置信度、PMID+normalized span、provenance）。只读。"))
+def kg_get_assertions(entity: str, predicate: str = "", target: str = "") -> str:
+    return json.dumps(_sdk().kg_assertions(entity, predicate, target), ensure_ascii=False, default=str)
+
+
+@mcp.tool(description=("按 assertion_id 查询证据与溯源链（provenance 四件套/execution_id/"
+                       "PMID+span/context/review 状态）。只读。"))
+def kg_get_prov(assertion_id: str) -> str:
+    return json.dumps(_sdk().kg_evidence(assertion_id), ensure_ascii=False, default=str)
+
+
 @mcp.tool(description=("队列关联分析：单暴露×特征表 偏 Spearman（控协变量，BH 校正）。"
                        "较重（分钟级 R 沙箱），同类参数有缓存。暴露/特征表名见部署配置。"))
 def r_association(exposure: str, features: str = "species",

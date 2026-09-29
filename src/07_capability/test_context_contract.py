@@ -99,3 +99,31 @@ def test_final_isolated_from_not_host():
     ctx = build_context("s. aureus strain isolated from atopic dermatitis patients tested in vitro",
                         "MESH:X", "NCBITaxon:1", object_name="X")
     assert "patients" not in ctx["host_species"]["value"], "isolated from patients 是来源归属，终审#36"
+
+
+def test_v3_human_cells_substrate_not_host():
+    ctx = build_context("psoralen upregulates genes in human periodontal ligament cells",
+                        "MESH:X", "NCBITaxon:1", object_name="X")
+    assert "human" not in ctx["host_species"].get("value", "") or \
+        ctx["host_species"]["status"] != "explicit", "human X cells 是细胞底物，v3-#24"
+
+def test_v3_microbiota_habitat_not_host():
+    ctx = build_context("disappearance of h. pylori from the human microbiota may be linked",
+                        "MESH:X", "NCBITaxon:1", object_name="X")
+    assert ctx["host_species"]["status"] != "explicit", "from the human microbiota 是栖息地，v3-#36"
+
+def test_v3_stage_name_fragment_filtered():
+    ctx = build_context("sars-cov-2 and severe acute respiratory syndrome contribute to gi inflammation",
+                        "MESH:X", "NCBITaxon:1", object_name="X")
+    assert ctx["disease_stage"]["status"] != "explicit", "severe/acute 是 SARS 名称碎片，v3-#14"
+
+def test_v3_stage_outcome_modifier_filtered():
+    ctx = build_context("superantigens increase more severe cutaneous inflammation in ad patients",
+                        "MESH:X", "NCBITaxon:1", object_name="X")
+    assert "severe" not in (ctx["disease_stage"].get("value") or ""), "more severe 是结局修饰，v3-#31"
+
+def test_v3_dangling_subtype_inferred():
+    ctx = build_context("lactobacillus alleviates dili via indole-3-lactic acid in hepatocellular assays",
+                        "MESH:X", "NCBITaxon:1", object_name="X")
+    if "hepatocellular" in (ctx.get("disease_subtype", {}).get("value") or ""):
+        assert ctx["disease_subtype"]["status"] == "inferred", "悬挂 subtype 须降 inferred，v3-#17/18"

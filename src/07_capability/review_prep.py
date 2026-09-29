@@ -89,9 +89,10 @@ def _object_disease_forms(object_name: str) -> set:
 #: "murine-specific pathogen" 等短语中的物种词描述菌株生态位，不得据此确认
 #: host_species（batch1 一审实证 #13/#23/#25/#27/#29/#31）。
 _HOST_EPITHET_RE = re.compile(
-    r"\b(human|murine|mouse)\s*[-\s]?\s*"
+    r"\b(human|murine|mouse)\s*[-\s]?\s*(?:[a-z\-]+\s+){0,3}"
     r"(commensal|intestinal|gut|symbiotic|associated|derived|specific|"
-    r"oral|stomach|nasal|skin|microbiome|colonizes)\b")
+    r"oral|stomach|nasal|skin|microbiome|microbiota|colonizes|cells?|"
+    r"tissues?|cell lines?)\b")
 
 #: 终审缺陷类 4（2026-09-29）："isolated from … patients" 类来源归属——
 #: 菌株来源宿主不是研究宿主（终审实证 #36）。
@@ -109,6 +110,34 @@ _OUTCOME_POST_RE = re.compile(
     r"\b([a-z\-]+)\s+(?:elicited|induced|triggered|observed)\s+by\b")
 
 #: 终审缺陷类 3：给药途径不是解剖部位（"oral administration"，终审实证 #9/#34）。
+#: 终审 v3 缺陷类（2026-09-29）：他实体名称碎片与结局修饰词不得作 disease_stage——
+#: "acute-phase proteins"、"severe acute respiratory syndrome"、"more severe inflammation"。
+_STAGE_NAME_FRAGMENT_RE = re.compile(
+    r"\b(severe|acute|mild|early|late|chronic)[\s-]*(phase|acute respiratory syndrome|"
+    r"phase proteins?|care|onset)")
+_STAGE_OUTCOME_MODIFIER_RE = re.compile(
+    r"\b(more|less|increased|decreased|significantly)\s+(severe|mild|acute|chronic)\b")
+
+
+def _disease_stage_hit(evidence_text: str):
+    """stage 维度专用命中：剔除名称碎片与结局修饰词用法。"""
+    found = _hit(evidence_text, "disease_stage")
+    if not found:
+        return None
+    low = evidence_text.lower()
+    bad = set()
+    _stage_words = ("severe", "acute", "mild", "early", "late", "chronic", "advanced")
+    for m in _STAGE_NAME_FRAGMENT_RE.finditer(low):
+        bad.add(m.group(1))
+        span_txt = m.group(0)
+        bad |= {w for w in _stage_words if w in span_txt}  # 短语内部的分期词一并剔除
+    for m in _STAGE_OUTCOME_MODIFIER_RE.finditer(low):
+        bad.add(m.group(2))
+    if bad:
+        found = [f for f in found if f.lower() not in bad] or None
+    return found
+
+
 _ROUTE_PHRASE_RE = re.compile(
     r"\b(oral|intragastric|intravenous|subcutaneous|topical|nasal)\s+"
     r"(administration|gavage|dosing|delivery|supplementation)\b")
@@ -258,6 +287,15 @@ def build_context(evidence_text: str, object_id: str, subject_id: str = "",
         elif dim == "anatomical_site":
             # 终审缺陷类 3：给药途径（oral administration/gavage）不是解剖部位
             found = _anatomical_site_hit(evidence_text)
+        elif dim == "disease_stage":
+            found = _disease_stage_hit(evidence_text)
+        if dim == "disease_subtype" and found and \
+                ctx.get("disease", {}).get("status") not in ("explicit", None):
+            # 悬挂 subtype：父疾病维度未确认（unknown）时降 inferred，避免无父孤悬
+            ctx[dim] = {"value": ",".join(found[:2]), "status": "inferred",
+                        "source": "dangling_without_parent_disease", "applicable": True,
+                        "unknown_reason": "parent_disease_unknown"}
+            continue
         elif dim in ("disease_subtype", "disease_stage") and object_name:
             # 终审缺陷类 1：object 名碎片从 subtype/stage 维度漏入
             # （object="Crohn Disease"→subtype 不得取 crohn；"Liver Failure, Acute"→stage 不得取 acute）

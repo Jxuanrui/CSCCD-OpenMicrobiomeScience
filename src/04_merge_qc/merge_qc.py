@@ -26,6 +26,35 @@ def registry_gate():
         raise SystemExit(f'[registry] 以下来源未登记/未激活，拒绝合并: {missing}')
     return {k: v for k, v in SOURCE_MAP.items()}
 
+def close_entity_closure(nodes: pd.DataFrame, stage: Path) -> pd.DataFrame:
+    """P0-1 修复（2026-09-29 监工令）：断言引用实体闭包。
+
+    relation_assertions.tsv 由全部 ok 且非 no_relation 行派生（含单篇 Tier-C 与冲突行），
+    因此 merged_nodes 必须对这些行的 subject/object 实体闭包，否则 Neo4j 物化出现
+    orphan assertion（636e59a5 实测 orphan=1392 的根因）。补建占位实体与 v1 时代
+    物化外挂补建同法（literature_only），幂等。
+    """
+    seen = set(nodes['id']); add = []
+    if stage.exists():
+        for line in stage.open(encoding='utf-8'):
+            try:
+                r = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            if not isinstance(r, dict) or r.get('status') != 'ok' or r.get('predicate') == 'no_relation':
+                continue
+            for ent in (r.get('subject'), r.get('object')):
+                if isinstance(ent, dict) and ent.get('id') and ent['id'] not in seen:
+                    add.append({'id': ent['id'], 'name': ent.get('name') or ent['id'],
+                                'category': ent.get('category') or 'literature_only',
+                                'aliases': '', 'xrefs': '', 'tax_rank': ''})
+                    seen.add(ent['id'])
+    if add:
+        nodes = pd.concat([nodes, pd.DataFrame(add)], ignore_index=True)
+        nodes = nodes.drop_duplicates(subset=['id'], keep='first')
+    return nodes
+
+
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--include-c',action='store_true'); args=ap.parse_args()
     MERGED.mkdir(parents=True,exist_ok=True)
@@ -108,23 +137,10 @@ def main():
             else:
                 row['evidence_tier']='C'
     pd.DataFrame(review).to_csv(MERGED/'pending_review_edges.tsv',sep='\t',index=False)
+    # P0-1：断言引用实体闭包（全部 ok 行——Tier-C 断言同样需要实体，不再限定 Tier-B agg）
+    nodes = close_entity_closure(nodes, stage)
     if agg:
-        # Tier-B 实体节点并入主图（仅缺失时追加，保持幂等）。
-        stage_nodes=[]
-        seen_ids=set(nodes['id'])
-        if stage.exists():
-            for line in stage.open(encoding='utf-8'):
-                r=json.loads(line)
-                if r.get('status')!='ok': continue
-                for ent in (r['subject'],r['object']):
-                    key=(r['subject']['id'],r['predicate'],r['object']['id'])
-                    if key in agg and ent['id'] not in seen_ids:
-                        stage_nodes.append({'id':ent['id'],'name':ent.get('name') or ent['id'],
-                                            'category':ent['category'],'aliases':'','xrefs':'','tax_rank':''})
-                        seen_ids.add(ent['id'])
-        if stage_nodes:
-            nodes=pd.concat([nodes,pd.DataFrame(stage_nodes)],ignore_index=True)
-            nodes=nodes.drop_duplicates(subset=['id'],keep='first')
+        # Tier-B 聚合边并入主图（实体闭包已由 close_entity_closure 统一处理）
         add=pd.DataFrame(agg.values())
         add['evidence_tier']='B'
         edges=pd.concat([edges,add],ignore_index=True)

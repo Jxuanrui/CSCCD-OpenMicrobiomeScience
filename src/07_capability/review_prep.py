@@ -21,6 +21,7 @@ from __future__ import annotations
 
 import json
 import random
+import re
 from datetime import date
 from pathlib import Path
 
@@ -47,7 +48,67 @@ _IN_VITRO_MARKERS = ("in vitro", "organoid", "cell line")
 #: 但不得单独确认 context match（"60 mg/kg" vs "100 mg/kg" 不能因都是 mg 而 match）
 _GENERIC_VALUES = frozenset({"strain", "treated", "intake", "supplementation",
                              "probiotic", "mg", "dose", "cfu", "g/kg", "after",
-                             "trial", "randomized"})
+                             "trial", "randomized", "derived from"})
+
+#: 1B 收口（2026-09-29 监工令 P0-2）：疾病 object 的同义/缩写形式族——
+#: target≠background 过滤此前只排除与 object 名同形的词，同义词族全漏
+#: （batch1 实证：object=Neoplasms 时 tumorigenesis/cancer/carcinoma 泄入
+#: disease context；object=IBD 时 inflammatory bowel disease 泄入）。
+_DISEASE_SYNONYM_FAMILY = {
+    "neoplasm": {"cancer", "cancers", "tumor", "tumors", "tumour", "tumours",
+                 "tumorigenesis", "tumorogenesis", "carcinogenesis", "carcinoma",
+                 "carcinomas", "neoplasia", "neoplasias", "neoplastic",
+                 "oncogenesis", "malignancy", "malignancies", "malignant",
+                 "metastasis", "metastases", "metastasize"},
+    "inflammatory bowel disease": {"ibd", "inflammatory bowel disease"},
+    "colitis": {"colitis", "colitides"},
+    "obesity": {"obesity", "obese"},
+    "diabetes": {"diabetes", "diabetic", "diabetics"},
+}
+
+
+def _object_disease_forms(object_name: str) -> set:
+    """object 疾病概念的全部表面形式（自身词 + 同义族 + 多词首字母缩写）。"""
+    if not object_name:
+        return set()
+    low = object_name.lower()
+    forms = {w for w in low.replace(",", " ").split() if len(w) > 3}
+    for concept, family in _DISEASE_SYNONYM_FAMILY.items():
+        concept_words = set(concept.split())
+        if (forms & concept_words) or any(f in low for f in family) \
+                or any(w in concept or concept in w for w in forms):
+            forms |= family
+    words = [w for w in low.replace(",", " ").split() if len(w) > 2 and w.isalpha()]
+    if len(words) >= 2:
+        forms.add("".join(w[0] for w in words))
+    return forms
+
+
+#: P0-2 收口（2026-09-29）：描述菌来源/栖息地的定语不是研究宿主——
+#: "human commensal/intestinal/gut/symbiotic/oral/stomach/nasal microbiome"、
+#: "murine-specific pathogen" 等短语中的物种词描述菌株生态位，不得据此确认
+#: host_species（batch1 一审实证 #13/#23/#25/#27/#29/#31）。
+_HOST_EPITHET_RE = re.compile(
+    r"\b(human|murine|mouse)\s*[-\s]?\s*"
+    r"(commensal|intestinal|gut|symbiotic|associated|derived|specific|"
+    r"oral|stomach|nasal|skin|microbiome|colonizes)\b")
+
+
+def _host_species_hit(evidence_text: str):
+    """host_species 专用命中：剔除定语用法后判定（仅剩定语证据 → None）。"""
+    found = _hit(evidence_text, "host_species")
+    if not found:
+        return None
+    import re as _re
+    epithets = _HOST_EPITHET_RE.findall(evidence_text.lower())
+    if epithets:
+        # 定语短语中的物种词出现次数（粗粒度：每个定语短语计一次）
+        n_epithet = sum(1 for _ in _HOST_EPITHET_RE.finditer(evidence_text.lower()))
+        n_total = sum(len(_re.findall(rf"\b{(_re.escape(f.lower()))}\b", evidence_text.lower()))
+                      for f in found)
+        if n_epithet >= n_total:
+            return None  # 全部出现都是定语用法
+    return found
 
 _EXPLICIT = {
     "strain": ["MMX", "MRE 600", "ETBF", "NTBF", "pks+", "K-12", "Nissle",
@@ -122,13 +183,12 @@ def build_context(evidence_text: str, object_id: str, subject_id: str = "",
             # 发生在 colitis 背景下）。object 疾病信息由 assertion.object 承载。
             found = _hit(evidence_text, "disease")
             if found and object_name:
-                # 1B：target≠background——排除与 object 自身名同形的命中词
-                # （"…aggravates colitis" 句中 colitis 是 target 不是研究背景）
-                obj_words = {w for w in object_name.lower().replace(",", " ").split()
-                             if len(w) > 3}
+                # 1B：target≠background——排除 object 自身名及其同义/缩写形式族
+                # （P0-2 收口：同形词过滤扩展到同义词族，如 Neoplasms↔tumorigenesis）
+                obj_forms = _object_disease_forms(object_name)
                 found = [f for f in found
-                         if not any(ow in f.lower() or f.lower() in ow
-                                    for ow in obj_words)] or None
+                         if not any(of in f.lower() or f.lower() in of
+                                    for of in obj_forms)] or None
             if found:
                 ctx[dim] = {"value": ",".join(found[:2]), "status": "explicit",
                             "source": "abstract_sentence", "applicable": True,
@@ -137,10 +197,19 @@ def build_context(evidence_text: str, object_id: str, subject_id: str = "",
                 ctx[dim] = _unknown(True, "not_present_in_available_evidence")
             continue
         found = _hit(evidence_text, dim)
+        if dim == "host_species":
+            found = _host_species_hit(evidence_text)
         if found:
-            ctx[dim] = {"value": ",".join(found[:2]), "status": "explicit",
-                        "source": "abstract_sentence", "applicable": True,
-                        "unknown_reason": ""}
+            # 1A 收口（P0-2）：命中全部为泛化 token → 存为 inferred signal，
+            # 不得标 explicit（batch1 实证 strain="strain" 以 explicit 入库）
+            if {f.lower() for f in found} <= _GENERIC_VALUES:
+                ctx[dim] = {"value": ",".join(found[:2]), "status": "inferred",
+                            "source": "abstract_signal", "applicable": True,
+                            "unknown_reason": "generic_token_only"}
+            else:
+                ctx[dim] = {"value": ",".join(found[:2]), "status": "explicit",
+                            "source": "abstract_sentence", "applicable": True,
+                            "unknown_reason": ""}
         else:
             applicable, reason = _applicability(dim, subject_id, t)
             ctx[dim] = _unknown(applicable, reason)

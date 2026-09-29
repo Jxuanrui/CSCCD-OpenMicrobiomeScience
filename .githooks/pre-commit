@@ -1,0 +1,15 @@
+#!/bin/bash
+# pre-commit secret scan（2026-09-29 密钥事故整改 R1 防复发）
+# 拦截新增行中的疑似明文凭据；命中即拒绝提交。
+set -u
+PATTERNS='sk-[A-Za-z0-9]{20,}|NEO4J_PASSWORD=[A-Za-z0-9/_-]{12,}|api[_-]?key[^\n]{0,8}[A-Za-z0-9_-]{20,}|passwo?rd[^\n]{0,8}[=:][^\n]{0,4}[A-Za-z0-9]{16,}'
+ADDED=$(git diff --cached --diff-filter=ACM -U0 2>/dev/null | grep "^+" | grep -v "^+++" || true)
+[ -z "$ADDED" ] && exit 0
+HITS=$(echo "$ADDED" | grep -En "$PATTERNS" | head -5 || true)
+if [ -n "$HITS" ]; then
+  echo "⛔ pre-commit secret scan 命中疑似明文凭据："
+  echo "$HITS" | cut -c1-120
+  echo "凭据仅允许经 .env（已 gitignore）/环境变量注入；确属误报请用 'git commit --no-verify' 并在 commit message 说明理由。"
+  exit 1
+fi
+exit 0

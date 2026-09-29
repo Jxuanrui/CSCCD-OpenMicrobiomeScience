@@ -182,6 +182,14 @@ if __name__ == "__main__":
     pw = os.getenv("NEO4J_PASSWORD")
     if not pw:
         raise SystemExit("NEO4J_PASSWORD required")
+    # P0-6 写入准入（2026-09-29）：物化须显式授权键（registry 不预置——
+    # 任何物化前用户须在 write_authorizations.tsv 登记 neo4j-materialize 授权，
+    # 实现"授权物化与授权发布分离"的 fail-closed 控制）
+    import sys as _s
+    _s.path.insert(0, str(Path(__file__).resolve().parent))
+    from write_guard import guard_write
+    guard_write("neo4j_materialize", EXECUTION_ID,
+                os.getenv("KG_WRITE_AUTH", "neo4j-materialize"))
     result = materialize(uri, pw)
     print(json.dumps(result, ensure_ascii=False, indent=2))
     (MERGED / "neo4j_materialization_result.json").write_text(

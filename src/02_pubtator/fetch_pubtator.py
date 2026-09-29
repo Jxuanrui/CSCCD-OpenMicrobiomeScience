@@ -86,6 +86,13 @@ def main():
     ap.add_argument("--backfill-provenance", action="store_true",
                     help="对既有语料幂等回填记录级 provenance（不重新拉取）")
     args = ap.parse_args()
+    # P0-6 写入准入（2026-09-29）：articles.jsonl 写入须授权键 + 审计留痕（fail-closed）
+    import sys as _sg, os as _og
+    _sg.path.insert(0, str(Path(__file__).resolve().parents[1] / "07_capability"))
+    from write_guard import guard_write, new_execution_id
+    _exec = _og.environ.get("KG_EXECUTION_ID") or new_execution_id("kg.fetch_pubtator")
+    guard_write("data/pubtator", _exec, _og.environ.get("KG_WRITE_AUTH", "provenance-rebuild-mvp"))
+    print(f"[write_guard] pubtator 写入放行 exec={_exec}")
     if args.backfill_provenance:
         import sys as _sys
         _sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "07_capability"))

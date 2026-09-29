@@ -58,6 +58,13 @@ def close_entity_closure(nodes: pd.DataFrame, stage: Path) -> pd.DataFrame:
 def main():
     ap=argparse.ArgumentParser(); ap.add_argument('--include-c',action='store_true'); args=ap.parse_args()
     MERGED.mkdir(parents=True,exist_ok=True)
+    # P0-6 写入准入（2026-09-29）：data/merged 写入须授权键 + 审计留痕（fail-closed）
+    import sys as _s, os as _o
+    _s.path.insert(0, str(ROOT / 'src/07_capability'))
+    from write_guard import guard_write, new_execution_id
+    _exec = _o.environ.get('KG_EXECUTION_ID') or new_execution_id('kg.merge_qc')
+    guard_write('data/merged', _exec, _o.environ.get('KG_WRITE_AUTH', 'phase-r-remediation'))
+    print(f'[write_guard] merged 写入放行 exec={_exec}')
     smap = registry_gate(); print(f'[registry] {len(smap)} 个输入来源全部登记在案')
     nodes=pd.read_csv(SEED/'seed_nodes.tsv',sep='\t')
     edges=pd.read_csv(SEED/'seed_edges.tsv',sep='\t').fillna('')

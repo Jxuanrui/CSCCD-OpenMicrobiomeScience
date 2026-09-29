@@ -109,12 +109,19 @@ Knowledge_Graph/
 - **本地依赖**：Python 3.10+（pandas/networkx/neo4j/pykeen/streamlit/lightrag-hku 等，见各脚本 import）；节点 ID 体系与管线详见上文章节
 
 
-### 双终端并行开发守则（单人双 AI，2026-09-22 起）
+### 双终端并行开发守则 v2（2026-09-29 强化，基于 4 次实际干扰教训）
 
-- **第二终端使用独立克隆**（`git clone` 到另一路径或 `git worktree add`），绝不共用本工作目录——两个 AI 同时编辑/提交会产生 git 状态互相污染与进程误杀（本项目已有实证教训）
-- **data/ 经 symlink 共享**（只读为主）；写 data/ 的批量任务（LLM/merge/导入）**只从本终端发起**
-- **进程操作禁用宽匹配 kill**（`kill $(pgrep -f 关键词)` 在另一终端会误伤）；需要停任务时按 PID 精确操作
-- LLM 批量运行时第二终端避免同时发起 API 密集任务（同 Key 并发互踩）
+**独立检出**：AI-1（ZCode 终端）使用 `git worktree` 独立检出（`/data/LYteamwork/JiXuanRui/Project/KG_zcode`），主目录留给 AI-2。**任何一方不得在对方检出中切分支。**
+
+**src/ 变更通知**：修改 `src/` 下任何文件前，必须在 README 进展日志或 commit message 中注明，并确保不影响另一终端正在运行的进程（classify/merge 等在启动时加载代码，运行中的进程不受后续代码修改影响，但新启动的进程会加载新代码——两终端须知晓对方正在运行什么）。
+
+**历史干扰记录（防止重犯）**：
+1. 切分支×3：导致对方工作目录文件突变 → 改用 worktree 隔离
+2. crontab 明文 Key：安全违规 → 密钥只走 .env
+3. 未经 PR 直提 main：绕过审查 → 走 dev→main 流程
+4. 运行中修改抽取 prompt：可能使对方评估失效 → **修改 src/ 前先通知**
+
+**data/ 共享**：批量写入（LLM/merge/导入）只从 AI-1 的 worktree 发起；AI-2 只读。process 操作按精确 PID，禁宽匹配 kill。
 
 
 ## Local Knowledge Layer 架构原则（v1.0，2026-09-24 审计批准）

@@ -734,11 +734,15 @@ def snapshot(rows):
             r.setdefault("execution_id", EXEC["execution_id"])
             r.setdefault("capability_id", EXEC["capability_id"])
             r.setdefault("resource_ref", str(USAGE_REF))
-    with OUTPUT.open("w", encoding="utf-8") as f:
+    # S2 修复（2026-09-29 监工定稿 s2_fix_plan）：原子写入——先 tmp 再 os.replace，
+    # 进程被杀不再可能留下半行/截断文件（连带保护 S1 成果）
+    tmp = OUTPUT.with_suffix(".jsonl.tmp")
+    with tmp.open("w", encoding="utf-8") as f:
         for r in rows:
             if r is None:
                 continue
             f.write(json.dumps(r, ensure_ascii=False) + "\n")
+    os.replace(tmp, OUTPUT)
 
 
 def main():
@@ -802,10 +806,26 @@ def main():
             if k in rows and prev.get("status") != "error":
                 rows[k] = prev
         done = sum(v is not None for v in rows.values())
-        print(f"[resume] 已完成 {done}/{len(pairs)}，仅补齐其余", flush=True)
+        dup_votes = sum(1 for v in rows.values()
+                        if v and v.get("status") == "ok" and v.get("stage") == "1" and v.get("votes"))
+        print(f"[resume] 已完成 {done}/{len(pairs)}，仅补齐其余；"
+              f"duplicate-vote 风险行（stage=1 仍带 votes）={dup_votes}", flush=True)
+    # v6 钉版（监工 P0-2）：运行 commit 写入 manifest，杜绝共用检出被改后版本漂移
+    try:
+        import subprocess as _sp
+        _commit = _sp.check_output(["git", "rev-parse", "--short", "HEAD"],
+                                   cwd=str(ROOT), stderr=_sp.DEVNULL).decode().strip()
+    except Exception:
+        _commit = "unknown"
+    (ROOT / "data/logs/v6_run_manifest.json").write_text(
+        json.dumps({"started_at": time.strftime("%Y-%m-%dT%H:%M:%S%z"),
+                    "commit": _commit, "argv": vars(args)}, ensure_ascii=False, indent=1),
+        encoding="utf-8")
 
     todo = [p for p in pairs if rows[f"{p['pmid']}|{p['subject']['id']}|{p['object']['id']}"] is None]
-    api_calls = 0
+    api_calls = 0  # S1 计数（主线程，安全）
+    api_calls_d = {"n": 0}
+    api_lock = threading.Lock()
 
     # ---- 阶段1：全候选单次抽取 + L3a 确定性校验
     def stage1(pair):
@@ -841,8 +861,13 @@ def main():
                     if r and r["status"] == "ok" and r.get("stage") == "1"]
 
     def vote(pair, row):
-        nonlocal api_calls
-        votes, api_err = [row["predicate"]], 0
+        # S2 修复（s2_fix_plan #2/#3）：工作线程只改副本，主线程单点赋值；
+        # api_err>=2 保持 stage="1" 待重投（原实现与注释相反：stage=2+单票会
+        # 绕过 k=3 直接进 judge 且重启不重投）；持久化 s2_attempts 计数
+        with api_lock:
+            api_calls_d["n"] += 1
+        new = {**row}
+        votes, api_err = [new["predicate"]], 0
         for _ in range(2):
             try:
                 res, _ = classify_pair(base, key, model, args.fallback_model, pair)
@@ -850,19 +875,22 @@ def main():
             except Exception:
                 api_err += 1
             finally:
-                api_calls += 1
+                with api_lock:
+                    api_calls_d["n"] += 1
+        new["s2_attempts"] = new.get("s2_attempts", 0) + 1
         top, n = Counter(votes).most_common(1)[0]
         if n >= 2 and top != "no_relation":
-            row["status"], row["stage"], row["votes"] = "ok", "2", votes
+            new["status"], new["stage"], new["votes"] = "ok", "2", votes
         elif n >= 2 and top == "no_relation":
-            row["status"], row["stage"], row["predicate"] = "no_relation", "2", "no_relation"
-            row["votes"] = votes
+            new["status"], new["stage"], new["predicate"] = "no_relation", "2", "no_relation"
+            new["votes"] = votes
         elif api_err >= 2:
-            # 两票均因 API 失败缺失：不能视为模型分歧，保留阶段1结果待重跑。
-            row["stage"], row["votes"] = "2", votes
+            # 两票均因 API 失败缺失：保持 stage="1"（重启自动重投，不进 judge）
+            new["stage"] = "1"
+            new["vote_api_err"] = api_err
         else:
-            row["status"], row["stage"], row["votes"] = "dropped_vote", "2", votes
-        return row
+            new["status"], new["stage"], new["votes"] = "dropped_vote", "2", votes
+        return new
 
     if vote_targets:
         print(f"[L3b] 对 {len(vote_targets)} 条正向边补充投票", flush=True)
@@ -871,7 +899,9 @@ def main():
             for i, (p, fut) in enumerate(futures, 1):
                 row = fut.result()
                 rows[f"{p['pmid']}|{p['subject']['id']}|{p['object']['id']}"] = row
-                print(f"  [S2 {i}/{len(futures)}] {row['votes']} -> {row['status']}", flush=True)
+                if i % 10 == 0 or i == len(futures):
+                    snapshot(list(rows.values()))  # S2 修复：增量落盘（每 10 条，与 S1 同法）
+                print(f"  [S2 {i}/{len(futures)}] {row.get('votes')} -> {row['status']}", flush=True)
         snapshot(list(rows.values()))
 
     # ---- 阶段3：跨架构 judge（仅处理投过票未判的 stage2 行）
@@ -880,15 +910,17 @@ def main():
                      if r and r["status"] == "ok" and r.get("stage") == "2"]
 
     def judge(pair, row):
-        nonlocal api_calls
-        verdict = judge_triple(base, key, args.judge_model, pair, row["predicate"])
-        api_calls += 1
-        row["judge"] = verdict
+        # S3 修复（s2_fix_plan #2）：副本改写 + 线程安全计数
+        with api_lock:
+            api_calls_d["n"] += 1
+        new = {**row}
+        verdict = judge_triple(base, key, args.judge_model, pair, new["predicate"])
+        new["judge"] = verdict
         if verdict.get("verdict") == "SUPPORTED" and verdict.get("subject_binding_ok"):
-            row["status"], row["stage"] = "ok", "3"
+            new["status"], new["stage"] = "ok", "3"
         else:
-            row["status"], row["stage"] = "dropped_judge", "3"
-        return row
+            new["status"], new["stage"] = "dropped_judge", "3"
+        return new
 
     if judge_targets:
         print(f"[L3c] 对 {len(judge_targets)} 条投票存活边执行 {args.judge_model} judge", flush=True)
@@ -897,6 +929,8 @@ def main():
             for i, (p, fut) in enumerate(futures, 1):
                 row = fut.result()
                 rows[f"{p['pmid']}|{p['subject']['id']}|{p['object']['id']}"] = row
+                if i % 10 == 0 or i == len(futures):
+                    snapshot(list(rows.values()))  # S3 修复：增量落盘
                 print(f"  [S3 {i}/{len(futures)}] {row['judge'].get('verdict')} "
                       f"binding={row['judge'].get('subject_binding_ok')} -> {row['status']}", flush=True)
         snapshot(list(rows.values()))
@@ -910,7 +944,7 @@ def main():
     final = [r for r in rows.values() if r]
     st = Counter(r["status"] for r in final)
     ok_rows = [r for r in final if r["status"] == "ok"]
-    print(f"[out] 候选 {len(final)}；状态 {dict(st)}；正向存活 {len(ok_rows)}；API 调用 {api_calls}", flush=True)
+    print(f"[out] 候选 {len(final)}；状态 {dict(st)}；正向存活 {len(ok_rows)}；API 调用 {api_calls + api_calls_d['n']}", flush=True)
     print(f"[pred] {dict(Counter(r['predicate'] for r in ok_rows))}", flush=True)
     print(f"[out] -> {OUTPUT}", flush=True)
 

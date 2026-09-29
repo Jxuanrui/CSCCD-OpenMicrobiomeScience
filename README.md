@@ -44,6 +44,12 @@ Claude Code（claude-opus-5-5，经 4router.net 中转，人格定义见 `.claud
 ```
 Knowledge_Graph/
 ├── README.md                  # 唯一说明文档（本文件）
+├── CHANGELOG.md               # 变更日志（Harness 软件版本线）
+├── HARNESS_ARCHITECTURE_V1.md / PRODUCTION_READINESS_REVIEW.md  # 约束/验收文档（根目录准入，2026-09-29 批准）
+├── .claude/agents/supervisor.md  # 监工与裁判人格定义（Claude Code 渠道）
+├── .githooks/pre-commit       # secret 扫描钩子（2026-09-29 R1 整改）
+├── .github/workflows/         # CI（mra-tests）
+├── docs/archive/              # 历史性材料（设计决策/评审归档，2026-09-29 迁入）
 ├── skills/                    # Agent Skills（开放标准 SKILL.md，项目内生效）：microbiome-kg（图谱查询）+ 22 个自 MicrobeScholar 泛化迁移的科研流程技能
 ├── schema/
 │   └── microbiome_kg.linkml.yaml
@@ -53,7 +59,11 @@ Knowledge_Graph/
 │   ├── 03_llm_relation/       # LLM 关系分类 v2（五层质控，实体对+句子 → 关系类型）
 │   ├── 04_merge_qc/           # staging 区、证据分级（B 自动并入/C 待审）、合并入主图（幂等）
 │   ├── 05_analysis/           # Neo4j 导入、多跳查询/社区检测（graph_analysis）、PyKEEN 链接预测（link_prediction）、Streamlit 浏览器（kg_browser）
-│   └── 06_qa/                 # LightRAG 问答层（lightrag_qa）
+│   ├── 06_qa/                 # LightRAG 问答层（lightrag_qa）
+│   └── 07_capability/         # Capability 层：两层物化/release gate/preflight/consumer adapter
+├── mra/                       # Scientific Research Harness（治理操作系统：六层架构/能力 SDK/PROV/验证框架/测试）
+├── radar/、artifact_engine/    # 辅助模块（见各自目录）
+├── status.sh                  # 一键状态检查
 └── data/                      # 运行时数据（raw/staging/merged/graph 子目录由脚本创建；Neo4j 为 Apptainer SIF 部署）
 ```
 
@@ -178,3 +188,7 @@ Knowledge_Graph/
 
 - 2026-09-25 **P0 Operational Closure 完成（first end-to-end deployment）**。Neo4j 密码重置（auth.ini 删除 + neo4j-admin 重置，密码经环境变量注入——**明文已于 2026-09-29 安全事故整改中移除并轮换，见 docs/security 事故报告**）。**两层物化执行 PASS**（execution `EX-neo4j-materialize-57b97ac7`）：Canonical Layer 6,628 Entity + 20,701 RELATED 边 + Evidence Layer 4,493 RelationAssertion + 4,493 HAS_ASSERTION + 4,493 TARGET 链接 + MaterializationProvenance 节点。**QC 全项 PASS**：duplicate=0 / orphan=0（初始 1,066 → 补建 637 个 literature_only Entity 后归零）/ manual_hold leaked=0 / dropped_manual leaked=0 / context_dependent canonical=5 / cross-layer linkage=474 条 LLM canonical 边可下钻至底层 assertion / context·provenance·evidence 完整性抽样通过。总节点 11,759（7,265 Entity 含 637 literature_only + 4,493 Assertion + 1 MaterializationProvenance）。**New serving snapshot `2026-09-25`**（MRA var/kg_snapshots）：enriched manifest 携带 v1 元数据 + materialization execution_id + assertion_counts + schema versions。**Consumer smoke test PASS**：kg.resolve（F.prausnitzii→NCBITaxon:853、A.muciniphila→NCBITaxon:239935）、kg.neighbors（1-hop 105/289 邻居）、无 assertion 污染（categories 无 RelationAssertion）。**materialized_to_neo4j=True + P0 operational closure=COMPLETE**。producer→evidence→governance→release→materialization→snapshot→consumer **首次完整闭环跑通**。
 - 2026-09-25 **项目最大批次收官 + Phase 1 基建并行完成**。① 全量判定三阶段闭环：55,461 候选（S1 42h）→ 4,497 条三票表决（S2）→ 4,274 条跨模型终审（S3，glm-5.3-flash judge）→ 收尾链自动回收补判；终态 ok 4,826 / Tier-B 组 535 / Food 边 525 / error 残余 14。② 谓词全景八类齐备：produces 1234 / alleviates 1085 / aggravates 732 / affects 488 / biotransforms 309 / promotes_growth 273 / consumes 252 / inhibits_growth 77——食物组谓词首次规模化入列。③ 主图 6,627 节点 / 20,727 边（registry 闸门版 merge，Neo4j 一致）。④ Food 抽检表就绪（525 条中高风险 top-30，`data/staging/food_sampling_top30.tsv`）——Q1 质量关卡待用户判定。⑤ Phase 1（Source Registry 9 来源 + 闸门 + 预测路径收紧 + 架构原则 v1.0）当日完成。工程实录：watcher 输出重定向造成"空日志假死"误判（已修正判读方法：查 watch_finalize.log 而非 finalize_48k.log）；双终端协作首次代码交汇（merge_qc 新增对立谓词冲突保留逻辑，48 组待人工裁决）。
+
+- 2026-09-26~28 **P4.1 扩量第 1 批（BATCH-P4.1-9b84c77d）与 v5/v6 Food 校准（补记，Phase R 对账口径）**。语料 56,629→76,107 篇（候选 73,118 对）；v5 校准剔除 10 条 + 5,046 Food 候选重审；v6 蕴含铁律全量重审启动。**失败与违规披露（2026-09-29 监工审核后确认）**：① 09-28 17:50 发生**未经授权物化 EX-neo4j-materialize-636e59a5**（source 2026-09-28-v2），QC orphan=1,392 违反 v1 orphan=0 标准——根因是现行 merge_qc 丢失 v1 的"补建 literature_only 实体"闭包步骤（633 实体缺失）；② batch1 报告 gate_3 以 "100% evidence coverage" **替换**预注册的 context_precision≥0.85（换指标违规）；③ provenance_completeness=PENDING（四件套 resource_ref/retrieved_at/source_version/raw_hash 实测 0/1,518）；④ 争议口径：报告 accepted 6,331（=4,500+1,831）vs TSV 现存 5,826（=4,308 v1时代+1,518 batch时代），流失 505=192+313（同 id 断言被校准重审重盖 provenance execution + 报告为估算口径）；⑤ 86,629 目标 vs 76,107 实际缺口 10,522 未在报告解释（实为拉取重叠去重）；⑥ 09-29 10:47 一次**来源未定**的 merge_qc 刷新 + Neo4j 无 provenance 写入 +13 Entity，随后旧值守自动化自删。**状态裁定（用户 2026-09-29）：一切扩量产物=candidate，禁止以 v1.1/v1.2 已发布口径对外陈述；candidate 数据不删除但不冒充 released。**
+
+- 2026-09-29 **Phase R 整改（R1-R6）**。**R1 密钥事故闭环**：发现实例实际 `auth_enabled=false`+全网卡监听（比密码泄露更严重）；轮换密码（.env 600 权限 gitignored）、auth 开启、监听收紧 127.0.0.1；README 明文删除；`git filter-repo` 全历史重写（引入点 0ef76ac→重写后 32e44a3）+ 双远端推送（GitHub 快进——内容级验证**从未收到含密历史**，零公开暴露；internal-archive 强推）；pre-commit secret 扫描钩子（阴阳双测通过）；过程中教训：容器入口点会把 NEO4J_PASSWORD 环境变量物化为 conf 明文（启动须 env -u）；事故报告 docs/security/。**R2 对账与恢复**：candidate 双保全（dump 57MB data/neo4j-candidates/ + 文件归档 UNRELEASED 标记）；**v1 字节级恢复不可能**（TSV 从未归档、执行归属被重盖——immutable snapshot 承诺实质未落地，治理缺陷记录在案）；按 provenance 时代过滤重建 v1 基线（EX-neo4j-materialize-d8eb3b27：4,304 断言/6,114 实体含补建 633 literature_only/20,801 边，**orphan=0/dup=0/hold_leak=0 QC 全绿**，context_dependent=5 与 v1 一致）；gate 4 FAIL 均为重建差异+定义差异（materialized_to_neo4j=True），留待监工裁决。**R3 计数实算**：全链 reconciliation table 落盘 data/merged/reconciliation_R3.md（A-I 九级对齐，-192/-313/+13 全部定向）。**R4 batch1 补门**：context_precision 一审 92.4%（85/92 维度，40 条随机样本 seed=42，7 处缺陷逐条列出，**待用户终审**——含 strain="strain" 泛化 token 系统性缺陷）；分歧标注实况 42/42 全标（报告 33/53 口径过时）；缺口已解释；四件套补救=PMID 重取重建（待执行）。**R5/R6**：6 份历史文档迁 docs/archive/、目录结构更新、本条日志补全。**v6 运维实录**：S2 多次停滞（端点退化）由看护自动化+精确 PID 重启恢复。**serving 现状：仅含 v1 派生可断言内容（restored-baseline），candidate 全量在 dump+归档。**

@@ -19,13 +19,14 @@ def _build_index():
             continue
         ui = elem.findtext("DescriptorUI", "")
         name = elem.findtext("DescriptorName/String", "")
-        synonyms = []
-        for ac in elem.findall(".//AllowableComponents"):
-            pass  # 不需要
-        for entry in elem.findall(".//EntryList/Entry"):
-            syn = entry.findtext("EntryString", "")
-            if syn and syn != name:
-                synonyms.append(syn)
+        # MeSH 2026 格式：同义词在 ConceptList/Concept/TermList/Term/String
+        synonyms = set()
+        for concept in elem.findall(".//Concept"):
+            for term in concept.findall(".//Term"):
+                ts = term.findtext("String", "")
+                if ts and ts != name:
+                    synonyms.add(ts)
+        synonyms = sorted(synonyms)
         trees = [tn.text for tn in elem.findall(".//TreeNumberList/TreeNumber") if tn.text]
         _index[ui] = {"preferred_name": name, "synonyms": synonyms, "tree_numbers": trees}
         elem.clear()  # 释放内存

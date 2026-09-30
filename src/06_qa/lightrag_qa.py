@@ -122,7 +122,35 @@ async def ingest():
     await rag.initialize_storages()
     await rag.ainsert_custom_kg(kg)
     await rag.finalize_storages()
+    write_layer_identity(kg)
     print(f"[out] LightRAG 索引完成 -> {WORKDIR}")
+
+
+def write_layer_identity(kg):
+    """Phase 2 vecstore 层标识（2026-09-30）：向索引工作区写自描述文件。
+
+    消费方（Router/审计）据此确认该向量库是 Local KG 的派生检索面，
+    且不包含 research_evidence/live_knowledge/method_knowledge 域数据。
+    """
+    import json
+    from datetime import datetime, timezone
+
+    edges = pd.read_csv(EDGES, sep="\t", dtype=str).fillna("")
+    layers = sorted(set(edges.get("knowledge_layer", pd.Series(dtype=str))))
+    identity = {
+        "knowledge_architecture": "local_kg_derived_vector_index",
+        "allowed_layers": ["local_kg_curated", "local_kg_llm_extracted"],
+        "indexed_layers": layers,  # 空 = 旧 TSV 无该列（回填前构建）
+        "forbidden_layers": ["live_knowledge", "research_evidence", "method_knowledge"],
+        "source_nodes_tsv": str(NODES),
+        "source_edges_tsv": str(EDGES),
+        "entity_count": len(kg["entities"]),
+        "relationship_count": len(kg["relationships"]),
+        "built_at": datetime.now(timezone.utc).isoformat(),
+    }
+    (WORKDIR / "layer_identity.json").write_text(
+        json.dumps(identity, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(f"[identity] 层标识写入 {WORKDIR / 'layer_identity.json'}（indexed_layers={layers}）")
 
 
 async def ask(question, mode):

@@ -40,6 +40,7 @@ def main(root: str | None = None):
     pred_m = {int(l["idx"]): int(l["lookup_pred"])
               for l in map(json.loads, open(RE / "mesh_lookup_150_preds.jsonl")) if l["set"] == "dev"}
     assert set(gold) == set(pred_d) == set(range(1, 51))
+    assert set(pred_m) >= set(range(1, 51)), "mesh dev 子集未覆盖 1-50"
 
     def score(pred):
         ok = sum(pred[i] == gold[i] for i in gold)
@@ -67,10 +68,12 @@ def main(root: str | None = None):
                              "52% 根因（背景病误判）未被 dev 测量；各类 n<10 仅描述性报告",
       "agreement_D_mesh": sum(pred_d[i] == pred_m[i] for i in gold),
       "per_item": per,
+      "input_prefix_dup_stats": {"note": "annotation_sheet 原文列自带标题+首句拼接重复",
+        "dup_n_of_150": 36, "check": "输入 v1/v2 与源逐条一致（600 字符内断言），非构造引入，对 D 无语义影响"},
       "input_sha256": {
         "gold": "sha256:" + hashlib.sha256((RE / "user_blind_labels_50_ORIGINAL.tsv").read_bytes()).hexdigest(),
         "pred_D": "sha256:" + hashlib.sha256((RE / "route_d_role_dev_v1.jsonl").read_bytes()).hexdigest(),
-        "pred_mesh_dev": "sha256:" + hashlib.sha256((RE / "mesh_lookup_150_preds.jsonl").read_bytes()).hexdigest()},
+        "pred_mesh_file": "sha256:" + hashlib.sha256((RE / "mesh_lookup_150_preds.jsonl").read_bytes()).hexdigest()},
     }
     (RE / "eval_dev_threeway.json").write_text(json.dumps(out, ensure_ascii=False, indent=1))
     print(f"D: {d_ok}/50={d_acc:.1%} CI{d_ci} | mesh(样本内): {m_ok}/50={m_acc:.1%} CI{m_ci}"

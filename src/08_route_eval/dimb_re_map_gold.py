@@ -115,10 +115,13 @@ def map_one(ents, events, facts, doc):
 
 
 def v1_literal_stats(ents, events, facts):
-    """v1 规则表字面口径：Disease **任意参数位置** 参与 target 谓词（可重叠，对照统计）。"""
+    """v1 规则表字面口径：Disease **任意参数位置** 参与 target 谓词且 factuality=Factual
+    （表 :14 原文含事实性条件；DiMB-RE 无标注=默认 Factual；可重叠，对照统计）。"""
     hits = set()
     for eid, ev in events.items():
         if ev["trigger"] not in TRIGGER_TARGET:
+            continue
+        if facts.get(eid) in NONFACTUAL or facts.get(eid) == "Negated":
             continue
         args = set(ev["args"].get("Theme", []) + ev["args"].get("Theme2", [])
                    + ev["args"].get("Agent", []))
@@ -143,11 +146,20 @@ def main():
     outdir = Path(args.outdir) if args.outdir else root / "data/merged/route_eval"
 
     all_rows, v1_hits, n_docs = [], set(), 0
+    endpoint_struct = 0
     for d in ANN_DIRS:
         for ann in sorted(d.glob("*.ann")):
             ents, events, facts = parse_ann(ann)
             all_rows += map_one(ents, events, facts, ann.stem)
             v1_hits |= {(ann.stem, *h) for h in v1_literal_stats(ents, events, facts)}
+            for ev in events.values():
+                if ev["trigger"] not in TRIGGER_ENDPOINT:
+                    continue
+                if not any(ents.get(t, {}).get("type") == "Disease"
+                           for t in ev["args"].get("Theme", []) + ev["args"].get("Theme2", [])):
+                    continue
+                if {ents[a]["type"] for a in ev["args"].get("Agent", []) if a in ents} & FOOD_AGENT:
+                    endpoint_struct += 1
             n_docs += 1
 
     out = outdir / "external_human_gold_dimb_re.jsonl"
@@ -173,9 +185,13 @@ def main():
           "v11_target_theme_only": v11_target,
           "v11_note": "执行语义（Theme 端收窄+事实性优先唯一角色）——正式辅尺口径",
           "v1_minus_v11_reason": "差值来自 Disease 位于 Agent 端的事件（我方 role 语义=客体端）"
-                                 "及事实性前置规则截走；详见 mapping_rules_v1.md 偏差声明节"},
+                                 "及事实性前置规则截走；详见 mapping_rules_v1.md 偏差声明节",
+          "endpoint_structural_hits_no_factuality_filter": endpoint_struct,
+          "endpoint_struct_note": "结构命中（3谓词×Theme Disease×食物Agent，不含事实性过滤）；"
+                                  "最终 endpoint=1 为事实性优先排序截走后的余量"},
         "deviation_notes": [
           "treatment_context Agent 集合首版误用 FOOD4 全集，v1.1 已回归规则表 :19 原文 {Chemical,Nutrient}（bugfix）",
+          "background_disease 以 residual 兜底实现（偏离表 :21 'Population 嵌套+已有共识关系'）——报告中标低置信类，不与用户盲标 background 对比（监工拍板#1）",
           "not_disease 3711 为实体级 NER 负例；疾病角色样本（事件级）以 disease_role_sample_count 为准",
           "subgroup_condition 实测=0：Disease span 嵌套 Population 的结构在 brat_v1 中未出现"],
         "usage_note": "辅尺·描述性统计专用：DiMB-RE 关系级 partial IAA~0.54 上限，"
@@ -189,7 +205,7 @@ def main():
 
 
 def _selfcheck():
-    """构造最小 ann 覆盖各规则分支（监工 P0-3d：脚本自检）。"""
+    """最小 ann 分支自检（监工 C4：覆盖实际所列分支，含 bugfix 反例与正向断言）。"""
     ann = ("T1\tDisease 10 18\tcolitis\n"
            "T2\tDisease 30 40\tarthritis\n"
            "T3\tChemical 0 8\tnisin\n"
@@ -201,26 +217,45 @@ def _selfcheck():
            "T9\tIMPROVES 200 208\timproves\n"
            "T10\tPREVENTS 210 219\tprevents\n"
            "T11\tAFFECTS 220 228\taffects\n"
-           "E1\tIMPROVES:T9 Theme:T3 Agent:T1\n"     # Disease 在 Agent 端：v1 命中、v1.1 不计 target
-           "E2\tPREVENTS:T10 Agent:T5 Theme:T2\n"    # Nutrient agent → treatment
-           "E3\tAFFECTS:T11 Agent:T4 Theme:T2\n"     # Food agent+Theme Disease → endpoint
-           "E4\tIMPROVES:T9 Theme:T2\n")             # Theme Disease → target(v1.1)
+           "T12\tPopulation 300 330\tibd patients with dysbiosis\n"
+           "T13\tDisease 310 318\tdysbiosis\n"
+           "E1\tIMPROVES:T9 Theme:T3 Agent:T1\n"      # Disease 在 Agent 端
+           "E2\tPREVENTS:T10 Agent:T5 Theme:T2\n"     # Nutrient agent -> treatment(正向)
+           "E3\tPREVENTS:T10 Agent:T4 Theme:T2\n"     # Food agent -> 不判 treatment(bugfix 反例)
+           "E4\tAFFECTS:T11 Agent:T4 Theme:T2\n"      # Food agent + Theme Disease -> endpoint(正向)
+           "E5\tIMPROVES:T9 Theme:T2\n")              # 无 factuality=默认 Factual -> target(正向)
     p = Path("/tmp/_selfcheck.ann"); p.write_text(ann)
     ents, events, facts = parse_ann(p)
-    facts["E4"] = "Negated"                          # E4 → exclusion 优先于 target
+    facts["E1"] = "Possible"                            # Agent端Disease+非事实 -> (v1.1不计Theme)且v1字面被事实性过滤
+    facts["E3"] = "Unknown"                             # 非事实值 -> uncertain(正向断言)
     rows = map_one(ents, events, facts, "chk")
     roles = {(r["event_id"], r["entity_id"]): r["mapped_role"] for r in rows if r["event_id"]}
-    assert roles[("E2", "T2")] == "treatment_context"
-    assert roles[("E3", "T2")] == "endpoint_related"
-    assert roles[("E4", "T2")] == "exclusion_condition"          # 事实性优先
-    assert rows[-0:] and any(r["mapped_role"] == "not_disease" and r["entity_id"] == "T8" for r in rows)
-    v1 = v1_literal_stats(ents, events, facts)
-    assert ("E1", "T1") in v1 and ("E4", "T2") in v1             # v1 字面口径含 Agent 端/被截走事件
-    assert ("E1", "T1") not in {k[1] for k in []} or True
-    v11_theme = {(r["event_id"], r["entity_id"]) for r in rows if r["event_id"]}
-    assert ("E1", "T1") not in v11_theme                          # v1.1 只看 Theme 端 Disease
+    assert roles[("E2", "T2")] == "treatment_context"          # 正向：Nutrient+PREVENTS
+    assert roles[("E3", "T2")] == "uncertain"                  # 正向：非事实值优先
+    assert roles[("E4", "T2")] == "endpoint_related"           # 正向：Food agent+AFFECTS
+    assert roles[("E5", "T2")] == "target_disease"             # 正向：Factual+IMPROVES+Theme
+    assert any(r["mapped_role"] == "not_disease" and r["entity_id"] == "T8" for r in rows)
+    # bugfix 反例：Food+PREVENTS 不得判 treatment（E3 已被 uncertain 截走，另验无 factuality 版）
+    ents2, ev2, f2 = parse_ann(p); f2["E3"] = None
+    rows2 = map_one(ents2, ev2, f2, "chk2")
+    roles2 = {(r["event_id"], r["entity_id"]): r["mapped_role"] for r in rows2 if r["event_id"]}
+    assert roles2[("E3", "T2")] != "treatment_context", "Food agent 误判 treatment（bugfix 回归）"
+    assert roles2[("E3", "T2")] == "background_disease"        # residual 兜底分支
+    # subgroup：Disease 嵌套 Population 且无其他规则命中
+    ann3 = ann + "T20\tAFFECTS 400 407\taffects\nE6\tAFFECTS:T20 Theme:T13\n"
+    p.write_text(ann3)
+    ents3, ev3, f3 = parse_ann(p)
+    rows3 = map_one(ents3, ev3, f3, "chk3")
+    roles3 = {(r["event_id"], r["entity_id"]): r["mapped_role"] for r in rows3 if r["event_id"]}
+    assert roles3[("E6", "T13")] == "subgroup_condition"       # T13 嵌套于 T12 Population
+    # v1 字面：含 Agent 端 Disease（E1 无 factuality 版）且过滤非事实
+    v1 = v1_literal_stats(ents2, ev2, f2)
+    assert ("E1", "T1") in v1                                 # Agent 端参与（无事实性标注=默认Factual）
+    assert ("E1", "T1") not in v1_literal_stats(ents, events, facts)  # Possible -> 被事实性过滤
+    assert ("E5", "T2") in v1
     p.unlink()
-    print("[selfcheck] 全部分支断言通过（treatment/endpoint/exclusion优先/not_disease/v1字面/v1.1收窄）")
+    print("[selfcheck] 分支断言通过：treatment正例/bugfix反例(Food+PREVENTS≠treatment)/"
+          "uncertain/endpoint/target正例/Factual过滤/not_disease/subgroup/background残差/v1字面Agent端")
 
 
 if __name__ == "__main__":

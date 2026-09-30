@@ -26,7 +26,7 @@ PRE_REGISTERED_GATES = {
     "v6_closure": {
         "s2_votes_required_ratio": 1.0,     # S2 全部 2,142 票投完
         "error_residual_max": 20,           # error 残余上限（历史收口惯例）
-        "flip_rate_max": 0.15,              # v6 翻转率上限（vs 7,945 Food 基线；默认值待用户冻结确认）
+        "flip_rate_max": 0.15,              # v6 翻转率上限（vs 7,945 Food 基线；用户 2026-09-29 确认冻结，见 test_preregistered_gates）
         "sampling_pass_line": 0.85,         # top-30 + 随机 30-50 抽检线（MVP 验收惯例）
         "_frozen_before": "v6-S2<10%（实际冻结于 S2≈4%，先于结果可见）",
     },

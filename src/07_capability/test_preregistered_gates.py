@@ -64,5 +64,8 @@ def test_flip_rate_v1_denominator_anchor():
     src = Path(rgc.__file__).read_text(encoding="utf-8")
     assert "7,945" in src or "7945" in src, (
         "v1 口径分母 7,945 锚文本缺失——flip_rate_v1 分母被改动（§十九条件③，须经双签）")
-    # v2 若被实现，只能以"并列报告"存在，不得替换 v1 判定
-    assert "flip_rate_v2" not in PRE_REGISTERED_GATES, "v2 不得进入判定常量表（只报告不判定）"
+    # v2 若被实现，只能以"并列报告"存在，不得替换 v1 判定（嵌套键级排除）
+    for stage, gates in PRE_REGISTERED_GATES.items():
+        for k in gates:
+            assert "flip_rate_v2" not in k, (
+                f"v2 键 {stage}.{k} 进入判定常量表——v2 只报告不判定（§十九条件①③）")

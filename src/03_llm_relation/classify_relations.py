@@ -857,6 +857,43 @@ def main():
                   f"{pair['object']['name']} [{row['status']}]", flush=True)
     snapshot(list(rows.values()))
 
+    # ---- P0 预筛（第七轮校准 2026-09-30 监工裁决）：确定性拦截合生元/复合制剂 ----
+    SYMBIOTIC_PAT = re.compile(
+        r"\b(?:co[- ](?:administration|fermentation|supplementation|culture)|"
+        r"combined\s+with|together\s+with|synbiotic[s]?|"
+        r"probiotic[s]?\s*\+\s*prebiotic|"
+        r"probiotic[s]?\s+and\s+prebiotic|"
+        r"co[- ]administered|co[- ]supplemented|"
+        r"enriched\s+system|complex\s+(?:diet|extract|food))\b", re.I)
+    COMPOUND_PAT = re.compile(
+        r"\b(?:protein\s+hydrolysate|extract\s+of|isolate[sd]?\s+from|"
+        r"bioactive\s+compound|fraction\s+of)\b", re.I)
+
+    def prescreen_food(pair, row):
+        """确定性预筛：合生元/复合制剂 → 强制 INSUFFICIENT（不入投票池）。"""
+        if row['subject'].get('category') != 'Food':
+            return row
+        sent = pair.get('sentence', '')
+        food_name = row['subject'].get('name', '').lower()
+        # 规则1：句中同时出现 prebiotic 类食物 + probiotic/菌株名 → 合生元
+        if any(w in food_name for w in ('prebiotic', 'fiber', 'fos', 'gos', 'inulin')):
+            if re.search(r'\b(?:probiotic|lactobacill\w+|bifidobacter\w+|streptococc\w+)\b', sent, re.I):
+                if re.search(r'\b(?:co[- ]|combined|together|with|and|\+)\b', sent, re.I):
+                    row['status'] = 'dropped_prescreen'
+                    row['stage'] = '0'
+                    row['flag'] = 'synbiotic_detection_deterministic'
+                    return row
+        # 规则2：合生元句式
+        if SYMBIOTIC_PAT.search(sent):
+            row['status'] = 'dropped_prescreen'
+            row['stage'] = '0'
+            row['flag'] = 'synbiotic_detection_deterministic'
+            return row
+        # 规则3：配料/提取物上归拦截
+        if COMPOUND_PAT.search(sent) and any(w in food_name for w in ('vegetable', 'fruit', 'meat', 'fish', 'dairy')):
+            row['flag'] = 'compound_ingredient_risk'
+        return row
+
     # ---- 阶段2：正向边 k=3@T=0.7 投票（已有 1 票，补 2 票；仅处理未投过票的 stage1 行）
     vote_targets = [(p, r) for p in pairs
                     for r in [rows[f"{p['pmid']}|{p['subject']['id']}|{p['object']['id']}"]]

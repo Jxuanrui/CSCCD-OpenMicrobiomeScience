@@ -548,7 +548,9 @@ def judge_triple(base_url, api_key, judge_model, pair, predicate):
              '{"verdict":"SUPPORTED|REFUTED|NEI","subject_binding_ok":true或false,"reason":"≤30字"}。'
              "若论断谓词为 produces：仅当前提明确该菌自身合成/分泌该代谢物时才 SUPPORTED；"
              "底物转化反应应为 biotransforms 而非 produces；宿主体内/粪便代谢物丰度升高（cross-feeding/群落效应）不支持 produces。"
-             "Food 蕴含铁律（第六轮校准）：你检验的是句子是否蕴含三元组，不是寻找生物学解释让它说得通（Evidence first, plausibility second）。"
+             "Food 蕴含铁律（第六轮校准）：你检验的是句子是否蕴含三元组，不是寻找生物学解释让它说得通（Evidence first, plausibility second）。
+谓词降级（第七轮校准）：原句含 may/might/marginal/tended to/trend/suggest/appear/possible 时，promotes_growth 和 inhibits_growth 一律降为 affects。
+主语归属三禁（第七轮校准 2026-09-30 监工裁决）：①合生元/复合制剂（synbiotic、probiotic+prebiotic 组合）的效应禁止拆归给其中单一食物成分；②"X 逆转了 Y 引起的失调"类句式中 Y 是背景因素不是作用主语，禁止绑定到 Y→菌；③营养素/补充剂（Omega-3、PUFA、维生礦等）不能上归到包含它的食物组（如鱼类、乳制品），主体必须是原句中直接施加作用的一方。"
              "以下推理链一律 REFUTED：degrades/ferments/utilizes 底物→promotes_growth；mediator/key player→food affects 该菌；"
              "代谢物水平变化→微生物变化；signature/associated 菌→promotes_growth；western diet 等近义饮食模式互换。"
 "若论断谓词为 produces/biotransforms/consumes：核查是否为该菌活菌自身的酶促反应——"

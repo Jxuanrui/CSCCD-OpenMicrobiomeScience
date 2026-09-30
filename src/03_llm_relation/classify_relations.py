@@ -974,6 +974,65 @@ def main():
                       f"binding={row['judge'].get('subject_binding_ok')} -> {row['status']}", flush=True)
         snapshot(list(rows.values()))
 
+    # ===== v7 P0 确定性否决（第八轮校准 2026-09-30 监工裁决）=====
+    # 否定/非显著限定词：含有这些词的证据句不得保留为 ok 边（彻底丢弃——用户拍板#3）
+    NEGATION_MARKERS = re.compile(
+        r"\b(?:not\s+significant|failed\s+to|no\s+significant\s+change|"
+        r"limited\s+effect|tended\s+to|P\s*[<>=]\s*0\.[01]\b|"
+        r"non[- ]significant|marginally\s+significant|"
+        r"did\s+not\s+(?:significantly\s+)?(?:alter|change|affect|modify)|"
+        r"no\s+(?:significant\s+)?(?:difference|effect|change|impact))\b", re.I)
+
+    # 关联措辞降级：evidence 含这些词时，强谓词一律降为 affects
+    ASSOCIATION_MARKERS = re.compile(
+        r"\b(?:associated\s+with|correlated\s+with|linked\s+to|"
+        r"negative\s+influence|positive\s+influence|inversely\s+associated)\b", re.I)
+
+    # 复合暴露检测（不可归给单一食物组）
+    COMPOSITE_MARKERS = re.compile(
+        r"\b(?:and\s+beans|fish,\s+beans|multiple\s+diet|"
+        r"dietary\s+index|diet\s+index|"
+        r"compared\s+to\s+(?:the\s+)?other|"
+        r"two\s+carbon\s+sources|versus\s+\w+\s+alone)\b", re.I)
+
+    def v7_deterministic_veto(rows_list):
+        """v7 P0 三规则：否定丢弃 / 关联降级 / 复合不产边。"""
+        n_neg = n_dem = n_comp = 0
+        for r in rows_list:
+            if r is None or r.get('status') != 'ok':
+                continue
+            sent = r.get('sentence', '') or ''
+            ev = r.get('evidence', '') or ''
+            text = sent + ' ' + ev
+
+            # 规则1：否定/非显著 → 彻底丢弃
+            if NEGATION_MARKERS.search(text):
+                r['status'] = 'dropped_negation'
+                r['stage'] = '8'
+                r['flag'] = 'negation_nonsignificant_deterministic'
+                n_neg += 1
+                continue
+
+            # 规则2：复合暴露 → 不产边
+            if r['subject'].get('category') == 'Food' and COMPOSITE_MARKERS.search(sent):
+                r['status'] = 'dropped_composite'
+                r['stage'] = '8'
+                r['flag'] = 'composite_exposure_deterministic'
+                n_comp += 1
+                continue
+
+            # 规则3：关联措辞 + 强谓词 → 降级为 affects
+            if r['subject'].get('category') == 'Food' and ASSOCIATION_MARKERS.search(ev):
+                if r.get('predicate') in ('promotes_growth', 'inhibits_growth'):
+                    r['predicate'] = 'affects'
+                    r['flag'] = 'association_wording_downgraded'
+                    n_dem += 1
+
+        return n_neg, n_dem, n_comp
+
+    n_veto = v7_deterministic_veto(list(rows.values()))
+    print(f"[v7-veto] 否定丢弃 {n_veto[0]} | 复合不产边 {n_veto[2]} | 关联降级 {n_veto[1]}")
+
     n_demoted = demote_transform_conflicts(list(rows.values()))
     n_indirect = demote_indirect_mechanism(list(rows.values()))
     if n_demoted or n_indirect:

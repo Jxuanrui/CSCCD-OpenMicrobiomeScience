@@ -35,10 +35,19 @@ def test_rule2_endpoint_excludes_disease_words():
 
 
 def test_rule3_geography_title_filtered():
-    # 位置启发（真接入 build_context）：地理词仅在标题区（前120字符）→ unknown
-    ctx = rp.build_context("Gut microbiome changes in Chinese patients with colitis. we analyzed stool samples.", "MESH:D000001")
+    # 真实 title 字段语义（G4b v2）：正文命中→explicit；仅 title 命中→title_only
+    import json as _json, tempfile, os
+    # 造一个假 articles.jsonl（monkeypatch ROOT 过重——直接测 _pmid_title 分支跳过：正文/无 pmid 场景）
+    ctx = rp.build_context("Gut microbiome changes in patients with colitis. we analyzed stool samples.", "MESH:D000001")
     g = ctx.get("geography", {})
-    assert g.get("status") != "explicit" and "title" in str(g.get("unknown_reason","")), f"规则3未生效: {g}"
-    ctx2 = rp.build_context("we analyzed stool samples from a prospective cohort and performed 16S sequencing and metabolomics on all specimens collected. the cohort enrolled 30 chinese participants in a multicenter study of colitis outcomes.", "MESH:D000001")
+    assert g.get("status") == "unknown" and g.get("unknown_reason") == "not_present_in_available_evidence", f"无地理词应为 absent: {g}"
+    ctx2 = rp.build_context("we analyzed stool samples. the cohort enrolled 30 chinese participants in a multicenter study of colitis outcomes.", "MESH:D000001")
     g2 = ctx2.get("geography", {})
     assert g2.get("status") == "explicit" and "chinese" in g2.get("value",""), f"正文地理词应保留: {g2}"
+
+
+def test_rule3_invitro_not_applicable():
+    # G4b P0-2：in vitro 场景 geography 必须 not_applicable（适用性先于命中）
+    ctx = rp.build_context("in vitro culture of fecal samples from chinese populations", "MESH:D000001")
+    g = ctx.get("geography", {})
+    assert g.get("status") == "not_applicable" and g.get("applicable") is False, f"in vitro 应 not_applicable: {g}"

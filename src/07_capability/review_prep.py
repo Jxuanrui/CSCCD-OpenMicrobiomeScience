@@ -310,8 +310,25 @@ def _hyphen_compound_hit(evidence_text: str, found):
     return kept or None
 
 
-def build_context(evidence_text: str, object_id: str, subject_id: str = "",
-                  object_name: str = "") -> dict:
+_TITLE_IDX: dict[str, str] = {}
+
+def _pmid_title(pmid) -> str:
+    """pmid→PubMed title（articles.jsonl passages[type=title]懒加载索引，监工 G4b 拍板#1）。"""
+    if not _TITLE_IDX:
+        try:
+            with (ROOT / "data/pubtator/articles.jsonl").open(encoding="utf-8") as f:
+                for line in f:
+                    try: a = json.loads(line)
+                    except json.JSONDecodeError: continue
+                    for p in a.get("passages", []):
+                        if p.get("infons", {}).get("type") == "title":
+                            _TITLE_IDX[str(a.get("pmid", a.get("id", "")))] = p.get("text", "")
+                            break
+        except FileNotFoundError:
+            pass
+    return _TITLE_IDX.get(str(pmid), "")
+
+def build_context(evidence_text: str, object_id: str, subject_id: str = "", object_name: str = "", pmid: str = "") -> dict:
     """Evidence-aware context v0.5：每维 {value,status,source,applicable,unknown_reason}。
 
     C：unknown 细分 applicable/unknown_reason（in vitro 的 geography 与
@@ -322,18 +339,24 @@ def build_context(evidence_text: str, object_id: str, subject_id: str = "",
     t = evidence_text.lower()
     for dim in CONTEXT_DIMS:
         if dim == "geography":
-            # C2b 规则3（真接入，监工 G4/E3）：地理词仅出现在标题区（前 120 字符，
-            # staging sentence 常含 title 前缀）而正文无 → 不产 explicit（title 非正文陈述）
-            _head, _rest = evidence_text[:120], evidence_text[120:]
-            _hr = _hit(_rest, "geography")
-            if _hr:
-                ctx[dim] = {"value": ",".join(_hr[:2]), "status": "explicit",
+            # C2b 规则3 v2（监工 G4b：先适用性→真实 title 字段判定，弃字符位置启发）
+            ok, reason = _applicability(dim, subject_id, evidence_text)
+            if not ok:
+                ctx[dim] = {"value": "", "status": "not_applicable", "source": "",
+                            "applicable": False, "unknown_reason": reason or "in_vitro"}
+                continue
+            _body_hits = _hit(evidence_text, "geography")
+            if _body_hits:
+                ctx[dim] = {"value": ",".join(_body_hits[:2]), "status": "explicit",
                             "source": "abstract_sentence", "applicable": True,
                             "unknown_reason": ""}
             else:
-                ctx[dim] = {"value": "", "status": "unknown",
-                            "source": "", "applicable": True,
-                            "unknown_reason": "geography_title_only_or_absent"}
+                _title = _pmid_title(pmid) if pmid else ""
+                _title_only = bool(_title and _hit(_title, "geography"))
+                ctx[dim] = {"value": "", "status": "unknown", "source": "",
+                            "applicable": True,
+                            "unknown_reason": ("geography_title_only" if _title_only
+                                                else "not_present_in_available_evidence")}
             continue
         if dim == "disease":
             # 契约修正（裁决第 1 项）+ 终审缺陷类 1/2（2026-09-29）：disease background
@@ -491,7 +514,7 @@ def side_ev(idx, sid, pred, oid, pmids: str):
 #: 换行/制表）折叠为单空格 + 首尾去除；不做 NFKC、不去标点、不剥引用标记、
 #: 不做句子边界切分；基底 = evidence + sentence 拼接（0.1→0.2 基底变更）。
 #: 变更此算法必须 bump 版本并迁移 assertion_id。
-SPAN_NORMALIZATION_VERSION = "norm/0.7.1-c2b-r3-wired"  # C2b 规则升级：amod修饰过滤/endpoint值域去疾病词/title地理过滤（0.6 基线之上，监工G3）
+SPAN_NORMALIZATION_VERSION = "norm/0.7.2-c2b-r3-title"  # C2b 规则升级：amod修饰过滤/endpoint值域去疾病词/title地理过滤（0.6 基线之上，监工G3）
 
 
 def _norm_span(text: str) -> str:
@@ -552,7 +575,7 @@ def build_relation_assertions(conflicted_pairs: set) -> dict:
         div = "contextual_divergence_pending" if (sid, oid) in conflicted_pairs else ""
         # 口径统一：context 抽取文本 == ID 的 span 基 == 存储列（evidence+sentence 拼接）
         text = f"{r.get('evidence') or ''} {r.get('sentence') or ''}"
-        ctx = build_context(text, oid, sid, str(r.get("object", {}).get("name", "")))
+        ctx = build_context(text, oid, sid, str(r.get("object", {}).get("name", "")), str(pmid))
         rows.append({
             "assertion_id": aid,
             "subject": sid, "predicate": r["predicate"], "object": oid,

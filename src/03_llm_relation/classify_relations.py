@@ -857,6 +857,43 @@ def main():
                   f"{pair['object']['name']} [{row['status']}]", flush=True)
     snapshot(list(rows.values()))
 
+    # ---- P0 预筛（第七轮校准 2026-09-30 监工裁决）：确定性拦截合生元/复合制剂 ----
+    SYMBIOTIC_PAT = re.compile(
+        r"\b(?:co[- ](?:administration|fermentation|supplementation|culture)|"
+        r"combined\s+with|together\s+with|synbiotic[s]?|"
+        r"probiotic[s]?\s*\+\s*prebiotic|"
+        r"probiotic[s]?\s+and\s+prebiotic|"
+        r"co[- ]administered|co[- ]supplemented|"
+        r"enriched\s+system|complex\s+(?:diet|extract|food))\b", re.I)
+    COMPOUND_PAT = re.compile(
+        r"\b(?:protein\s+hydrolysate|extract\s+of|isolate[sd]?\s+from|"
+        r"bioactive\s+compound|fraction\s+of)\b", re.I)
+
+    def prescreen_food(pair, row):
+        """确定性预筛：合生元/复合制剂 → 强制 INSUFFICIENT（不入投票池）。"""
+        if row['subject'].get('category') != 'Food':
+            return row
+        sent = pair.get('sentence', '')
+        food_name = row['subject'].get('name', '').lower()
+        # 规则1：句中同时出现 prebiotic 类食物 + probiotic/菌株名 → 合生元
+        if any(w in food_name for w in ('prebiotic', 'fiber', 'fos', 'gos', 'inulin')):
+            if re.search(r'\b(?:probiotic|lactobacill\w+|bifidobacter\w+|streptococc\w+)\b', sent, re.I):
+                if re.search(r'\b(?:co[- ]|combined|together|with|and|\+)\b', sent, re.I):
+                    row['status'] = 'dropped_prescreen'
+                    row['stage'] = '0'
+                    row['flag'] = 'synbiotic_detection_deterministic'
+                    return row
+        # 规则2：合生元句式
+        if SYMBIOTIC_PAT.search(sent):
+            row['status'] = 'dropped_prescreen'
+            row['stage'] = '0'
+            row['flag'] = 'synbiotic_detection_deterministic'
+            return row
+        # 规则3：配料/提取物上归拦截
+        if COMPOUND_PAT.search(sent) and any(w in food_name for w in ('vegetable', 'fruit', 'meat', 'fish', 'dairy')):
+            row['flag'] = 'compound_ingredient_risk'
+        return row
+
     # ---- 阶段2：正向边 k=3@T=0.7 投票（已有 1 票，补 2 票；仅处理未投过票的 stage1 行）
     vote_targets = [(p, r) for p in pairs
                     for r in [rows[f"{p['pmid']}|{p['subject']['id']}|{p['object']['id']}"]]
@@ -936,6 +973,65 @@ def main():
                 print(f"  [S3 {i}/{len(futures)}] {row['judge'].get('verdict')} "
                       f"binding={row['judge'].get('subject_binding_ok')} -> {row['status']}", flush=True)
         snapshot(list(rows.values()))
+
+    # ===== v7 P0 确定性否决（第八轮校准 2026-09-30 监工裁决）=====
+    # 否定/非显著限定词：含有这些词的证据句不得保留为 ok 边（彻底丢弃——用户拍板#3）
+    NEGATION_MARKERS = re.compile(
+        r"\b(?:not\s+significant|failed\s+to|no\s+significant\s+change|"
+        r"limited\s+effect|tended\s+to|P\s*[<>=]\s*0\.[01]\b|"
+        r"non[- ]significant|marginally\s+significant|"
+        r"did\s+not\s+(?:significantly\s+)?(?:alter|change|affect|modify)|"
+        r"no\s+(?:significant\s+)?(?:difference|effect|change|impact))\b", re.I)
+
+    # 关联措辞降级：evidence 含这些词时，强谓词一律降为 affects
+    ASSOCIATION_MARKERS = re.compile(
+        r"\b(?:associated\s+with|correlated\s+with|linked\s+to|"
+        r"negative\s+influence|positive\s+influence|inversely\s+associated)\b", re.I)
+
+    # 复合暴露检测（不可归给单一食物组）
+    COMPOSITE_MARKERS = re.compile(
+        r"\b(?:and\s+beans|fish,\s+beans|multiple\s+diet|"
+        r"dietary\s+index|diet\s+index|"
+        r"compared\s+to\s+(?:the\s+)?other|"
+        r"two\s+carbon\s+sources|versus\s+\w+\s+alone)\b", re.I)
+
+    def v7_deterministic_veto(rows_list):
+        """v7 P0 三规则：否定丢弃 / 关联降级 / 复合不产边。"""
+        n_neg = n_dem = n_comp = 0
+        for r in rows_list:
+            if r is None or r.get('status') != 'ok':
+                continue
+            sent = r.get('sentence', '') or ''
+            ev = r.get('evidence', '') or ''
+            text = sent + ' ' + ev
+
+            # 规则1：否定/非显著 → 彻底丢弃
+            if NEGATION_MARKERS.search(text):
+                r['status'] = 'dropped_negation'
+                r['stage'] = '8'
+                r['flag'] = 'negation_nonsignificant_deterministic'
+                n_neg += 1
+                continue
+
+            # 规则2：复合暴露 → 不产边
+            if r['subject'].get('category') == 'Food' and COMPOSITE_MARKERS.search(sent):
+                r['status'] = 'dropped_composite'
+                r['stage'] = '8'
+                r['flag'] = 'composite_exposure_deterministic'
+                n_comp += 1
+                continue
+
+            # 规则3：关联措辞 + 强谓词 → 降级为 affects
+            if r['subject'].get('category') == 'Food' and ASSOCIATION_MARKERS.search(ev):
+                if r.get('predicate') in ('promotes_growth', 'inhibits_growth'):
+                    r['predicate'] = 'affects'
+                    r['flag'] = 'association_wording_downgraded'
+                    n_dem += 1
+
+        return n_neg, n_dem, n_comp
+
+    n_veto = v7_deterministic_veto(list(rows.values()))
+    print(f"[v7-veto] 否定丢弃 {n_veto[0]} | 复合不产边 {n_veto[2]} | 关联降级 {n_veto[1]}")
 
     n_demoted = demote_transform_conflicts(list(rows.values()))
     n_indirect = demote_indirect_mechanism(list(rows.values()))

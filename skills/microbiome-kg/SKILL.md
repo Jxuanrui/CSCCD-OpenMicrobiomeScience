@@ -7,7 +7,7 @@ description: 查询肠道菌群知识图谱（Gut Microbiome Knowledge Graph）�
 
 ## 数据资产（项目内固定路径）
 
-- 主图：`data/merged/merged_nodes.tsv` 与 `merged_edges.tsv`（Neo4j 镜像运行于 bolt://127.0.0.1:17687）
+- 主图：`data/merged/merged_nodes.tsv` 与 `merged_edges.tsv`（Neo4j 镜像运行于 bolt://127.0.0.1:17687（注意：Neo4j 内容落后于 TSV 且无 provenance 列，查询请走 TSV/MCP——2026-09-30 监工第三轮审 E5））
 - 待审文献边：`data/staging/llm_v2_review.tsv`（Tier C，含逐字证据/judge 理由）
 - 链接预测：`data/merged/link_predictions.tsv`（RotatE，evidence=predicted，非实测证据）
 - 图指标与社区：`data/merged/graph_metrics.json`

@@ -197,10 +197,20 @@ def _anatomical_site_hit(evidence_text: str):
         r"(?:[a-z\-]+\s+){0,2}(commensal|bacterium|bacteria|microbiota|"
         r"microbiome|pathobiont|symbiont|inhabitant)\b")
     ep_sites = [m.group(1) for m in _site_epithet_re.finditer(low)]
+    # C2b 规则1（2026-10-01 监工G3）：部位词后紧邻疾病/过程名词（amod 修饰）时视为
+    # 修饰成分不产独立部位——"intestinal inflammation / colonic damage / hepatic injury"
+    _site_disease_mod_re = re.compile(
+        r"\b(gut|intestinal|colonic|colon|hepatic|renal|gastric|pulmonary|"
+        r"liver|lung|brain|joint|oral|nasal|periodontal)\s+"
+        r"(?:[a-z\-]+\s+){0,2}(inflammation|inflammatory|damage|injury|disease|"
+        r"diseases|colitis|cancer|carcinoma|tumor|tumorigenesis|fibrosis|necrosis|"
+        r"steatosis|dysbiosis|barrier|severity|progression|pain|failure)\b")
+    dis_mod_sites = {m.group(1) for m in _site_disease_mod_re.finditer(low)}
     kept = []
     for f in found:
         fl = f.lower()
-        n_att = sum(1 for w in route_words if w == fl) + sum(1 for w in ep_sites if w == fl)
+        n_att = (sum(1 for w in route_words if w == fl) + sum(1 for w in ep_sites if w == fl)
+                 + (1 if fl in {d.lower() for d in dis_mod_sites} else 0))  # C2b 规则1：疾病修饰词计数
         n_total = len(re.findall(rf"\b{re.escape(fl)}\b", low))
         if n_total > n_att:
             kept.append(f)
@@ -244,8 +254,11 @@ _EXPLICIT = {
                      "supplemented", "gavage", "intake", "probiotic"],
     "geography": ["chinese", "china", "european", "japanese", "korean",
                   "african", "indian"],   # population≠geography（precision 一审移除）
+    # C2b 规则2（2026-10-01 监工G3）：endpoint=过程指标值域，疾病词 colitis/tumor 移除（归 disease 维度）
     "endpoint": ["inflammation", "tumorigenesis", "barrier", "proliferation",
-                 "survival", "dysbiosis", "colitis", "tumor"],
+                 "survival", "dysbiosis", "severity", "damage", "injury",
+                 "carcinogenesis", "oncogenesis", "metastasis", "steatosis",
+                 "fibrosis", "necrosis", "progression", "permeability"],
     "timepoint": ["weeks", "days", "months", "hours", "after"],
     "dose": ["mg", "g/kg", "dose", "cfu"],
     "host_population": [],   # 无显式词表——默认 unknown（禁止模型补全）
@@ -463,7 +476,7 @@ def side_ev(idx, sid, pred, oid, pmids: str):
 #: 换行/制表）折叠为单空格 + 首尾去除；不做 NFKC、不去标点、不剥引用标记、
 #: 不做句子边界切分；基底 = evidence + sentence 拼接（0.1→0.2 基底变更）。
 #: 变更此算法必须 bump 版本并迁移 assertion_id。
-SPAN_NORMALIZATION_VERSION = "norm/0.2-lowercase-ws-collapse-basis-evd-plus-sent"
+SPAN_NORMALIZATION_VERSION = "norm/0.7-c2b-rules"  # C2b 规则升级：amod修饰过滤/endpoint值域去疾病词/title地理过滤（0.6 基线之上，监工G3）
 
 
 def _norm_span(text: str) -> str:
@@ -788,3 +801,10 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+def _geography_hit(evidence_text: str, source: str = "abstract_sentence"):
+    """C2b 规则3（监工G3）：geography 命中——title 行的地理词不产属性（标题词非正文陈述）。"""
+    if source == "title":
+        return None
+    return _hit(evidence_text, "geography")

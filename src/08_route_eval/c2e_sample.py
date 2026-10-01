@@ -21,10 +21,9 @@ def main(root: str):
     per_dim_cap = rd2.get("per_dim_cap", 4)
     rows = list(csv.DictReader(open(C2/"relation_assertions.tsv"), delimiter="\t"))
     old_ids = {r["assertion_id"] for r in csv.DictReader(open(C2/"context_precision_sample.tsv"), delimiter="\t")}
-    rd2 = pre.get("round2_appendix") or {}
-    if rd2.get("round") == 2:
-        prev = RE/"c2e_blind_sample.tsv"
-        old_ids |= {r["assertion_id"] for r in csv.DictReader(open(prev), delimiter="\t")}
+    hist = RE/"c2e_sampled_ids_history.tsv"
+    if hist.exists():
+        old_ids |= {r["assertion_id"] for r in csv.DictReader(open(hist), delimiter="\t")}
     nodes = {r["id"]: r for r in csv.DictReader(open(C2/"merged_nodes.tsv"), delimiter="\t")}
     food_ids = {i for i, r in nodes.items() if r["category"] == "Food"}
     rng = random.Random(seed)
@@ -47,7 +46,9 @@ def main(root: str):
             for d in sorted(by_layer):
                 if by_layer[d] and len(ctx_sample) < n_ctx: ctx_sample.append(by_layer[d].pop(0))
     top30 = {r["object_name"].strip().lower() for r in csv.DictReader(open(Path(root)/"data/staging/food_sampling3_top30.tsv"), delimiter="\t")}
-    food_pool = [r for r in rows if r["subject"] in food_ids or r["object"] in food_ids]
+    food_pool = [r for r in rows if r["subject"] in food_ids or r["object"] in food_ids
+                 and r["assertion_id"] not in old_ids]
+    food_pool = [r for r in food_pool if r["assertion_id"] not in old_ids]  # G4r2-1：Food 同样排除全部既往样本
     food_excluded = [r for r in food_pool if any(
         (nodes.get(r["object"], {}).get("name", "") or "").strip().lower() in top30 or
         (nodes.get(r["subject"], {}).get("name", "") or "").strip().lower() in top30
@@ -64,7 +65,9 @@ def main(root: str):
         for a,d,v,ev in ctx_sample: w.writerow([a,d,v,ev,"context","",""])
         for a,d,v,ev in food_sample: w.writerow([a,d,v,ev,"food","","菌×食物断言是否成立（含谓词方向）"])
     sha = "sha256:"+hashlib.sha256(out.read_bytes()).hexdigest()
-    inter = len({a for a,_,_,_ in ctx_sample} & old_ids)
+    hist_ids = old_ids
+    inter_ctx = len({a for a,_,_,_ in ctx_sample} & hist_ids)
+    inter_food = len({a for a,_,_,_ in food_sample} & hist_ids)
     pre_sha = "sha256:" + hashlib.sha256((RE/"c2e_preregistration.json").read_bytes()).hexdigest()
     head = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, cwd=root).stdout.strip()
     meta = {"file": out.name, "preregistration_commit": head, "preregistration_sha256_runtime": pre_sha,
@@ -72,13 +75,18 @@ def main(root: str):
             "food_top30_intersection": len({a for a,_,_,_ in food_sample} & {r["assertion_id"] for r in food_excluded}),
             "seed": seed,
             "sampled_at": datetime.now(timezone.utc).isoformat(),
-            "freeze_tag": "c2c-freeze-v2-20261001（fe0c059，早于本抽样）",
+            "freeze_tag": subprocess.run(["git","describe","--tags","--abbrev=0"],capture_output=True,text=True,cwd=root).stdout.strip(),
             "context_n": len(ctx_sample), "food_n": len(food_sample),
-            "exclusion_check": {"old_50_id_intersection": inter},
+            "exclusion_check": {"vs_all_history": {"context": inter_ctx, "food": inter_food}, "must_be_zero": True},
             "context_dim_distribution": dict(Counter(d for _,d,_,_ in ctx_sample)),
             "label_key": "(assertion_id, dimension)——逐行 verdict yes/no",
             "output_sha256": sha, "sampler": "src/08_route_eval/c2e_sample.py（入库）"}
     (RE/"c2e_blind_sample.meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1))
+    with open(hist, "a", newline="", encoding="utf-8") as hf:
+        w = csv.writer(hf, delimiter="\t")
+        if hf.tell() == 0: w.writerow(["assertion_id", "round", "seed"])
+        for a,_,_,_ in ctx_sample + food_sample:
+            w.writerow([a, pre.get("round2_appendix",{}).get("round","1"), seed])
     print(json.dumps({k: meta[k] for k in ["context_n","food_n","exclusion_check","output_sha256","seed"]}, ensure_ascii=False))
 
 if __name__ == "__main__":

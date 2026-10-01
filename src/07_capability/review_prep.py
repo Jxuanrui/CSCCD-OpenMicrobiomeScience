@@ -734,16 +734,29 @@ def main():
                         and spec.get("unknown_reason") == "not_present_in_available_evidence" \
                         and len(np_rows) < 5:
                     np_rows.append(rec)
-        # 每维度 ≤4 条 explicit（覆盖 anatomical/disease/subtype/strain/model/intervention）
+        # C1a（2026-10-01 监工计划v2）：explicit 每维度带种子随机 ≤4 条（逐字节可复现）；
+        # na/np 两分层仅作结构参考，不进精度分母（计分侧只用 status==explicit 行）。
+        import random as _rnd
+        _rng = _rnd.Random(20261001)
+        _explicit_n = 0
         for dim in sorted(by_dim):
-            sample_rows.extend(by_dim[dim][:4])
+            pool = list(by_dim[dim])
+            _rng.shuffle(pool)
+            take = pool[:4]
+            _explicit_n += len(take)
+            sample_rows.extend(take)
+            by_dim[dim] = pool[4:]  # 剩余=池去掉已抽中（监工 C3-2：原误存全池致去向多算）
         sample_rows.extend(na_rows)
         sample_rows.extend(np_rows)
         pd.DataFrame(sample_rows).to_csv(
             MERGED / "context_precision_sample.tsv", sep="\t", index=False)
+        _leftover = sum(len(v) for v in by_dim.values())
         print(f"[precision-qc] v2 分层抽样 {len(sample_rows)} 条"
-              f"（explicit×{ {d: min(4, len(v)) for d, v in sorted(by_dim.items())} }"
+              f"（explicit×{_explicit_n}（种子 20261001 随机）"
               f" + not_applicable {len(na_rows)} + not_present {len(np_rows)}）")
+        print(f"[precision-qc][去向] explicit 池总量 {_explicit_n + _leftover}，抽 {_explicit_n}，"
+              f"剩 {_leftover} 条未入样本（每维度 ≤4 上限所致，非丢弃）；"
+              f"na/np 各 5 条为结构参考层，不计入精度分母")
 
     # ---- 既有抽检口径 ----
     pr = MERGED / "pending_review_edges.tsv"

@@ -40,16 +40,6 @@ def call_api(base: str, key: str, items: list[dict]) -> str:
     with urllib.request.urlopen(req, timeout=60) as resp:
         return json.load(resp)["choices"][0]["message"]["content"]
 
-def parse_answers(text: str, idxs: list[int]) -> dict[int, int]:
-    out = {}
-    for line in text.splitlines():
-        m = re.search(r'(\d+)\D*[:=]\D*ANSWER\D*:?\s*(\d)|ANSWER\D*:\s*(\d)', line, re.I)
-        if m:
-            idx = int(m.group(1)) if int(m.group(1)) in idxs else None
-            val = int(m.group(2) or m.group(3))
-            if idx: out[idx] = val
-    return out
-
 def offline_reparse_and_score(RE: Path):
     """离线模式（监工 cf 审 C1）：只读 raw 重解析 + 计分落盘，不调 API，可复现 82/100。
 
@@ -58,10 +48,10 @@ def offline_reparse_and_score(RE: Path):
       "idx=<答案值>"型与纯 ANSWER 型按位映射——仅当行数==本批条目数时；
       8 个按位映射批共 22 条（批 33 仅 1 条）。
     """
-    import hashlib, math
+    import math
     from collections import Counter
+    import hashlib
     rows = [json.loads(l) for l in open(RE / "route_d_role_test_input_v2.jsonl")]
-    idx_by_pos = {i: r["idx"] for i, r in enumerate(rows)}
     preds, positional_batches = {}, []
     for line in open(RE / "cross_family_ds_raw.jsonl"):
         d = json.loads(line)
@@ -79,11 +69,12 @@ def offline_reparse_and_score(RE: Path):
         elif len(vals) == len(d["idx"]):
             positional_batches.append(d["batch"])
             for pos, v in enumerate(vals):
-                preds[idx_by_pos[d["batch"] * 3 + pos]] = v[2]
+                preds[d["idx"][pos]] = v[2]
         else:
             raise AssertionError(f"批 {d['batch']} 无法解析：{d['raw_output'][:120]}")
     assert len(preds) == 100 and set(preds) == set(range(51, 151))
-    n_positional = sum(len([r for r in rows if r['idx'] in preds and True])for _ in [0]) # placeholder
+    n_positional = sum(3 if b != 33 else 1 for b in positional_batches)
+    assert n_positional == 22, f"按位映射条数 {n_positional} != 22（监工 cf 审核定的复现锚）"
     gold = {int(l.split("\t")[0]): int(l.split("\t")[1]) for l in
             open(RE / "gold_test_100_user_direct.tsv").readlines()[1:]}
     pred_d = {r["idx"]: r["pred"] for r in map(json.loads, open(RE / "route_d_role_test_preds_full.jsonl"))}
@@ -95,7 +86,7 @@ def offline_reparse_and_score(RE: Path):
         return [round(max(0, c-h), 4), round(min(1, c+h), 4)]
     ds_ok = sum(preds[i] == gold[i] for i in gold)
     # 批 30 退化敏感性（监工 E6：3 条全判 1 全错，剔除后口径）
-    b30 = idx_by_pos[30*3], idx_by_pos[30*3+1], idx_by_pos[30*3+2]
+    b30 = tuple(rows[30*3+k]["idx"] for k in range(3))
     sens = {i: (gold[i], preds[i]) for i in b30}
     ds_ok_excl = sum(preds[i] == gold[i] for i in gold if i not in b30)
     out = {
@@ -104,7 +95,7 @@ def offline_reparse_and_score(RE: Path):
              "confusion": {f"{g}->{p}": c for (g, p), c in sorted(Counter((gold[i], preds[i]) for i in gold).items())}},
       "sensitivity_batch30_degenerate": {
         "items": {str(i): sens[i] for i in b30},
-        "note": "批 30 三条输出全为 'idx=1'（格式退化，全错）；剔除后 79/97=81.4%，不影响同档结论（监工 E6/P1）",
+        "note": f"批 30 三条输出全为 'idx=1'（格式退化，全错，不在正确项内）；剔除后 {ds_ok_excl}/97（82/97 口径，监工 cf2 已采纳撤回 79/97）",
         "acc_excl_batch30": round(ds_ok_excl/97, 4)},
       "agreement": {"with_D": sum(preds[i] == pred_d[i] for i in gold),
                     "with_mesh": sum(preds[i] == pred_m[i] for i in gold),
@@ -118,8 +109,11 @@ def offline_reparse_and_score(RE: Path):
                  "ds_raw": "sha256:"+hashlib.sha256((RE/"cross_family_ds_raw.jsonl").read_bytes()).hexdigest(),
                  "input": "sha256:"+hashlib.sha256((RE/"route_d_role_test_input_v2.jsonl").read_bytes()).hexdigest()},
     }
+    # P0-4: preds 与磁盘文件机器校验（meta.parse_note 的说法落到 assert）
+    disk = {r["idx"]: r["pred"] for r in map(json.loads, open(RE / "cross_family_ds_preds.jsonl"))}
+    assert disk == preds, "离线重解析与磁盘 preds 不一致"
     (RE / "eval_cross_family.json").write_text(json.dumps(out, ensure_ascii=False, indent=1))
-    print(f"离线复现：DS {ds_ok}/100；批30剔除后 {ds_ok_excl}/97；与D一致 {out['agreement']['with_D']}")
+    print(f"离线复现：DS {ds_ok}/100；批30剔除后 {ds_ok_excl}/97（82/97 口径）；与D一致 {out['agreement']['with_D']}；按位 {n_positional} 条；preds 磁盘一致 ✓")
     return out
 
 

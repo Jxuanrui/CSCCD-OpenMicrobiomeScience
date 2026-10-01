@@ -15,9 +15,16 @@ ROOT = Path(__file__).resolve().parents[2]
 def main(root: str):
     RE = Path(root)/"data/merged/route_eval"; C2 = Path(root)/"data/merged/candidate_v2"
     pre = json.loads((RE/"c2e_preregistration.json").read_text())
-    seed = pre["seed"]; n_ctx = pre["context_layer"]["sample_n"]; n_food = pre["food_layer"]["sample_n"]
+    seed = pre["seed"]; n_food = pre["food_layer"]["sample_n"]
+    n_ctx = pre["context_layer"]["sample_n"]  # None=不设总量上限（round2 每维 cap）
+    rd2 = pre.get("round2_appendix") or {}
+    per_dim_cap = rd2.get("per_dim_cap", 4)
     rows = list(csv.DictReader(open(C2/"relation_assertions.tsv"), delimiter="\t"))
     old_ids = {r["assertion_id"] for r in csv.DictReader(open(C2/"context_precision_sample.tsv"), delimiter="\t")}
+    rd2 = pre.get("round2_appendix") or {}
+    if rd2.get("round") == 2:
+        prev = RE/"c2e_blind_sample.tsv"
+        old_ids |= {r["assertion_id"] for r in csv.DictReader(open(prev), delimiter="\t")}
     nodes = {r["id"]: r for r in csv.DictReader(open(C2/"merged_nodes.tsv"), delimiter="\t")}
     food_ids = {i for i, r in nodes.items() if r["category"] == "Food"}
     rng = random.Random(seed)
@@ -31,8 +38,8 @@ def main(root: str):
                 by_dim[dim].append((r["assertion_id"], dim, str(spec.get("value","")), (r.get("evidence_span_norm","") or "")[:110]))
     ctx_sample = []
     for dim in sorted(by_dim):
-        pool = list(by_dim[dim]); rng.shuffle(pool); ctx_sample += pool[:8]
-    if len(ctx_sample) > n_ctx:
+        pool = list(by_dim[dim]); rng.shuffle(pool); ctx_sample += pool[:per_dim_cap]
+    if n_ctx and len(ctx_sample) > n_ctx:
         by_layer = defaultdict(list)
         for it in ctx_sample: by_layer[it[1]].append(it)
         ctx_sample = []

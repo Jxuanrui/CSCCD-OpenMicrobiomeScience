@@ -155,6 +155,25 @@ def _disease_stage_hit(evidence_text: str):
                 bad_occ += 1
         if bad_occ < len(occ):
             kept.append(f)
+    # G5 P0-3（监工）：中心词约束——形容词型分期词右侧 0~2 token 的中心词必须属
+    # disease 词表；endpoint 独有词（inflammation 等病理过程）与 stage of 非疾病宾语均剔除。
+    _D = {w.lower() for w in _EXPLICIT.get("disease", [])}
+    _EP = {w.lower() for w in _EXPLICIT.get("endpoint", [])}  # 含双表词（inflammation）：作分期中心词时一律视为病理过程（监工 G5 E5）
+    def _center_ok(sw):
+        m2 = re.search(rf"\b{re.escape(sw)}\s+stage\s+of\s+([a-z\-]+)", low)
+        if m2:
+            return m2.group(1) in _D
+        mm = re.search(rf"\b{re.escape(sw)}\s+((?:[a-z\-]+\s+){{0,2}}[a-z\-]+)", low)
+        if mm:
+            words = mm.group(1).split()
+            if words[0] in _EP:           # 紧邻病理过程词（chronic inflammation）→ 剔除
+                return False
+            if any(w in _D or w in ("disease", "diseases") for w in words):
+                return True               # 窗口内含疾病中心词（advanced colorectal cancer）
+            return False
+        return True
+    _ADJ = {"severe", "acute", "mild", "early", "late", "chronic", "advanced"}
+    kept = [f for f in kept if f.lower() not in _ADJ or _center_ok(f.lower())]
     return kept or None
 
 
@@ -195,7 +214,7 @@ def _anatomical_site_hit(evidence_text: str):
     route_words = [m.group(1) for m in _ROUTE_PHRASE_RE.finditer(low)]
     _site_epithet_re = re.compile(
         r"\b(gut|skin|oral|intestinal|colonic|nasal|periodontal|fecal)\s+"
-        r"(?:[a-z\-]+\s+){0,2}(commensal|bacterium|bacteria|microbiota|"
+        r"(?:[a-z\-]+\s+){0,2}(commensal|bacterium|bacteria|bacterial|species|taxa|microbiota|"
         r"microbiome|pathobiont|symbiont|inhabitant)\b")
     ep_sites = [m.group(1) for m in _site_epithet_re.finditer(low)]
     # C2b 规则1（2026-10-01 监工G3）：部位词后紧邻疾病/过程名词（amod 修饰）时视为
@@ -246,7 +265,7 @@ _EXPLICIT = {
                            "cell line", "HCT-116", "HT-29", "gnotobiotic",
                            "germ-free"],
     "study_type": ["cohort", "RCT", "randomized", "trial", "cross-sectional",
-                   "case-control", "volunteers"],
+                   "case-control"],
     "disease_stage": ["early", "late", "advanced", "mild", "severe", "recovery",
                       "chronic", "acute"],
     "diet": ["diet", "dietary", "fiber", "inulin", "FOS", "GOS", "high-fat",
@@ -307,7 +326,7 @@ def _hyphen_compound_hit(evidence_text: str, found):
         n_compound = len(re.findall(rf"(?<=[a-z]-){fl}(?![a-z0-9])|(?<![a-z0-9-]){fl}(?=-[a-z])", low))
         if n_total > n_compound:
             kept.append(f)
-    return kept or None
+        return kept or None
 
 
 _TITLE_IDX: dict[str, str] = {}
@@ -514,7 +533,7 @@ def side_ev(idx, sid, pred, oid, pmids: str):
 #: 换行/制表）折叠为单空格 + 首尾去除；不做 NFKC、不去标点、不剥引用标记、
 #: 不做句子边界切分；基底 = evidence + sentence 拼接（0.1→0.2 基底变更）。
 #: 变更此算法必须 bump 版本并迁移 assertion_id。
-SPAN_NORMALIZATION_VERSION = "norm/0.7.2-c2b-r3-title"  # C2b 规则升级：amod修饰过滤/endpoint值域去疾病词/title地理过滤（0.6 基线之上，监工G3）
+SPAN_NORMALIZATION_VERSION = "norm/0.8-c2b-round2"  # C2b 规则升级：amod修饰过滤/endpoint值域去疾病词/title地理过滤（0.6 基线之上，监工G3）
 
 
 def _norm_span(text: str) -> str:

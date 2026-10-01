@@ -169,3 +169,24 @@ def test_2nd_administration_is_generic():
     ctx = build_context("oral administration of lactobacillus to wild-type mice",
                         "MESH:X", "NCBITaxon:1", object_name="X")
     assert ctx["intervention"].get("status") != "explicit", "administration 须泛化 inferred，二次终审保留意见"
+
+
+# ---- G5 第 1 轮迭代 5 错例契约（监工 G5 P0-4：本轮错例必须翻转+正例不回退）----
+import sys as _sys
+_sys.path.insert(0, str(Path(__file__).parent))
+import review_prep as _rp
+
+def test_g5_round1_error_flips():
+    # 5 条用户判 no 的错例在修复后必须不再产出
+    assert 'gut' not in (_rp._anatomical_site_hit("certain sow gut bacterial species in late trimester sows") or [])
+    assert _rp._disease_stage_hit("Advanced structural characterization and in vitro fermentation") is None
+    assert _rp._disease_stage_hit("The early stage of fermentation is characterized by fungi") is None
+    assert _rp._disease_stage_hit("chronic inflammation induction in mice") is None
+    assert 'volunteers' not in (_rp._hit("fecal bacteria collection of healthy volunteers", "study_type") or [])
+
+def test_g5_round1_no_regression():
+    # 现有正例不回退
+    assert _rp._disease_stage_hit("patients with severe ulcerative colitis") == ['severe']
+    assert _rp._disease_stage_hit("advanced colorectal cancer progression") == ['advanced']
+    hits = _rp._anatomical_site_hit("bacterial translocation in the gut of mice with colitis")
+    assert hits and 'gut' in [h.lower() for h in hits]

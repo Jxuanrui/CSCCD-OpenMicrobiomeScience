@@ -43,14 +43,17 @@ def normalize_mesh(object_raw: str) -> dict:
         return {"raw": raw, "mesh_id": uid, "preferred_name": d["preferred_name"],
                 "synonyms": d["synonyms"][:10], "tree_numbers": d["tree_numbers"],
                 "resolved": True}
-    # 名称精确匹配（含同义词）
-    raw_lower = raw.lower()
+    # 名称匹配（含同义词；折叠逗号差异——supp_bg P0-4 冻结回归发现的 3 条漂移根因：
+    # 倒序名无逗号形式如 "Liver Diseases Alcoholic" 匹配不上标准名 "Liver Diseases, Alcoholic"）
+    def _fold(s: str) -> str:
+        return " ".join(s.lower().replace(",", " ").split())
+    raw_fold = _fold(raw)
     for uid, d in idx.items():
-        if d["preferred_name"].lower() == raw_lower:
+        if _fold(d["preferred_name"]) == raw_fold:
             return {"raw": raw, "mesh_id": uid, "preferred_name": d["preferred_name"],
                     "synonyms": d["synonyms"][:10], "tree_numbers": d["tree_numbers"],
                     "resolved": True}
-        if any(s.lower() == raw_lower for s in d["synonyms"]):
+        if any(_fold(s) == raw_fold for s in d["synonyms"]):
             return {"raw": raw, "mesh_id": uid, "preferred_name": d["preferred_name"],
                     "synonyms": d["synonyms"][:10], "tree_numbers": d["tree_numbers"],
                     "resolved": True}

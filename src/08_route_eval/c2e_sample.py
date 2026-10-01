@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
-"""C2e 预注册抽样执行器（G4 E5 整改：抽样代码入库，不再内联）。
+"""C2e 预注册抽样执行器（G4 E5 整改：抽样代码入库；G4b：top30 排除+预注册 sha 机器绑定）。
 
 预注册：data/merged/route_eval/c2e_preregistration.json（须独立 commit 先于本脚本产物）。
-用法：python3 c2e_sample.py --root 主项目根
+用法：python3 c2e_sample.py [主项目根]（位置参数，默认脚本仓库根）
 """
 from __future__ import annotations
-import argparse, csv, hashlib, json, random
+import csv, hashlib, json, random, subprocess
 from collections import Counter, defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
@@ -39,7 +39,13 @@ def main(root: str):
         while len(ctx_sample) < n_ctx:
             for d in sorted(by_layer):
                 if by_layer[d] and len(ctx_sample) < n_ctx: ctx_sample.append(by_layer[d].pop(0))
+    top30 = {r["object_name"].strip().lower() for r in csv.DictReader(open(Path(root)/"data/staging/food_sampling3_top30.tsv"), delimiter="\t")}
     food_pool = [r for r in rows if r["subject"] in food_ids or r["object"] in food_ids]
+    food_excluded = [r for r in food_pool if any(
+        (nodes.get(r["object"], {}).get("name", "") or "").strip().lower() in top30 or
+        (nodes.get(r["subject"], {}).get("name", "") or "").strip().lower() in top30
+        for _ in [0])]
+    food_pool = [r for r in food_pool if r not in food_excluded]
     rng.shuffle(food_pool)
     food_sample = [(r["assertion_id"], "food_pair",
                     f'{nodes.get(r["subject"],{}).get("name",r["subject"])} | {r["predicate"]} | {nodes.get(r["object"],{}).get("name",r["object"])}',
@@ -52,7 +58,12 @@ def main(root: str):
         for a,d,v,ev in food_sample: w.writerow([a,d,v,ev,"food","","菌×食物断言是否成立（含谓词方向）"])
     sha = "sha256:"+hashlib.sha256(out.read_bytes()).hexdigest()
     inter = len({a for a,_,_,_ in ctx_sample} & old_ids)
-    meta = {"file": out.name, "preregistration_commit": "独立提交（先于本抽样）", "seed": seed,
+    pre_sha = "sha256:" + hashlib.sha256((RE/"c2e_preregistration.json").read_bytes()).hexdigest()
+    head = subprocess.run(["git", "rev-parse", "--short", "HEAD"], capture_output=True, text=True, cwd=root).stdout.strip()
+    meta = {"file": out.name, "preregistration_commit": head, "preregistration_sha256_runtime": pre_sha,
+            "preregistration_binding": "抽样器运行时实算预注册 sha（机器绑定，G4b 风险预警3）",
+            "food_top30_intersection": len({a for a,_,_,_ in food_sample} & {r["assertion_id"] for r in food_excluded}),
+            "seed": seed,
             "sampled_at": datetime.now(timezone.utc).isoformat(),
             "freeze_tag": "c2c-freeze-v2-20261001（fe0c059，早于本抽样）",
             "context_n": len(ctx_sample), "food_n": len(food_sample),

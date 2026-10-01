@@ -1,9 +1,9 @@
 name: mra-tests
 on:
   push:
-    paths: ["mra/**", "src/**", ".github/workflows/mra-tests.yml"]
+    paths: ["mra/**", ".github/workflows/mra-tests.yml"]
   pull_request:
-    paths: ["mra/**", "src/**"]
+    paths: ["mra/**"]
 jobs:
   pytest:
     runs-on: ubuntu-latest

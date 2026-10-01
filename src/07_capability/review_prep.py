@@ -321,6 +321,20 @@ def build_context(evidence_text: str, object_id: str, subject_id: str = "",
     ctx = {}
     t = evidence_text.lower()
     for dim in CONTEXT_DIMS:
+        if dim == "geography":
+            # C2b 规则3（真接入，监工 G4/E3）：地理词仅出现在标题区（前 120 字符，
+            # staging sentence 常含 title 前缀）而正文无 → 不产 explicit（title 非正文陈述）
+            _head, _rest = evidence_text[:120], evidence_text[120:]
+            _hr = _hit(_rest, "geography")
+            if _hr:
+                ctx[dim] = {"value": ",".join(_hr[:2]), "status": "explicit",
+                            "source": "abstract_sentence", "applicable": True,
+                            "unknown_reason": ""}
+            else:
+                ctx[dim] = {"value": "", "status": "unknown",
+                            "source": "", "applicable": True,
+                            "unknown_reason": "geography_title_only_or_absent"}
+            continue
         if dim == "disease":
             # 契约修正（裁决第 1 项）+ 终审缺陷类 1/2（2026-09-29）：disease background
             # 三重过滤——1B 同义族 + object 名碎片 + 结局动词语境（共享词表 token
@@ -477,7 +491,7 @@ def side_ev(idx, sid, pred, oid, pmids: str):
 #: 换行/制表）折叠为单空格 + 首尾去除；不做 NFKC、不去标点、不剥引用标记、
 #: 不做句子边界切分；基底 = evidence + sentence 拼接（0.1→0.2 基底变更）。
 #: 变更此算法必须 bump 版本并迁移 assertion_id。
-SPAN_NORMALIZATION_VERSION = "norm/0.7-c2b-rules"  # C2b 规则升级：amod修饰过滤/endpoint值域去疾病词/title地理过滤（0.6 基线之上，监工G3）
+SPAN_NORMALIZATION_VERSION = "norm/0.7.1-c2b-r3-wired"  # C2b 规则升级：amod修饰过滤/endpoint值域去疾病词/title地理过滤（0.6 基线之上，监工G3）
 
 
 def _norm_span(text: str) -> str:
@@ -802,10 +816,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-
-def _geography_hit(evidence_text: str, source: str = "abstract_sentence"):
-    """C2b 规则3（监工G3）：geography 命中——title 行的地理词不产属性（标题词非正文陈述）。"""
-    if source == "title":
-        return None
-    return _hit(evidence_text, "geography")

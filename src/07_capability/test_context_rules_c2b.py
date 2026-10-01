@@ -35,7 +35,10 @@ def test_rule2_endpoint_excludes_disease_words():
 
 
 def test_rule3_geography_title_filtered():
-    title = "Gut microbiome changes in Chinese patients with colitis"
-    assert rp._geography_hit(title, source="title") is None, "规则3未生效：title 地理词未过滤"
-    body = "we enrolled 30 chinese participants in a cohort study"
-    assert rp._geography_hit(body, source="abstract_sentence") is not None, "正文地理词应保留"
+    # 位置启发（真接入 build_context）：地理词仅在标题区（前120字符）→ unknown
+    ctx = rp.build_context("Gut microbiome changes in Chinese patients with colitis. we analyzed stool samples.", "MESH:D000001")
+    g = ctx.get("geography", {})
+    assert g.get("status") != "explicit" and "title" in str(g.get("unknown_reason","")), f"规则3未生效: {g}"
+    ctx2 = rp.build_context("we analyzed stool samples from a prospective cohort and performed 16S sequencing and metabolomics on all specimens collected. the cohort enrolled 30 chinese participants in a multicenter study of colitis outcomes.", "MESH:D000001")
+    g2 = ctx2.get("geography", {})
+    assert g2.get("status") == "explicit" and "chinese" in g2.get("value",""), f"正文地理词应保留: {g2}"

@@ -619,7 +619,7 @@ def main():
         for _, r in pd.read_csv(ann_path, sep="\t").fillna("").iterrows():
             ann[f"{r['subject']}|{r['object']}"] = r.to_dict()
     conflicted_pairs = set()
-    rows, ctx_stats = [], {"explicit": 0, "inferred": 0, "unknown": 0, "total": 0}
+    rows, ctx_stats = [], {"explicit": 0, "inferred": 0, "unknown": 0, "not_applicable": 0, "total": 0}
     comp_dist = {}
     if cf.exists():
         for _, c in pd.read_csv(cf, sep="\t").fillna("").iterrows():

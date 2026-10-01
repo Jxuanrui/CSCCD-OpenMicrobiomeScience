@@ -88,7 +88,7 @@ class TestIntentionalViolations:
         import copy
         clone = GraphValidationEngine.__new__(GraphValidationEngine)
         clone.merged_dir = engine.merged_dir
-        clone._assertions = engine.assertions.copy()
+        clone._assertions = engine.assertions.copy().astype(str)  # 全转 str 防 int64 赋空串报错
         clone._edges = engine.edges.copy()
         clone._manifest = copy.deepcopy(engine.manifest)
         clone.rules = engine._build_rules()

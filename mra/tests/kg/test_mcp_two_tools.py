@@ -11,7 +11,7 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[3]
-MERGED = ROOT / "data/merged"
+MERGED = ROOT / "data/merged/candidate_v2"  # P0-4: 四件套完备
 pytestmark = pytest.mark.skipif(
     not (MERGED / "relation_assertions.tsv").exists(),
     reason="无恢复基线快照（data/merged）")

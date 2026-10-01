@@ -26,7 +26,12 @@ class TestCostModel:
         cost = build_cost_model(KG_MERGED)
         b = cost["baseline"]
         assert b["papers"] == 56_629
-        assert b["assertions"] == 4_500
+        # 基线从数据实读（P0-4 修复：4500 硬编码→动态读取）
+        import csv as _csv
+        from pathlib import Path as _P
+        _tsv = KG_MERGED / 'relation_assertions.tsv'
+        _n = sum(1 for _ in open(_tsv)) - 1
+        assert b['assertions'] == _n, f"基线 {_n} != 实际 {b['assertions']}（来源: relation_assertions.tsv）"
         assert b["acceptance_rate"] > 0.05  # >5% acceptance
         assert b["api_calls_per_accepted_assertion"] > 0
 

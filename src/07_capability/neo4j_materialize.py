@@ -34,7 +34,17 @@ def load_data():
     return nodes, edges, assertions
 
 
+def _selfcheck_edge_columns():
+    """P2 启动自检：边表必须含溯源四列，缺任一则报错退出。"""
+    REQUIRED = {"source_id", "retrieved_at", "version", "knowledge_layer"}
+    df = pd.read_csv(MERGED / "merged_edges.tsv", sep="\t", nrows=1)
+    missing = REQUIRED - set(df.columns)
+    if missing:
+        raise SystemExit(f"[selfcheck] merged_edges.tsv 缺少溯源列: {missing}")
+
+
 def materialize(uri, password):
+    _selfcheck_edge_columns()  # P2 自检
     nodes, edges, assertions = load_data()
     print(f"[load] nodes={len(nodes)} edges={len(edges)} eligible_assertions={len(assertions)}")
     driver = GraphDatabase.driver(uri, auth=("neo4j", password))
@@ -55,7 +65,8 @@ def materialize(uri, password):
             UNWIND $rows AS r
             MERGE (n:Entity {id: r.id})
             SET n.name = r.name, n.category = r.category,
-                n.aliases = r.aliases, n.xrefs = r.xrefs, n.tax_rank = r.tax_rank
+                n.aliases = r.aliases, n.xrefs = r.xrefs, n.tax_rank = r.tax_rank,
+                n.knowledge_layer = r.knowledge_layer
         """, rows=nodes).consume()
         print(f"[canonical] nodes {len(nodes)} imported")
 
@@ -72,7 +83,11 @@ def materialize(uri, password):
                 e.polarity = r.polarity,
                 e.last_updated = r.last_updated,
                 e.relation_status = r.relation_status,
-                e.canonical_view = r.canonical_view
+                e.canonical_view = r.canonical_view,
+                e.source_id = r.source_id,
+                e.retrieved_at = r.retrieved_at,
+                e.version = r.version,
+                e.knowledge_layer = r.knowledge_layer
         """, rows=edges).consume()
         print(f"[canonical] edges {len(edges)} imported")
 

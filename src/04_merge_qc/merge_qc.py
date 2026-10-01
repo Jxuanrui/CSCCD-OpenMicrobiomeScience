@@ -210,4 +210,18 @@ def main():
     print(f"[snapshot] {manifest['snapshot_id']} registry_sha={manifest['source_registry_version'][:19]}… "
           f"materialized_to_neo4j={manifest['materialized_to_neo4j']}")
 
+    # P1 根因修复（2026-10-01 监工并行计划）：收尾自动回填 provenance 四列+knowledge_layer。
+    # 9-30 事故根因：merge_qc 输出不含四列，任何重跑都会冲掉事后回填——自此回填内联为收尾步骤。
+    import backfill_provenance as _bf
+    _reg = _bf.load_registry()
+    _lk = _bf.build_edge_lookup()
+    _edges2 = _bf.enrich_edges(edges, _reg, _lk)
+    _nodes2 = _bf.enrich_nodes(nodes, _bf.build_node_lookup())
+    _fails2 = _bf.verify(edges, _edges2, nodes, _nodes2, _reg)
+    if _fails2:
+        raise SystemExit("[merge_qc→backfill] 回填核对未通过，快照已写但四列校验失败（fail-closed）")
+    _edges2.to_csv(MERGED / "merged_edges.tsv", sep="\t", index=False)
+    _nodes2.to_csv(MERGED / "merged_nodes.tsv", sep="\t", index=False)
+    print("[backfill] provenance 四列+knowledge_layer 已随 merge 收尾写入（根因修复）")
+
 if __name__=='__main__': main()

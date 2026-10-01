@@ -175,11 +175,27 @@ def verify(edges_old: pd.DataFrame, edges_new: pd.DataFrame,
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__.splitlines()[0])
     ap.add_argument("--verify", action="store_true", help="只读核对，不写文件")
+    ap.add_argument("--merged-dir", default=None,
+                    help="目标目录（默认 data/merged；可指 data/merged/candidate_v2 等）")
     args = ap.parse_args()
 
+    global MERGED, BACKUP_DIR
+    if args.merged_dir:
+        MERGED = Path(args.merged_dir)
+        BACKUP_DIR = MERGED / "provenance_backfill_backup"
     edges_path, nodes_path = MERGED / "merged_edges.tsv", MERGED / "merged_nodes.tsv"
     edges_old = pd.read_csv(edges_path, sep="\t", dtype=str).fillna("")
     nodes_old = pd.read_csv(nodes_path, sep="\t", dtype=str).fillna("")
+    # 占位列剥离（2026-10-01 P2）：candidate_v2 等表曾按占位值补过这四/一列——
+    # 当列的取值集合 ⊆ 占位集合时视为占位列，剥离后按 15 列流程回填真值；
+    # 真值列（如 source_id∈registry 键集）不受影响。占位集合即 10-01 物化事故的填充值。
+    _PH = {"curated", "llm_extracted", "literature_only", "canonical", "2026-10-01T12:33:15", "2026-09-30-candidate-v2"}
+    def _strip_ph(df):
+        for c in ["source_id", "retrieved_at", "version", "knowledge_layer"]:
+            if c in df.columns and set(df[c].unique()) <= _PH:
+                df = df.drop(columns=[c])
+        return df
+    edges_old, nodes_old = _strip_ph(edges_old), _strip_ph(nodes_old)
     reg = load_registry()
 
     edges_new = enrich_edges(edges_old, reg, build_edge_lookup())
@@ -203,7 +219,9 @@ def main() -> None:
     sys.path.insert(0, str(ROOT / "src/07_capability"))
     from write_guard import guard_write, new_execution_id  # noqa: E402
     exec_id = os.environ.get("KG_EXECUTION_ID") or new_execution_id("kg.backfill_provenance")
-    guard_write("data/merged", exec_id, os.environ.get("KG_WRITE_AUTH", "phase-r-remediation"))
+    _target = str(MERGED.relative_to(ROOT)) if str(MERGED).startswith(str(ROOT)) else "data/merged"
+    guard_write(_target, exec_id, os.environ.get("KG_WRITE_AUTH",
+                 "phase-v-prime-merge" if "candidate_v2" in _target else "phase-r-remediation"))
     print(f"[write_guard] merged 写入放行 exec={exec_id}")
 
     # 新列追加在尾部（旧列顺序与内容保持字节级不变由 verify 兜底）

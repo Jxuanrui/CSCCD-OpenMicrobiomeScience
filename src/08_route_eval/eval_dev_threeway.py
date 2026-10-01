@@ -83,7 +83,7 @@ def main(root: str | None = None):
 # ---- v3 审 P0-1：test / supp_bg 计分正式化（并入本脚本，不新建文件；wilson 复用）----
 
 def score_test(RE):
-    """test_100 三路计分（gold 直付版）→ eval_test_score.json 复现。"""
+    """test_100 三路计分校验（assert 与落盘一致；只校验不写盘）。"""
     gold = {int(l.split("\t")[0]): int(l.split("\t")[1])
             for l in (RE / "gold_test_100_user_direct.tsv").read_text().splitlines()[1:]}
     pred_d = {r["idx"]: r["pred"] for r in map(json.loads, open(RE / "route_d_role_test_preds_full.jsonl"))}
@@ -119,8 +119,8 @@ def score_supp(RE):
     # 背景类 CI（v3 审 P0-3 允许的表述数据）
     bg = [i for i in gold if gold[i] == 1]
     out["background_class_disclosure"] = {
-        "n": 3, "items": {i: {"D": pd_[i], "DS": ps_[i], "mesh": pm_[i],
-                              "wilson_D": wilson(1.0, 3), "wilson_DS": wilson(2/3, 3)} for i in bg},
+        "n": 3, "wilson": {"D_3of3": wilson(3/3, len(bg)), "DS_2of3": wilson(2/3, len(bg))},
+        "items": {i: {"D": pd_[i], "DS": ps_[i], "mesh": pm_[i]} for i in bg},
         "mesh_note": "0/3 为设计决定（predict 只输出 2/3/9），非测量结果",
         "statement_rule": "描述性，不支持推断；不得作为根因证据（监工 v3 P0-3）"}
     out["reproduced_by"] = "eval_dev_threeway.py --split supp_bg"

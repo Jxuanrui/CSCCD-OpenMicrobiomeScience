@@ -80,6 +80,66 @@ def main(root: str | None = None):
           f" | D-mesh 一致 {out['agreement_D_mesh']}/50 | gold 类别 n={dict(cls_n)}")
 
 
+# ---- v3 审 P0-1：test / supp_bg 计分正式化（并入本脚本，不新建文件；wilson 复用）----
+
+def score_test(RE):
+    """test_100 三路计分（gold 直付版）→ eval_test_score.json 复现。"""
+    gold = {int(l.split("\t")[0]): int(l.split("\t")[1])
+            for l in (RE / "gold_test_100_user_direct.tsv").read_text().splitlines()[1:]}
+    pred_d = {r["idx"]: r["pred"] for r in map(json.loads, open(RE / "route_d_role_test_preds_full.jsonl"))}
+    pred_m = {int(l["idx"]): int(l["lookup_pred"]) for l in
+              map(json.loads, open(RE / "mesh_lookup_150_preds.jsonl")) if l["set"] == "test"}
+    assert set(gold) == set(pred_d) == set(range(51, 151))
+    out = json.loads((RE / "eval_test_score.json").read_text())  # 原有披露字段保留
+    d_ok = sum(pred_d[i] == gold[i] for i in gold)
+    m_ok = sum(pred_m[i] == gold[i] for i in gold)
+    out["reproduced_by"] = "eval_dev_threeway.py --split test"
+    assert out["D"]["correct"] == d_ok and out["mesh"]["correct"] == m_ok, "复现数字与落盘不一致"
+    print(f"test 复现：D {d_ok}/100、mesh {m_ok}/100（与落盘一致）")
+
+
+def score_supp(RE):
+    """补充集三路双口径计分 → eval_supp_score.json 复现（v3 审裁：full50 主口径）。"""
+    gold = {l.split("\t")[0]: int(l.split("\t")[1])
+            for l in (RE / "supp_bg_50_gold.tsv").read_text().splitlines()[1:]}
+    pd_ = {r["idx"]: r["pred"] for r in map(json.loads, open(RE / "supp_bg_d_preds.jsonl"))}
+    ps_ = {r["idx"]: r["pred"] for r in map(json.loads, open(RE / "supp_bg_ds_preds.jsonl"))}
+    pm_ = {r["idx"]: int(r["lookup_pred"]) for r in map(json.loads, open(RE / "supp_bg_mesh_preds.jsonl"))}
+    assert len(gold) == len(pd_) == len(ps_) == len(pm_) == 50
+    out = json.loads((RE / "eval_supp_score.json").read_text())
+    out["primary_calibration"] = "full50（v3 审终裁：预注册停止规则触发后 full50 为最终分析集；first30=交付批敏感性）"
+    out["reserve20_disclosure"] = {"background_n": 0, "target_n": 14, "endpoint_n": 6,
+        "reserve20_scores": {"mesh": 20, "D": 17, "DS": 16},
+        "note": "两口径差异完全来自 reserve20 段 mesh 全对（监工 v3 E6）——两口径并列呈现"}
+    for name, pr in [("D_glm_ark", pd_), ("DS_ark", ps_), ("mesh_frozen", pm_)]:
+        ok30 = sum(pr[i] == gold[i] for i in gold if int(i[1:]) <= 30)
+        ok50 = sum(pr[i] == gold[i] for i in gold)
+        assert out["scores"][name]["first30"]["correct"] == ok30
+        assert out["scores"][name]["full50"]["correct"] == ok50
+    # 背景类 CI（v3 审 P0-3 允许的表述数据）
+    bg = [i for i in gold if gold[i] == 1]
+    out["background_class_disclosure"] = {
+        "n": 3, "items": {i: {"D": pd_[i], "DS": ps_[i], "mesh": pm_[i],
+                              "wilson_D": wilson(1.0, 3), "wilson_DS": wilson(2/3, 3)} for i in bg},
+        "mesh_note": "0/3 为设计决定（predict 只输出 2/3/9），非测量结果",
+        "statement_rule": "描述性，不支持推断；不得作为根因证据（监工 v3 P0-3）"}
+    out["reproduced_by"] = "eval_dev_threeway.py --split supp_bg"
+    (RE / "eval_supp_score.json").write_text(json.dumps(out, ensure_ascii=False, indent=1))
+    print(f"supp 复现：D {out['scores']['D_glm_ark']['full50']['correct']}/50、"
+          f"DS {out['scores']['DS_ark']['full50']['correct']}/50、"
+          f"mesh {out['scores']['mesh_frozen']['full50']['correct']}/50；主口径已改 full50+披露已补")
+
+
 if __name__ == "__main__":
     import sys
-    main(sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("-") else None)
+    root, split = None, "dev"
+    for a in sys.argv[1:]:
+        if a.startswith("--split="):
+            split = a.split("=", 1)[1]
+        elif not a.startswith("--"):
+            root = a
+    if split == "dev":
+        main(root)
+    else:
+        RE_ = (Path(root) if root else Path(__file__).resolve().parents[2]) / "data/merged/route_eval"
+        (score_test if split == "test" else score_supp)(RE_)

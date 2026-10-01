@@ -128,52 +128,27 @@ def main():
         offline_reparse_and_score(RE); return
     base, key = os.getenv("ARK_BASE_URL"), os.getenv("ARK_KEY")
     assert base and key, "需 ARK_BASE_URL/ARK_KEY（项目根 .env）"
-
-    rows = [json.loads(l) for l in open(RE / "route_d_role_test_input_v2.jsonl")]
-    assert len(rows) == 100
-    preds: dict[int, int] = {}
-    raw_log = []
-    batch, B = 0, 3
-    while batch * B < len(rows):
-        items = rows[batch * B:(batch + 1) * B]
-        idxs = [r["idx"] for r in items]
-        if all(i in preds for i in idxs):
-            batch += 1; continue
+    eng_rows = [json.loads(l) for l in open(RE / "route_d_role_test_input_v2.jsonl")]
+    raw_f = open(RE / "cross_family_ds_raw.jsonl", "a", encoding="utf-8")
+    done_batches = {json.loads(l)["batch"] for l in open(RE / "cross_family_ds_raw.jsonl")}
+    B = 3
+    for b in range((len(eng_rows) + B - 1) // B):
+        if b in done_batches:
+            continue
+        items = eng_rows[b*B:(b+1)*B]
         text, err = None, None
         for attempt in range(3):
             try:
                 text = call_api(base, key, items); break
             except Exception as e:
                 err = str(e)[:120]; time.sleep(1.5 * (attempt + 1))
-        raw_log.append({"batch": batch, "idx": idxs,
-                        "raw_output": (text or "")[:500], "error": err,
-                        "retries": attempt, "ts": datetime.now(timezone.utc).isoformat()})
-        if text:
-            preds.update(parse_answers(text, idxs))
-        if (batch + 1) % 5 == 0:
-            print(f"[{batch+1}/{(len(rows)+B-1)//B}] 已得 {len(preds)}/100", flush=True)
-        batch += 1
+        raw_f.write(json.dumps({"batch": b, "idx": [r["idx"] for r in items],
+                                "raw_output": (text or "")[:500], "error": err},
+                               ensure_ascii=False) + "\n")
+        raw_f.flush()
         time.sleep(0.3)
+    print(f"[online] raw 落盘完成——计分请用 --offline（监工 cf2/v3：在线不解析不写 preds）")
 
-    missing = [r["idx"] for r in rows if r["idx"] not in preds]
-    if missing:
-        print(f"[warn] 未解析到 {len(missing)} 条：{missing}（见 raw_log 人工核对）")
-
-    out = RE / "cross_family_ds_preds.jsonl"
-    out.write_text("\n".join(json.dumps({"idx": i, "pred": preds[i]}) for i in sorted(preds)) + "\n")
-    (RE / "cross_family_ds_raw.jsonl").write_text(
-        "\n".join(json.dumps(r, ensure_ascii=False) for r in raw_log) + "\n")
-    meta = {"file": out.name, "n": len(preds), "missing": missing,
-            "model": MODEL, "family": "DeepSeek（非 GLM）", "channel": "火山方舟 Coding plan（用户提供 key，仅存 .env）",
-            "temperature": 0, "thinking": "disabled（reasoning_tokens=0 实测）",
-            "input_file": "route_d_role_test_input_v2.jsonl",
-            "input_sha256": "sha256:56d6d4d048ee28db85909002eeecb678fbdf3b6cb8d876104a9694313abc682",
-            "system_prompt_sha256": "sha256:" + hashlib.sha256(SYSTEM.encode()).hexdigest(),
-            "note": "gold 于复核前已定版可见——本复核性质=独立第二意见（非盲评）；D 预测先于 gold 锁定不受影响",
-            "generated_at": datetime.now(timezone.utc).isoformat(),
-            "output_sha256": "sha256:" + hashlib.sha256(out.read_bytes()).hexdigest()}
-    (RE / "cross_family_ds_preds.meta.json").write_text(json.dumps(meta, ensure_ascii=False, indent=1))
-    print(json.dumps({k: meta[k] for k in ["n", "missing", "output_sha256"]}, ensure_ascii=False))
 
 if __name__ == "__main__":
     main()

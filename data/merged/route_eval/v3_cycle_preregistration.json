@@ -1,0 +1,59 @@
+{
+ "cycle": "v3",
+ "created_at": "2026-10-02T04:43:48.769031+00:00",
+ "purpose": "语料扩容(①)+context修复(③)合并为同一数据周期v3，只物化一次",
+ "user_authorization": "T1 2026-10-02 用户批示「按监工建议执行 T1」",
+ "corpus_expansion": {
+  "target": "从 76,108 篇扩至 ~130,000 篇",
+  "source": "PubTator 3.0（12 疾病域+radar 增量）",
+  "model": "glm-5.3-flash @ coding plan",
+  "old_pmids_policy": "不重新分类（防断言漂移）",
+  "new_pmids_only": true,
+  "tier_b_pass_line": 0.85,
+  "food_regression_check": "原 Food 59/60 样本重判不退步"
+ },
+ "context_fix": {
+  "dimensions": [
+   "anatomical_site",
+   "disease_subtype"
+  ],
+  "current_scores": {
+   "anatomical_site": "6/8",
+   "disease_subtype": "5/8"
+  },
+  "approach": "MeSH 解剖词表驱动（替代手写词表）+中心词约束泛化",
+  "mesh_source": "NLM MeSH 2026（data/sources/nlm-mesh-desc/ 已登记）",
+  "mesh_version_lock": "2026",
+  "sample_n": 50,
+  "seed": 20261010,
+  "pass_threshold": "每个修复维度盲标取值正确率>=0.85",
+  "stop_rule": "1 轮（新周期不继承旧计数）",
+  "exclusions": "排除 v1/v2 周期全部 assertion_id"
+ },
+ "threshold_alignment": {
+  "old_report_threshold": 0.8,
+  "preregistered_threshold": 0.85,
+  "fix": "已改为读 PRE_REGISTERED_GATES 常量",
+  "requires_double_signature": true
+ },
+ "incremental_update_policy": {
+  "real_time": false,
+  "actual": "radar->staging->三关制->按批发布"
+ },
+ "visualization": {
+  "approach": "Streamlit 内嵌 MVP",
+  "upgrade_path": "不够再升 G6"
+ },
+ "user_participation": {
+  "T1": "已签字（6项拍板+预注册+ark key+PAT待更）",
+  "T2": "盲标一次（③两维+①新TierB合表）",
+  "T3": "v3物化授权+放行v2上C1/C2重建"
+ },
+ "invariants": [
+  "v2 assertion_id 在 v3 全保留或逐条列差异",
+  "Food 59/60 不退步",
+  "B4 拆两步各出 diff 归因",
+  "消费者启动时断言输入哈希==serving manifest",
+  "写入 data/merged 须走 write_guard"
+ ]
+}

@@ -561,3 +561,25 @@ All rules validated in real study (Food-Pathway-Phage campaign). Includes: sampl
 - 3 项机检（Span norm/Batch completion/Comparability Gate）为写死 PASS，待改真实计算
 - LightRAG 问答索引因环境损坏待重建
 - GitHub PAT 缺 workflow scope，CI src/** 触发路径待恢复
+
+## v1.3.1 (2026-10-02) — T1 优化轮（语料扩容启动+可视化升级+项目清理）
+
+### 新增
+- **C1 RotatE 自包含实现**（`src/05_analysis/rotate_embed.py`）——纯 PyTorch，零 PyKEEN 依赖，避免 torch 1.13 版本冲突
+- **C3 交互式网络图**（`kg_browser.py` 第 5 个 Tab）——pyvis 驱动，支持拖拽/缩放/悬停详情/键盘导航
+- **B3 全量重跑启动**（89,404 篇 ark/DeepSeek，~48h 后台）——B2 关口通过（90% test_100）
+
+### 变更
+- `kg_browser.py`：数据源从 legacy `data/merged/` 切换到 `candidate_v2/`；预测文件改读 `rotate_predictions.tsv`
+- `classify_relations.py`：API 端点改为 ARK/DeepSeek（BIGMODEL coding plan 在 test_100 上仅 54%，不通过）
+
+### 移除（→ docs/archive 或 data/archive）
+- `link_prediction.py`（旧版 PyKEEN，被 `rotate_embed.py` 替代）
+- `neo4j_import.py`（旧版导入器，被 `neo4j_materialize.py` 替代）
+- `data/staging/food_v6_*` / `food_v7_*` / `food_sampling*`（Food 校准中间产物，已收口）
+- 全部 `__pycache__/` + `.pytest_cache/`
+
+### 已知问题
+- B3 全量重跑预计 ~48 小时（因 staging 覆盖事故，全量而非增量）
+- CI `src/**` 触发路径待 PAT workflow scope
+- context 精度 anatomical_site/disease_subtype 两维仍为"未验证"状态

@@ -22,7 +22,7 @@ from pathlib import Path
 import requests
 
 ROOT = Path(__file__).resolve().parents[2]
-INPUT = ROOT / "data" / "pubtator" / "articles.jsonl"
+INPUT = Path(os.environ.get("KG_INPUT", str(ROOT / "data" / "pubtator" / "articles.jsonl")))
 OUTPUT = ROOT / "data" / "staging" / "llm_relations.jsonl"
 NAMES_CACHE = ROOT / "data" / "raw" / "taxon_names_cache.json"
 NAMES_DMP = ROOT / "data" / "raw" / "names.dmp"
@@ -755,8 +755,9 @@ def main():
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--resume", action="store_true")
     args = ap.parse_args()
-    key, base = os.getenv("OPENAI_API_KEY"), os.getenv("OPENAI_BASE_URL")
-    model = os.getenv("OPENAI_MODEL", "glm-5.3")
+    key = os.getenv("ARK_KEY") or os.getenv("OPENAI_API_KEY")
+    base = os.getenv("ARK_BASE_URL") or os.getenv("OPENAI_BASE_URL")
+    model = os.getenv("ARK_MODEL", "deepseek-v4-1-flash-260910")
     if not key or not base:
         raise SystemExit("请设置 OPENAI_API_KEY 和 OPENAI_BASE_URL")
 

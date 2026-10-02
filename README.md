@@ -48,7 +48,7 @@ Knowledge_Graph/                  ← 唯一项目路径（main 分支）
 │   ├── 02_pubtator/             ← PubTator 语料拉取
 │   ├── 03_llm_relation/         ← LLM 关系分类（含 v7 确定性否决）
 │   ├── 04_merge_qc/             ← 合并+质检（含 provenance 回填）
-│   ├── 05_analysis/             ← 多跳查询/社区检测/链接预测
+│   ├── 05_analysis/             ← 多跳查询/交互式图谱/社区/RotatE 嵌入
 │   ├── 06_qa/                   ← LightRAG 问答（待环境修复）
 │   ├── 07_capability/           ← 能力层（write_guard/release_gate/review_prep/safe_clean）
 │   ├── 07_monitor/              ← 定时审计（kg_audit.sh，crontab 每 30 分钟）

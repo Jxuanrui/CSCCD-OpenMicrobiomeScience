@@ -24,3 +24,4 @@ var/exec_registry/registry.json
 
 # 评测中间产物（含 AI 审计细节，不入库）
 data/merged/route_eval/
+.venv-lightrag/

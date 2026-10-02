@@ -17,7 +17,7 @@ import pytest
 
 KG_MERGED = Path(os.environ.get(
     "KG_MERGED_DIR",
-    "/data/LYteamwork/JiXuanRui/Project/Knowledge_Graph/data/merged"))
+    "./data/merged"))
 
 pytestmark = pytest.mark.skipif(
     not (KG_MERGED / "relation_assertions.tsv").exists(),

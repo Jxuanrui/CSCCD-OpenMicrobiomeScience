@@ -79,7 +79,7 @@
 
 **口径修正（2026-09-24）**：以上结果证明的是"**已在多 runtime / client path 下验证 portability**"——runtime/Agent execution（standalone / dsh / OpenCode）与 protocol reference client（MCP Inspector）分属不同层，不合并为"4 runtime"。
 
-**未实证（B 类）**：Claude Code / WorkBuddy / ZCode MCP 挂载——已安装但未实际挂载测试。**不外推为"任何 Agent 天然兼容"。**
+**未实证（B 类）**：MCP 客户端 / WorkBuddy / MCP 客户端 MCP 挂载——已安装但未实际挂载测试。**不外推为"任何 Agent 天然兼容"。**
 
 ---
 

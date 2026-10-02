@@ -18,12 +18,12 @@
 | Food 精度 | **59/60**（两轮盲标合并） |
 | context 精度 | **9/12 维过线**（≥85%），2 维未验证（6/8、5/8 明示），2 维未评测 |
 | 溯源完备 | source_id 六源 100% / retrieved_at = registry / knowledge_layer 两枚举 |
-| 治理 | G0-G7 全关口闭环，13 份监工审报告，write_guard 授权键全部核销 |
+| 治理 | G0-G7 全关口闭环，13 份独立审查报告，write_guard 授权键全部核销 |
 
 ## 发布三关制（所有发布必须通过）
 
 1. **机检**：`release_gate_check.py` 全过（预注册门禁常量，测试锁定）
-2. **监工审**：阶段关口审核（只审不干，否决权）
+2. **独立审查**：阶段关口审核（只审不干，否决权）
 3. **用户授权**：明确批示后执行，授权键一次执行即核销
 
 ## 版本线说明
@@ -40,7 +40,6 @@ Knowledge_Graph/                  ← 唯一项目路径（main 分支）
 ├── HARNESS_ARCHITECTURE_V1.md   ← 架构约束文档（最高约束）
 ├── status.sh                     ← 执行健康核验（统一入口）
 ├── .env                          ← 密钥（gitignored，600 权限）
-├── .claude/agents/supervisor.md ← 监工人格定义
 ├── .github/workflows/            ← CI（mra-tests.yml）
 ├── .githooks/pre-commit          ← secret 扫描钩子
 │
@@ -73,7 +72,7 @@ Knowledge_Graph/                  ← 唯一项目路径（main 分支）
     ├── seed/                    ← 策展源 TSV
     ├── staging/                 ← LLM 中间结果
     ├── registry/                ← Source Registry + write_authorizations
-    ├── logs/                    ← 运行日志 + 13 份监工审报告
+    ├── logs/                    ← 运行日志 + 审计记录
     ├── backups/                 ← 快照/worktree 备份
     └── rag/                     ← LightRAG 索引（待重建）
 ```

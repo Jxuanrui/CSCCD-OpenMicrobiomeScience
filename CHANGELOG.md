@@ -547,10 +547,10 @@ All rules validated in real study (Food-Pathway-Phage campaign). Includes: sampl
 - **知识内容管线全链闭环**：role gold 双尺评测（用户盲标 199 条）→ 规则修复（amod 修饰过滤/endpoint 值域/解剖形容词停用表）→ 跨家族复核（DeepSeek 82%）→ 预注册两轮评测（Food 59/60；context 9 维过线+2 维未验证明示+2 维未评测）
 - **provenance 四列真值回填**：merge_qc 收尾内联回填（根因修复）+ candidate_v2 真值落库（六源/retrieved_at/knowledge_layer 20840/20840）
 - **背景病补充集**：图谱断言池 190 条→50 条盲标（D 3/3 vs mesh 0/3 背景类）
-- **发布三关制**：机检（38 PASS）→ 监工审（13 份报告）→ 用户授权（write_guard 键核销）
+- **发布三关制**：机检（38 PASS）→ 独立审查（13 份报告）→ 用户授权（write_guard 键核销）
 
 ### 变更
-- **双终端→单开发模式**：KG_zcode 与 Knowledge_Graph-mra worktree 已删除，服务器唯一路径 `/data/LYteamwork/JiXuanRui/Project/Knowledge_Graph`
+- **双终端→单开发模式**：辅助开发分支 已删除，服务器唯一路径 项目根目录
 - **serving 从冻结基线（4,304 断言）切换到 candidate_v2（5,742 断言/12,015 节点/20,840 边）**
 - **数据范围**：剔除 1,167 个孤立种子节点（690 药物+443 疾病等无关联节点未入图）
 - crontab/status.sh 全部改指主目录

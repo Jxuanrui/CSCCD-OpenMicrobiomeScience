@@ -1,6 +1,6 @@
 # Production-readiness Review — Scientific Research Harness v1.1.0 candidate
 
-评审日期：2026-09-24（用户裁决启动）｜评审对象：`dev/zcode-mra` @ B4.1+B3 之后
+评审日期：2026-09-24（用户裁决启动）｜评审对象：`dev/governance` @ B4.1+B3 之后
 基线：**447 passed / 2 skipped**（含 B1–B5、B4.1、production hardening 全部用例）
 
 评审问题：**当前 Harness 能否安全、稳定、可控地进入真实持续使用？**

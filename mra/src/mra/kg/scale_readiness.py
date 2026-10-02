@@ -260,7 +260,7 @@ def generate_scale_readiness_report(merged_dir: Path) -> dict:
 if __name__ == "__main__":
     merged = Path(os.environ.get(
         "KG_MERGED_DIR",
-        "/data/LYteamwork/JiXuanRui/Project/Knowledge_Graph/data/merged"))
+        str(Path(__file__).resolve().parents[4] / "data" / "merged")))
     report = generate_scale_readiness_report(merged)
     print(json.dumps({
         "cost_baseline": report["cost_model"]["baseline"],

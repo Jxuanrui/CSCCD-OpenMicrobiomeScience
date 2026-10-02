@@ -12,7 +12,7 @@ Harness**：为通用基础模型提供**知识、工具、记忆、治理、证
 可靠执行专业科研任务的 Harness。
 
 **模型可以替换。** Harness 不绑定 GPT / Claude / Gemini / Qwen / DeepSeek /
-ZCode / Claude Code / OpenCode / WorkBuddy 中的任何一个；任何支持
+MCP 兼容客户端 中的任何一个；任何支持
 CLI / MCP / API 的 Agent 客户端都应能调用 Harness 能力。
 
 **Harness 架构原则（最高约束）：**
@@ -32,7 +32,7 @@ CLI / MCP / API 的 Agent 客户端都应能调用 Harness 能力。
 
 | 层 | 定义 | 当前实现 | 成熟度 |
 |---|---|---|---|
-| **L0 Model Interface** | ZCode / Claude Code / OpenCode / WorkBuddy / 任意 MCP 客户端 | 实测：ZCode（CLI 驱动全程）；MCP 通道（mcp_server，8 工具） | H3 |
+| **L0 Model Interface** | 任意 MCP 兼容客户端 | 实测：MCP 兼容客户端（mcp_server，8 工具） | H3 |
 | **L1 Harness Core** | context assembly / memory / planning / tool orchestration / state management | research/loop（planner_fn 注入、state_digest 紧凑摘要、meta_review、session 断点续跑、白名单派发）；记忆为会话级 | H3（缺跨会话 workspace 记忆） |
 | **L2 Knowledge Layer** | Local / Live / Method Knowledge | KG 快照（curated A 18913 + llm B 88）+ KnowledgeStore（16 条，12 条方法规则）+ litread（EXTERNAL_LIVE 全 provenance）+ Router MVP + Gap Detector | **H4-min** |
 | **L3 Tool Layer** | R / Python / bioinfo tools / MCP tools / external APIs | R 治理沙箱（rtools+gate）、atlas、litread、vecstore；kg/tools TOOL_SPECS（JSON Schema）先例；exec_registry（论文工具卡） | H3（无统一 tool registry） |

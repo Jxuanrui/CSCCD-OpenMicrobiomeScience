@@ -1,6 +1,6 @@
 #!/bin/bash
 # KG 定时审计（只读巡检）；API Key 从项目根 .env 读取（已 gitignore）
-KG_ROOT="/data/LYteamwork/JiXuanRui/Project/Knowledge_Graph"
+KG_ROOT="$(cd "$(dirname "$0")/../.." && pwd)"
 [ -f "$KG_ROOT/.env" ] && set -a && source "$KG_ROOT/.env" && set +a
 LOG="$KG_ROOT/data/logs/kg_audit_$(date +%Y%m%d).log"
 STAGING="$KG_ROOT/data/staging/llm_relations.jsonl"

@@ -58,7 +58,7 @@ def call_llm(system_prompt: str, user_content: str) -> str:
 
 def _call_claude(system_prompt: str, user_content: str,
                  model: str = "claude-sonnet-4-6") -> str:
-    """Claude API（Anthropic SDK 优先，claude CLI 兜底）。"""
+    """LLM API 调用（Anthropic SDK 优先，CLI 兜底）。"""
     try:
         import anthropic
         kwargs = {"api_key": ANTHROPIC_API_KEY}
@@ -75,7 +75,7 @@ def _call_claude(system_prompt: str, user_content: str,
     except ImportError:
         pass
     except Exception as e:
-        print(f"[analyze] Claude SDK error: {e}", file=sys.stderr)
+        print(f"[analyze] LLM SDK error: {e}", file=sys.stderr)
 
     # 回退 claude CLI
     try:
@@ -87,9 +87,9 @@ def _call_claude(system_prompt: str, user_content: str,
         if result.returncode == 0:
             return result.stdout.strip()
     except Exception as e:
-        print(f"[analyze] Claude CLI error: {e}", file=sys.stderr)
+        print(f"[analyze] LLM CLI error: {e}", file=sys.stderr)
 
-    return "[ERROR: Claude unavailable]"
+    return "[ERROR: LLM unavailable]"
 
 
 def _call_gemini(system_prompt: str, user_content: str, model_key: str) -> str:

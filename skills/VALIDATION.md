@@ -7,17 +7,17 @@
 
 | 端 | 状态 | 说明 |
 |---|---|---|
-| ZCode（GLM harness） | ✅ 通过 | 结构 23/23；运行时实跑 microbiome-kg 全部命令（多跳查询/预测表/审核表） |
-| Claude Code | ✅ 通过（2026-09-19 用户执行清单验证） | 开放标准原生支持 |
+| MCP 兼容客户端（GLM） | ✅ 通过 | 结构 23/23；运行时实跑 microbiome-kg 全部命令（多跳查询/预测表/审核表） |
+| MCP 兼容客户端（Anthropic） | ✅ 通过（2026-09-19 用户执行清单验证） | 开放标准原生支持 |
 | Codex / 其他 | 📋 开放标准预期兼容 | Codex 官方支持 Agent Skills（developers.openai.com/codex/skills）；未实测 |
 
-## Claude Code 一键验证清单
+## MCP 兼容客户端（Anthropic） 一键验证清单
 
 ```bash
 cd $KG_HOME
-# 1) 让 Claude Code 发现项目技能（复制到项目级技能目录，仅本项目生效）
+# 1) 让 MCP 兼容客户端（Anthropic） 发现项目技能（复制到项目级技能目录，仅本项目生效）
 mkdir -p .claude/skills && cp -r skills/* .claude/skills/
-# 2) 在 Claude Code 中依次执行：
+# 2) 在 MCP 兼容客户端（Anthropic） 中依次执行：
 #    a. /microbiome-kg  → 问："Faecalibacterium prausnitzii 与哪些疾病相关？"
 #       预期：调用 graph_analysis query 返回扇出表（Neo4j 无关，纯本地）
 #    b. /microbiome-kg  → 问："链接预测给出哪些 T2D 相关假设？"

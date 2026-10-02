@@ -6,9 +6,9 @@
  "corpus_expansion": {
   "target": "从 76,108 篇扩至 ~130,000 篇",
   "source": "PubTator 3.0（12 疾病域+radar 增量）",
-  "model": "glm-5.3-flash @ coding plan",
-  "old_pmids_policy": "不重新分类（防断言漂移）",
-  "new_pmids_only": true,
+  "model": "deepseek-v4-1-flash-260910 @ ark coding plan",
+  "old_pmids_policy": "全部重新分类（因 staging 覆盖事故，用户批准方案 2）",
+  "new_pmids_only": false,
   "tier_b_pass_line": 0.85,
   "food_regression_check": "原 Food 59/60 样本重判不退步"
  },
@@ -55,5 +55,18 @@
   "B4 拆两步各出 diff 归因",
   "消费者启动时断言输入哈希==serving manifest",
   "写入 data/merged 须走 write_guard"
- ]
+ ],
+ "incident_disclosure": {
+  "date": "2026-10-02",
+  "what": "B3 试点批（--limit-pairs 500）意外覆盖 staging/llm_relations.jsonl（73K→500 行）",
+  "cause": "classify_relations.py 默认写 OUTPUT=staging/llm_relations.jsonl，试点未重定向输出路径",
+  "impact": "旧 LLM 分类记录丢失（17K 篇的 ok/no_relation/error 全部丢失）；candidate_v2/Neo4j 不受影响",
+  "recovery": "方案 2 全量重跑（用户确认 2026-10-02）——89,404 篇全部用 ark/DeepSeek 重新分类"
+ },
+ "model_evaluation": {
+  "glm_coding_plan": "54% test_100（FAIL）——推理模式干扰+格式漂移",
+  "ark_glm_flash": "68.6% @ 35/100 覆盖（FAIL）——输出格式不稳定",
+  "ark_deepseek": "90% @ 90/100（PASS）——唯一通过 B2 门",
+  "decision": "B3 使用 ark/DeepSeek（用户批准同模型换 Provider 方案测试后，因 GLM API 输出不稳定而放弃）"
+ }
 }

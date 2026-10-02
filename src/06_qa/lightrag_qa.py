@@ -58,10 +58,12 @@ def build_rag():
     from lightrag import LightRAG
     from lightrag.base import EmbeddingFunc
     from lightrag.llm.openai import openai_complete_if_cache
-    base, key = os.getenv("OPENAI_BASE_URL"), os.getenv("OPENAI_API_KEY")
+    base = os.getenv("BIGMODEL_API_BASE") or os.getenv("OPENAI_BASE_URL")
+    key = os.getenv("BIGMODEL_KEY") or os.getenv("OPENAI_API_KEY")
     model = os.getenv("RAG_LLM_MODEL", "glm-5.3")  # flash 偶发空响应，默认主模型
     if not base or not key:
-        raise SystemExit("请设置 OPENAI_API_KEY / OPENAI_BASE_URL")
+        if not base or not key:
+        raise SystemExit("请设置 BIGMODEL_KEY（.env）或 OPENAI_API_KEY / OPENAI_BASE_URL")
 
     async def llm_func(prompt, system_prompt=None, history_messages=None, **kw):
         # 上游端点偶发空响应/429（与批量任务共享 key 时会撞并发上限），统一退避重试。

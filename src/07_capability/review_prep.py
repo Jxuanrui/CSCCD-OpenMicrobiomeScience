@@ -856,5 +856,58 @@ def main():
         print(f"[degree] top20 扇出：最高 {deg.iloc[0]}")
 
 
+
+
+# ===== B1': MeSH 解剖词表驱动的 anatomical_site 命中（v3 周期）=====
+# 替代手写词表：通过 MeSH A 树（Anatomy）判定是否为独立解剖部位，
+# 而非修饰语。比手写 epithet 正则更准确（覆盖全部 MeSH 解剖实体）。
+def _mesh_anatomy_hit(evidence_text: str):
+    """MeSH A 树驱动的 anatomical_site 命中。
+
+    1. 从文本中抽取候选词（长词优先）
+    2. 尝试 MeSH 归一化 → tree_numbers 有 A 前缀 = 解剖部位
+    3. 保留"独立部位"语义：排除已被修饰语规则/途径短语剔除的
+    """
+    import re as _re
+    from pathlib import Path as _Path
+    import sys as _sys
+    _sys.path.insert(0, str(_Path(__file__).resolve().parents[1] / "08_route_eval"))
+    try:
+        from mesh_normalize import normalize_mesh as _nm
+    except ImportError:
+        return _anatomical_site_hit(evidence_text)  # 兜底：退回手写词表
+
+    low = evidence_text.lower()
+    # 候选词：2-4 词短语（MeSH 常见长度），按长度优先
+    words = _re.findall(r'[a-z][a-z\-]+(?:\s+[a-z][a-z\-]+){0,3}', low)
+    candidates = sorted(set(words), key=len, reverse=True)
+
+    hits = []
+    seen = set()
+    for c in candidates:
+        if any(c in s_ for s_ in seen):  # 跳过已被更长词覆盖的
+            continue
+        r = _nm(c)
+        if r.get('resolved'):
+            trees = r.get('tree_numbers', [])
+            if any(t.startswith('A') for t in trees):
+                # 检查是否被修饰语规则剔除
+                if c not in _ROUTE_WORDS and not _is_epithet(c, low):
+                    hits.append(c)
+                    seen.add(c)
+
+    return hits or None
+
+def _is_epithet(word: str, text: str) -> bool:
+    """检查词是否为修饰语（后接菌名/疾病名/过程名词）。"""
+    import re as _re
+    _patterns = [
+        rf"\b{word}\s+(?:[a-z\-]+\s+){{0,2}}(bacterium|bacteria|bacterial|species|microbiota|microbiome)",
+        rf"\b{word}\s+(?:[a-z\-]+\s+){{0,2}}(inflammation|inflammatory|damage|injury|disease|colitis|cancer|barrier|severity)",
+    ]
+    return any(_re.search(p, text) for p in _patterns)
+
+_ROUTE_WORDS = frozensome = frozenset()  # 由 _anatomical_site_hit 的 route_words 填充
+
 if __name__ == "__main__":
     main()

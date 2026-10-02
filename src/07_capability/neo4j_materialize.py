@@ -11,6 +11,7 @@
 import csv
 import json
 import os
+import pandas as pd
 import time
 import uuid
 from pathlib import Path
@@ -18,7 +19,8 @@ from pathlib import Path
 from neo4j import GraphDatabase
 
 ROOT = Path(__file__).resolve().parents[2]
-MERGED = ROOT / "data/merged"
+import os
+MERGED = Path(os.environ.get("KG_MERGED_DIR", str(ROOT / "data/merged")))  # D1：可指 candidate_v2
 EXECUTION_ID = f"EX-neo4j-materialize-{uuid.uuid4().hex[:8]}"
 
 

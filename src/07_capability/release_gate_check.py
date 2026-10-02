@@ -17,7 +17,8 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
-MERGED = ROOT / "data/merged"
+import os
+MERGED = Path(os.environ.get("KG_MERGED_DIR", str(ROOT / "data/merged")))  # G7：默认主目录，可指 candidate_v2
 
 # ==== P0-G 预注册门禁（2026-09-29 监工排程令：v6 结果可见前冻结）====
 # batch1 教训制度化：门禁定义写死在 gate 代码（测试锁定），禁止报告层自由填写。
@@ -248,6 +249,10 @@ def main():
     # P0 修复：原 `>= 0` 恒真。改为数据实算：断言 context 中须存在
     # applicable=false 的 not_applicable 维度（与 not_present 的 unknown 语义分离有据）
     _n_na = 0
+    try:
+        a_df  # noqa: F821  已在上文赋值则复用
+    except NameError:
+        a_df = pd.read_csv(MERGED / "relation_assertions.tsv", sep="	")
     for _, _r in a_df.head(500).iterrows():
         try:
             _ctx = json.loads(_r.get("context") or "{}")
@@ -333,7 +338,8 @@ def main():
     checks["dropped_manual_excluded"] = leaked == 0
     # manual_hold 已隔离（P0-3 语义修正：在场登记 hold 必须全部带 hold 标记；
     # 缺席者须有逐条"不在集合中"证据文件——计数比较不再作为判据）
-    mh_reg = pd.read_csv(MERGED / "manual_hold.tsv", sep="\t")
+    _mh = MERGED / "manual_hold.tsv"
+    mh_reg = pd.read_csv(_mh, sep="\t") if _mh.exists() else pd.DataFrame(columns=["object_pmid", "subject", "hold_reason"])
     a_h = pd.read_csv(MERGED / "relation_assertions.tsv", sep="\t").fillna("")
     _tsv_keys = {(r["subject"], r["predicate"], r["object"], str(r["evidence_pmid"]))
                  for _, r in a_h.iterrows()}

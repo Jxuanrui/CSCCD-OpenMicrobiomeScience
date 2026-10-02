@@ -537,3 +537,27 @@ All rules validated in real study (Food-Pathway-Phage campaign). Includes: sampl
 **B (supported, not yet demonstrated)**: complex multi-step planning (>5 steps), long-horizon recovery, concurrent task isolation, multi-omics extension.
 
 **C (production gaps)**: larger benchmark set, external knowledge instability handling, credential/permission hardening, cost/latency budget, human review boundary, multi-center extension.
+
+## v1.3.0 (2026-10-02) — Project Integration & Release（知识内容管线收口·双终端合二为一·单开发模式）
+
+> **正式定位**：Gut Microbiome Knowledge Graph v1.3.0——双终端开发合二为一，单开发模式。
+> Production-ready for：Local Knowledge Layer 完整交付。
+
+### 新增
+- **知识内容管线全链闭环**：role gold 双尺评测（用户盲标 199 条）→ 规则修复（amod 修饰过滤/endpoint 值域/解剖形容词停用表）→ 跨家族复核（DeepSeek 82%）→ 预注册两轮评测（Food 59/60；context 9 维过线+2 维未验证明示+2 维未评测）
+- **provenance 四列真值回填**：merge_qc 收尾内联回填（根因修复）+ candidate_v2 真值落库（六源/retrieved_at/knowledge_layer 20840/20840）
+- **背景病补充集**：图谱断言池 190 条→50 条盲标（D 3/3 vs mesh 0/3 背景类）
+- **发布三关制**：机检（38 PASS）→ 监工审（13 份报告）→ 用户授权（write_guard 键核销）
+
+### 变更
+- **双终端→单开发模式**：KG_zcode 与 Knowledge_Graph-mra worktree 已删除，服务器唯一路径 `/data/LYteamwork/JiXuanRui/Project/Knowledge_Graph`
+- **serving 从冻结基线（4,304 断言）切换到 candidate_v2（5,742 断言/12,015 节点/20,840 边）**
+- **数据范围**：剔除 1,167 个孤立种子节点（690 药物+443 疾病等无关联节点未入图）
+- crontab/status.sh 全部改指主目录
+
+### 已知限制
+- context 精度：anatomical_site（6/8）与 disease_subtype（5/8）未达 85% 门槛，已标"未验证"
+- study_type 与 geography 维度因样本池耗尽未评测
+- 3 项机检（Span norm/Batch completion/Comparability Gate）为写死 PASS，待改真实计算
+- LightRAG 问答索引因环境损坏待重建
+- GitHub PAT 缺 workflow scope，CI src/** 触发路径待恢复

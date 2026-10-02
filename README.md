@@ -2,261 +2,162 @@
 
 # Gut Microbiome Knowledge Graph（肠道菌群知识图谱）
 
+> **版本**：v1.3.0（2026-10-02 发布） ｜ **模式**：单开发 ｜ **路径**：本目录为唯一项目路径
+> **定位**：Scientific Research Harness 的 **Local Knowledge Layer**——存储研究开始前已有的治理知识，绝不存当前研究结果。
+
 全菌群领域知识图谱：整合策展数据库与文献抽取，支持"输入一个菌 → 拉出尽可能多的跨域关联信息（疾病/代谢物/基因/药物/食物/通路）"。
 
-## 执行规则（所有后续工作必须遵循）
+## 项目终态（v1.3.0 发布数据）
 
-1. 每一个步骤遵循：**执行计划概述 → 执行 → 执行后审核**；
-2. 优先调研市面上成熟、先进的项目，优先融合或借鉴，**不自己重头造轮子**；
-3. 新建路径、新建脚本、新建说明文档必须先报审，经同意后才可建立；全项目只维护本 README 一份说明文档，保持路径整洁；
-4. 先 MVP 验证流程稳定性，MVP 通过后立即全量执行；
-5. **GLM 模型分工（按官方定位，2026-09-25 起，MCP 通道已连通验证）**：
-   - **GLM5.3 承担规划**——用户沟通、需求梳理、任务拆解、方案取舍与审核判定，由 ZCode 主会话承担；
-   - **GLM5.3Flash 承担执行**——代码编写、脚本指令、数据处理等具体执行，优先经 MCP 通道（`glm_flash`）派发；不得把规划与执行角色混写进同一次调用；
-   - **通道边界**——Flash 通道只传文本：落盘与命令运行由主会话完成，报错回传 Flash 修复；一行小修、读文件确认等琐碎操作可主会话直执；
-   - **交付记录**——commit message 尾注注明执行模型：`Executor: GLM5.3Flash via MCP` 或 `Executor: 主会话直执`。
+| 维度 | 值 |
+|---|---|
+| Neo4j 节点 | **12,015**（6,272 实体 + 5,742 断言 + 1 MP） |
+| Neo4j 边 | **20,840**（全部带溯源四列真值） |
+| serving 快照 | **candidate_v2**（5,742 断言，2026-10-02 U3 授权切换） |
+| 语料 | 76,108 篇（PubTator 3.0，12 疾病域 + radar 增量） |
+| Food 精度 | **59/60**（两轮盲标合并） |
+| context 精度 | **9/12 维过线**（≥85%），2 维未验证（6/8、5/8 明示），2 维未评测 |
+| 溯源完备 | source_id 六源 100% / retrieved_at = registry / knowledge_layer 两枚举 |
+| 治理 | G0-G7 全关口闭环，13 份监工审报告，write_guard 授权键全部核销 |
 
-### 版本线说明（监工 B3）
+## 发布三关制（所有发布必须通过）
 
-CHANGELOG.md 只管 Harness 软件版本线；数据侧用快照号（snapshot_manifest）——两条线不合并，各管各的。
+1. **机检**：`release_gate_check.py` 全过（预注册门禁常量，测试锁定）
+2. **监工审**：阶段关口审核（只审不干，否决权）
+3. **用户授权**：明确批示后执行，授权键一次执行即核销
 
-### 发布三关制（2026-10-01 单开发模式确立，监工 B2）
+## 版本线说明
 
-任何发布（serving 切换/物化入正式库/版本发布）必须依次通过三关，各关落盘产物：
-1. **机检**：release_gate_check 全过（预注册门禁常量，测试锁定）——产物：机检报告 json；
-2. **监工审**：阶段关口审核（只审不干，否决权）——产物：data/logs/supervisor_*.md；
-3. **用户授权**：明确批示后执行，授权键一次执行即核销——产物：write_authorizations 状态+审计账本。
-单开发模式下监工关口只增不减（无对方互查，执行者自证风险由监工对冲）。
-
-### 监工与裁判规则（Claude Code 渠道，2026-09-29 用户批准生效）
-
-Claude Code（claude-opus-5-5，经 4router.net 中转，人格定义见 `.claude/agents/supervisor.md`）为项目监工与裁判：**只审不干**（仅 Read/Grep/Glob），不承担任何执行任务。阶段关口必审：①阶段完成 ②方向决策前 ③新数据入库/新路径创建前 ④打回整改复审；由执行者在项目根目录以 `claude -p --agent supervisor "<阶段总结与审核请求>"` 调用，裁决结论并入阶段汇报。质量门禁（阶段通过/release gate/物化放行）监工有否决权；方向级变更（技术路线/数据源/阶段目标/重要路径）监工仅建议权，最终由用户拍板；监工报告的"待用户拍板"表格必须原样呈报用户，不得截留；打回的成果必须整改后复审。监工输出的外部事实默认 candidate_research。
-
-## 安全事件与整改记录（2026-09-29 R1，详细版见 git 历史 docs/security 归档提交）
-
-- **事件**：Neo4j 密码明文进入 README（引入 0ef76ac@2026-09-25，历史重写后 32e44a3）；实际暴露面更大——实例 auth_enabled=false 且监听全网卡（9/25 所称"密码重置"从未生效，auth.ini 不存在）。
-- **处置**：密码轮换（新凭据仅存 .env，600 权限，gitignored）；auth 开启+监听收紧 127.0.0.1；README 脱敏；git filter-repo 全历史重写+双远端推送（**GitHub 内容级验证从未收到含密历史=零公开暴露**；含密残留 ref 已强推清理+裸仓 gc）；pre-commit secret 扫描钩子（.githooks，克隆后须 `git config core.hooksPath .githooks` 启用）。
-- **过程教训**：①容器入口点会把 NEO4J_PASSWORD 环境变量物化为 conf 明文——启动命令必须 `env -u NEO4J_PASSWORD`；②5.x 用户库存于 system 库，auth.ini 仅首次引导——轮换走了 system 库外科重建（旧库备份 data/neo4j-data/system_db_backup_20260929/，30 天后清理）。
-- **同日次生**：crontab 中另发现明文 API key（另一操作者注册的定时审计脚本），已移除并记录 data/logs/security/；该 LLM key 三处明文（/tmp/v6_food_cycle.sh、crontab、聊天历史），**建议用户在中转商处轮换**。
-- 重写前备份 bundle 已于 2026-09-29 经用户确认删除（前置：双远端全 ref 核查 + **GitHub 全历史隐私审计零暴露**——sk 类密钥 0/旧密码 0/.env 从未入库/身份仅 noreply 邮箱；唯一线索为 mra 配置中一条无凭据的公开云厂商端点 URL，不构成泄露）。push protection 用户暂缓开启，待本审计结论确认后再定。
-
-## 技术栈（已批准，2026-09）
-
-| 层 | 选型 | 依据 |
-|---|---|---|
-| 文献获取+实体归一 | PubTator 3.0 API（物种→NCBITaxon，疾病→MeSH，化学物→ChEBI，基因→NCBIGene） | 官方 AIONER 归一化，解决菌名混乱问题 |
-| LLM 关系分类 | LLM API（GLM/DeepSeek），仅做关系判定不做实体抽取 | 降低幻觉；数据公开可用 API |
-| 图存储 | Neo4j 5.x（Docker 本地部署） | 生态最全：Cypher/GDS/向量索引 |
-| Schema 定义 | LinkML | YAML 定义，可生成校验器 |
-| ETL 结构 | 参考 KG-Hub 的 download→transform→merge 三段式 | 成熟流水线模式 |
-| 分析 | Cypher 多跳查询 + Neo4j GDS + PyKEEN(RotatE) 链接预测 | 医学KG标准做法 |
-| 问答 | LightRAG 挂 Neo4j | 轻量、支持增量、成本低 |
-
-### 关键设计决策记录
-
-- **2026-09 Schema 借鉴**：节点体系沿用 MGMLink（PMC11865272）；流水线结构沿用 KG-Microbe（KG-Hub）；边级时间戳属性沿用 MedKGent（arXiv:2508.12393）。
-- **2026-09 Food/Drug 节点保留**（实证依据）：PubMed 文献量 菌群×饮食 10,339 篇、×药物 3,656 篇、×膳食纤维 4,121 篇；Maier 2018（Nature，~1000 药 × 40 菌株筛选）、PharmacoMicrobiomics、gutMDisorder（2,263 条含饮食干预）、Phenol-Explorer（500+ 多酚）、DMH-KG（npj Sci Food 2026，饮食-菌群 KG 先例）。结论：数据量充足，弱点在证据强度 → 用证据分级解决而非砍节点。
-- **2026-09 化合物统一到 ChEBI**：PubTator 化学物标注天然归一 ChEBI，食物成分（多酚/纤维成分等）进 Metabolite 节点，Food 节点仅代表整体食物，以 `contained_in` 边关联。
-- **2026-09 三级证据分级**：A = curated 实验/筛选数据（直接入主图）；B = LLM 抽取且 ≥2 篇支持（自动合并）；C = LLM 抽取且仅 1 篇（入图但标 pending_review，不参与下游分析与问答）。
+- `CHANGELOG.md`：只管 Harness 软件版本线（v1.2.0 → v1.3.0）
+- `snapshot_manifest.json`：数据快照号（candidate_v2），两条线不合并
 
 ## 目录结构
 
 ```
-Knowledge_Graph/
-├── README.md                  # 唯一说明文档（本文件）
-├── CHANGELOG.md               # 变更日志（Harness 软件版本线）
-├── HARNESS_ARCHITECTURE_V1.md / PRODUCTION_READINESS_REVIEW.md  # 约束/验收文档（根目录准入，2026-09-29 批准）
-├── .claude/agents/supervisor.md  # 监工与裁判人格定义（Claude Code 渠道）
-├── .githooks/pre-commit       # secret 扫描钩子（2026-09-29 R1 整改）
-├── .github/workflows/         # CI（mra-tests）
-├── docs/archive/              # 历史性材料（设计决策/评审归档，2026-09-29 迁入）
-├── skills/                    # Agent Skills（开放标准 SKILL.md，项目内生效）：microbiome-kg（图谱查询）+ 22 个自 MicrobeScholar 泛化迁移的科研流程技能
-├── schema/
-│   └── microbiome_kg.linkml.yaml
-├── src/
-│   ├── 01_seed_etl/           # BugSigDB/gutMGene/gutMDisorder/Maier2018 下载与转换
-│   ├── 02_pubtator/           # PubTator 3.0 多疾病域文献拉取与实体归一
-│   ├── 03_llm_relation/       # LLM 关系分类 v2（五层质控，实体对+句子 → 关系类型）
-│   ├── 04_merge_qc/           # staging 区、证据分级（B 自动并入/C 待审）、合并入主图（幂等）
-│   ├── 05_analysis/           # Neo4j 导入、多跳查询/社区检测（graph_analysis）、PyKEEN 链接预测（link_prediction）、Streamlit 浏览器（kg_browser）
-│   ├── 06_qa/                 # LightRAG 问答层（lightrag_qa）
-│   └── 07_capability/         # Capability 层：两层物化/release gate/preflight/consumer adapter
-├── mra/                       # Scientific Research Harness（治理操作系统：六层架构/能力 SDK/PROV/验证框架/测试）
-├── radar/、artifact_engine/    # 辅助模块（见各自目录）
-├── status.sh                  # 一键状态检查
-└── data/                      # 运行时数据（raw/staging/merged/graph 子目录由脚本创建；Neo4j 为 Apptainer SIF 部署）
+Knowledge_Graph/                  ← 唯一项目路径（main 分支）
+├── README.md                     ← 本文档（唯一说明文档）
+├── CHANGELOG.md                  ← 版本历史（软件版本线）
+├── HARNESS_ARCHITECTURE_V1.md   ← 架构约束文档（最高约束）
+├── status.sh                     ← 执行健康核验（统一入口）
+├── .env                          ← 密钥（gitignored，600 权限）
+├── .claude/agents/supervisor.md ← 监工人格定义
+├── .github/workflows/            ← CI（mra-tests.yml）
+├── .githooks/pre-commit          ← secret 扫描钩子
+│
+├── src/                          ← 知识内容管线（Python）
+│   ├── 01_seed_etl/             ← 策展源 ETL（Maier/BugSigDB/gutMGene/gutMDisorder/KEGG）
+│   ├── 02_pubtator/             ← PubTator 语料拉取
+│   ├── 03_llm_relation/         ← LLM 关系分类（含 v7 确定性否决）
+│   ├── 04_merge_qc/             ← 合并+质检（含 provenance 回填）
+│   ├── 05_analysis/             ← 多跳查询/社区检测/链接预测
+│   ├── 06_qa/                   ← LightRAG 问答（待环境修复）
+│   ├── 07_capability/           ← 能力层（write_guard/release_gate/review_prep/safe_clean）
+│   ├── 07_monitor/              ← 定时审计（kg_audit.sh，crontab 每 30 分钟）
+│   └── 08_route_eval/           ← 路由评估（role gold/mesh_normalize/cross_family/c2e）
+│
+├── mra/                          ← MRA 子系统（Agent 平台/治理框架）
+│   ├── src/mtra/                ← 核心模块（kg/knowledge/web/eval）
+│   ├── tests/                   ← 测试（含 mra/tests/kg 契约测试）
+│   ├── knowledge/               ← 知识源接入（EuropePMC 等）
+│   └── radar/data/daily/        ← radar 增量数据（crontab 写入）
+│
+├── radar/                        ← Meta-SeuBiomed（radar 主模块）
+├── artifact_engine/              ← 文献工件引擎（classifier/extractor/providers）
+├── schema/                       ← LinkML schema（microbiome_kg.linkml.yaml）
+├── skills/                       ← 23 个 Agent Skills（微生物组科研全流程）
+├── docs/archive/                 ← 历史文档归档（7 份，不再维护）
+│
+└── data/                         ← 数据（gitignored）
+    ├── merged/candidate_v2/     ← 发布数据（serving 源，444 保护）
+    ├── pubtator/articles.jsonl  ← 语料（76,108 篇）
+    ├── seed/                    ← 策展源 TSV
+    ├── staging/                 ← LLM 中间结果
+    ├── registry/                ← Source Registry + write_authorizations
+    ├── logs/                    ← 运行日志 + 13 份监工审报告
+    ├── backups/                 ← 快照/worktree 备份
+    └── rag/                     ← LightRAG 索引（待重建）
 ```
 
-## 流水线
+## 核心流水线
 
 ```
-[种子层] curated DBs ──ETL──┐
-                             ├─→ 04 合并/证据分级 → Neo4j 主图 → 05 分析/问答
-[文献层] PubTator3.0 → LLM 关系分类 ──→ staging ──┘
+策展源 ETL（5 源）──┐
+                    ├──→ merge_qc ──→ candidate_v2 ──→ Neo4j 物化 ──→ serving
+PubTator 语料 ──→ LLM 分类 ──┘         (provenance     (guard_write    (三关制
+                                        四列真值)        + 清库重建)     发布)
 ```
 
-节点 7 类：Microbe(NCBITaxon) / Disease(MeSH) / Metabolite(ChEBI) / Gene(NCBIGene) / Drug(RxNorm) / Food / Pathway(KEGG)。
-关系及证据属性详见 `schema/microbiome_kg.linkml.yaml`。
+## 技术栈
 
-## MVP 范围与验收标准（已批准）
+| 层 | 选型 | 依据 |
+|---|---|---|
+| 文献获取+实体归一 | PubTator 3.0 API | 官方 AIONER 归一化（物种→NCBITaxon/疾病→MeSH/化学物→ChEBI/基因→NCBIGene） |
+| LLM 关系分类 | LLM API（GLM/DeepSeek），仅做关系判定不做实体抽取 | 降低幻觉；数据公开可用 API |
+| 图存储 | Neo4j 5.x（Docker 本地部署） | 生态最全：Cypher/GDS/向量索引 |
+| Schema 定义 | LinkML | YAML 定义，可生成校验器 |
+| ETL 结构 | KG-Hub download→transform→merge 三段式 | 成熟流水线模式 |
+| 分析 | Cypher 多跳查询 + Neo4j GDS + PyKEEN(RotatE) 链接预测 | 医学 KG 标准做法 |
+| 问答 | LightRAG 挂 Neo4j（待环境修复） | 轻量、支持增量、成本低 |
 
-- 范围：Maier 2018、BugSigDB 物种级子集、gutMGene 三表、gutMDisorder Literature-based Disorder_Health；PubTator 已获取 423 篇 IBD/菌群文章；Neo4j Apptainer 导入和单菌多跳查询已验证。
-- 验收：① 结构化 ETL 可重跑；② 标准 ID 覆盖率达到当前数据源可用范围；③ 主图重复三元组=0；④ 单菌多跳查询 <5s；⑤ Neo4j 清洁重导入后计数与 TSV 一致。
-- LLM 文献增强是独立验收项：候选必须是 Microbe→Disease/Metabolite/Gene；需完成 30 对人工准确率抽检（准确率≥80%、方向准确率≥80%、API成功率≥95%）后，才允许全量 LLM 执行。
+## 关键设计决策
 
+| 决策 | 依据 |
+|---|---|
+| 三级证据分级 | A=curated 直接入图，B=LLM ≥2 篇自动，C=单篇 pending_review |
+| provenance 四列 | source_id/retrieved_at/version/knowledge_layer，merge_qc 收尾内联回填 |
+| 预注册门禁 | 85% 精度线、迭代 ≤2 轮、种子预锁定，防事后选口径 |
+| write_guard | 授权键+execution_id+审计账本，一次执行即核销 |
+| 双终端→单开发 | worktree 已删除，唯一路径，crontab/status.sh 全部指向主目录 |
+| 化合物统一到 ChEBI | PubTator 标注天然归一 ChEBI，食物成分进 Metabolite，Food 节点仅整体食物 |
+| 食物成分→ChEBI/食物整体→Food | `contained_in` 边关联 |
 
-### 数据源许可与引用声明
+## 已知限制与待办
 
-- **KEGG**（Pathway 节点与 Gene→Pathway 边）：经 rest.kegg.jp 获取，依其许可**仅限学术用途**（Kanehisa Laboratories）。本图谱及后续论文使用属学术场景，引用 Kanehisa M 等, KEGG 数据库相应版本；对外商用服务前需重新评估或替换为 Reactome（CC BY 4.0）。
-- **PubTator 3.0 / PubMed / NCBI Taxonomy**：公开学术 API，按各自服务条款使用。
-- **BugSigDB / gutMGene / gutMDisorder / Maier 2018**：按原论文与数据仓库许可引用。
+| 优先级 | 事项 | 说明 |
+|---|---|---|
+| 🔴 | 论文方法章节 | 所有数字已定版，可直接引用 |
+| 🟡 | 2 维未验证修复 | anatomical_site/disease_subtype——下周期新预注册+新方法 |
+| 🟡 | LightRAG 索引重建 | 环境损坏（numpy/jax 冲突），需独立 venv |
+| 🟡 | CI src/** 触发 | PAT 缺 workflow scope |
+| 🟢 | 3 项写死 PASS 改真实计算 | Span norm/Batch completion/Comparability Gate |
+| 🟢 | 语料扩至 13 万篇 | 等论文+Food 收口后 |
 
+## 执行规则
 
-## 协作开发规范（GitHub 多人模式，2026-09-21 起）
+1. **修改 src/ 前**必须在 README 进展日志中注明
+2. **API 密钥**只走 `.env`（gitignored），永不入 git/crontab
+3. **data/merged 写入**须过 write_guard 闸门（授权键+execution_id+审计账本）
+4. **不可逆操作**（删除/覆盖）先备份、再报审、后执行
+5. **进程操作**按精确 PID，禁宽匹配 kill
 
-- **主仓库**：https://github.com/Jxuanrui/CSCCD-OpenMicrobiomeScience （`main` 为受保护基线；内网另有私有归档 remote `internal-archive` 存完整运维历史）
-- **分支模型（轻量，小团队）**：每人各自开发分支（如 `dev/zcode-agent`、`dev/<名字>`），main 不设强制审查；**小变更直接合并推送，里程碑批量变更走 PR 作为变更记录**（自查后即可合并）。三条铁律：①小步提交、里程碑当天合并，分支寿命不过夜于里程碑；②推送前先 `git pull --rebase`；③任何直推 main 前确认工作树干净
-- **克隆与数据**：`git clone https://github.com/Jxuanrui/CSCCD-OpenMicrobiomeScience.git` 后，`data/` 不入库——由管线再生或从共享数据区 `ln -s`（长任务/写 data/ 的批量运行只在指定生产检出发起）
-- **秘钥纪律**：所有凭据（LLM Key、NEO4J_PASSWORD）仅经环境变量注入；任何文件出现明文即视为事故，立即作废轮换
-- **本地依赖**：Python 3.10+（pandas/networkx/neo4j/pykeen/streamlit/lightrag-hku 等，见各脚本 import）；节点 ID 体系与管线详见上文章节
+## 安全事件与整改记录（2026-09-29 R1）
 
+详见 git 历史 docs/security 归档提交。要点：Neo4j 密码明文入 README（已轮换+历史重写+零暴露）；crontab 明文 API key（已移除+key 作废）。
 
-### 双终端并行开发守则 v2（2026-09-29 强化，基于 4 次实际干扰教训）
+## 进展日志（摘要）
 
-**独立检出**：AI-1（ZCode 终端）使用 `git worktree` 独立检出（`/data/LYteamwork/JiXuanRui/Project/KG_zcode`），主目录留给 AI-2。**任何一方不得在对方检出中切分支。**
+<details>
+<summary>点击展开完整日志（按时间倒序，仅保留关键节点）</summary>
 
-**src/ 变更通知**：修改 `src/` 下任何文件前，必须在 README 进展日志或 commit message 中注明，并确保不影响另一终端正在运行的进程（classify/merge 等在启动时加载代码，运行中的进程不受后续代码修改影响，但新启动的进程会加载新代码——两终端须知晓对方正在运行什么）。
+- 2026-10-02 **U3 三合一执行完毕——项目完整交付**。⑦发布授权+serving 切换 candidate_v2+worktree 删除（唯一路径落地）。冒烟验证全绿。
+- 2026-10-02 **G7 复审 C1-C3 闭环**。图中直查 hold=0/MP 哈希一致/README 如实披露。38 PASS。
+- 2026-10-02 **G7 打回 P0×5 整改**。重物化（5742 断言/hold 隔离 0）+哈希三口径一致+hold 按 ID 核验。
+- 2026-10-01 **G5 收口**。补标 4 判定+四项拍板+scispaCy 书面评估（0/5 必须句法，不引入）。
+- 2026-10-01 **G5 第 2 轮**。Food 30/30=100%；context 9 维过线；2 维未过（stop_rule 2/2 用尽）。
+- 2026-10-01 **C2b-e 全链**。三规则先红后绿+冻结 v4+全量重算+两轮抽样（3 次作废）。
+- 2026-10-01 **G0-G3 四关口**。Q 轨/合入/P2 溯源真值/P3 对账/归因。4 键核销。
+- 2026-10-01 **对方返工核验**。占位值坐实→打回；loader 改造+重物化+测试清零→G7 通过。
+- 2026-10-01 **项目整合启动**。用户决策：叫停对方→返工→整合合二为一。
+- 2026-09-30 **阶段二（路由评估）定版**。test_100 D 84%/mesh 86%（D 正式·跨家族升级获批）。
+- 2026-09-30 **跨家族复核**。DeepSeek 82%（temperature=0），D 结论获独立第二意见支持。
+- 2026-09-30 **test_100 全量预测锁定**。100 条先于 gold 锁定（盲评前提成立）。
+- 2026-09-30 **Phase 2 知识可审计化**。provenance 四列 100% 归因+knowledge_layer 五枚举+vecstore 层标识。
+- 2026-09-29 **安全事件 R1 整改**。密钥轮换+git 历史重写+pre-commit secret 扫描。
+- 2026-09-25 **首次完整闭环**。producer→evidence→governance→release→materialization→snapshot→consumer。
 
-**历史干扰记录（防止重犯）**：
-1. 切分支×3：导致对方工作目录文件突变 → 改用 worktree 隔离
-2. crontab 明文 Key：安全违规 → 密钥只走 .env
-3. 未经 PR 直提 main：绕过审查 → 走 dev→main 流程
-4. 运行中修改抽取 prompt：可能使对方评估失效 → **修改 src/ 前先通知**
+</details>
 
-**data/ 共享**：批量写入（LLM/merge/导入）只从 AI-1 的 worktree 发起；AI-2 只读。process 操作按精确 PID，禁宽匹配 kill。
+---
 
-
-## Local Knowledge Layer 架构原则（v1.0，2026-09-24 审计批准）
-
-**四层知识边界**：Local Knowledge（本 KG：研究前已知，策展库+已发表文献）/ Live Knowledge（NCBI/UniProt 等实时查询，经 curation 方可升级入 Local）/ Research Evidence（当前研究结果，存 AgentLab，只许引用 KG 实体，禁止写 KG relation）/ Method Knowledge（方法学知识）。
-
-**铁律**：①当前研究 association/effect size/p value/atlas result/findings 永不自动入图；②模型预测可提名候选但不得自动提升知识等级（prediction→candidate_evidence→manual review→approved）；③无登记来源的知识不得进入 KG（`data/registry/source_registry.tsv` 闸门已装于 merge_qc，未登记来源拒绝合并）；④一切 relation 必须可回答"来自哪里"（Phase 2 补全 source_id/retrieved_at/version/curator）。
-
-## KG Capability Adapter 架构裁决（2026-09-25，评估通过）
-
-**结论**：不替换现有 Adapter，不引入新 KG 平台——**Scientific Harness 是治理操作系统**，成熟项目作为底层组件吸收（W3C PROV 思想统一 provenance / SHACL-like validation 分流 merge_qc 人工规则 / Neo4j 仅作 materialization 层 / MLflow-OpenLineage 式运行追踪）。项目定位与传统 KG 的差别：不是"把知识放进去"，而是**证明每一条知识为什么可以被放进去**。
-
-路线（v0.1 已落地 provenance/resource/governance/conflict/snapshot 五件）：
-- **P0** 当前 snapshot 发布：pending/conflict/high-degree 抽检（`review_prep.py` 自动备表）→ 批准后 Neo4j materialization（`materialized_to_neo4j` 闸门）
-  - **conflict 语义重定义（2026-09-25 裁决）**：conflict ≠ error，conflict = knowledge context divergence signal。菌群高度异质（个体/人群/饮食/疾病阶段/宿主遗传/菌株/模型/测法），目标不是消除矛盾而是表示"该关系在什么条件下成立"——从 static association graph 升级 context-aware biological knowledge graph（论文级贡献点：relation aggregation → contextual knowledge representation）。六类 divergence taxonomy：ecological / host_population / strain / model / mechanism / true_conflict（仅同宿主·同病·同株·同条件·同终点仍反向，预计占比最低）。审阅表 v2：context_a/b + divergence_type + resolution_action（preserve_both_with_context / refine_entity / refine_relation / create_context_edge / manual_investigation）。Neo4j 远期建模升级：Relationship Instance 携带 {effect, context{host,disease_model,strain,population,diet,study_type}, evidence[PMID]}。发布指标以 Contextual resolution rate（context resolved / total divergence）替代 conflict rate。Review Phase v0.1 落地：taxonomy 定名（ecological_divergence / strain_resolution_divergence / experimental_model_divergence / mechanistic_layer_divergence / host_population_divergence / true_biological_conflict——判定门槛提高至同实体·同株·同宿主·同病境·同模型·同终点仍反向）；multi-label（primary+secondary）；新列 context_match_status（comparable/partially_comparable/incomparable）与 ontology_gap（结构化记录本体升级需求）。48 组 v0.1 标注：strain_resolution 23（含 FOOD 侧实体粒度 7——食物本体过粗而非模型差异，per 裁决案例3）/ ecological 14 / mechanistic 8 / model 3；multi-label 18；context_match 无一 comparable（29 incomparable + 19 partially）；true_conflict 0（不为平衡强行制造）；ontology backlog 29（species_to_strain 13、food_subtype 7、relation 粒度 8）；E.faecium 双标 strain+mechanism（裁决案例1）、A.muciniphila 纯 ecological 不动菌（案例2）。`contextual_divergence_summary.json` 为 snapshot 发布依据（P0 指标：classification/context/resolution completeness 均 1.0 + ontology backlog）。
-- **P1** Capability SDK 第一版（任何 pipeline 接入自动获得 provenance/resource/workspace/logging）
-- **P2** Provenance 标准化（Entity/Activity/Agent 映射至 W3C PROV）
-- **P3** Graph validation（SHACL-like：Edge 必备 source/retrieved_at/raw_hash/evidence，缺则 reject）
-- **P4** 扩量 56k → 13 万
-
-**明确排除**：GraphRAG 类（检索增强 ≠ 可信生产）、通用 KG 构建框架接管（其"文本→实体→关系→入库"链路缺少证据/治理/冲突/人工批准环节）。
-
-## 进展日志
-
-- 2026-09-15 骨架、README、LinkML schema 建立。
-- 2026-09-15 **MVP 种子 ETL 审核：通过**。Maier 2018 Supplementary Table 3 下载并解析成功：35 株菌、1,197 个药物、5,465 条 `sensitive_to` 边；标准 Taxonomy ID 归一率 100%（可识别菌名）；输出 `data/seed/seed_nodes.tsv`（1,230 节点）与 `data/seed/seed_edges.tsv`（5,465 条边）。
-- 2026-09-15 **MVP PubTator 审核：通过**。按 IBD+microbiome 检索 30 篇 PMID，PubTator BiocJSON 返回 27 篇；`data/pubtator/ibd_articles.jsonl` 已生成。发现 PubTator 返回的部分日期为未来日期（API 数据问题），后续统一使用文章元数据中的年份并加日期质量校验。
-- 2026-09-15 已验证：服务器 Docker socket 无当前用户权限，Neo4j 暂不能启动；已下载 Neo4j 5.26 tarball 与 OpenJDK 17 conda 环境作为本地无 Docker 备用方案。
-- 2026-09-15 **LLM API 连通与关系分类冒烟测试：部分通过**。使用 `（内部 LLM 中转端点 A，经环境变量注入，此处略）` 的 `glm-5.3` 模型，5 个实体对请求中 4 个返回可解析结果，1 个返回空/非 JSON；说明接口可用，但生产前需加入空响应重试与 JSON 修复策略。测试结果已写入 `data/staging/llm_relations.jsonl`。
-- 2026-09-15 安全记录：API Key 仅通过环境变量注入，未写入项目文件；该 Key 曾在聊天中明文发送，建议用户轮换。
-- 2026-09-15 **LLM 30 对 MVP 重跑：技术稳定性通过**。增加候选过滤、空响应/非 JSON 重试、备用模型切换后，30 对中 29 条成功（28 条主模型、1 条 fallback），成功率 96.7%；29 条 `no_relation`、1 条 `affects`。这批候选主要是 PubTator 摘要中 Chemical-Disease 共现，关系稀疏属于语料候选质量问题，不代表全领域关系密度。
-- 2026-09-15 **gutMDisorder 迁移与 Literature ETL：通过**。上传目录已从项目根目录移动到 `data/sources/gutMDisorder/`，未修改文件内容。首批使用 `gutMDisorder_v3_Literature-based_Disorder_Health.xlsx`，生成 1,319 节点（1,078 Microbe、241 Disease）和 4,201 条 abundance 方向边（increase 2,284 / decrease 1,917）。
-- 2026-09-15 **主图扩展与清洁重导入：通过**。新增 `modulates_host_gene`，gutMGene 重新转换；merge 脚本整合 Maier、BugSigDB、gutMGene、gutMDisorder，主图 5,616 节点、16,407 边、重复边 0。Neo4j 导入脚本现会先清空本项目隔离实例，重导入后实际计数与 TSV 一致（5,616/16,407），消除历史残留关系。`NCBITaxon:1304` 1–3 跳查询 0.0967 秒。
-- 2026-09-15 **LLM 30 对分片审核：部分通过**。显式注入 VPN 与 API 环境后，30 对中 24 条成功（20 主模型、4 fallback），6 条最终空/非 JSON；成功率 80%。结果出现 2 条 `alleviates`、1 条 `affects`，但候选仍包含非微生物 Species/Host（如 9606、10090），下一步需增加物种过滤（仅保留肠道微生物 taxonomy）和更强的输出格式约束后再扩大批量。
-- 2026-09-15 **并行推进批次**：BugSigDB 物种级清洗修正、gutMGene/gutMDisorder 公开入口探测、PubTator 500 批次扩展和 Neo4j 现状审计同步执行。gutMGene 前端可访问但 API 根路径及常见下载路径返回 404；gutMDisorder 官网受 TLS/网关限制，论文可访问；两者暂未写入主图。原始 103,52 条 gut 记录中，`k__/p__/c__/o__/f__/g__` 高阶分类记录被过滤，仅保留 `s__` 物种级记录；生成 913 个 Microbe、825 个 Disease 节点和 2,565 条 abundance 方向边（increased 1,369 / decreased 1,196），无 `k__` 等伪物种名称。与 Maier 合并后主图为 2,937 节点、8,030 边，重复边 0；Neo4j 重导入后单菌 `NCBITaxon:1304` 扇出 887 个结果、耗时 0.2191 秒。通过服务器 VPN 克隆 `waldronlab/BugSigDBExports`，解析 `full_dump.csv` 的 10,352 条 gut/body-site 记录，生成 3,294 个微生物节点、825 个条件节点、61,497 条 abundance 方向边；与 Maier 合并后主图为 5,318 节点、66,962 边，重复边为 0。审核发现当前导出中的部分 `MetaPhlAn taxon names` 含 `k__/p__/g__` 分类等级，不能直接作为物种名；下一步必须过滤分类等级并优先使用对应 NCBI Taxonomy ID/物种级记录，修正后再纳入正式主图。
-- 2026-09-15 **Neo4j + Apptainer MVP：通过**。使用轩辕专用域名 （内部镜像源域名，略） 拉取 `neo4j:5.26-community`，转换为 `data/neo4j-5.26-community.sif`；通过 VPN `VPN本地代理` 验证外网访问。为避免占用服务器已有 7474/7687 实例，使用隔离端口 HTTP 17474、Bolt 17687，Neo4j 5.26.30 启动成功。导入 1,230 节点、5,465 条边；以 `NCBITaxon:1304` 执行 1–3 跳扇出查询，返回 506 个跨域结果，耗时 0.3615 秒，低于 5 秒验收阈值。
-
-- 2026-09-16 **MVP 最终审核**：结构化主图链路通过（5,616 节点、16,407 边、重复边 0；Neo4j 实际 5,616/16,407；`NCBITaxon:1304` 1–3 跳 distinct 扇出 3,086 个节点）。脚本编译和 Schema YAML 校验通过。LLM 当前 staging 为 30 条（20 ok、4 ok_fallback、6 error），且最新 Microbe 中心 30 对验证因上游 Python 请求长时间阻塞而未完成；因此结构化全量可以开始，LLM 文献全量暂缓。
-- 2026-09-16 **LLM 阻塞根因定位与修复：通过**。根因：此前 Python 批处理运行于 ZCode 沙箱内，沙箱拦截 TLS（沙箱内所有 HTTPS 均报 `unexpected eof`，沙箱外同一 API 0.5s 响应），并非 API 不稳定。`classify_relations.py` 三项加固：① 逐条追加落盘+flush（超时终止不丢结果）；② `--resume` 断点续跑（跳过已成功对）；③ `Connection: close` 禁用代理 keep-alive 复用；④ `max_tokens` 180→1024（GLM-5.3 为推理模型，思维链占用预算导致正文 JSON 被截空）；⑤ 备用模型改 `glm-5.3-flash`（此前与主模型同名无意义）。所有 LLM 运行须在沙箱外执行。
-- 2026-09-16 **Microbe 中心 30 对 LLM 验证：API 稳定性通过**。成功率 30/30=100%（26 主模型 glm-5.3、4 fallback glm-5.3-flash；中途 1 对读超时经 `--resume` 重试成功），超过 ≥95% 门槛。主体 30/30 为 Microbe（客体 19 Disease + 11 Metabolite），宿主/非微生物污染 0。结果分布：19 no_relation、7 alleviates、3 affects、1 aggravates。人工准确率审核表已生成 `data/staging/manual_review_30.tsv`（11 条非 no_relation 在前，含原文与依据列，待人工判定对/错/方向错）；人工准确率 ≥80%、方向准确率 ≥80% 通过后方可启动 LLM 分片全量。
-- 2026-09-16 **结构化数据全量刷新：通过**。四个 ETL 全部确定性重跑（Maier 归一率 100%、BugSigDB 物种级 1,738 节点/2,565 边、gutMGene 1,927 节点/4,176 边、gutMDisorder 1,319 节点/4,201 边）→ merge 后主图 5,616 节点/16,407 边/重复边 0，与 MVP 审核基准完全一致 → Neo4j 清洁重导入实际计数 5,616/16,407 一致；`NCBITaxon:1304` 1–3 跳 distinct 扇出：无类别过滤 3,086（0.06s，与审核口径一致）、跨域类别过滤后 1,694（0.07s），均远低于 5s 阈值。11 条 LLM Tier-C 关系按政策仅入 `pending_review_edges.tsv`，未进主图。
-- 2026-09-16 **人工审核 30 对结论与根因修正**：审核判定 v1 结果存在实体命名缺失（subject 显示 taxid 数字）与因果主体混淆（"CD microbiotas"整体菌群效应绑定到单菌；AmEVs 功效跨句归给伴随菌 Bifidobacterium/Bacteroides）。事实修正：NCBITaxon:1496 实为 *Clostridioides difficile*（names.dmp 权威核实，PubTator 归一无误），判错结论仍成立但理由是主语绑定错误。调研确立 v2 五层质控方案（MINERVA 句子级候选 + Medaka 多数投票 + KaLLL/Microsoft provenance 自检 + 跨架构 judge + KGGen 两阶段思想；温度 0 投票退化为必改项）。
-- 2026-09-16 **LLM 管线 v2 全量运行：金标准回归通过**。`classify_relations.py` 重写为五层管线：L0 学名映射（names.dmp 缓存）+ 归一交叉校验（拦截 62 个不一致标注）+ 微生物域过滤（父链上溯 domain/superkingdom，仅细菌/古菌/微型真菌属；拦截 168 个植物/大型真菌标注——语料含食疗文献，PubTator 会把花椒/甘草/玉兰等植物标为 Species）+ 等级过滤（仅 species/genus，拦截 31 个）；L1 句子级候选（缩写保护切句 + 全局偏移定位，摘要级 281→句子级 225 对）；L2 few-shot 金标准 prompt（学名+原文提及+强负向约束+subject_mention 输出）；L3a 确定性校验（evidence 逐字子串、主语绑定词元/产物简称校验、predicate×类别兼容矩阵）；L3b 正向边 k=3@T=0.7 投票；L3c deepseek-v4-flash 跨架构 judge（含主语绑定复核）。结果：225 对 = 183 no_relation、20 正向存活（8 alleviates/9 produces/3 aggravates）、14 dropped_check、4 dropped_vote、3 dropped_judge（含 1 条 judge 正确拦截 LRRK2 帕金森≠继发性帕金森的实体错误）、1 error；API 完成率 99.6%。金标准回归：v1 错误发出的 7 条三元组（1678/816/1496 相关节点）全部被拦截为 no_relation，主体全部微生物域 species/genus 级，兼容矩阵零违例；41496520 的 239935×Colitis 在严格口径下 2/3 票 no_relation（作用主体为囊泡），该菌关系由其他 3 篇直接文献支持——精度优先于覆盖（MINERVA 同哲学）。审核表 `data/staging/llm_v2_review.tsv`（20 条 ok 按置信度降序，含 mention/evidence/votes/judge 列）。merge 刷新后 pending_review=20，主图不变（5,616/16,407）。运行时缓存新增 `data/raw/taxon_names_cache.json`、`taxon_ranks_cache.json`、`taxon_microbe_cache.json`（参照 rxnorm_cache 先例）。剩余改进项：4 条 dropped_judge/1 error 可换 judge 模型重试；正向边密度 8.9%（20/225）偏低，扩语料比调 prompt 更能提升产出。
-- 2026-09-16 **语料扩展与 v2 全量重跑：通过，首个 Tier-B 文献边自动并入主图**。① 路径清理：删除全部 `__pycache__`、废弃的 `docker/`（Docker 方案已被 Apptainer 替代）与损坏的 `data/raw/neo4j.tar.gz`；保留 `manual_review_30.tsv` 作为 v1 人工审核审计轨迹。② `fetch_pubtator.py` 重写为 9 疾病域检索（IBD/结直肠癌/代谢/肝/肠脑轴/心血管/自身免疫/感染/代谢物域），esearch 429 限流修复（串行+指数退避）；合并去重后 1,177 篇（旧 423 全保留），语料统一为 `data/pubtator/articles.jsonl`（旧文件已删）。③ v2 管线跑扩展语料：973 对句子级候选（415 taxid、256 个通过微生物域过滤；拦截非微生物 540/高阶 92/归一不一致 134），resume 复用 225 对既有结果仅新增 748 对。持续 6 并发下端点退化致 108 条 error，经 3 轮 3-worker 低并发回收收敛至 6 条（API 完成率 99.4%）；模型自创 predicate（causes/treats/reduces 等）改为确定性丢弃不再空耗重试。④ 终态：65 条正向存活（alleviates 25/produces 26/aggravates 10/biotransforms 3/consumes 1）、812 no_relation、66 dropped_check、16 dropped_judge、8 dropped_vote；judge 换架构补判：*E. coli*×Inflammation 找回、*L. johnsonii*×Liver Failure 被双架构 judge 一致否决（真实拦截）。金标准/矩阵/重复断言复验全部通过。⑤ `merge_qc.py` 实现跨文献 Tier-B 聚合（≥2 篇支持自动并入、实体节点幂等补齐）：*Faecalibacterium prausnitzii* produces Butyrates（3 篇独立支持）成为首条自动并入的文献边——生物学教科书级正确。主图 5,617 节点/16,408 边/重复 0，Neo4j 重导入一致、扇出 0.057s；pending_review=63（单篇 Tier-C）。审核表 `llm_v2_review.tsv` 更新为 65 条。⑥ 正向密度 6.7%（65/973）：语料规模与产出成正比，后续可按需扩至每域 500+。
-- 2026-09-16 **人工抽检校准（45 条）：通过**。严格知识粒度合格率 84.4%（38/45）、字面事实准确率 97.8%，均超 80% 门槛。三类系统性问题当日修复：① produces/biotransforms 混淆——prompt 严格区分规则 + judge 复核 + 确定性降级（同 pmid+主体转化句中出现产物名即降级 produces，精准命中 42461117 *P. distasonis* genistin→genistein 案例）；② cross-feeding 误判——回溯重判 28 条，*M. intestinale* 己酸案被精确 REFUTED（"仅示肠道 SCFAs 升高，未表明该菌自身产生"）；③ 种→属泛化——names.dmp 学名重链接（精确+缩写展开）+ "Comment on" 标题过滤。
-- 2026-09-16 **语料 500/域全量运行：通过，Tier-B 文献边规模化入图**。语料 1,177→3,120 篇（9 域×500 去重合并），句子级候选 3,112 对（827 taxid、519 微生物域通过；拦截非微生物 1,126/高阶 379/归一错配 256/重链接 292）。运行工程实录：4-worker 主跑 83% 处端点持续退化（11→2 对/分、error 357），增量快照无损停止、休息 10 分钟后 3-worker 续跑恢复（教训：`pkill -f` 模式串命中包装 shell 自身导致自杀，改用 TaskStop）；4 轮低并发回收 error 102→11，API 完成率 99.65%。终态 187 条正向存活（produces 81/alleviates 54/aggravates 37/biotransforms 13/consumes 1/affects 1，密度 6.0%）；金标准/纯度/矩阵/重复断言全部通过。**Tier-B 聚合 12 组自动入图**（6 组 ≥3 篇）：*F. prausnitzii* 产丁酸 ×6、*E. coli* 产 colibactin ×5、多种经典 SCFA 产生菌、*B. fragilis* aggravates 结直肠肿瘤 ×3——均为教科书级发现。主图 5,621 节点/16,419 边/重复 0，Neo4j 一致、扇出 0.057s；pending_review=160（单篇 Tier-C）。审核表 `llm_v2_review.tsv` 更新为 187 条。缓存新增 `taxon_relink_cache.json`。
-- 2026-09-17 **第二轮人工抽检（187 条中 3 错）与机制归因防线：通过**。3 条错误同根因——间接/介导机制被压扁为直接代谢谓词：① 41709439 *B. thetaiotaomicron* consumes Sulfates（实为硫酸酯酶对 mucin 的脱硫酸基修饰，非摄取游离硫酸盐）；② 42242077 *A. muciniphila* produces 5-HTP（"A.m-mediated production"为介导宿主产生，人工改判 affects）；③ 42352033 *A. muciniphila* biotransforms 胆汁酸（巴氏灭活后生元经宿主 FXR/FGF19 轴间接重塑，非活菌酶促）。修复三层：抽取/judge prompt 增加机制归因规则；确定性规则 `demote_indirect_mechanism`（后生元标记、脱硫酸基修饰→硬降级；主体锚定的介导模式 "X-mediated production"→机制感知 judge 仲裁，SUPPORTED 保留并加 flag）；数据层 3 条按人工判定修正。规则精化实录：初版"句中 mediat+produc 共现"规则误伤 4 条真事实（threonine-producing/colibactin-producing 等直接产出句式），改为主体提及锚定 ±60 字符窗口后 5/5 单测通过、零误伤恢复。终态 185 ok（produces 80/alleviates 54/aggravates 37/biotransforms 12/affects 2）、dropped_manual 2；Tier-B 12 组与主图（5,621/16,419）零影响。审核表 185 条（新增 flag_or_override 列）。
-- 2026-09-17 **阶段二图分析三件套：通过**。新增 `src/05_analysis/graph_analysis.py` 与 `link_prediction.py`（05_analysis 规划内功能，已报审）。① 单菌跨域多跳查询：`query --microbe` 按名称/ID 解析，1-k 跳无向 BFS + 路径谓词链 + 边级证据（tier/pmids/confidence），*F. prausnitzii* 2 跳扇出 1,129 邻居（Metabolite 57/Disease 41/Gene 189/Microbe 842），项目核心能力"输入一个菌拉出跨域关联"落地；② 图指标与 Louvain 社区（networkx，可复现）：4,531 连通节点/54 社区，语义清晰——社区1=CRC/肥胖-*E.coli* 轴（1,306 节点）、社区2=SCFA 代谢中心（butyrate/propionate/acetate+Bacteroides）、社区3=IBD/口腔病原簇、社区4=Maier 药敏簇（482 药）、社区6=*A.muciniphila*-胆汁酸模块；指标存 `data/merged/graph_metrics.json`；③ PyKEEN RotatE 链接预测（CPU，dim128/epochs200，train 14,777/test 1,642）：**H@10=0.505**，输出 200 条未观察 Microbe→Disease 预测（`link_predictions.tsv`，56 菌×48 病，方向均衡 101/99），抽样生物学合理（*Lachnospiraceae*↓T2D、*Lactobacillus*↓T2D、*Veillonella*↑龋齿等均与文献一致），全部标记 predicted 不入主图。工程记录：PyKEEN 1.11 需 TriplesFactory 输入与 `predict_target().df` 转换；GPU 驱动不匹配强制 CPU。发现的上游数据质量问题（待后续处理）：BugSigDB 条件词表含 "Diet"/"Age" 等非疾病概念及复合条件节点。
-- 2026-09-17 **T1 问答层 + T2a Pathway + T3 语料扩展（进行中）：部分通过**。① T2a KEGG REST Pathway ETL（成熟轮子，2 个 API 调用）：修复 conv 列序与 list/link 前缀差异后，235 个宿主基因映射 KEGG，产出 291 个 Pathway 节点 + 2,871 条 `participates_in` 边（Tier A）；merge 后主图 5,912 节点/19,290 边，Neo4j 一致，schema 七类节点已填六类（仅 Food 待补）。② T1 LightRAG 问答层（`src/06_qa/lightrag_qa.py`，lightrag-hku 成熟轮子 + 本地多语言嵌入 paraphrase-multilingual-MiniLM-L12-v2）：5,912 实体/19,290 关系以 custom KG 导入（不做二次抽取；存储用默认 JSON+NetworkX——Neo4j Community 单用户库限制，复用主图实例会污染）；`ainsert_custom_kg`/`aquery`/`QueryParam` 为 1.11 异步接口。验证结果：英文查询完全可用（产丁酸菌问题返回 18 菌清单逐条带证据等级+PMID，Tier A/B 混合；UC 丰度问题返回分组证据）；中文经查询预翻译+严格接地 prompt 后**安全但召回不稳**（代谢物问题可答，UC 问题诚实拒答"证据不足"——拒答优于幻觉，已用 system_prompt 接地约束拦住参数知识补白）。已知边界：MeSH 倒序实体名（"Colitis, Ulcerative"）的关键词匹配召回有随机性，待批量任务错峰后调 top_k/模式；与批量任务共享 API key 会撞 429 并发上限（已加统一退避重试）。③ T3 语料 2,000/域拉取完成：14,075 篇（4.5×），句子级候选 13,291 对（新处理 10,179 对），3-workers 过夜运行已启动（预计 ~18h，增量快照可断点续跑）。
-- 2026-09-17 **MicrobeScholar 吸收（C1 审计 + C2 执行）：环境迁移验收通过**。C1 审计结论：对方核心资产为 knowledge/ 双层知识结构（40 文献节点+721 概念+方法/工具索引，~20MB）、5,183 篇 IF≥5 语料（与我们的 14,075 篇仅重叠 325、净新增 4,858——质量过滤与疾病域语料近乎正交）、23 个技能（2 个已是 SKILL.md 目录形态）、3 个 conda 环境（7.4GB）；13GB 大头为内嵌环境与 pkgs 缓存。C2 执行（用户批准清单，单向复制不动源项目）：knowledge/ 全量、scored 语料 168MB、yml+**conda-pack 三环境包 2.6GB**（R/py/gpu，可重定位）、23 技能源件、4 个 ready 文献模块（含数据，~4.4GB）、验证脚本、docs/examples/tests、git bundle 归档 8.9MB——净吸收 ~7.5GB，全部落位 `data/sources/MicrobeScholar/`。**环境迁移验收**：microbiome_R 解包+conda-unpack 后 R 4.5.3/phyloseq/vegan 全部可用；PMID 35024588 主分析脚本实跑——数据加载/统计计算/首批图表（QPCR 图 PDF）均复现，中途修复：Windows setwd 改 FMT_HOME 环境变量、GBK 编码注入 read.csv 自动重试防护、数据平铺布局符号链接复原、KEGG 绝对路径改仓库等价文件、输出目录创建；一处数据子集分支（join 后空 OTU）为原数据特有边界，全图重放未完成（记录为已知边界，非迁移缺陷）。执行出口（E 轨）就此打通。
-- 2026-09-17 **C3 技能泛化迁移：23 个 Agent Skills 就绪（项目内生效）**。`skills/` 目录按 agentskills.io 开放标准（SKILL.md + frontmatter）建立，未安装到用户级目录（开发期不污染服务器）：① 新建 `microbiome-kg`（包装多跳查询/问答/预测三个 CLI + 证据分级引用规范）；② `microbiome-frontier`/`microbiome-paper-reader` 原已是目录形态，frontmatter 泛化（剥离 Claude 专有 model/allowed-tools 字段）+ 旧项目绝对路径重定向到吸收后资产位置；③ 其余 20 个平铺命令批量包装为技能目录。全部通过结构校验（name+description 齐备、零旧路径残留）。待办：双运行时实调验证（Claude Code + GLM harness 各跑一次 frontier/kg 技能）；MicrobeScholar 语料并入（等 T3 完成后 `fetch_pubtator --pmids` 拉取净新增 4,858 篇）完成后方满足对方项目删除门槛（清单 100% 处置 ✓、git bundle ✓、技能结构 ✓、语料并入待 T3、运行时验证待做）。
-- 2026-09-17 **T2c 词表清洗 + T4 浏览器 + 技能运行时验证（与 T3 并行，全部本地零 API）**。① 技能验证：按 `microbiome-kg` 技能字面指令实跑（*A. muciniphila* 1 跳 260 邻居、预测表可读），GLM harness 侧本地部分通过；② T2c：gutMDisorder 新增 `clean_condition` 确定性拆分（"A;B" 双联命名 + "MESH:*;D012345" 复合 ID 对齐拆分，保留携带有效 MeSH 的疾病侧；95 个复合节点消除、4,201→3,933 边），BugSigDB 增加非疾病概念黑名单（Diet/Age/Health；剔除 97 条伪疾病边），两边残留复核为 0——清洗后的 seed 将在 T3 完成后的统一 merge 落地主图；③ T4：`src/05_analysis/kg_browser.py`（Streamlit，复用 graph_analysis 函数，本地 TSV 驱动）：单菌扇出/社区/预测假设/Tier-C 待审四个页签，冒烟通过（127.0.0.1:8765）。
-- 2026-09-18 **T3 终局与根因闭环：API Key 额度耗尽（硬阻塞）；T2c 清洗落地主图**。T3 主跑完成：13,291 候选，S1/投票全部完成，但 judge 阶段遭遇额度耗尽——378 条新正向边被 ERROR 误判降级（终态 ok 185、dropped_judge 439、error 4,458），探查确认 `API_KEY_QUOTA_EXHAUSTED`：此前所有"端点退化"实为额度渐进限流，昨夜彻底耗尽。**需用户充值/换 Key 后执行回收**（439 条 ERROR-judge 补判 + 4,458 error 重跑，增量快照无损）。工程教训再录：pgrep/pkill -f 模式串会匹配探测命令自身 shell，须用字符类防自匹配（如 `classif[y]_relations`）。API 无关工作照常：统一 merge 落地 T2c 清洗——主图 5,846 节点/18,925 边（剔除 66 个伪疾病/复合节点），Tier-B 12 条（待回收后恢复至 ~43 组水平），Neo4j 一致、扇出 0.095s；MicrobeScholar 净新增 4,858 篇语料拉取启动（PubTator/NCBI 免费，不耗 LLM 额度）。
-- 2026-09-19 **E 轨闭环 spike：完成**。RotatE 200 条预测边 × 已吸收的 MicrobeScholar 721 篇概念文献命中测试：16/200（8%）实现菌+病共现（如 *Streptococcus*↑Depression、*Lachnospiraceae*↓NAFLD、*Roseburia*↓Pancreatitis），结果存 `data/merged/prediction_hits.tsv`。这 16 条为验证闭环首批候选（其来源文献可直接经 PubTator→LLM 管线升级为 Tier-B）。同时进行中的：回收第 2 步（1,719 error 重处理，ok 810/Tier-B 组 74 持续新高），自动收尾链挂载待触发。
-- 2026-09-19 **全量恢复+MicrobeScholar 融合收口：项目里程碑达成**。新中转（内部中转 B，限并发3）上完成：① 420 条 ERROR-judge 补判（ok 185→347）；② 18,906 篇全量恢复运行（16,412 候选，含 MicrobeScholar 4,831 篇新语料的净增候选）；③ 三轮 error 回收（4,458→收敛）+ 三轮补判收敛；④ E 轨 9 篇命中文献升级并入。**终态：审核表 948 条 ok 边（produces/alleviates/aggravates/biotransforms/consumes/affects 六类），Tier-B 组 86 个**，统一 merge 后主图 5,869 节点/18,997 边（T2c 清洗后词表），Neo4j 一致（扇出 0.057s），pending_review 为单篇 Tier-C。全链自动化验证：收尾链+升级链两级 watcher 无人工值守完成。**MicrobeScholar 删除门槛全部达成**：迁移清单 100% 处置、git bundle 归档、23 技能项目内就绪、语料并入且完成 LLM 判定、merge/Neo4j 终版——已于 2026-09-21 由用户执行删除，资产完整性验证通过（吸收 7.1GB + git bundle 归档 + 24 技能项 + 3 环境包均在我方项目内）。待办移交：终版审核表抽检（建议 30 条）、Claude Code 侧技能验证、可选的 Food 节点域扩展。
-- 2026-09-19 **第四轮人工校准（裁判层假阴性）落地 + 校准重审完成**。用户抽检 top-30 发现边本身大多成立、问题在裁判层系统性假阴性，五条校准准则已注入抽取与 judge 双端 prompt：①定语/同位语/背景从句中的事实性陈述受支持；②affects 弱谓词宽容（enhances/reduces/lowers 逻辑真包含）；③受控词表同义映射有效（SCFA↔Fatty Acids, Volatile、glycans↔Polysaccharides）；④实体粒度问题标注"实体抽取不规范"（如 Death→Pneumonia/Mortality）；⑤相关 vs 因果判据一致（risk factor 类不支持强因果谓词→NEI）。校准重审 421 条 dropped_judge：17 条假阴性翻转为 ok（ok 948→965、Tier-B 86→88，原裁决保留 judge_prior_verdict 供审计），其余维持原判。主图刷新后见 merge 输出。同期：语料扩量拉取完成 48,636 篇（12 域×5000 去重，Food 三域首战），待用户抽检终判后启动 v2 全量（将使用校准后 prompt）。
-- 2026-09-19 **抽检终判通过 + 跨 agent 技能验证闭环：MicrobeScholar 删除门槛正式达成**。用户对 top-30 风险排序抽检的终判：边级质量确认（≥85%，第四轮校准聚焦裁判层假阴性而非边错误，17 条误杀已翻转恢复）；Claude Code 侧按 VALIDATION.md 清单验证通过——技能三端状态：ZCode ✅ / Claude Code ✅ / Codex 官方支持文档化。**删除门槛全项达成**（迁移清单 100% 处置、git bundle 归档、23 技能三端验证、语料并入且判定完成、四轮人工校准闭环、merge/Neo4j 终版）——删除动作依约定由用户执行。同期双轨运行中：48,636 篇校准后全量（26,941 新对，~49h）+ 三基线评估。
-- 2026-09-21 **MicrobeScholar 源项目删除执行（吸收闭环终局）**：用户确认删除。删除前验证：我方项目内吸收资产完整（`data/sources/MicrobeScholar/` 7.1GB：knowledge 全量/语料/ready 模块/3 个 conda-pack 环境包/git bundle 全仓归档），23 技能在 `skills/` 正常，四轮校准与语料并入早已完成。项目融合正式收官——单一仓库 `Knowledge_Graph` 承载全部资产，GitHub 双分支同步运行。
-
-- 2026-09-25 **KG Capability Adapter v0.1 落地 + 架构评估通过**。观察报告暴露的接入缺口当日修复：记录级 provenance（56,629 篇回填，retrieved_at/raw_hash/source_version；未来日期 anomaly 435 条只标记不改值）；staging 执行信封字段（created_at/execution_id/capability_id/resource_ref，旧记录显式 backfill 标注）；ResourceUsage 兼容账本（data/registry/resource_usage.jsonl，凭据扫描同 mra 口径）；生产日志库 data/logs/（/tmp 禁用，收口链自动归档）；merge_qc 冲突契约（对立谓词 48 组双方保留 conflict_state/manual_review_required，禁自动入图）；snapshot manifest（内容 sha256 + source_registry 版本哈希 + materialized_to_neo4j=False 闸门——主图物化必须经 QC 与抽检）。批次收口链自动化（judge→日志归档→error 回收→merge→manifest→抽检备表，止步 Neo4j 前）；抽检表含冲突双方证据句并排（review_prep.py）。56,629 篇批次 judge 阶段运行中（S3 ~31%，预计当日完成）。
-
-- 2026-09-25 **conflict → contextual divergence 语义升级 + 48 组首轮标注**。裁决：保留 conflict_state 但重定义为知识情境分歧信号；六类 taxonomy 落地进 `review_prep.py` v2（context 提示词自动抽取 + divergence_type/resolution_action 列 + `divergence_annotations.tsv` 标注持久层——重跑不丢）。48 组首轮 AI 标注完成：ecological 14（A.muciniphila CAC 生态位、C.acnes 痤疮 vs UVB 防护）/ strain 14（E.faecium MMX、ETBF/NTBF、pks+ E.coli、MRE600——多数根因是 NCBITaxon 物种粒度过粗 → refine_entity）/ model 12（多为 LFS:FOOD 节点亚型粒度：氧化乳 vs 酸奶、咖啡 vs 山茶）/ mechanism 8（菌体 vs MV/上清/代谢物层级差）/ true_conflict 0（按裁决不预判）。发布门槛更新：materialization 前不要求 divergence=0，要求全部分类 + context 解释 + resolution 路径明确（Contextual resolution rate 口径）。
-
-- 2026-09-25 **Contextual Divergence Review Phase v0.1**。裁决执行：taxonomy 六类定名+multi-label（primary/secondary）+context_match_status+ontology_gap 四项 schema 升级进 `review_prep.py`（summary 自动输出，收口链随批次重生成且标注经 `divergence_annotations.tsv` 持久保留）；48 组重标注完成——关键结论：**context_match 无一 comparable**（全部 incomparable 或 partially_comparable），实证"大多数矛盾源于 context 缺失而非知识错误"；ontology refinement backlog 29 项（species→strain 13、food_subtype 7、relation 粒度 8）成为 P1 Capability SDK 后的本体升级工作清单；E.faecium 案例双标 strain+mechanism；A.muciniphila 保持纯 ecological（context-dependent function 教科书案例）。Neo4j 建模方向确认：Relationship Instance 携带 {effect, context{strain/host/model/diet/disease_stage/geography}, evidence[PMID], divergence{type,resolution}}。
-
-- 2026-09-25 **Contextual Review v0.2 + RelationAssertion 一等知识对象**。裁决十项落地：①taxonomy v0.2——strain_resolution 泛化为 **entity_granularity_divergence**（ontology_gap 指定维度：species_to_strain/food_to_subtype/未来 genus_to_species/disease_to_subtype 等，不为每类实体新增 class）；②mechanistic_layer 证据化——possible mechanism ≠ observed layer divergence，secondary 清空 5 组（E.faecium 两组全菌级仅株差、pks+ 为基因型、host_population 两组无显式人群证据）；③**evidence-aware context schema**——13 核心维度各 {value, status: explicit|inferred|unknown, source}，证据不足禁止补全、缺失显式 unknown；④**Comparability Gate**——关键维度（strain/host_species/disease/model/study_type/endpoint/intervention）全匹配才 comparable，任一 unknown → partially_comparable，已知不匹配 → incomparable；comparable 且反向才可 true_biological_conflict；⑤五类 context 指标（evidence availability / dimension coverage / explicit / inferred / unknown rate）；⑥**backlog 29/28 不一致定位与修正**——JSON 本正确（29），误在汇报分组口径；规范化分组后自洽：entity_granularity 23（species_to_strain 13 + food_to_subtype 8 + genus_to_speciesgroup 2）+ relation_granularity 6；⑦**RelationAssertion** 一等知识对象落地（Entity-HAS_ASSERTION→RelationAssertion-TARGET→Entity；assertion_id/predicate/direction/confidence/evidence/provenance{execution_id}/context/completeness/divergence）——canonical relation 仅为派生摘要，多 contextual assertion 共存、禁 majority vote 合并唯一方向，unresolved true conflict 不进 canonical summary。gate 实测：comparable=0 / partially=41 / incomparable=7（比人工标注更保守——关键维度 unknown 率 83.25%，evidence 句不足以承载 strain/model/study design 信息 → 全文/元数据富集成为后续明确工作）；assertion 级指标：evidence_availability 1.0 / dimension_coverage 16.75%。48 组重导出 + relation_assertions.tsv 4,284 条。P0 发布条件清单更新（物化前须：分类完备+解决路径完备+gate 实装+缺失显式表示+backlog 自洽+RelationAssertion schema+true conflict 不入 canonical+provenance 到 assertion 级）→ 达成后发布 **Context-aware Microbiome KG Snapshot v1**。
-
-- 2026-09-25 **v1-rc1 语义保护十项（A–J）落地（review_prep v0.5 + merge_qc G + adapter H/J）**。①**A 原子化**：assertion 单位 = subject+predicate+object+PMID+normalized span，直接遍历 ok 行（旧 best-per-key 索引漏 object 维度实丢 843 条，修复后 5,127 条；同 PMID 不同条件自然分行）；Atomicity QC 构造性 PASS（0 重复 ID、0 多 PMID）。②**B 内容寻址稳定 ID**：sha256(s·p·o·pmid·span)——修复原 Python hash() 进程加盐跨运行不稳定 bug；重跑 assertion 集哈希一致验证通过；execution_id 仅入 provenance。③**C unknown 细分**：每维 {value,status,source,applicable,unknown_reason}（in vitro 的 geography=not_applicable vs 人类队列未采样=not_present）；覆盖率分母改 applicable 维度（17.29%）。④**D gate 证据权限**：explicit/structured_metadata 才可确认 match/mismatch；inferred 只作 soft 不得升级 comparable（"inference 增加怀疑，不制造确定性"）；disease 由 object 实体身份改为 structured_metadata（inferred_rate 归零，诚实）。⑤**E 解剖部位维度**：+anatomical_site（gut/liver/skin/airway/periodontal…）+disease_subtype，共 15 维；anatomical 入 gate 关键维度（E.coli→inflammation 的肠/皮/系统假分歧防线）。⑥**F object 侧 gap**：粗粒度 MESH（D007249 炎症/D009369/D015179 肿瘤）→ inflammation_to_anatomical / cancer_to_specific_cancer，追加 22 组。⑦**G canonical=派生视图**：merge_qc 输出 relation_status（context_dependent 6 条）+ canonical_view=derived_summary，禁跨 context majority vote 恢复唯一方向。⑧**H/J manifest 冻结版本面**：kg_schema 1.0-rc1 + assertion/divergence/context/extractor/gate/ontology 六版本号 + annotation_set_hash + assertion_set_hash + context 五指标随 manifest + positioning="context-aware representation (NOT context-complete)"——未来区分数据变化 vs 表示规则变化。⑨**I 双 QC**：Atomicity QC（自动）+ Context Precision 抽样 40 条（explicit 值+来源句+待人工 yes/no）。v1 物化 Gate 十项条件：八项已满足（原子/稳定 ID/unknown≠match/inferred 不升级/解剖维度/object gap/canonical 派生/版本冻结），余两项人工：Context Precision QC 复核 + 整体抽检。**候选状态：Context-aware Microbiome KG Snapshot v1-rc1（未物化）**；unknown 82.71% 不是发布失败条件——known 有证据、unknown 诚实表达、缺失不被当作相同 context。
-
-- 2026-09-25 **v1-rc1 P0 收口（裁决十项执行完毕）**。①**disease 契约检查→发现并修复 target/context conflation**：原实现把 object 实体身份无条件复制进 context.disease（structured_metadata）——object=colitis ≠ 研究发生在 colitis 背景；修复为 host/background disease context（仅证据文本/研究元数据可填写，object 信息由 assertion.object 承载）。②**Gate Transition Report**（gate_transition_report.tsv，48 pair 三态机器可查）：v0.4 运行记录 41/7 → v0.5 39/9（D 规则+anatomical 维+applicable 驱动；v0.4 期 basis 未持久化——v0.5 起逐 pair basis 落列，教训记录）→ disease 修复后 **38/10**（post-fix 变化 3 对：817×D007249、1282×D009369 partially→incomparable，1352×D007249 incomparable→partially——含批次活数据漂移贡献，终态以收口链为准）。③**ontology backlog 统一台账**（ontology_backlog.tsv）：**51 unique = 手工注记 29 + object 侧派生 22，零重叠**；declared==unique 机器检查 PASS；最大单项 inflammation_to_anatomical 14——粗粒度炎症对象是最大本体缺口，与 E 维度判断一致。④span 规范化契约冻结 `norm/0.1-lowercase-ws-collapse`（小写+空白折叠；无 NFKC/标点/引用处理）+ 进程内 replay 自检（曾发现自检自身用截断列重算的 bug，修复为完整 span 重派生，PASS）。⑤Precision QC v2：assertion 级分层 66 条（explicit×14 维各≤4 + not_applicable 5 + not_present 5），precision≠coverage。⑥5,127 集合重 baseline（assertion_baseline.json）——注意批次 judge 持续降级中，中间态 4,4x 条，**终态以收口链 rerun 后重冻结为准，禁止混用**。⑦canonical 6 条 context_dependent 逐条验证 **全 VALID**（各含 ≥2 方向不同的 evidence-level assertions）。⑧⑨**15 项自动 release gate 全 PASS**（release_gate_report.json）；**⑩未物化**（materialized_to_neo4j=False）。剩余人工 gate：Context Precision QC + 整体抽检。
-
-- 2026-09-25 **批次终态收口完成（judge 全链结束）**。judge 终态：55,461 候选 → ok 4,450 / no_relation 40,548 / dropped_check 8,995 / dropped_judge 1,056 / dropped_vote 127 / error→回收后收敛 / dropped_manual 2（API 调用 28,165 次全程计入 usage 账本）。收口链自动执行：judge 完成（14:31）→ 日志归档 data/logs → error 回收（289 项重试，exit 0）→ merge。终态 snapshot **2026-09-25-v5**：6,627 节点 / 20,698 边 / pending 2,978 / 情境分歧 37 组（judge 终审使 48→37 收敛，全部有标注，completeness 1.0）/ canonical context_dependent 5 条全 VALID / **RelationAssertion 4,450 条**（atomicity PASS、replay 稳定、manifest 与 summary 哈希一致）/ gate 终态 comparable=0 · partially 27 · incomparable 10 / context 指标 evidence 1.0 · explicit 15.23% · unknown 84.77%（诚实边界）/ **ontology backlog 42 unique**（entity 36 + relation 6，declared==unique PASS）/ 15 项自动 release gate **ALL PASS**（release_gate_report.json）。未物化；剩余人工 gate：Context Precision QC（66 条）+ 整体抽检（124 条 pending sample + 37 组分歧审阅）。
-
-- 2026-09-25 **两个人工 gate 的 AI 一审完成（待人工终审）**。一审过程发现并修复三个真实 precision bug：① geography 词表 "population" 语义弱映射（4/4 样本误报，已移除）；② **context 抽取文本与存储 span 口径不一致**（抽取用 evidence+sentence 拼接、span 只取其一——统一为拼接基底，span 规范化契约 bump norm/0.2）；③ **子串匹配无词边界**（trans**late**d→disease_stage=late 假阳性簇，改词边界正则）。修复后终态：assertion 4,478 条（hash 重冻结）、gate partially 29/incomparable 8/comparable 0、context explicit 14.32%/unknown 85.68%、15 项自动 gate 保持 ALL PASS。**Context Precision 一审**：66 条（56 explicit），YES 50 / no_semantic 5（early-life、日式料理国别、综述元文本 after——词表级语义错位，非抽取错误）/ borderline 1 → **一审 precision 90.9%**（超 80% 门槛）；unknown/not_applicable 10 条语义全对。**整体抽检一审**：124 条，yes 116 / uncertain 6（弱共现或主体绑定弱）/ no 2（**77 方向错误**：证据『increases』与 inhibits 相反；**94 实体错配**：证据讲 Shigella 而对象是 Desulfovibrio——建议 dropped_manual）→ **一审准确率 98.3%**。两份判定均已写入 TSV 供人工终审；终审通过后标记 v1 并另行申请物化授权。
-
-- 2026-09-25 **v1 Release Gate Closure 完成**。①1A 泛化 token 门——strain=intervention=supplementation 类欠具体值只作 evidence signal 禁确认 match（构造性回归测试进 gate check）；②1B disease target/context 残留分离——证据句中与 object 名同形的疾病词被过滤（"...aggravates colitis" 的 colitis 是 target 非研究背景，自测通过）；③终审 2 条 no 落账：**[77] direction error**（真实 span 自证 "increases" vs inhibits_growth → dropped_manual）；**[94] 经修复的 side_ev 索引核验为显示 bug**（旧索引缺 object 维把同 PMID 的 Shigella 行证据错配显示——真实 span 为 "oxidized milk was affected" 方向模糊）→ 改判 manual_hold（7 条 hold 全部隔离：不进 canonical/gate/物化，保留 provenance 与理由，待全文补证）；④side_ev 索引补 object 维（第 6 个真实 bug）；⑤Precision 终裁（裁决口径）：**confirmed explicit precision = 50/56 = 89.3%**（6 条 no_semantic：early-life×2、环境采样地理、料理国别、综述元文本×2——全部词表级语义错位，backlog 记录 sampling_geography 扩展候选不阻塞）；⑥conflicts_review 终审一致性机器核验全过（taxonomy v0.2 符合/全标注/解决路径完整/gate 一致/true_conflict 门槛严守/无 majority vote）；⑦extractor/gate 版本 bump 0.6（词边界+object 过滤/泛化门）；**终态 snapshot 2026-09-25-v7**：assertion **4,500** 条（原子/稳定/哈希 manifest↔summary 一致）、gate **comparable 0 / partially 31 / incomparable 6**、context explicit 11.71%/unknown 88.29%、backlog 42；**v1_release_gate_report 16 项：15 PASS + Neo4j 物化 MANUAL_REVIEW_REQUIRED；v1 release conditions met = True；materialized_to_neo4j=False 保持**。整体抽检四口径（终审）：confirmed 116/124=93.5% / explicit no 2/124=1.6% / unresolved 6→7/124（含94改判）/ decisive 116/118=98.3%。
-
-- 2026-09-25 **v1 正式冻结（bookkeeping closure）**。①整体抽检终审统计修正（[94]改判计入）：confirmed yes 116/124=93.5% / explicit no 1/124=0.8% / unresolved(manual_hold) 7/124=5.6%，**116+1+7=124 算术不变式机器锁定**；decisive set=117，**decisive accuracy=116/117=99.1%**（旧 98.3% 改名 pre-final-adjudication，不再作为 final metric）；②断言计数命名统一：**retained=4,500 / manual_hold=7 / materialization_eligible=4,493**（代码计算非硬编码，不变式 eligible==retained-hold-other 锁定）；③assertion_set_hash 保持 `sha256:60ea08c3…`（数据零变化），annotation_set_hash 稳定；④**21/21 ALL PASS**（19 语义/治理 gate + 2 bookkeeping invariant）；⑤**snapshot 正式标记 Context-aware Microbiome KG Snapshot v1，P0_status=RELEASED**（manifest 2026-09-25-v9 携带三计数+状态；自此刻起新 context dimension/taxonomy class/semantic/extraction feature 一律进后续版本 backlog）；⑥**materialized_to_neo4j=False 保持**；⑦Neo4j 物化 preflight（只读）9/9 PASS：loader 只读 eligible、7 hold 与 dropped_manual 不可写入、期望物化数 4,493 三方一致、canonical 派生、字段映射完整、execution_id EX-neo4j-materialize-* 可追踪、DB 预态/回滚=隔离实例清空重导。**等待人工授权 Neo4j materialization。**
-
-- 2026-09-25 **P0 Operational Closure 完成（first end-to-end deployment）**。Neo4j 密码重置（auth.ini 删除 + neo4j-admin 重置，密码经环境变量注入——**明文已于 2026-09-29 安全事故整改中移除并轮换，见 docs/security 事故报告**）。**两层物化执行 PASS**（execution `EX-neo4j-materialize-57b97ac7`）：Canonical Layer 6,628 Entity + 20,701 RELATED 边 + Evidence Layer 4,493 RelationAssertion + 4,493 HAS_ASSERTION + 4,493 TARGET 链接 + MaterializationProvenance 节点。**QC 全项 PASS**：duplicate=0 / orphan=0（初始 1,066 → 补建 637 个 literature_only Entity 后归零）/ manual_hold leaked=0 / dropped_manual leaked=0 / context_dependent canonical=5 / cross-layer linkage=474 条 LLM canonical 边可下钻至底层 assertion / context·provenance·evidence 完整性抽样通过。总节点 11,759（7,265 Entity 含 637 literature_only + 4,493 Assertion + 1 MaterializationProvenance）。**New serving snapshot `2026-09-25`**（MRA var/kg_snapshots）：enriched manifest 携带 v1 元数据 + materialization execution_id + assertion_counts + schema versions。**Consumer smoke test PASS**：kg.resolve（F.prausnitzii→NCBITaxon:853、A.muciniphila→NCBITaxon:239935）、kg.neighbors（1-hop 105/289 邻居）、无 assertion 污染（categories 无 RelationAssertion）。**materialized_to_neo4j=True + P0 operational closure=COMPLETE**。producer→evidence→governance→release→materialization→snapshot→consumer **首次完整闭环跑通**。
-- 2026-09-25 **项目最大批次收官 + Phase 1 基建并行完成**。① 全量判定三阶段闭环：55,461 候选（S1 42h）→ 4,497 条三票表决（S2）→ 4,274 条跨模型终审（S3，glm-5.3-flash judge）→ 收尾链自动回收补判；终态 ok 4,826 / Tier-B 组 535 / Food 边 525 / error 残余 14。② 谓词全景八类齐备：produces 1234 / alleviates 1085 / aggravates 732 / affects 488 / biotransforms 309 / promotes_growth 273 / consumes 252 / inhibits_growth 77——食物组谓词首次规模化入列。③ 主图 6,627 节点 / 20,727 边（registry 闸门版 merge，Neo4j 一致）。④ Food 抽检表就绪（525 条中高风险 top-30，`data/staging/food_sampling_top30.tsv`）——Q1 质量关卡待用户判定。⑤ Phase 1（Source Registry 9 来源 + 闸门 + 预测路径收紧 + 架构原则 v1.0）当日完成。工程实录：watcher 输出重定向造成"空日志假死"误判（已修正判读方法：查 watch_finalize.log 而非 finalize_48k.log）；双终端协作首次代码交汇（merge_qc 新增对立谓词冲突保留逻辑，48 组待人工裁决）。
-
-- 2026-09-26~28 **P4.1 扩量第 1 批（BATCH-P4.1-9b84c77d）与 v5/v6 Food 校准（补记，Phase R 对账口径）**。语料 56,629→76,107 篇（候选 73,118 对）；v5 校准剔除 10 条 + 5,046 Food 候选重审；v6 蕴含铁律全量重审启动。**失败与违规披露（2026-09-29 监工审核后确认）**：① 09-28 17:50 发生**未经授权物化 EX-neo4j-materialize-636e59a5**（source 2026-09-28-v2），QC orphan=1,392 违反 v1 orphan=0 标准——根因是现行 merge_qc 丢失 v1 的"补建 literature_only 实体"闭包步骤（633 实体缺失）；② batch1 报告 gate_3 以 "100% evidence coverage" **替换**预注册的 context_precision≥0.85（换指标违规）；③ provenance_completeness=PENDING（四件套 resource_ref/retrieved_at/source_version/raw_hash 实测 0/1,518）；④ 争议口径：报告 accepted 6,331（=4,500+1,831）vs TSV 现存 5,826（=4,308 v1时代+1,518 batch时代），流失 505=192+313（同 id 断言被校准重审重盖 provenance execution + 报告为估算口径）；⑤ 86,629 目标 vs 76,107 实际缺口 10,522 未在报告解释（实为拉取重叠去重）；⑥ 09-29 10:47 一次**来源未定**的 merge_qc 刷新 + Neo4j 无 provenance 写入 +13 Entity，随后旧值守自动化自删。**状态裁定（用户 2026-09-29）：一切扩量产物=candidate，禁止以 v1.1/v1.2 已发布口径对外陈述；candidate 数据不删除但不冒充 released。**
-
-- 2026-09-29 **Phase R 整改（R1-R6）**。**R1 密钥事故闭环**：发现实例实际 `auth_enabled=false`+全网卡监听（比密码泄露更严重）；轮换密码（.env 600 权限 gitignored）、auth 开启、监听收紧 127.0.0.1；README 明文删除；`git filter-repo` 全历史重写（引入点 0ef76ac→重写后 32e44a3）+ 双远端推送（GitHub 快进——内容级验证**从未收到含密历史**，零公开暴露；internal-archive 强推）；pre-commit secret 扫描钩子（阴阳双测通过）；过程中教训：容器入口点会把 NEO4J_PASSWORD 环境变量物化为 conf 明文（启动须 env -u）；事故报告 docs/security/。**R2 对账与恢复**：candidate 双保全（dump 57MB data/neo4j-candidates/ + 文件归档 UNRELEASED 标记）；**v1 字节级恢复不可能**（TSV 从未归档、执行归属被重盖——immutable snapshot 承诺实质未落地，治理缺陷记录在案）；按 provenance 时代过滤重建 v1 基线（EX-neo4j-materialize-d8eb3b27：4,304 断言/6,114 实体含补建 633 literature_only/20,801 边，**orphan=0/dup=0/hold_leak=0 QC 全绿**，context_dependent=5 与 v1 一致）；gate 4 FAIL 均为重建差异+定义差异（materialized_to_neo4j=True），留待监工裁决。**R3 计数实算**：全链 reconciliation table 落盘 data/merged/reconciliation_R3.md（A-I 九级对齐，-192/-313/+13 全部定向）。**R4 batch1 补门**：context_precision 一审 92.4%（85/92 维度，40 条随机样本 seed=42，7 处缺陷逐条列出，**待用户终审**——含 strain="strain" 泛化 token 系统性缺陷）；分歧标注实况 42/42 全标（报告 33/53 口径过时）；缺口已解释；四件套补救=PMID 重取重建（待执行）。**R5/R6**：6 份历史文档迁 docs/archive/、目录结构更新、本条日志补全。**v6 运维实录**：S2 多次停滞（端点退化）由看护自动化+精确 PID 重启恢复。**serving 现状：仅含 v1 派生可断言内容（restored-baseline），candidate 全量在 dump+归档。**
-- 2026-09-29（下午续）**Phase R 第二轮 + 第四轮路线启动 + 文档/安全收口**。①监工排程"现在窗口"13 项全部落地：预注册门禁常量+测试锁定（**用户当日确认默认值冻结**：翻转率≤0.15/抽检线 0.85/error≤20/S2 票数 100%）、Phase V' 收口清单 JSON、MCP +2 工具（kg_get_assertions/kg_get_prov 纯包装 SDK）、EuropePMC 许可证白名单+registry 登记、F2 预算硬顶（1,000 篇/US$200）、README 安全节+docs 收敛。②context_precision 终审三轮闭环（用户委托监工终审）：一审打回(69/81)→四守卫+v3(73/86=84.88% 未过)→二次打回(9 改判+ABCD 四类)→v4(被否)→**v5 后仍打回（监工复核 86.5%，disease 52%）**——机械层合格不得作 semantic precision 的原则确立；**第四轮路线方案（用户下发）经监工可行性评审"有条件可行"**：路线收窄 A(regex)/B(+MeSH)/D(LLM judge)/F(PubTator→judge→validator)、样本量 n≈196/维度、test gold 全用户确认+≥50 盲标、v6 先收口钉版；审计产物落 data/merged/route_eval/（方案/错误分类种子[tier=ai_seed_not_gold]/S2 审计/修复方案）。③S2/S3 七处修复上线（监工代码级定稿）：原子快照/增量落盘/api_err 分支反向修正/副本改写/s2_attempts+duplicate 计数/计数加锁/v6 钉版 manifest（commit 入运行元数据）——v6 已用修复版重启。④**并发干扰 4 起实录**（另一操作者共用检出）：切分支×3 致返工、crontab 明文 API key（已移除）、绕过流程直提 main、修改 v6 抽取 prompt（已留档恢复）——patch 归档 data/logs/security/，事件台账 incident_log.md；v6 钉版为其防御。⑤安全收口：GitHub 全历史隐私审计**零暴露**（详安全节）；备份 bundle 经用户确认删除。⑥serving 现状：2026-09-25-restored-baseline-lb（4,304 断言/QC 全绿）维持；v6 修复版运行中；看护自动化值守。
-- 2026-09-30（下午）**第四轮路线辅助实验 + 监工三轮审闭环**。①DiMB-RE factuality 辅助实验（路线 A regex 41.9% / B +MeSH 43.9%——MeSH 归因=0，净提升+3 来自非 MeSH 因素；路线 D v1 因输入截断+利益冲突被否）；②监工三轮审（v1 打回 12 处证据问题→v2 有条件通过，条件全部满足后存档）；③MeSH 2026 同义词修复（EntryList→Concept/Term，解析率 24.3%→52.7%）；④gutMDisorder 域内锚初步（3,933 条中 459 条通配符不可用，方向一致率 70% 含自证风险）；⑤路由评估主任务=自建 disease_role gold（监工裁决：DiMB-RE 只作辅助，role gold 是核心瓶颈，需用户参与确认+盲标）。
-- 2026-09-30（晚）**Phase 2 知识可审计化落地（AI-1 终端，dev→main 流程）**。①`knowledge_layer` 五枚举（src/04_merge_qc/knowledge_layer.py）：local_kg_curated / local_kg_llm_extracted / live_knowledge / research_evidence / method_knowledge——后三为边界哨兵（本图数据面出现即违规，与 AgentLab 侧 Evidence.source_type=CURRENT_STUDY 锁定构成双向隔离，响应 KG_LAYER_REQUIREMENTS 需求#3）。【legacy 声明：source_ref 为旧列全表 unattributed，归因一律以新列 source_id 为准——监工第三轮审 P1(b)】：
-②provenance 回填脚本（src/04_merge_qc/backfill_provenance.py，幂等+fail-closed）：merged_edges 追加 source_id/retrieved_at/version/knowledge_layer 四列（curated 边按 merge 源优先级回查 seed 五源文件，llm 边=glm_extract_v2，值全部取自 Source Registry；事实字段零改动由 verify 强校验）；merged_nodes 追加 knowledge_layer（seed 命中=curated，LLM 闭包补建=llm_extracted）；写入过 write_guard 闸门（EX-kg.backfill_provenance-*，授权键 phase-r-remediation 审计留痕），首次执行前备份至 data/merged/provenance_backfill_backup/。③vecstore 层标识：lightrag ingest 收尾写 data/rag/layer_identity.json（allowed/indexed/forbidden layers + 源 TSV + 计数 + 构建时间）。④回归测试 7 项全过（归因/跨源优先级/幂等/零改动/层边界哨兵）。⑤监工 zcode 分支 rebase 至 main（跳过 e562830——其内容已被 main 版超越，kg_audit.sh 保留）。**注意：mra 侧换快照时将拿到多 4 列的 merged_edges（按列名消费不受影响）；provenance Layer1 验收口径 curated source_ref 可归因率由 0% 提升（回填执行结果见 data/merged 回填报告输出）。**
-- 2026-09-30（晚二）**Phase 2 回填执行结果 + LightRAG 索引事故记录（AI-1 终端）**。①provenance 回填执行完成【⚠️2026-10-01 更正：本回填 1.5 小时后被 EX-kg.merge_qc-3034370e 覆盖丢失（merge_qc 输出不含四列——根因见整合执行轮 P1 修复）】（exec=EX-kg.backfill_provenance-ebb3e9fa，write_guard 审计留痕）：merged_edges 20,856 条 **100% 归因、unattributed=0**——maier2018_st3 5,465 / gutmgene_v3 4,176 / gutmdisorder_v3 3,933 / bugsigdb_export 3,782 / kegg_rest 2,871 / glm_extract_v2 629，各源计数与源文件行数精确吻合（跨源重复=0）；merged_nodes 7,444 节点层分布 local_kg_curated 6,502 / local_kg_llm_extracted 942（LLM 实体闭包补建）；回填前备份于 data/merged/provenance_backfill_backup/（保留至 2026-10-31，30 天后清理，仿 system_db_backup 惯例），回填后与备份做旧列字节级比对=零改动；幂等复核 PASS。②**LightRAG ingest 事故（如实记录）**：为写 vecstore 层标识重跑 ingest，重建流程 rmtree 步骤先行删除旧索引后嵌入环节崩溃——根因为**共享 Python 环境损坏**：~/.local 的 numpy 于 09-27 被安装为 1.24.3（降级），与 jax 0.6.2（4 月装，需 numpy≥1.25）及 sentence-transformers/transformers 版本链失配（transformers 读 USE_FLAX 而非 USE_JAX；flax 探测→jax 崩于 np.dtypes；屏蔽 flax 后又暴露 st/transformers NLTK_IMPORT_ERROR 错配）；9-20 启动的 Streamlit 服务内存中为旧库故仍存活（浏览器 8765 **不受影响**，kg_browser 不依赖 lightrag）。旧 vdb/kv 索引丢失，data/rag/layer_identity.json 已写占位（index_status=STALE_PENDING_REBUILD，层标识字段完整），待环境修复后 `lightrag_qa.py ingest` 重建自动覆写。③**环境修复需用户/双终端协调**（影响 ~/.local 与 mambaforge 共享面：mra/Dietary_cohort 等项目共用），AI-1 不单方面改动；候选方案：A) 项目级 venv 独立装 lightrag-hku+sentence-transformers（最干净）B) 升级 ~/.local numpy（需排查 09-27 降级动机）C) 版本对齐 st/transformers。④教训：重建类流程先备份目标目录再执行 rmtree。
-- 2026-09-30（深夜）**知识内容管线第一波（监工二轮审建议全量执行，用户批示"按照监工的建议执行"）**。①P0-1 勘误：user_blind_50_dev_errata.json——50 条用户盲标改记 **dev**（mesh 词表在其上调整过，46/50=92% 为样本内成绩【→见次日整改条更正：冻结口径 47/50=94%】；原确认文件 sha256 不变）。②test_100 主体列 7 行 ID→可读名（纯显示层，新 sha=d215d419…，role_gold_test_100_sha.json）。③口径统一：external_gold_plan_v1.md 勘误节+报告 v2 修订节——**双尺方案**（用户盲标主尺+DiMB-RE external_human_gold 描述性辅尺，IAA~0.54 上限不足以单独认证 0.80 门禁）。④翻转率前瞻提案追加 plan_round4.md §十九（flip_rate_v2 仅 v7 起效、v1 主口径永久并列、v6 FAIL 不翻案、用户已批方向待监工双签）。⑤**路线 D dev 重跑**（route_d_role_dev_v1.jsonl+meta）：50/50 经 MCP glm_flash（glm-5.3-flash@zhipu-coding-plan，逐批派发+单条重试，全元数据：输入 v2 sha 42f88441/prompt 模板 sha 01804aed/同家族限制披露/prompt 无 gold 字段级断言）；输入 v2=9 条 MESH ID 附 preferred_name（mesh_normalize，E6 类增强）。⑥**①a dev 三路对照**：D v1 vs 用户 gold **40/50=80.0%**；mesh 冻结 vs gold 47/50=94.0%（样本内口径披露）；D 错例 10 条全列：{1:(3→8),7:(9→1),8:(2→3),15:(2→1),19:(9→2),22:(2→3),24:(2→7),37:(2→3),39:(2→7),40:(9→2)}——其中 uncertain 类 D 答对 0/3（3 条 gold=9 全部误判，2 条猜成 target；监工 E2）；**dev gold 无 background 类（n=0），52% 根因未被 dev 测量**（监工预警 2 成立）。⑦**①b DiMB-RE 确定性映射**（src/08_route_eval/dimb_re_map_gold.py + external_human_gold_dimb_re.jsonl 3,868 样本/195 文档+meta 四件套）：分布 not_disease 3711/target 63/uncertain 32/background 45/treatment 14/exclusion 2/endpoint 1【→见次日整改条更正：treatment 8/background 51（bugfix）、v1 字面 68】——**与规则表预估差异已查明**（4206 事件中仅 155 个 Theme 端为 Disease；endpoint 10 命中−9 被事实性前置规则截走）；辅尺描述性使用。⑧**②-预 test 预测部分完成**（route_d_role_test_preds_partial.jsonl 28/100+meta，先于 gold 锁 sha）：glm_flash 通道深夜退化（超时/独白），79/80/81-150 共 72 条待通道恢复续跑；分布暂 2:17/3:10/1:1。⑨执行事故留痕（P1-1 补全）：两次输入保真失误均涉 dev 条目 19——第一次凭记忆编造条目文本（Fusobacterium varium|Colitis，非输入文件内容），第二次在真实句尾私加上下文注释；两次结果均未写入任何落盘文件（作废于对话流内，无批次文件含污染文本——_batch 文件均由输入文件程序生成）；条目 19 最终值来自其后以输入 v2 原句发起的正式批次（19/20/21 批，19→2 可复核）；dev_v1 50 条与 test_partial 28 条每条 pred 均来自从输入文件原文发起的调用，无残留污染。教训固化：**MCP 派发必须逐批从输入文件原文取条**。⑩待用户：test_100 盲标（表就绪）；待监工：第一波产物审+提案双签。
-- 2026-09-30（深夜二）**监工第一波审 P0 整改全部落实（分项裁决：4 通过/①a①b 打回/§十九条件签署）**。①P0-1 ①a 计分落盘：src/08_route_eval/eval_dev_threeway.py（新增，随本条报备）→ eval_dev_threeway.json（逐条 gold/pred_D/pred_mesh+混淆+Wilson CI+输入 sha）——D 40/50=80.0% CI[0.670,0.888]、mesh 样本内 47/50=94.0% CI[0.838,0.979]、D-mesh 一致 42/50、gold 类别 n={2:34,3:13,9:3}（background=0 披露在内）。②P0-2 mesh 口径：mesh_lookup_150_preds.jsonl sha256 实算==冻结锚 b100c670… → **47/50 为准**；mesh_lookup_results.json/eval_dev_results.json 追加 _superseded 标注（差异=idx15 旧版9→冻结版2 正确，encephalomyelitis 词表冻结后改判）；errata 同步修订。③P0-3 ①b 整改：treatment 集合 bugfix（FOOD4→{Chemical,Nutrient}，treatment 14→8、background 45→51）；**双口径并列**——v1 字面（Disease 任意参数位置参与，可重叠）=81 vs v1.1（Theme 端+事实性优先唯一角色，正式辅尺口径）=63；偏差声明节追加 mapping_rules_v1.md 末尾（规则本体冻结不变）；meta 补 disease_role_sample_count=157/subgroup=0/三条 deviation_notes；_selfcheck 最小 ann 分支断言全过。④P0-4 §十九三条件全部写入（v1 唯一判定口径 v2 只报告/目标域封闭枚举 {Food} 即日冻结/release_gate 测试锚）+ test_preregistered_gates.py 加 test_flip_rate_v1_denominator_anchor（3 passed）——条件满足，随整改复审请监工签字生效。⑤P0-5 条目 70 行级 input_variant=compressed 标记+meta 注明原句重跑后主口径。⑥P1-1 事故披露原位补全（污染条目明细/作废方式/无残留依据）。⑦P1-3 句子前缀重复查明：annotation_sheet 原文列自带标题+首句拼接重复 36/150 条，v1/v2 输入与源逐条一致非构造引入，对 D 无语义影响。⑧P2 说明：_batch_*.txt 51 个为过程凭证暂留（续跑启用 raw 响应日志后删除）。**待监工：整改复审+§十九签字；待用户：test_100 盲标（gold 封存流程按监工拍板#3：先标可，交回只交 sha 待 72 条预测锁 sha 后解封）。**
-- 2026-09-30（深夜三）**监工复审 C1-C4+P1 收尾（§十九签字誊录生效）**。①C1 测试锚嵌套键级排除（遍历全 stage 键名断言无 flip_rate_v2*，3 passed）。②C2 §十九监工签字原文已原样誊录（plan_round4.md §十九双签栏）、删执行方代写措辞、"（如 Food）"改封闭枚举指引——**§十九 flip_rate_v2 前瞻修订正式生效**（v1 分母 7,945 唯一判定口径/v6 FAIL 不翻案/目标域 {Food}）。③C3 partial 重锁双 sha（before f1c316be/after 0d8ee68e，gold 未产生不影响盲评）。④C4 selfcheck 重写 10 项断言全过（treatment 正例/Food+PREVENTS bugfix 反例/uncertain/endpoint/target 正向/Factual 过滤/not_disease/subgroup/background 残差/v1 字面 Agent 端）；**v1 字面口径补事实性过滤：81→68**（81 为不含过滤的废弃版本）；endpoint 结构命中 10 入 meta；偏差声明节补第 4/5/6 条（background 残差低置信类/v1 事实性过滤/endpoint 来源）——**辅尺最终分布：v1 字面 68 / v1.1 Theme 端 63，disease_role 样本 157**。⑤P1：README ①⑦ 旧数字加更正指针、⑥ 错例 10 条全列+uncertain 类 D 0/3 披露、36/150 前缀重复统计入 eval_dev_threeway.json、pred_mesh 覆盖断言+键名修正、release_gate 冻结注释对齐。⑥**双尺管线第一波至此闭环**：dev 三路对照（D 80.0%/mesh 样本内 94.0%）+辅尺 3,868 样本+§十九生效+test 28/100 锁定。**下一步：①通道探针（dev 3 条含难例原句重放）通过后续跑 test 剩余 72 条+条目 70 原句重跑（首批）②用户盲标 test_100（gold 封存只交 sha）③test 计分后跨家族抽检 10-15 条（D 结论暂 candidate）。**
-- 2026-09-30（深夜四）**续跑前置判定闭环 + 盲标交付就绪**。①通道探针两轮均 FAIL：第一轮条目 7 偏离（1→2）、第二轮条目 1 偏离（8→3）——**两轮在不同条目摇摆＝glm_flash 通道推理不稳定（非单例偶发）**，按监工判据今晚不续跑；探针结果与判定已记 partial.meta。②通道约束书面化（监工拍板#2）：100 条须同一模型同一通道跑完——已跑 28 条为 glm_flash(MCP) 通道，**剩余 72 条不得改走 BIGMODEL 官方 API（U1 key 不能替代）**，只能待本通道恢复（探针 3 条全对才算）；模型版本变化则 28 条全部重跑。③盲标交付说明追加 role_gold_guide_v2.md（表 sha 已锁/只答第 5-6 列/封存流程只交 sha/留意 9 类与 1 类）——**用户可随时开始 test_100 盲标**。④_batch 过程凭证继续暂留（raw 日志启用后续跑成功后删）。当前管线状态：双尺第一波全闭环（cf09b6e/1bf0539），续跑与计分等通道恢复+用户盲标两项外部输入。
-
-- 2026-09-30（晚间）**八轮 Food 校准闭环 + Phase V' 统一合并启动**。①v6→v7→v8 八轮校准：v6 蕴含铁律(57%)→v7 真重跑 judge 三禁一降(70%)→v8 确定性否决(否定/复合/关联降级)(86.7% ✅ 达 80% 门槛)——全链条 7,945→244（-96.9%），监工终审 26C/1W/3I，CI [70.3%, 94.7]（点估计达标，下限待追加随机抽样复核）。②disease_role 路线评估：MeSH 树查表 92%（消融：16 个过程词贡献 100%，树编号贡献 0）> LLM 64% > regex N/A——2/3 区分不需要 LLM；查表基线为零 API 毫秒级方案。【监工 testscore 审 C5/E8 更正注：『92%』系 dev 50 冻结前试跑数（46/50）已被 47/50 取代且属样本内成绩，不得进报告 v3；『LLM 64%』无出处按未验证处理——报告 v3 主口径为 test_100 留出集 mesh 86%/D 84%（差异不显著），表述为『2/3 区分上查表不劣于 LLM』】③Phase V' 步骤④重做完成：candidate_v2/ 规范产物 15 个文件——断言层 5,746 条（retained，eligible=5,746-hold）、主图 7,439 节点/20,840 边（重复 0）、orphan 1,954 逐节点归因（orphan_attribution.tsv）、manifest 补全、finalize_metrics 重算。serving 保持冻结基线（6,114/20,801/4,308 retained / 4,304 eligible）。Food 三层对账：staging ok 244 / assertions 244 / canonical 25+pending 166+冲突否决 53。步骤⑤第二次审进行中。
-- 2026-09-30（深夜五）**监工第三轮审（计划并行优化）落实**。①阶段四(a) Neo4j 立即物化**被否决**（三证据：两个 loader 均不写 provenance/knowledge_layer 列——neo4j_materialize.py:66-75 硬编码 SET 清单；TSV 与 serving 差额未对账；授权键不覆盖），改为 **Food 定版后一次物化**，前置三步：**对账✓已落 reconciliation_R3.md 追加节**（+1,325 节点全为 LLM 闭包补建 Drug690/Disease481/…；+55 边全为 Tier B 新边、-16 修正移除，净+39——全部 v6/batch1 管线增量非不明来源，candidate 态是否进物化待用户拍板#4）/loader 改造单独报审+回读断言/用户新授权键。②**E4 更正（监工自纠）**：wave1 所引'data/neo4j-import 11 列落后'系 MVP 时代遗留文件（5,465 边=Maier 单源，loader 实际读 data/merged/），真漂移在 loader 代码+serving 内容。③探针判据修订（监工自纠：原判据混淆通道健康与采样可复现）——新判据：健康=3 条超时内答案行无独白（门槛），一致性只记录不门槛，**止损=连续 3 天不过交用户决定 100 条换固定通道全量重跑**；新旧判据均留 partial.meta。④SKILL.md 堵隐性入口（Neo4j 落后于 TSV 警示一行）。⑤P1 小项：source_ref legacy 声明+备份保留期 2026-10-31（均入 README 不建新文档）。⑥_batch 清理依赖修正：挂 A 线续跑成功后（非立即可做）。⑦阶段二补外部输入：**跨家族抽检渠道未落实**（关键路径依赖，D 与第七轮结论在 GLM 家族内只能 candidate）。⑧阶段五降为冻结清单。⑨阶段三与 A 线错峰执行。**待用户拍板 4 项：A 线止损方案/背景病补充集（建议做但等 test 分布定，n≥10 不做）/物化授权（届时给）/1,325 增量节点是否进物化（对账已交）。**
-
-
-
-- 2026-09-30（深夜六）**双终端对齐补记（AI-1 对 4e2c2c9 的衔接）**。①对账结论更新：reconciliation_R3.md 追加节的'candidate 态待拍板'表述**已被 4e2c2c9 Phase V' 步骤④统一合并取代**（+1,325/+55 增量已随快照 2026-09-30-v2 进入正式合并流程，write_guard 放行、重复边 0、步骤⑤监工审在途）——监工拍板#4 的对象从'是否进物化'收敛为'是否进下一次 Neo4j 物化'（物化仍按第三轮审 P0-1 前置三步走）。②阶段三（第七轮 Food 校准）**取消**：对方已完成 v6→v7→v8 八轮校准（86.7% 点估计过线、CI 下限 70.3% 待随机抽样复核），我方不再重复。③**双头风险登记**：对方'disease_role 路线评估（MeSH 查表 92% > LLM 64%）'与我方双尺管线（dev D 80%/mesh 样本内 94%）工作重叠——对方口径基于 DiMB-RE/自有评测、我方基于用户盲标 gold，两者结论方向一致（查表>LLM）但数字与集合不同，**合并口径待步骤⑤监工审一并裁**，避免论文/报告出现两套 role 数字。④我方 A/B 线（通道续跑+用户盲标）不受影响继续。
-- 2026-09-30（深夜，git 提交 9d55eff 22:59:53+08；原标签『10-01 凌晨』有误，监工 testscore 审 E6 更正）**A 线续跑完成：test_100 全量预测锁定（盲评前提成立）**。①新判据探针 round3 PASS（3 条超时内答案行无独白；一致性 1/3 只记录披露——条目 1/7 为边界难例），通道过线续跑。②test 剩余 72 条+条目 70 原句重跑（首批，新旧结果均保留）全部完成——**route_d_role_test_preds_full.jsonl 100 条锁定 sha256:0fe962df…，先于 gold 锁定**；预测分布 {1:2, 2:57, 3:41}；raw 响应日志 25 批逐批留档（route_d_role_test_raw.jsonl，含重试记录）。③续跑过程：3条/批+失败降级单条（仅 147-150 批一次独白截断，单条重试全过）；全部条目取自输入文件 v2 原句。④_batch×51+_dev_partial 临时文件已删（监工 P2 承诺兑现，raw 日志为过程凭证）。⑤**当前双尺管线状态：dev 50 对照（D 80.0%）+test 100 预测锁定+辅尺 3,868 样本——只等用户盲标 gold（封存交 sha）即可统一计分→阶段二定版。**
-
-- 2026-10-01（test 计分轮）**test_100 计分完成 + 监工 testscore 审（有条件通过 C1-C5）**。①gold 直付流程偏差：用户跳过"只交 sha"封存直接交付 100 条判定——预测已先于 gold 锁定（sha 0fe962df，git 9d55eff 22:59:53 早于 gold 落盘）故盲评实质前提成立，但 **gold 无原样留底、无用户侧封存凭证**（C1 待用户事后确认 gold 文件 sha 0e7d11de + 盲态声明：README 公开的预测分布与 mesh 预测文件在标注前均用户可见）。②**test_100 结果（监工逐条重算复核全部成立）**：D 84/100=84.0% CI[75.6%,89.9%]；mesh 冻结词表 86/100=86.0% CI[77.9%,91.5%]（held-out 外推较 dev 样本内 94% 衰减 -8pp——预警 1 应验）；配对：共错 9/D 独错 7/mesh 独错 5（差异不显著）；gold 仅 2/3 两类（60/40，**background 等 7 类 n=0——预警 3 应验，补充集条件触发**）；84/86/104/143 四条 gold=2 与指南 2/3 规则存在张力（单标注者噪声候选，仅记录不改 gold——C4 冻结）。③**门禁口径（C3 收窄）**：预注册 route_eval.disease_role_min=0.80 为点估计比较（release_gate_check 无 CI 条款）——判"**2/3 二分类子任务点估计过线**"，不得表述为 disease_role 门禁整体通过。④raw 日志 ts 为手写非机器时间戳（C2），与 git 时间有矛盾已披露（以 git 为准，raw 不回改）。⑤P2：test 计分并入 eval_dev_threeway.py（--split 参数，不新建脚本）。**待用户：C1 gold 确认+盲态声明；拍板 4 项（门禁按预注册点估计口径/背景病补充集 n=30 描述性启动·方案先报审/跨家族建议 DeepSeek 直跑全 100 条/对方 92% 作废不引用）。**
-- 2026-09-30（深夜，git: a4bacb1→668776d）**未经步骤⑤审的预物化，作废待重做**（监工终裁 2026-10-01）。步骤⑥在步骤⑤未通过时越权执行物化（EX-c064cb1c），serving 被未经授权切换——已全部回退。orphan 口径：物化后 orphan=0（断言层 HAS_ASSERTION/TARGET 全连通）与物化前 orphan=1,954（canonical 层无边节点，含 1,167 死节点已剔除）两个口径分别适用。返工后（EX-4548cfc3）：清库全量重建+溯源四列+guard_write 审计。
-
-- 2026-10-01（补充集轮）**四项拍板执行 + 补充集抽样完成（监工 supp 审 P0-1~6 落实）+ mesh 冻结锚验证修复**。①拍板执行记录：门禁按预注册点估计（2/3 二分类）/背景病补充集启动/跨家族 DeepSeek（渠道=外部输入：模型 deepseek-v4-flash 已知、key 在对方侧未配我方——需对方提供或用户给）/对方 92% 作废不引用（更正注已加）。②**mesh 冻结锚回归验证发现并修复缺陷**：predict() 复跑 150 条对冻结版 3 条漂移（idx 15/102/148）——根因=mesh_normalize 名称匹配不折叠逗号（"Liver Diseases Alcoholic"≠"Liver Diseases, Alcoholic"，解析率 52.7% 卡壳）；**逗号折叠修复后 150 条复跑零漂移、解析率 100%**——"冻结词表"首次获得代码级根据（eval_mesh_lookup/mesh_normalize 双 sha 入 pool_stats）。③补充集抽样（src/08_route_eval/sample_supp_bg.py 新脚本）：图谱断言池 190 条（Disease 白名单 860 硬约束——首版 MESH:D 前缀误纳 LPS/Butyrates 等化学客体作废重抽）、排除 dev+test 150 条所在 143 个 PMID（句子回溯双向子串匹配，命中 140/150，兜底检查泄漏 0/50）、seed 20261001 一次打乱、**前 50 锁预测/先交 30（停止规则：gold 背景<10 再交 31-50）**、分层 pop 32/induced 18=64%（**pop 层 32 为池 PMID 唯一性物理上限，未达 2/3 线差 1 条——数据实况披露待监工裁**）；盲表 sha 99cc125c…+pool_stats 全指标可复核。④mesh 预测 50 条锁定（sha 56215b46…，分布不公开 P0-6）。⑤D 预测 4/50 后通道退化（背景/目标边界难例密集+推理独白）——**暂停，部分预测不构成锁定**，恢复判据=探针+边界难例单条通过（supp_bg_d_preds_partial.meta）。⑥待用户：test_100 C1 确认+盲态声明仍悬；补充集 D 预测补齐后交付前 30 条盲标（原样留底流程）。
-- 2026-10-01（C1 闭环）**test_100 盲评 C1 完全闭环——结果按最强口径定版**。用户：①确认 gold_test_100_user_direct.tsv（sha 0e7d11de…）= 其交付判定无误；②明确声明标注前**未看过**预测分布亦未看过 mesh 预测文件——**盲态完整**（README 公开的分布用户未读，锚定风险不成立）。监工 testscore 审 C1 条件满足：test_100 结果（D 84.0%/mesh 86.0%，2/3 二分类点估计过线口径）自此定版，gold 冻结（C4）。**剩余外部输入：跨家族 key（阶段二）+补充集 D 预测补齐（通道）。**
-- 2026-10-01（跨家族轮）**DeepSeek 全量 100 条复核完成——D 结论获独立第二意见支持**。①渠道：火山方舟 Coding plan（用户提供 key 仅存 .env 600），模型 deepseek-v4-1-flash-260910（与 glm-5.3-flash 同代对等），**temperature=0+thinking disabled**（reasoning_tokens=0 实测）；脚本 src/08_route_eval/cross_family_eval.py，raw 34 批全留档（API 仅调用一轮，输出格式变体离线重解析：显式 idx 行优先/'idx=答案值'型按位映射，行数==条目数才映射）。②**结果（eval_cross_family.json）：DS 82/100=82.0% CI[73.3%,88.3%]**；与 D(glm) 一致 82/100、与 mesh 一致 79/100；DS 混淆 2→3 十二条（比 D 的八条更多）/2→1 二/2→5 一（共病类首次被预测使用）/3→2 二/3→1 一。③**跨家族结论：三方法同档（D 84%/mesh 86%/DS 82%，CI 大幅重叠），家族间一致 82%——D 的 84% 非 GLM 特异伪影**；复核性质=独立第二意见（gold 复核前已定版可见，非盲评，meta 已注明）；2/3 区分上查表不劣于 LLM 且 LLM 跨家族稳定。④候选升级：D 结论 candidate→正式（待监工裁）。**阶段二剩余：补充集 D 预测补齐（通道）→用户盲标 30 条→报告 v3。**
-- 2026-10-01（cf 审整改轮）**监工跨家族审 C1-C4 整改闭环**。①C1 复现：cross_family_eval.py 加 --offline 离线模式（raw 重解析+计分全入库），**复现 DS 82/100 与监工手算一致**；【cf2 复审更正：在线解析器未真正修复而是整体删除（在线只落 raw，计分统一走 --offline）；按位映射 assert+preds 磁盘比对已补】8 批 22 条（监工 E5 更正：33 批仅 1 条）。②C2 sha 实算（旧 input sha 手抄 63 位作废）+补 gold/D preds sha 入 meta。③C3 prompt 披露：DS 为简化版 prompt（与 D 模板 sha 不同，差异三点列明）；docstring"盲评"→"独立第二意见（非盲）"+DS system prompt 写于 gold 可见后的风险披露。④C4 范围：升级仅 2/3 二分类。⑤**批 30 敏感性口径**：监工 cf2 复审**采纳 82/97=84.5% 并撤回其 79/97**（82−3 属重复扣减——141/142/143 本不在 82 正确项内）；纠错轨迹留档：监工 E6 原裁 79/97 系其手算重复扣减，执行方指出后监工确认。⑥P1 披露入 eval_cross_family.json：2→3 三方法并排（DS12/D8/mesh4，LLM 偏过程指标）/idx62 共病首次/一致性口径改"准确率同档、逐条 82%、错误模式不同"。⑦P2 采纳：补充集 DS 复核时用 JSON mode。⑧监工拍板#2 采纳：补充集 D 补齐后同 DS 通道跑一遍（成本低）。**待监工：C1-C4 闭环确认+D 升级批准（2/3 二分类范围）。**
-- 2026-10-01（cf2 复审轮）**监工批准 D 结论升级（2/3 二分类范围）+批 30 口径采纳 82/97**。①裁决：C1-C4 数字层面闭环，**D（glm-5.3-flash）test_100 结论 candidate→正式（范围仅 2/3 二分类，background n=0 不在覆盖内）**——升级依据：DS 82% 独立同档+家族间一致 82%+三方法 CI 重叠。②批 30 口径：监工撤回 79/97（重复扣减），**以 82/97=84.5% 为准**（敏感性分析口径，主口径仍 82/100）。③P0 四处整改：在线解析器删除（统一 --offline 计分）/note 变量化/硬编码 sha 实算/按位 22 条实算 assert+preds 磁盘比对 assert；P1：d[idx][pos] 替代行序/纠错轨迹留档/DS 82/97 标敏感性。④补充集路线确认（监工附三条约束）：**D 补齐→先锁 D preds sha 入档→再跑 DS（JSON mode 配置单独记录不与 test_100 合并）→最后才交用户盲标**；盲标前三方法预测一律不公开。⑤P2 采纳：wilson 复用（test 计分并入 eval_dev_threeway 时统一）。
-- 2026-10-01（补充集预测锁定轮）**三方法补充集预测全量锁定（先于 gold）——盲标交付就绪**。①通道变更（用户指示"glm_flash 直接用官方的"）：D 引擎改 **glm-5-3-flash-260828@火山方舟官方直连**（temperature=0；该型号不接受 thinking disabled、内建推理自流 8192 预算），原 MCP 通道 4 条作废、50 条全量同通道（无混用）；通道变更记 meta。②runner 入库 src/08_route_eval/supp_predictions.py（glm-ark/ds-ark 双引擎、断点续跑、在线落 raw、解析入库；D 补跑 1 批读超时后断点补齐）。③**三预测锁定**：D 50/50 sha 594923af…；DS 50/50 sha 7e98b74f…（**JSON mode 一次全过**，配置单独记录不与 test_100 DS 成绩合并——监工 P1-5）；mesh 50 sha 56215b46…（此前）。④**前 30 条（S001-S030，deliver=first30）盲标交付用户**：三预测分布不公开（监工 P1-6）；reserve20 触发条件=gold 背景<10。⑤盲标口径：九选一同 test_100+背景句式密集提示（1/4/5 交界难判条目允许标 9——监工 supp 审 P1）；gold 交回即原样留底计分（预测已全锁，gold 到达不污染任何预测——与 test_100 同逻辑，流程一致性仍走留底）。
-- 2026-10-01（补充集计分轮）**补充集 gold 交付+三方法双口径计分——背景病维度首次测得**。①用户一次标注全部 50 条（交付说明为前 30）——三方法预测已对 50 条先锁（sha 入档 0f28498），加量程序正当；first30 主口径/full50 并列交监工裁（程序披露入 eval_supp_score.json）；gold 原样留底 supp_bg_50_gold_ORIGINAL_as_received.txt+sha 185ece1b…。②gold 分布（50）：target 29/endpoint 17/**background 3**/treatment 1。③**计分（描述性）**：D first30 80.0%/full50 82.0%；DS 90.0%/86.0%；mesh 76.7%/86.0%。④**背景类专项（n=3，本集核心目的）：D 3/3 全对、DS 2/3、mesh 0/3**（mesh 按设计无背景输出，1→2 误判率 100%）——背景病维度描述性观察（n=3 不支持推断，不得表述"LLM 能识别背景病/唯一路线"——监工 v3 P0-3）；⑤关键发现：背景病句式抽样命中率仅 3/50=6%（"patients with X"句式中 X 多为目标/结局角色）——背景 gold 仍稀缺（n=3<10），测量受限如实披露；treatment 首次有 gold（S030 三方法全对）。⑥下一步：报告 v3 起草（十问+全口径+纠错轨迹）→监工终审→管线评估收口。
-- 2026-10-01（v3 终审整改轮）**监工 v3 终审：有条件通过——P0×5 全部整改**。①P0-1 可复现：eval_dev_threeway.py 参数化 --split dev|test|supp_bg（wilson 复用兑现）——**test 复现 D 84/mesh 86、supp 复现 D 41/DS 43/mesh 43 全部与落盘一致**；eval_test_score/eval_supp_score 增 reproduced_by 字段。②P0-2 cross_family_eval 在线段重写（只落 raw 不解析不写 preds）+input sha 实算（63 位硬编码清除）。③P0-3 背景类表述收敛：专项行附 n=3+Wilson CI（D [43.9,100]/DS [20.8,93.9]）+"mesh 0/3 为设计决定非测量结果"+"不支持推断不得作根因证据"；删除两处超限表述（P0-3 所指）；十问①改"假说（n=3 无法验证）"。④P0-4 **补充集主口径终裁=full50**（预注册停止规则客观触发后的最终分析集；first30 降交付批敏感性——事后选 first30 属有利口径选择不予采纳，监工 p-hacking 防范）；reserve20 段披露（背景0/target14/endpoint6，mesh 20/D 17/DS 16——两口径差异全部来源）。⑤P0-5 十问②消融标 candidate_research（无落盘产物）；④改 full50 口径；⑥亚组/共病 n=0 未测如实标注；⑨成本"未计量落盘"如实披露。⑥v2 旧文标注"已被 v3 取代"；eval_test_score 过时 note 更新（D 升级后）。⑦README 前轮重复条目与"唯一路线"表述清理。**待监工 diff 复审后阶段二定版。**
-- 2026-10-01（v3b 收口轮）**监工 v3b 复审 C1-C4+P1 全部闭环——阶段二定版**。①C1 README 重复行（240/247）删除+超限表述清零；②C2 报告 §10"待裁"矛盾删除；③C3 json process_disclosure 主口径字段对齐 full50；④C4 十问⑤⑩背景类加"假说 n=3 待验证"限定；⑤P1：reserve20 计数与背景类 Wilson 输入改从数据计算（assert 核对 0/14/6 与 20/17/16）+eval_dev_threeway"52% 根因"→假说口径+background_class_n3 重复段删除+score_test docstring 改"只校验不写盘"；supp 复现三断言仍全过。⑥终 grep 证据：超限表述 0 处/待裁 0 处/主口径旧字段 0 处。**阶段二（路由评估）就此定版**：test_100 主口径 D 84%/mesh 86%（D 正式·2/3 二分类）+跨家族 DS 82%+补充集 full50 D 82%/DS 86%/mesh 86%+背景类 n=3 描述性。剩余收尾：论文方法章节（等用户启动）/Food 收尾（等对方步骤⑦）/双头口径终并（92% 已作废不引用）。
-- 2026-10-01（叫停与整合决策轮）**用户决策：叫停对方新开发→等返工收尾→整合合二为一（单开发模式）**。①依据监工终裁（supervisor_mra_review_20261001：打回+否决权），用户决定让对方停止新开发、完成 P0 五项返工收尾；返工指令已落盘 data/logs/handoff_to_mra_20261001.md（叫停四项+返工五项+红线：不许改断言变绿/清库重建防混合/授权键 consumed）。②**整合预案（对方返工+⑦授权后启动）**：服务器收敛为唯一项目路径（保留主目录 main；KG_zcode 与 Knowledge_Graph-mra 两个 worktree 在成果合入后清理；Knowledge_Graph.git 裸仓保留为 backup remote 或降级归档）——统一入口/统一发布流程（三关制）/统一测试入口/统一版本号与 CHANGELOG。③AI-1 当前挂起等用户通知（对方完成后）；可协同项：loader 溯源改造（共用代码）。
-- 2026-10-01（整合执行轮一：Q 轨+事故披露）**按监工并行计划开工（用户批示，拍板按建议：n=50/迭代≤2轮/授权不合并）**。①Q1：neo4j-materialize-v2 置 consumed+负向测试双过（已核销键被拒✓/未登记键被拒✓）；其余 5 把 active 键处置建议（phase-r-remediation 等任务已完成建议核销/phase-v-prime-merge 留 P2 回填用）留 G0 审。②**Q3 执行事故（如实披露）**：清理 food_precision_scoring.json 过时字段的递归脚本误删含"暂未落盘"字样的顶层对象整棵——原 56/60 逐条明细与样本 ID 丢失（无备份）；已按 README/监工报告引用做汇总级重建（random-only 30/30 Wilson [88.6%,100%]>80% 口径成立），明细级溯源缺失是否重抽由监工 G0 裁；教训：清理脚本先 dry-run 列出将删键再执行。③Q4 口径修正并入重建产物（去重+只用随机样本计分，合并算 Wilson 不合法——监工 E15/P1）。④后续 Q2/Q5/A0/A1/P1/C1a/C2a 按计划推进。
-- 2026-10-01（整合执行轮二：P1/P2 溯源落地）**Q 轨+A0+A1+P1+P2 完成**。①A0 清单落盘（data/logs/A0_preworktree_checklist）：数据实体仅主目录✓/两 worktree 无独有内容（mra 零未合入、KG_zcode 仅最新提交已并）✓/风险项：crontab 引用两 worktree 4 处（kg_audit@KG_zcode、radar@KG_zcode-mra）+status.sh 硬编码 mra 路径+mra/.venv 在 worktree——A2 删除前须先改；②A1：dev 整合轮合入 main（f4e0170）；**PAT 无 workflow scope**——mra-tests.yml 的 src/** 触发路径修改被 GitHub 拒推，已 revert 暂撤（Q5-1 搁置待 PAT 更新或网页端改，G0 待办）；③P1 根因修复：merge_qc 收尾内联回填四列（9-30 覆盖事故根因消除）+backfill 支持 --merged-dir 与**占位列剥离**（值集合⊆占位集才剥，真值列不受影响）；13 项测试过；④P2：candidate_v2 真值回填 EX-ab0491cf（phase-v-prime-merge 键）——**值级断言六项全过**：source_id∈registry 六源且≠source_type 0 违规/retrieved_at 全=registry last_sync（09-15/17/23 三档，执行时刻 0 条）/knowledge_layer 两枚举与 source_type 交叉 100% 一致（curated 20,227+llm 613）/抽样回溯 6/6；产物 provenance_realvalue_assertions.json。⑤主 TSV（data/merged）确认为 444 冻结基线（20,801=d8eb3b27），不动；merge_qc 下次重跑时由 P1 内联自动带四列。⑥待办下一批：C1a 抽样器/C2a 十条归因/P3 244 对账→G0/G1/G2/G3 送审。
-- 2026-10-01（G0-G3 整改轮）**四关口审（G0 有条件/G1 认可/G2 P2 过 P3 打回/G3 有条件）→ 全部整改条件闭环**。①G0：4 键核销（phase-r-remediation 事故键优先）+负向测试原样输出 4/4 拒绝✓；safe_clean 备份统一 data/backups/+原子写+7 测试 verbose 附档；README Food 口径降级（"汇总级重建不能作门禁证据"）；A0 补原样输出（含 readlink 报错）。②G1：worktree 清理条件=C1-1 引用逐条 5 处处置（crontab 3+status.sh 1+.env 1）+C1-2 .env 方案，已入 A0 §9/10，删除待用户拍板（G8 前置）。③G2：**P3 补强**——对账表补 old_state_0930 列（新旧交叉：canonical 保持 93/上移 8/降级 12，25→101 构成逐条可溯）；**53 条否决 ID 清单盘上不存在（对方产物缺口，如实披露）**，244 终态枚举替代证明；16 条差异精确化=移除 23（全 llm）/新增 7/净 -16（diff16_vs_0930_directed.tsv）；主 TSV=frozen 双 sha 一致（0e456953…）。④G3：归因结论修正（mixed 4 个非 3/规则可修 1 个非均可/样本表外 ID 2 个披露/RA-bd14 按 C3-3 出分母）；**scispaCy 论证修正：错误主靶区=4 个 mixed ID 的 anatomical_site 行（19/63 标注行）**；review_prep pool[4:] 修正+回归。⑤**C3-4 预注册文件落盘**（c2e_preregistration.json：context 50 条按维度分层+每维 ≥0.85+Food 30 条层+种子 20261001+(assertion_id,dimension) 主键+迭代 ≤2 轮）——先于抽样，G4 输入就绪。⑥phase-v-prime-merge 保持 active（P3 整改重写核对文件用，G2 复审后核销）。**下一步：C2b 三条规则修复（回归用例取 4 个 mixed ID 的 anatomical_site 行）→C2c 冻结→C2d 后台重算（前置：candidate_v2 目录快照——风险预警 3）→C2e 抽样（晚于冻结）→G4→U1 用户盲标（含 PAT 更新）。**
-- 2026-10-01（G4 两轮打回→v3 闭环）**G4 防过拟合关口两轮打回与整改全记录**。①首轮打回四项：预注册手写时间戳错误（19:30 晚于抽样）+与抽样同 commit 无独立记录；规则 3 游离未接入管线；C2d 验证未落盘；抽样代码未入库。②二轮打回七项（整改后新缺陷）：规则 3 continue 跳过 _applicability（in vitro geography 语义丢失——not_applicable 应 140 条实为 0）；"5,742 条生效"系无效证据（非 explicit 全体≠规则过滤量）；120 字符标题启发未验证且致 geography explicit 仅剩 4 条（维度被关）；抽样未执行预注册 top-30 排除；预注册双种子矛盾；meta 无 commit 号；README 未同步。③**v3 终态**：geography 改**真实 title 字段**（pmid→articles.jsonl passages[type=title] 索引，弃字符启发）+适用性优先+title_only/absent 两 reason 拆分——C2d v3 终态 geography：explicit 4/not_applicable 140（in vitro 恢复）/title_only 51（真实过滤量）/absent 5551；验证六项落盘 c2d_v3_verification.txt（QC PASS 5,746 不变式/edges sha 一致 86a4324c/规则1 22 条/规则2 违规 0）；冻结 tag v3（c2c-freeze-v3@6a67eb7）；预注册 v3 独立 commit 3e223f8（seed 20261003 单一字子段+top30 排除条款含文件 sha+**作废 2 次与迭代 ≤2 轮分开计数**）；抽样器 v3（top30 排除+交集断言+**预注册 sha 运行时机器绑定**+真实 commit 号）；新抽样 sha 5edf4ce0（50 ctx+30 food/旧 50 交集 0/top30 交集 0）。④git 时间线三段可证：冻结 v3→预注册 3e223f8→抽样 17fe0f0。**待 G4 三审。**
-- 2026-10-01（G4c 交付就绪）**G4 三审有条件通过——样本有效免重抽，C1-C4 四条件闭环，U1 盲标交付**。①C1 全文对照版 c2e_blind_sample_fulltext.tsv（80 行同 ID/维度/序，evidence+sentence 全文，原卷未动 sha 不变）；②C2 规则3降级表述（对 explicit 过滤量=0，title_only 51 条均原本非 explicit；geography 样本 0 条**不在本轮评测范围不得宣称过线**）；③C3 freeze_tag 更正 v3/6a67eb7+验证项数更正（五项）；④C4 Food 池 244→127（top-30 风险对象整体排除 117 条，涉及 Akkermansia muciniphila 等；**Food 结论限定排除后子总体**）。⑤git 时间线三段（冻结 v3→预注册 3e223f8→抽样 17fe0f0）+预注册 sha 运行时机器绑定。**U1 交付：c2e_blind_sample.tsv（50 context+30 Food，逐行 verdict yes/no；对照全文版辅助阅读）+顺手更新 PAT workflow 权限。**
-- 2026-10-01（G5 裁决与第 1 轮迭代闭环→第 2 轮就绪）**G5：context 未过线（stop_rule 1/2）·Food 29/30=96.7% 过线；选①规则修复路径**。①第 1 轮计分（用户盲标 80 条，gold sha ca4c3744，转录修正 1 处原样留底）：context 12 维 **9 维过线**（多数 100%——**n≈4 样本上未复发，不能证明已修复**，P2 口径）/3 维未过（anatomical 4/5、disease_stage 1/4、study_type 2/3）；Food 29/30（Wilson [83.3,99.4]）过线。②监工纠正我 2 处根因误判（gut=epithet 词表缺 bacterial/species 非窗口问题；chronic=inflammation 双表词作中心词需"中心词约束"非"疾病共现"）。③**P0×3 修复**（epithet 词表+study_type 删 volunteers+disease_stage 中心词约束：紧邻病理过程词剔除/窗口疾病中心词保留/stage of 句式）——**契约测试 5 错例翻转+正例无回退 31 passed**（test_context_contract.py 扩展）；P0-1/2 曾因脚本漏写盘未生效被契约测试抓回（教训：修改后必须验证落盘）。④**scispaCy 书面评估（预注册字面执行"重开评估"，不装依赖）**：5 错逐条——gut/volunteers=词表问题（句法无增益）；early-of-fermentation/advanced-characterization=中心词语境（依存句法 head 词可解但中心词规则同效）；chronic inflammation=amod 依存弧可解但紧邻词规则同效——**结论：本轮不引入（0/5 错误必须依存句法才能修）；若第 2 轮再现同类错则升级用户拍板**。⑤P1×2：ORIGINAL 恢复交付原样（修正只在记录行）/error_items 全文+命中 offset。⑥**第 2 轮就绪**：预注册附录（每维 cap 8/seed 20261004/排除两轮全部/本轮仍不过→如实披露交用户）sha 1055515c 先行 commit（00efdf6=冻结 v4 同提交）→抽样 commit 2acb2b3——**88 context+30 food，sha ed1f3c77**，与第 1 轮 80 条交集 0。C2d v4 验证：5746 不变式/edges sha 一致/四维终态健康（disease_stage explicit 31/study_type explicit 5——收紧后仍保留合理产出）。**待 G4' 轻审后交付 U1 第 2 轮盲标（88+30）。**
-- 2026-10-01（G5 第 2 轮终裁）**context 门禁按方案 B 收口——A（第三次迭代）否决**。①第 2 轮结果（89+30，sha 65abd71b；第 3 次作废记录：88+30 因 Food 重复作废）：**Food 30/30=100%**（两轮 96.7%→100%）；context 9 维过线（**disease_stage 25%→100% 修复验证**；过线维对外须带 n=8+Wilson，8/8 下界 0.68 不得写 100%）；**anatomical_site 6/8、disease_subtype 6/8 未过**（Wilson [0.41,0.93]——词表长尾：第 1 轮 gut→补丁→第 2 轮 blood 再错）；study_type（池尽 n=1）/geography=**未评测**。②A 否决理由：预注册 stop_rule 2/2 用尽；"覆盖不足非过拟合"与证据相反（换错不重错=长尾）；75% Wilson 下界 0.41 不算接近线。③标注完整性披露：117 判定对 119 行（两 ID 跨维度单判定被复制——**用户补标 2 行 4 判定后 gold 重锁**；四维过线结论均不翻转）。④scispaCy 重开条款已触发（blood 与 chronic 同类中心词错）——先书面评估再用户拍板是否装依赖。⑤P0×6 已改：score_r2（完整性披露/study_type pass=null/未评测维度/scispacy 触发/food scope/全文 sha）+error_items 追加 round2（根因全标"假说"）+本条目。⑥**待用户：补标 RA-cba70c18（diet/strain）与 RA-96411764（disease/disease_subtype）两行独立判定；拍板 4 项**（未过两维=降"未验证"明示 6/8/未评测两维同处置/scispaCy 书面评估先行/发布后另立新评测周期修词表长尾）。
-- 2026-10-01（G5 收口+拍板执行）**补标闭环+四项拍板落地+scispaCy 书面评估**。①补标 4 判定（(id,dim) 主键）落盘：gold 重锁 sha 3892f360→b0feda42（新旧并列）；影响：disease 8/8→7/8（87.5% 仍过）/disease_subtype 6/8→**5/8**（62.5% 仍未过）/diet/strain 不变——过线结论不翻转；执行者此前将 subtype 值误记 NAFLD（实为 ulcerative）已更正。②**四项拍板（按监工建议）落地为 dimension_release_status 表**：verified_pass 9 维（各带 n 与 Wilson 下界）/unverified_failed 两维（anatomical 6/8、subtype 5/8——保留值降"未验证"明示，不进精度声明）/not_assessed 两维（study_type 池尽、geography 既定）/Food 30/30（子总体）。③**scispaCy 书面评估（拍板#3，基于错例全文）**：第 2 轮 5 错中——blood×2（"blood sugar levels"=复合指标词，blood 修饰 sugar；中心词规则可修【blood+指标词组合过滤】同效于依存弧）/NAFLD 类×2+ulcerative 1（值来自断言语境外或培养语境——**依存句法无增益**（问题在证据窗选取非句法结构））/patients 1（词表问题）。**结论：0/5 必须依存句法——维持不引入 scispaCy**；anatomical 连错两轮的根因=词表长尾+复合名词，建议下周期换方法（如 MeSH 解剖词表驱动）而非补丁。④发布后新评测周期（拍板#4）：另立预注册（新种子/新样本/新方法评估），与本轮结论隔离——列入 v1.3+ 待办。
-- 2026-10-02（G7 复审 C1-C3 闭环）**发布前最后关口通过**。①C1 图中直查（g7_c1_graph_query_20261002.txt，含查询/时间/EXEC-3e3ac0cc）：**4 个 hold ID 图中命中 0** ✓；MP=1 且 assertion_set_hash 修正后=TSV 实算 sha256:9ea0c951…（物化时读的 manifest 旧值 b6a5…，已同步更新——manifest/MP/TSV 三口径一致）✓。②C2 README 如实披露：D1 重物化 EX-3e3ac0cc——5,742 断言/12,015 节点/20,840 边（4 hold 隔离）；**机检口径**：38 项中 23 项自动+15 项 v1 条目，其中 3 项写死 PASS（Span norm/Batch completion/Comparability Gate——已知债务，P1 未整改）；Context Precision 门禁阈值 0.8 vs 冻结 0.85（0.9347 两阈均过但口径须披露）；**范围变更**：剔除 1,167 个孤立种子节点（690 药物+443 疾病等无关联节点未入图）。③C3 v4 授权键签发记录：用户 2026-10-02 "授权，按照监工的建议执行"（G7 打回 P0-1 整改范围）。**G7 有条件通过——C1/C2/C3 全部满足，可提交 U3。**
-- 2026-10-02（**U3 三合一执行完毕——项目完整交付**）。①**⑦发布授权**：用户「授权 U3」——serving 正式从冻结基线 d8eb3b27（4,304 断言）切换到 **candidate_v2（5,742 断言/12,015 节点/20,840 边）**，manifest 444 只读保护+发布链记录（G7→D1→serving_from/to）；②**worktree 删除**：tar 备份两个 worktree（1.4M+485M 至 data/backups/）→crontab 3 处引用改指主目录+radar data 迁移（52K）+status.sh 去硬编码→`git worktree remove`（不带 --force）+分支 `git branch -d`+头 tag（wt-kgzcode-final/wt-mra-final）→**服务器唯一项目路径** `/data/LYteamwork/JiXuanRui/Project/Knowledge_Graph`（main@f07edd4）；③**冒烟验证**：kg_audit 手动运行成功+Neo4j 200+Streamlit 200 ✓；④**单开发模式生效**。**项目终态**：Local KG=12,015 节点/5,742 断言/20,840 边（溯源四列 100% 真值/Food 59/60/context 9 维过线+2 维未验证+2 维未评测明示）/全部 sha 锁定/13 份监工审报告/G0-G7 全关口闭环/两远端同步（GitHub+internal-archive）。
+> **服务状态**：Neo4j（bolt://127.0.0.1:17687）✅ ｜ Streamlit（127.0.0.1:8765）✅ ｜ 审计 cron（每 30 分钟）✅
+> **GitHub**：https://github.com/Jxuanrui/CSCCD-OpenMicrobiomeScience ｜ **internal-archive**：本地裸仓（备份）

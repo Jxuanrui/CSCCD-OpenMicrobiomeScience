@@ -393,8 +393,20 @@ def build_context(evidence_text: str, object_id: str, subject_id: str = "", obje
         if dim == "host_species":
             found = _host_species_hit(evidence_text)
         elif dim == "anatomical_site":
-            # 终审缺陷类 3 + 二次终审#16：给药途径与栖息地定语（gut commensal X）
-            found = _anatomical_site_hit(evidence_text)
+            # B1'（v3 周期）：MeSH A 树驱动替代手写词表——覆盖全部 MeSH 解剖实体
+            # 兜底：MeSH 索引不可用时退回手写词表
+            # B1' v2（混合模式）：旧词表保底覆盖 + MeSH 过滤+新词发现
+            _legacy = _anatomical_site_hit(evidence_text)
+            _mesh = _mesh_anatomy_hit(evidence_text)
+            if _mesh is None:
+                found = _legacy
+            else:
+                _merged = list(_legacy or [])
+                for m in _mesh:
+                    if m not in _merged:
+                        _merged.append(m)
+                _filtered = [w for w in _merged if not _is_epithet(w, evidence_text.lower())]
+                found = _filtered or _legacy
         elif dim == "disease_stage":
             found = _disease_stage_hit(evidence_text)
         if found:
@@ -896,16 +908,20 @@ def _mesh_anatomy_hit(evidence_text: str):
                     hits.append(c)
                     seen.add(c)
 
-    return hits or None
+    return hits  # [] = MeSH 已检查无结果（不回退）
 
 def _is_epithet(word: str, text: str) -> bool:
-    """检查词是否为修饰语（后接菌名/疾病名/过程名词）。"""
+    """检查词是否为修饰语（后接菌名/疾病名/过程名词/复合指标词）。"""
     import re as _re
     _patterns = [
         rf"\b{word}\s+(?:[a-z\-]+\s+){{0,2}}(bacterium|bacteria|bacterial|species|microbiota|microbiome)",
-        rf"\b{word}\s+(?:[a-z\-]+\s+){{0,2}}(inflammation|inflammatory|damage|injury|disease|colitis|cancer|barrier|severity)",
+        rf"\b{word}\s+(?:[a-z\-]+\s+){{0,2}}(inflammation|inflammatory|damage|disease|colitis|cancer|barrier|severity)",
     ]
-    return any(_re.search(p, text) for p in _patterns)
+    # 复合指标词（blood sugar / gut permeability 等）——部位+指标≠独立部位
+    _compound_indicator = [
+        rf"\b{word}\s+(sugar|glucose|level|levels|flow|pressure|permeability|barrier\s+function)",
+    ]
+    return any(_re.search(p, text) for p in _patterns + _compound_indicator)
 
 _ROUTE_WORDS = frozensome = frozenset()  # 由 _anatomical_site_hit 的 route_words 填充
 

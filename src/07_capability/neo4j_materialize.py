@@ -113,7 +113,7 @@ def materialize(uri, password):
 
             s.run("""
                 MERGE (ra:RelationAssertion {assertion_id: $aid})
-                SET ra.predicate = $pred, ra.direction = $dir,
+                SET ra.predicate = $pred, ra.direction = $dir, ra.manual_hold = $hold,
                     ra.confidence = $conf, ra.evidence_pmid = $pmid,
                     ra.evidence_span = $span,
                     ra.context = $ctx, ra.context_completeness = toFloat($ctx_comp),
@@ -124,7 +124,8 @@ def materialize(uri, password):
                 dir=row.get("direction", ""), conf=row.get("confidence", ""),
                 pmid=row["evidence_pmid"], span=span,
                 ctx=ctx_str, ctx_comp=row.get("context_completeness", "0"),
-                prov=prov_str, div=row.get("divergence", "")).consume()
+                prov=prov_str, div=row.get("divergence", ""),
+                hold=row.get("manual_hold", "")).consume()
 
             # HAS_ASSERTION: subject → assertion
             s.run("""
@@ -172,7 +173,7 @@ def materialize(uri, password):
             "MATCH (ra:RelationAssertion) WITH ra.assertion_id AS id, count(*) AS n WHERE n > 1 RETURN count(*) AS c"
         ).single()["c"]
         qc["manual_hold_leaked"] = s.run(
-            "MATCH (ra:RelationAssertion) WHERE ra.divergence = 'manual_hold' RETURN count(ra) AS c"
+            "MATCH (ra:RelationAssertion) WHERE ra.manual_hold IS NOT NULL AND ra.manual_hold <> '' RETURN count(ra) AS c"
         ).single()["c"]
         qc["context_dependent_canonical"] = s.run(
             "MATCH ()-[r:RELATED {relation_status: 'context_dependent'}]->() RETURN count(r) AS c"

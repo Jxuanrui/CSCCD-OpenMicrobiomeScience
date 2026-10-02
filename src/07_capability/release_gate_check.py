@@ -286,6 +286,13 @@ def main():
         summary["ontology_refinement_backlog"] == len(backlog)
     checks["final_hashes_present"] = bool(
         manifest["assertion_set_hash"]) and bool(manifest["annotation_set_hash"])
+    # G7 P0-4：哈希必须一致（manifest == 当前 TSV 实算），不一致 FAIL
+    import hashlib as _hl
+    _tsv_sha = _hl.sha256((MERGED / "relation_assertions.tsv").read_bytes()).hexdigest()
+    checks["assertion_set_hash_consistent"] = (
+        manifest.get("assertion_set_hash", "").lstrip("sha256:") == _tsv_sha or
+        manifest.get("assertion_set_hash", "") == f"sha256:{_tsv_sha}")
+    manifest["assertion_set_hash"] = f"sha256:{_tsv_sha}"  # 对齐为实算值
     fm = json.loads((MERGED / "finalize_metrics.json").read_text(encoding="utf-8"))
 
     # ---- Bookkeeping invariants（收口裁决 2026-09-25）----
@@ -296,6 +303,12 @@ def main():
     ac = fm["assertion_counts"]
     _a = pd.read_csv(MERGED / "relation_assertions.tsv", sep="\t").fillna("")
     _live_hold = (_a["manual_hold"] != "").sum()
+    # G7 P0-2：三口径一致（manifest=finalize=result）
+    _res_n = json.loads((MERGED / "neo4j_materialization_result.json").read_text()).get("assertion_nodes") \
+        if (MERGED / "neo4j_materialization_result.json").exists() else None
+    checks["eligible_triple_consistent"] = (
+        manifest.get("eligible_assertions") == ac["materialization_eligible_assertion_count"]
+        and (not manifest.get("materialized_to_neo4j") or _res_n == ac["materialization_eligible_assertion_count"]))
     checks["assertion_count_invariant"] = (
         ac["materialization_eligible_assertion_count"]
         == ac["retained_assertion_count"] - ac["manual_hold_count"]
@@ -338,20 +351,18 @@ def main():
     checks["dropped_manual_excluded"] = leaked == 0
     # manual_hold 已隔离（P0-3 语义修正：在场登记 hold 必须全部带 hold 标记；
     # 缺席者须有逐条"不在集合中"证据文件——计数比较不再作为判据）
-    _mh = MERGED / "manual_hold.tsv"
-    mh_reg = pd.read_csv(_mh, sep="\t") if _mh.exists() else pd.DataFrame(columns=["object_pmid", "subject", "hold_reason"])
+    # G7 P0-5：从 finalize_metrics.hold_assertion_ids 读 hold 清单
+    _hold_ids = set(fm.get("hold_assertion_ids", []))
+    mh_reg = pd.DataFrame({"assertion_id": list(_hold_ids)})
     a_h = pd.read_csv(MERGED / "relation_assertions.tsv", sep="\t").fillna("")
     _tsv_keys = {(r["subject"], r["predicate"], r["object"], str(r["evidence_pmid"]))
                  for _, r in a_h.iterrows()}
     _leak = 0
     for _, h in mh_reg.iterrows():
-        _obj, _pmid = str(h["object_pmid"]).split("@")
-        k = (h["subject"], h["predicate"], _obj, _pmid)
-        if k in _tsv_keys:
-            row = a_h[(a_h["subject"] == h["subject"]) & (a_h["predicate"] == h["predicate"])
-                      & (a_h["evidence_pmid"].astype(str) == _pmid)]
-            if not (row["manual_hold"] != "").any():
-                _leak += 1
+        # 按 assertion_id 核验：hold ID 的行须有 manual_hold 标记
+        _row = a_h[a_h["assertion_id"] == h.get("assertion_id", "")]
+        if len(_row) > 0 and not (_row["manual_hold"] != "").any():
+            _leak += 1
     _absent_ev = (MERGED / "restored_baseline_hold_absence_evidence.json").exists()
     checks["manual_hold_quarantined"] = _leak == 0 and _absent_ev
         

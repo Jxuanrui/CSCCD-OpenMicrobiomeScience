@@ -2,7 +2,7 @@
 # 汇报前必跑的执行健康核验：输出事实证据（进程/时间戳/git/CI），供进度汇报引用。
 # 用法：bash status.sh
 set -u
-W=/data/LYteamwork/JiXuanRui/Project/Knowledge_Graph-mra
+W=/data/LYteamwork/JiXuanRui/Project/Knowledge_Graph
 echo "==[1] 我方后台进程（ps 事实）=="
 FOUND=0
 for PAT in 'full_sca[n]' 'run_batc[h]' 'mra.researc[h]' 'temporal_runne[r]' 'vecstor[e]' 'litrea[d]'; do

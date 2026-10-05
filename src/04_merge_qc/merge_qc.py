@@ -103,6 +103,7 @@ def main():
         for line in stage.open(encoding='utf-8'):
             r=json.loads(line)
             if r.get('status')!='ok' or r.get('predicate')=='no_relation': continue
+            if r.get('stage','1') != '3': continue  # v3 stage 契约
             subject, obj=r['subject'],r['object']
             key=(subject['id'],r['predicate'],obj['id'])
             groups.setdefault(key,[]).append(r)

@@ -21,9 +21,19 @@ from pathlib import Path
 
 import requests
 
+
+def _get_judge_base():
+    return os.getenv(JUDGE_BASE_URL) or os.getenv(DEEPSEEK_OFFICIAL_BASE_URL) or os.getenv(ARK_BASE_URL) or os.getenv(OPENAI_BASE_URL, )
+
+def _get_judge_key():
+    return os.getenv(JUDGE_KEY) or os.getenv(DEEPSEEK_OFFICIAL_KEY) or os.getenv(ARK_KEY) or os.getenv(OPENAI_API_KEY, )
+
+def _get_judge_model(args):
+    return os.getenv(JUDGE_MODEL, getattr(args, judge_model, deepseek-chat))
+
 ROOT = Path(__file__).resolve().parents[2]
 INPUT = Path(os.environ.get("KG_INPUT", str(ROOT / "data" / "pubtator" / "articles.jsonl")))
-OUTPUT = ROOT / "data" / "staging" / "llm_relations.jsonl"
+OUTPUT = Path(os.environ.get("KG_STAGING_OUTPUT", str(ROOT / "data" / "staging" / "llm_relations.jsonl")))
 NAMES_CACHE = ROOT / "data" / "raw" / "taxon_names_cache.json"
 NAMES_DMP = ROOT / "data" / "raw" / "names.dmp"
 RANKS_CACHE = ROOT / "data" / "raw" / "taxon_ranks_cache.json"
@@ -755,8 +765,11 @@ def main():
     ap.add_argument("--workers", type=int, default=6)
     ap.add_argument("--resume", action="store_true")
     args = ap.parse_args()
-    key = os.getenv("ARK_KEY") or os.getenv("OPENAI_API_KEY")
-    base = os.getenv("ARK_BASE_URL") or os.getenv("OPENAI_BASE_URL")
+    key = os.getenv("DEEPSEEK_OFFICIAL_KEY") or os.getenv("ARK_KEY") or os.getenv("OPENAI_API_KEY")
+    base = os.getenv("DEEPSEEK_OFFICIAL_BASE_URL") or os.getenv("ARK_BASE_URL") or os.getenv("OPENAI_BASE_URL")
+    model = os.getenv("DEEPSEEK_OFFICIAL_MODEL", "deepseek-chat")
+    # S3 judge 支持独立端点（跨家族验证：S1/S2 用 ARK/DS，S3 用 GLM 中转）
+
     model = os.getenv("ARK_MODEL", "deepseek-v4-1-flash-260910")
     if not key or not base:
         raise SystemExit("请设置 OPENAI_API_KEY 和 OPENAI_BASE_URL")

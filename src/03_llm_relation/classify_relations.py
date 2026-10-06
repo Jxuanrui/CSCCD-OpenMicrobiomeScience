@@ -770,7 +770,6 @@ def main():
     model = os.getenv("DEEPSEEK_OFFICIAL_MODEL", "deepseek-chat")
     # S3 judge 支持独立端点（跨家族验证：S1/S2 用 ARK/DS，S3 用 GLM 中转）
 
-    model = os.getenv("ARK_MODEL", "deepseek-v4-1-flash-260910")
     if not key or not base:
         raise SystemExit("请设置 OPENAI_API_KEY 和 OPENAI_BASE_URL")
 

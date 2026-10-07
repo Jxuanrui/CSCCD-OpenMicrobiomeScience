@@ -25,9 +25,9 @@ python3 src/05_analysis/graph_analysis.py
 
 | Layer | Count | Description |
 |---|---|---|
-| **Nodes** | 7,826 | Microbe / Disease / Drug / Metabolite / Gene / Pathway / Food |
-| **Edges** | 20,309 | 13 predicate types (alleviates, produces, aggravates, ...) |
-| **Assertions** | 985 | Each with 15-dim context + provenance + evidence tier |
+| **Entity nodes** | 6,840 | Microbe / Disease / Drug / Metabolite / Gene / Pathway / Food |
+| **Canonical edges** | 20,309 | 13 predicate types (82 条带 LLM 断言链接) |
+| **Assertion nodes** | 985 | Each with 15-dim context + provenance + evidence tier |
 | **Corpus** | 89,404 | PubTator 3.0 papers, 12 disease domains |
 | **Sources** | 6 | Curated (Tier A) + LLM-extracted (Tier B/C) |
 
@@ -60,19 +60,38 @@ Releases pass through a **three-gate system**: automated checks → independent 
 
 ## Comparison with Similar Projects
 
-| Feature | This KG | [MicrobiomeKG](https://frontiersin.org) | [MINERVA](https://academic.oup.com) |
+| Feature | This KG | [MicrobiomeKG](https://www.frontiersin.org/journals/systems-biology/articles/10.3389/fsysb.2025.1544432/full) (PMC12425944) | [MINERVA](https://academic.oup.com/bib/article/26/5/bbaf472/8261764) (PMC12454267) |
 |---|---|---|---|
 | Provenance per-edge | ✅ 4-column | Partial | PMID link only |
 | Pre-registered gates | ✅ Test-locked | ❌ | ❌ |
 | Cross-family judge | ✅ DS+GLM | ❌ | ❌ |
 | Entity types | 7 | 6 | 2 |
-| Context precision | 91.3% | Unreported | Unreported |
+| Context precision | 91.3% | Unreported* | Unreported* |
 
 ## Schema
 
 Defined in [LinkML](schema/microbiome_kg.linkml.yaml). Key enums:
 - `EvidenceTier`: A (curated) / B (≥2 papers) / C (single paper)
 - `KnowledgeLayer`: local_kg_curated / local_kg_llm_extracted
+
+## 执行规则
+
+1. **修改 src/ 前**必须在 README 进展日志中注明
+2. **API 密钥**只走 `.env`（gitignored），永不入 git/crontab
+3. **data/merged 写入**须过 write_guard 闸门（授权键+execution_id+审计账本）
+4. **不可逆操作**（删除/覆盖）先备份、再报审、后执行
+5. **进程操作**按精确 PID，禁宽匹配 kill
+
+## 进展日志（摘要）
+
+- 2026-10-07 **v3.0.0 发布**：B3-B6 全链（985 断言/91.3%/机检 41PASS/物化/serving 切换）
+- 2026-10-06 **B4-B6**：merge_qc + context 重算 + B5 盲标（91.3%）+ B6 发布
+- 2026-10-05 **B3 全链**：DeepSeek 官方 API S1+S2+S3+v7（24 分钟完成）
+- 2026-10-02 **T1 启动**：⑤真算/E1 阈值统一/CI/LightRAG venv/B0 预注册/B1 语料扩容
+- 2026-10-02 **v1.3.0 发布**：U3 三合一（⑦授权+serving 切换+worktree 删除）
+- 2026-09-30 **阶段二定版**：test_100 D 84%/mesh 86%
+- 2026-09-30 **跨家族复核**：DeepSeek 82% 独立验证
+- 2026-09-29 **安全事件 R1**：密钥轮换+git 历史重写+pre-commit 扫描
 
 ## Project Structure
 
@@ -113,4 +132,6 @@ TBD (paper under preparation)
 
 ---
 
-> **Status**: Neo4j (bolt://127.0.0.1:17687) ✅ | Streamlit (127.0.0.1:8765) ✅ | Audit cron ✅
+> **GitHub**: https://github.com/Jxuanrui/CSCCD-OpenMicrobiomeScience
+
+> *Comparison data for MicrobiomeKG/MINERVA based on their published papers; individual metrics unverified by our team (candidate_research).

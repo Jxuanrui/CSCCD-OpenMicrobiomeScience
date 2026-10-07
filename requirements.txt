@@ -7,7 +7,7 @@ openai>=1.0
 requests
 pyyaml
 linkml
-torch>=1.13
+torch>=1.13,<2.0
 numpy
 scipy
 scikit-learn

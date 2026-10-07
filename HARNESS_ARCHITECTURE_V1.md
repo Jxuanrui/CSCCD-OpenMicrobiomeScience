@@ -137,7 +137,7 @@ AgentLab/food-pathway-phage/ 并回放验证。
 streaming（P2，H5 前置）。
 
 **四、图谱侧同步内容升级**为《Harness Architecture v1.0 + KG Layer
-Requirements》（KG_LAYER_REQUIREMENTS.md）：KG 是 Harness 的 Local Knowledge
+Requirements》（docs/archive/KG_LAYER_REQUIREMENTS.md）：KG 是 Harness 的 Local Knowledge
 Layer，不是研究结果仓库。
 
 ---
@@ -151,7 +151,7 @@ Scientific Research Core（知识层/科学治理/Evidence 双账本/能力语�
 改 upstream core；Scientific Core 零 dsh import，耦合限制在 adapter 薄层。
 G2/G3/G8 全部重定义（G3=Scientific Capability Registry；G8=Client Compatibility
 & Research Extension Contract；G2=Scientific Planning/Governance Plugin）。
-完整审计与 13 项决策见 DEEPSEEK_HARNESS_INTEGRATION_DECISION.md（G0.5）。
+完整审计与 13 项决策见 docs/archive/DEEPSEEK_HARNESS_INTEGRATION_DECISION.md（G0.5）。
 
 ---
 

@@ -16,7 +16,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 from graph_analysis import EDGES, NODES, load_graph, resolve  # noqa: E402
 
 ROOT = Path(__file__).resolve().parents[2]
-CANDIDATE = ROOT / "data/merged/candidate_v2"
+CANDIDATE = ROOT / "data/merged/candidate_v3"
 PREDS = CANDIDATE / "rotate_predictions.tsv"
 METRICS = ROOT / "data/merged/graph_metrics.json"
 
@@ -188,7 +188,7 @@ with TABS[2]:
         st.write(pick["top_members"])
 
 
-# ===== Tab 3: 链接预测（原有，改读 candidate_v2） =====
+# ===== Tab 3: 链接预测（原有，改读 candidate_v3） =====
 with TABS[3]:
     if PREDS.exists():
         p = pd.read_csv(PREDS, sep="\t")

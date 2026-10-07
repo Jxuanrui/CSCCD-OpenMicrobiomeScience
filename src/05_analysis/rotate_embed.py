@@ -2,7 +2,7 @@
 """C1: 自包含 RotatE 链接预测（纯 PyTorch，零 PyKEEN 依赖）.
 
 替代 link_prediction.py 的 PyKEEN 版本——避免 torch 1.13 + pykeen + pystow 版本冲突。
-输入 candidate_v2 的 TSV，训练 RotatE 嵌入，导出 Top-N 预测边 + hits@10/MRR 报告。
+输入 candidate_v3 的 TSV，训练 RotatE 嵌入，导出 Top-N 预测边 + hits@10/MRR 报告。
 
 用法：
   python3 rotate_embed.py [--epochs 200] [--dim 128] [--topn 200] [--outdir DIR]
@@ -24,7 +24,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 
 ROOT = Path(__file__).resolve().parents[2]
-CANDIDATE = ROOT / "data/merged/candidate_v2"
+CANDIDATE = ROOT / "data/merged/candidate_v3"
 
 # ===== RotatE 模型 =====
 

@@ -76,46 +76,60 @@ def test_no_hardcoded_root_merged_paths_in_src():
 
 
 def test_anchored_defaults_resolve_to_existing_dirs():
-    """Path(__file__) 锚定的默认值必须解析到真实存在的目录（监工 P0-2，2026-10-07）。
+    """KG_MERGED_DIR 默认值必须解析到真实存在的目录（监工 P0-2，2026-10-07）。
 
-    背景：mra 源码（mra/src/mra/kg/）与测试（mra/tests/kg/）目录深度差一层，
-    parents[N] 层级写错时字符串匹配仍 PASS，只有存在性检查能兜底。
+    覆盖两种锚定写法：Path(__file__) 直锚与模块级 ROOT / "data/merged/candidate_v3"
+    （后者含 neo4j_materialize/release_gate_check 等高危脚本——默认路径写错会把
+    错误数据写进生产库）。求值仅限本仓库源码里的纯路径表达式。
     """
     import ast
     offenders = []
-    for root in _scan_roots():
-        for py in root.rglob("*.py"):
+    for root_dir in _scan_roots():
+        for py in root_dir.rglob("*.py"):
             text = py.read_text(errors="ignore")
-            tree = ast.parse(text)
+            try:
+                tree = ast.parse(text)
+            except SyntaxError:
+                continue
+            # 模块级 ROOT = <expr>（若有）
+            ns_base = {"__file__": str(py), "Path": Path,
+                       "os": __import__("os"), "str": str}
+            for node in tree.body:
+                if isinstance(node, ast.Assign) and len(node.targets) == 1 \
+                        and isinstance(node.targets[0], ast.Name) \
+                        and node.targets[0].id in ("ROOT", "MERGED", "_ROOT"):
+                    try:
+                        ns_base[node.targets[0].id] = eval(
+                            compile(ast.Expression(node.value), "<root>", "eval"),
+                            dict(ns_base), {})
+                    except Exception:  # noqa: BLE001
+                        pass
             for node in ast.walk(tree):
-                # 找 environ.get("KG_MERGED_DIR", <default>) 调用
+                # environ.get("KG_MERGED_DIR", d) 与 os.getenv 两种，含 or 变体
                 if (isinstance(node, ast.Call) and isinstance(node.func, ast.Attribute)
-                        and node.func.attr == "get" and node.args
+                        and node.func.attr in ("get", "getenv") and node.args
                         and isinstance(node.args[0], ast.Constant)
-                        and node.args[0].value == "KG_MERGED_DIR"
-                        and len(node.args) > 1):
-                    default = node.args[1]
-                    # 含 candidate_v3 的锚定表达式：静默求值（无副作用的纯路径表达式）
-                    src_seg = ast.get_source_segment(text, default) or ""
-                    if "candidate_v3" not in src_seg or "__file__" not in src_seg:
+                        and node.args[0].value == "KG_MERGED_DIR"):
+                    default = node.args[1] if len(node.args) > 1 else None
+                    expr = default
+                    if (isinstance(default, ast.BoolOp) and isinstance(default.op, ast.Or)
+                            and len(default.values) == 2):
+                        expr = default.values[1]  # env or "default" 的右侧
+                    if expr is None:
+                        continue  # 强制显式设置，合法
+                    src_seg = ast.get_source_segment(text, expr) or ""
+                    if "merged" not in src_seg:
                         continue
                     try:
-                        val = eval(  # noqa: S307 —— 仅求值本仓库源码里的纯路径表达式
-                            compile(ast.Expression(_strip_type_ctor(default)), "<default>", "eval"),
-                            {"__file__": str(py), "Path": Path, "os": __import__("os"),
-                             "str": str},
-                            {})
+                        val = eval(  # noqa: S307 —— 仅求值本仓库纯路径表达式
+                            compile(ast.Expression(expr), "<default>", "eval"),
+                            dict(ns_base), {})
                         resolved = Path(str(val))
                         if not (resolved / "merged_edges.tsv").exists():
                             offenders.append(f"{py}: 默认解析 {resolved} 不存在")
-                    except Exception as e:  # noqa: BLE001 —— 求值失败按可解析性失败处理
-                        offenders.append(f"{py}: 默认值无法求值（{type(e).__name__}）")
-    assert not offenders, "KG_MERGED_DIR 锚定默认值存在解析错误:\n" + "\n".join(offenders)
-
-
-def _strip_type_ctor(node):
-    """str(Path(...)) 外壳在求值时可原样保留——此辅助仅防御性保留接口。"""
-    return node
+                    except Exception as e:  # noqa: BLE001
+                        offenders.append(f"{py}: 默认值无法求值（{type(e).__name__}: {e}）")
+    assert not offenders, "KG_MERGED_DIR 默认值存在解析错误:\n" + "\n".join(offenders)
 
 
 if __name__ == "__main__":

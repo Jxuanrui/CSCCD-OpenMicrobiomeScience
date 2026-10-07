@@ -21,8 +21,9 @@ from pathlib import Path
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
-NODES = ROOT / "data" / "merged" / "merged_nodes.tsv"
-EDGES = ROOT / "data" / "merged" / "merged_edges.tsv"
+MERGED = Path(os.environ.get("KG_MERGED_DIR", str(ROOT / "data" / "merged" / "candidate_v3")))
+NODES = MERGED / "merged_nodes.tsv"
+EDGES = MERGED / "merged_edges.tsv"
 WORKDIR = ROOT / "data" / "rag"
 # 多语言嵌入（中英查询均可检索英文实体名；纯英文模型会让中文查询失效）
 EMBED_MODEL = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
@@ -34,12 +35,19 @@ PRED_CN = {"increases_abundance_in": "在…中丰度升高", "decreases_abundan
 _st = None
 
 # 接地约束：只允许基于图谱上下文作答并引用证据，禁止参数知识补白。
+# 逐字引用规则（2026-10-07 实测模型会用预训练知识编造 PMID/谓词后收紧）：
+# PMIDs/PMC 必须逐字出自上下文，上下文没有该证据的断言整条丢弃。
 GROUNDING_PROMPT_ZH = ("请用中文回答。你只能依据提供的上下文中的实体与关系作答，"
-                       "逐条标注实体名与证据等级/PMID；上下文证据不足时明确说明"
+                       "逐条标注实体名与证据等级/PMID；引用的 PMID/PMC 编号必须逐字"
+                       "出现在提供的上下文中——上下文里没有对应证据编号的断言必须整条"
+                       "省略，不得凭记忆补编号或谓词；上下文证据不足时明确说明"
                        "'知识库中证据不足'；严禁用上下文之外的知识补充答案。")
 GROUNDING_PROMPT_EN = ("Answer ONLY from the provided context (entities/relationships). "
-                       "Cite entity names and evidence tier/PMID per claim; state clearly "
-                       "when context is insufficient. Never use outside knowledge.")
+                       "Cite entity names and evidence tier/PMID per claim. Every cited "
+                       "PMID/PMC identifier must appear VERBATIM in the provided context — "
+                       "omit any claim whose evidence ID is not literally present; never "
+                       "reconstruct IDs, predicates, or associations from memory. State "
+                       "clearly when context is insufficient.")
 
 
 def embedder():
@@ -58,12 +66,22 @@ def build_rag():
     from lightrag import LightRAG
     from lightrag.base import EmbeddingFunc
     from lightrag.llm.openai import openai_complete_if_cache
-    base = os.getenv("BIGMODEL_API_BASE") or os.getenv("OPENAI_BASE_URL")
-    key = os.getenv("BIGMODEL_KEY") or os.getenv("OPENAI_API_KEY")
-    model = os.getenv("RAG_LLM_MODEL", "glm-5.3")  # flash 偶发空响应，默认主模型
-    if not base or not key:
-        if not base or not key:
-        raise SystemExit("请设置 BIGMODEL_KEY（.env）或 OPENAI_API_KEY / OPENAI_BASE_URL")
+    # 端点优先级：RAG_LLM_*（专用覆盖）→ BIGMODEL（GLM 官方）→ DEEPSEEK_OFFICIAL → OPENAI 兼容
+    _ENDPOINTS = [
+        ("RAG_LLM_BASE_URL", "RAG_LLM_KEY", "RAG_LLM_MODEL"),
+        ("BIGMODEL_API_BASE", "BIGMODEL_KEY", "BIGMODEL_MODEL"),
+        ("DEEPSEEK_OFFICIAL_BASE_URL", "DEEPSEEK_OFFICIAL_KEY", "DEEPSEEK_OFFICIAL_MODEL"),
+        ("OPENAI_BASE_URL", "OPENAI_API_KEY", "OPENAI_MODEL"),
+    ]
+    base = key = None
+    model = "glm-5.3"  # flash 偶发空响应，默认主模型
+    for bvar, kvar, mvar in _ENDPOINTS:
+        base, key = os.getenv(bvar), os.getenv(kvar)
+        if base and key:
+            model = os.getenv(mvar) or model
+            break
+    if not (base and key):
+        raise SystemExit("请在 .env 设置 BIGMODEL_* / DEEPSEEK_OFFICIAL_* / OPENAI_API_KEY 之一（含 base_url 与 key）")
 
     async def llm_func(prompt, system_prompt=None, history_messages=None, **kw):
         # 上游端点偶发空响应/429（与批量任务共享 key 时会撞并发上限），统一退避重试。
@@ -155,6 +173,38 @@ def write_layer_identity(kg):
     print(f"[identity] 层标识写入 {WORKDIR / 'layer_identity.json'}（indexed_layers={layers}）")
 
 
+def entity_evidence(question, limit=40):
+    """实体子图确定性证据：问题文本匹配节点名 → 从 TSV 拉 1 跳边（携带真实 PMID）。
+
+    LightRAG 向量检索能取到正确证据但 GLM 不遵守逐字引用（2026-10-07 实测会用
+    预训练记忆替换上下文中的 PMID），实体型问题改走本路径：证据清单由代码生成，
+    引用编号与 PMID 全部可回查。
+    """
+    nodes = pd.read_csv(NODES, sep="\t").fillna("")
+    edges = pd.read_csv(EDGES, sep="\t").fillna("")
+    name = dict(zip(nodes["id"], nodes["name"]))
+    q = question.lower()
+    hit_ids = {}
+    for r in nodes.to_dict("records"):
+        n = str(r["name"])
+        if len(n) >= 4 and n.lower() in q:
+            hit_ids[r["id"]] = n
+    if not hit_ids:
+        return None, hit_ids
+    lines = []
+    for r in edges.to_dict("records"):
+        s, o = r["subject"], r["object"]
+        if s in hit_ids or o in hit_ids:
+            if len(lines) >= limit:
+                break
+            pred_cn = PRED_CN.get(r["predicate"], r["predicate"])
+            lines.append(f"E{len(lines)+1}: {name.get(s, s)} {pred_cn} {name.get(o, o)}"
+                         f"（tier={r.get('evidence_tier','')}, "
+                         f"pmid={r.get('pmids','') or '无'}, "
+                         f"source={r.get('source_id','')}）")
+    return ("\n".join(lines) if lines else None), hit_ids
+
+
 async def ask(question, mode):
     from lightrag import QueryParam
     rag = build_rag()
@@ -170,8 +220,20 @@ async def ask(question, mode):
             if en:
                 q = en
                 sys_prompt = GROUNDING_PROMPT_ZH
-        print(await rag.aquery(q, param=QueryParam(mode=mode, top_k=100),
-                               system_prompt=sys_prompt))
+        evidence, hits = entity_evidence(q)
+        if evidence:
+            # 确定性路径：证据清单即答案边界，禁止引用清单外的编号
+            prompt = (f"{q}\n\n可用证据清单（回答的唯一依据；逐条引用 E 编号，"
+                      f"PMID 必须逐字取自对应条目；清单不足以回答时明确说明"
+                      f"'知识库中证据不足'）：\n{evidence}")
+            out = await rag.llm_model_func(prompt, system_prompt=sys_prompt)
+            print(out)
+        else:
+            # 向量路径（非实体问题）：预置关键词跳过 LLM 关键词抽取——GLM 偶发
+            # 返回 markdown 列表导致解析失败、检索空转；多语言嵌入允许整句问题
+            # 直接作为向量检索关键词，mix 模式同时覆盖实体与关系分支。
+            param = QueryParam(mode=mode, top_k=60, ll_keywords=[q], hl_keywords=[q])
+            print(await rag.aquery(q, param=param, system_prompt=sys_prompt))
     finally:
         await rag.finalize_storages()
 
@@ -182,7 +244,7 @@ def main():
     sub.add_parser("ingest")
     a = sub.add_parser("ask")
     a.add_argument("question")
-    a.add_argument("--mode", default="hybrid", choices=["hybrid", "mix", "local", "global", "naive"])
+    a.add_argument("--mode", default="mix", choices=["mix", "hybrid", "local", "global", "naive"])
     args = ap.parse_args()
     asyncio.run(ingest() if args.cmd == "ingest" else ask(args.question, args.mode))
 

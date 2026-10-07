@@ -1,6 +1,25 @@
 # Changelog
 
 
+## v3.0.1 (2026-10-07) — 收尾整改与 LightRAG 重建（监工收尾审 P0/P1 + C2 轨道）
+
+### 修复（监工收尾审 P0/P1）
+- **hits@10 数字修正**：README/CHANGELOG 误写 1.5% → 实测 1.0%（MRR=0.0073，raw 设定，测试集 200，依据 `rotate_report.json`）
+- **CHANGELOG 版本倒序**：最新版本置顶
+- **节点口径对平**：7,826 = 6,840 Entity + 985 RelationAssertion + 1 MaterializationProvenance（`neo4j_materialize.py` 每次物化 1 个溯源节点）
+- **孤立实体披露**：1,473 个实体节点无边（21.5%），RotatE 嵌入仅覆盖三元组中出现的 5,367 实体
+- **130K 缺口披露**：语料 89,404 篇 = 预注册目标的 68.8%，延后至 v4
+- **执行规则对齐**：README 执行规则补齐 6 条治理规则（计划→执行→审核/新建路径先报审/单说明文档/MVP 先行/P0 冻结/执行模型）
+- **skills 旧路径修正**：microbiome-kg 与 VALIDATION.md 指向 candidate_v3（rotate_predictions.tsv / pending_review_edges.tsv）
+- **graph_analysis.py**：改读 `KG_MERGED_DIR`（默认 candidate_v3；原硬编码根路径为旧数据，SKILL 验收命令曾指向过期图）
+
+### LightRAG 重建（C2 轨道，零 API 费用）
+- **索引**：candidate_v3 全量（6,840 实体 / 20,309 关系），本地嵌入（multilingual-MiniLM），ingest 零 LLM 调用
+- **lightrag_qa.py 三处修复**：嵌套 if 语法错误（文件原本无法运行）；BIGMODEL 废键端点链（RAG_LLM_* → BIGMODEL → DEEPSEEK_OFFICIAL → OPENAI）；NODES/EDGES 改读 KG_MERGED_DIR
+- **接地双路径**：实体型问题走确定性证据清单（问题匹配实体 → TSV 拉 1 跳边 → E 编号引用，PMID 逐字真实可回查）；非实体问题 mix 向量检索 + 预置关键词（跳过 GLM 不稳定的关键词抽取）
+- **根因记录**：① GLM 关键词抽取偶发 markdown 格式致解析失败检索空转；② llm_response_cache（平铺 dict）缓存了坏答案持续回放；③ GLM 在自由 RAG 上下文下不遵守逐字引用（用预训练记忆替换真实 PMID）——确定性路径为对策
+- **验收**：英文/中文疾病查询全部引用真实 PMID（逐个 grep 回查通过）；丁酸盐问题诚实拒答并准确说明 KG 实际内容
+
 ## v3.0.0 (2026-10-07) — v3 Release（语料扩容·全链重分类·DeepSeek 官方·跨家族 judge·一次冻结发布）
 
 > **正式定位**：Gut Microbiome Knowledge Graph v3.0.0——89K 语料全链重分类、985 条全 stage=3 断言、91.3% context 精度。

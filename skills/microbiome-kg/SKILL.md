@@ -29,7 +29,7 @@ python3 src/05_analysis/graph_analysis.py query --microbe "Faecalibacterium prau
 .venv-lightrag/bin/python src/06_qa/lightrag_qa.py ask "哪些微生物可以产生丁酸盐？"
 ```
 
-英文检索召回最稳；中文会自动预翻译并以中文作答，证据不足时会诚实拒答（优于编造）。索引基于 candidate_v3 重建中（重建完成后此条生效）。
+英文检索召回最稳；中文会自动预翻译并以中文作答。**接地双路径**（2026-10-07 重建后）：实体型问题走确定性证据路径（问题匹配实体→TSV 拉 1 跳边→E 编号引用，PMID 保证真实）；非实体问题走向量检索（mix 模式）。证据不足时诚实拒答（优于编造）。回答引用的 PMID 均可用 `grep` 在 `candidate_v3/merged_edges.tsv` 回查。
 
 ### 3. 链接预测（假设生成）
 

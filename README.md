@@ -90,6 +90,7 @@ Defined in [LinkML](schema/microbiome_kg.linkml.yaml). Key enums:
 
 ## 进展日志（摘要）
 
+- 2026-10-07 **C2 LightRAG 重建完成**：candidate_v3 全量索引（6,840 实体/20,309 关系，本地嵌入零 API 费）；lightrag_qa.py 修复（语法错误/BIGMODEL 废键/旧路径）+ 接地双路径（实体型问题确定性证据清单，PMID 保证真实；非实体问题 mix 向量检索+预置关键词）；缓存投毒根因定位（llm_response_cache 平铺 dict）
 - 2026-10-07 **监工收尾审 P0/P1 整改**：hits@10 1.5%→1.0% 修正；CHANGELOG 倒序；节点口径 7826=6840+985+1 说明；孤立实体 1,473 披露；130K 缺口披露；执行规则对齐 6 条治理规则；graph_analysis.py 改读 KG_MERGED_DIR（默认 candidate_v3，原根路径为旧数据）
 - 2026-10-07 **v3.0.0 发布**：B3-B6 全链（985 断言/91.3%/机检 41PASS/物化/serving 切换）
 - 2026-10-06 **B4-B6**：merge_qc + context 重算 + B5 盲标（91.3%）+ B6 发布
@@ -109,7 +110,7 @@ Defined in [LinkML](schema/microbiome_kg.linkml.yaml). Key enums:
 │   ├── 03_llm_relation/   # LLM classification (S1→S2→S3→v7)
 │   ├── 04_merge_qc/       # Merge + QC + provenance backfill
 │   ├── 05_analysis/       # Multi-hop / communities / RotatE / browser
-│   ├── 06_qa/             # LightRAG QA (index rebuild pending)
+│   ├── 06_qa/             # LightRAG QA (rebuilt on candidate_v3, dual grounding paths)
 │   ├── 07_capability/     # write_guard / release_gate / review_prep
 │   ├── 07_monitor/         # Cron audit
 │   └── 08_route_eval/     # Role gold / mesh_normalize / cross-family
@@ -137,7 +138,7 @@ TBD (paper under preparation)
 - Neo4j node census: 7,826 = 6,840 Entity + 985 RelationAssertion + 1 MaterializationProvenance (per-run audit node, `neo4j_materialize.py`)
 - 1,473 entity nodes (21.5%) are isolated (no edges); RotatE embeddings cover only the 5,367 entities appearing in triples
 - Corpus 89,404 papers vs pre-registered 130K target (68.8%) — gap deferred to v4
-- LightRAG QA index pending rebuild on candidate_v3 (numpy/jax conflict resolved via `.venv-lightrag`; rebuild awaiting cost approval)
+- LightRAG QA rebuilt on candidate_v3 (2026-10-07): entity questions use deterministic evidence lists (verbatim-real PMIDs); vector path for the rest. GLM's verbatim-citation compliance on free-form RAG context is imperfect — that's why the deterministic path exists
 - CI `src/**` trigger path pending PAT workflow scope update
 
 ---

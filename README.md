@@ -76,14 +76,21 @@ Defined in [LinkML](schema/microbiome_kg.linkml.yaml). Key enums:
 
 ## 执行规则
 
-1. **修改 src/ 前**必须在 README 进展日志中注明
-2. **API 密钥**只走 `.env`（gitignored），永不入 git/crontab
-3. **data/merged 写入**须过 write_guard 闸门（授权键+execution_id+审计账本）
-4. **不可逆操作**（删除/覆盖）先备份、再报审、后执行
-5. **进程操作**按精确 PID，禁宽匹配 kill
+1. **计划→执行→审核**：改动先列计划再执行，执行后由监工独立审查；质量门禁以监工裁决为准（有条件通过须先整改后开工）
+2. **修改 src/ 前**必须在 README 进展日志中注明
+3. **新建路径**（目录/数据管线/工具）先报审获准再创建，禁止未审先建
+4. **单一说明文档**：每项机制只保留一份说明文档，其余并入或删除，禁止多份并存漂移
+5. **MVP 先行**：新功能先做最小可用版本并通过验收，再考虑扩展
+6. **P0 冻结**：发布周期内 P0 问题未修完不开新轨道（v1.2+ 分级：P0 必改 → P1 强烈建议 → P2 可延后）
+7. **执行模型**：单仓库、单 worktree、单路径开发；多终端并行须先经用户与监工批准
+8. **API 密钥**只走 `.env`（gitignored），永不入 git/crontab
+9. **data/merged 写入**须过 write_guard 闸门（授权键+execution_id+审计账本）
+10. **不可逆操作**（删除/覆盖）先备份、再报审、后执行
+11. **进程操作**按精确 PID，禁宽匹配 kill
 
 ## 进展日志（摘要）
 
+- 2026-10-07 **监工收尾审 P0/P1 整改**：hits@10 1.5%→1.0% 修正；CHANGELOG 倒序；节点口径 7826=6840+985+1 说明；孤立实体 1,473 披露；130K 缺口披露；执行规则对齐 6 条治理规则；graph_analysis.py 改读 KG_MERGED_DIR（默认 candidate_v3，原根路径为旧数据）
 - 2026-10-07 **v3.0.0 发布**：B3-B6 全链（985 断言/91.3%/机检 41PASS/物化/serving 切换）
 - 2026-10-06 **B4-B6**：merge_qc + context 重算 + B5 盲标（91.3%）+ B6 发布
 - 2026-10-05 **B3 全链**：DeepSeek 官方 API S1+S2+S3+v7（24 分钟完成）
@@ -102,7 +109,7 @@ Defined in [LinkML](schema/microbiome_kg.linkml.yaml). Key enums:
 │   ├── 03_llm_relation/   # LLM classification (S1→S2→S3→v7)
 │   ├── 04_merge_qc/       # Merge + QC + provenance backfill
 │   ├── 05_analysis/       # Multi-hop / communities / RotatE / browser
-│   ├── 06_qa/             # LightRAG QA (under repair)
+│   ├── 06_qa/             # LightRAG QA (index rebuild pending)
 │   ├── 07_capability/     # write_guard / release_gate / review_prep
 │   ├── 07_monitor/         # Cron audit
 │   └── 08_route_eval/     # Role gold / mesh_normalize / cross-family
@@ -126,8 +133,11 @@ TBD (paper under preparation)
 
 - `anatomical_site` 75% (n=4, not statistically significant)
 - `geography` 0% (n=2, title-derived legacy issue)
-- RotatE hits@10 = 1.5% (simplified baseline, not production-grade PyKEEN)
-- LightRAG QA index under repair (numpy/jax conflict)
+- RotatE hits@10 = 1.0%, MRR = 0.0073 (raw setting, test set 200; simplified self-contained baseline, not production-grade PyKEEN; see `candidate_v3/rotate_report.json`)
+- Neo4j node census: 7,826 = 6,840 Entity + 985 RelationAssertion + 1 MaterializationProvenance (per-run audit node, `neo4j_materialize.py`)
+- 1,473 entity nodes (21.5%) are isolated (no edges); RotatE embeddings cover only the 5,367 entities appearing in triples
+- Corpus 89,404 papers vs pre-registered 130K target (68.8%) — gap deferred to v4
+- LightRAG QA index pending rebuild on candidate_v3 (numpy/jax conflict resolved via `.venv-lightrag`; rebuild awaiting cost approval)
 - CI `src/**` trigger path pending PAT workflow scope update
 
 ---

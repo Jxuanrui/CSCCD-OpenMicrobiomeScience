@@ -10,14 +10,16 @@ query 输出按 7 类节点分列的 1..k 跳邻居，含路径谓词链与边�
 """
 import argparse
 import json
+import os
 from collections import Counter, defaultdict
 from pathlib import Path
 
 import networkx as nx
 
 ROOT = Path(__file__).resolve().parents[2]
-NODES = ROOT / "data" / "merged" / "merged_nodes.tsv"
-EDGES = ROOT / "data" / "merged" / "merged_edges.tsv"
+MERGED = Path(os.environ.get("KG_MERGED_DIR", str(ROOT / "data" / "merged" / "candidate_v3")))
+NODES = MERGED / "merged_nodes.tsv"
+EDGES = MERGED / "merged_edges.tsv"
 
 
 def load_graph():

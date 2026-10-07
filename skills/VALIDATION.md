@@ -21,7 +21,7 @@ mkdir -p .claude/skills && cp -r skills/* .claude/skills/
 #    a. /microbiome-kg  → 问："Faecalibacterium prausnitzii 与哪些疾病相关？"
 #       预期：调用 graph_analysis query 返回扇出表（Neo4j 无关，纯本地）
 #    b. /microbiome-kg  → 问："链接预测给出哪些 T2D 相关假设？"
-#       预期：读取 data/merged/link_predictions.tsv 过滤 Diabetes Mellitus, Type 2
+#       预期：读取 data/merged/candidate_v3/rotate_predictions.tsv 过滤 Type_II_diabetes_mellitus
 #    c. /microbiome-frontier 宏基因组 IBD 120例 vs 60对照
 #       预期：走两阶段流程（文献扫描+方向分析；如需实时检索会请求 WebSearch 授权）
 # 3) 验收标准：三条命令均按技能文档流程执行且产出含证据分级/PMID

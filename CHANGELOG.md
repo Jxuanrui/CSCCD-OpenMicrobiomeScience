@@ -1,5 +1,102 @@
 # Changelog
 
+
+## v3.0.0 (2026-10-07) — v3 Release（语料扩容·全链重分类·DeepSeek 官方·跨家族 judge·一次冻结发布）
+
+> **正式定位**：Gut Microbiome Knowledge Graph v3.0.0——89K 语料全链重分类、985 条全 stage=3 断言、91.3% context 精度。
+
+### 新增
+- **B3 全链**（S1 分类 87K 对 + S2 三票 1.8K 候选 + S3 judge 1.2K 条 + v7 否决）——DeepSeek 官方 API 全链
+- **跨家族 S3 judge**：S1/S2 用 DeepSeek（test_100 80%）→ S3 可用 GLM 独立端点
+- **stage=3 契约**：merge_qc 只合并经过完整 S1→S2→S3 的行（stage≠3 的 ok 行排除）
+- **MeSH 解剖词表混合模式**：旧词表保底 + MeSH A 树过滤 + 复合指标词排除
+- **RotatE 自包含实现**（`rotate_embed.py`）：纯 PyTorch 零 PyKEEN 依赖
+- **交互式网络图**（`kg_browser.py` 第 5 Tab）：pyvis 驱动，拖拽/缩放/悬停
+- **⑤ 三项真算**：Span norm / Batch completion / Comparability Gate 从写死 PASS 改为真实计算
+- **E1 阈值统一**：报告层 0.8 → PRE_REGISTERED_GATES 0.85
+
+### 数据变更
+- **语料**：76,108 → 89,404 篇（+13,296）
+- **模型**：GLM MCP（弃用）→ DeepSeek 官方（deepseek-chat）
+- **serving**：candidate_v2 → **candidate_v3**（5,742→985 断言，每条经过 4 层质控）
+- **context 规则**：norm/0.8-c2b（含 MeSH 混合模式 + 中心词约束 + 复合指标词过滤）
+
+### 质量指标
+- **context 精度**：91.3%（10/13 维度 100%，3 维度 n≤4 不显著——用户批准方案 A 接受）
+- **disease_subtype**：v2 5/8 → v3 **100%**（MeSH 混合模式修复成功）
+- **机检**：41 PASS / 0 FAIL / 0 BLOCKER
+- **物化**：7,826 节点（= 6,840 Entity + 985 RelationAssertion + 1 MaterializationProvenance）/ 20,309 边 / 985 断言 / hold=0 / orphan=0
+
+### 工程修复
+- classify_relations.py：ARK_MODEL 覆盖行删除（S3 全链 error 根因）
+- merge_qc.py：KG_MERGED_DIR 支持 + stage 契约 + SOURCE_MAP→llm_extract_v3
+- review_prep.py：MeSH 性能优化（快速路径跳过非解剖句）+ geography title 过滤
+- adapter.py：MERGED_DIR 参数化
+- write_guard 目标参数化
+
+### 清理
+- data/envs/ 旧 conda 环境（2.4G）
+- MicrobeScholar 原始数据 → data/archive/（7.1G）
+- neo4j-candidates → data/archive/
+- 全部 __pycache__ / .pytest_cache
+- 旧 link_prediction.py / neo4j_import.py → docs/archive/
+- Food 校准中间产物 → data/archive/food_calibration/
+
+### 已知限制
+- anatomical_site 75%（4 条中 1 错，n=4 不显著，v2/v3 一致的长尾难题）
+- geography 0%（2 条，已知遗留——title 来源）
+- RotatE hits@10=1.0%，MRR=0.0073（raw 设定，测试集 200；自包含简化基线，非 PyKEEN 生产级）
+- 孤立实体 1,473 个（21.5% 无边），RotatE 嵌入仅覆盖三元组中出现的 5,367 实体
+- 语料 89,404 篇 vs 预注册 130K 目标（68.8%）——缺口延后至 v4
+- LightRAG 索引待重建（numpy/jax 冲突已通过 .venv-lightrag 独立环境解决，重建待批准）
+- CI src/** 触发路径待 PAT workflow scope
+
+## v1.3.1 (2026-10-02) — T1 优化轮（语料扩容启动+可视化升级+项目清理）
+
+### 新增
+- **C1 RotatE 自包含实现**（`src/05_analysis/rotate_embed.py`）——纯 PyTorch，零 PyKEEN 依赖，避免 torch 1.13 版本冲突
+- **C3 交互式网络图**（`kg_browser.py` 第 5 个 Tab）——pyvis 驱动，支持拖拽/缩放/悬停详情/键盘导航
+- **B3 全量重跑启动**（89,404 篇 ark/DeepSeek，~48h 后台）——B2 关口通过（90% test_100）
+
+### 变更
+- `kg_browser.py`：数据源从 legacy `data/merged/` 切换到 `candidate_v2/`；预测文件改读 `rotate_predictions.tsv`
+- `classify_relations.py`：API 端点改为 ARK/DeepSeek（BIGMODEL coding plan 在 test_100 上仅 54%，不通过）
+
+### 移除（→ docs/archive 或 data/archive）
+- `link_prediction.py`（旧版 PyKEEN，被 `rotate_embed.py` 替代）
+- `neo4j_import.py`（旧版导入器，被 `neo4j_materialize.py` 替代）
+- `data/staging/food_v6_*` / `food_v7_*` / `food_sampling*`（Food 校准中间产物，已收口）
+- 全部 `__pycache__/` + `.pytest_cache/`
+
+### 已知问题
+- B3 全量重跑预计 ~48 小时（因 staging 覆盖事故，全量而非增量）
+- CI `src/**` 触发路径待 PAT workflow scope
+- context 精度 anatomical_site/disease_subtype 两维仍为"未验证"状态
+
+## v1.3.0 (2026-10-02) — Project Integration & Release（知识内容管线收口·双终端合二为一·单开发模式）
+
+> **正式定位**：Gut Microbiome Knowledge Graph v1.3.0——双终端开发合二为一，单开发模式。
+> Production-ready for：Local Knowledge Layer 完整交付。
+
+### 新增
+- **知识内容管线全链闭环**：role gold 双尺评测（用户盲标 199 条）→ 规则修复（amod 修饰过滤/endpoint 值域/解剖形容词停用表）→ 跨家族复核（DeepSeek 82%）→ 预注册两轮评测（Food 59/60；context 9 维过线+2 维未验证明示+2 维未评测）
+- **provenance 四列真值回填**：merge_qc 收尾内联回填（根因修复）+ candidate_v2 真值落库（六源/retrieved_at/knowledge_layer 20840/20840）
+- **背景病补充集**：图谱断言池 190 条→50 条盲标（D 3/3 vs mesh 0/3 背景类）
+- **发布三关制**：机检（38 PASS）→ 独立审查（13 份报告）→ 用户授权（write_guard 键核销）
+
+### 变更
+- **双终端→单开发模式**：辅助开发分支 已删除，服务器唯一路径 项目根目录
+- **serving 从冻结基线（4,304 断言）切换到 candidate_v2（5,742 断言/12,015 节点/20,840 边）**
+- **数据范围**：剔除 1,167 个孤立种子节点（690 药物+443 疾病等无关联节点未入图）
+- crontab/status.sh 全部改指主目录
+
+### 已知限制
+- context 精度：anatomical_site（6/8）与 disease_subtype（5/8）未达 85% 门槛，已标"未验证"
+- study_type 与 geography 维度因样本池耗尽未评测
+- 3 项机检（Span norm/Batch completion/Comparability Gate）为写死 PASS，待改真实计算
+- LightRAG 问答索引因环境损坏待重建
+- GitHub PAT 缺 workflow scope，CI src/** 触发路径待恢复
+
 ## v1.2.0 (2026-09-25) — Production Hardening（资源治理·外部契约·备份恢复·多库隔离·外部写准入）
 
 > **正式定位**：Scientific Research Harness v1.2.0。
@@ -537,97 +634,3 @@ All rules validated in real study (Food-Pathway-Phage campaign). Includes: sampl
 **B (supported, not yet demonstrated)**: complex multi-step planning (>5 steps), long-horizon recovery, concurrent task isolation, multi-omics extension.
 
 **C (production gaps)**: larger benchmark set, external knowledge instability handling, credential/permission hardening, cost/latency budget, human review boundary, multi-center extension.
-
-## v1.3.0 (2026-10-02) — Project Integration & Release（知识内容管线收口·双终端合二为一·单开发模式）
-
-> **正式定位**：Gut Microbiome Knowledge Graph v1.3.0——双终端开发合二为一，单开发模式。
-> Production-ready for：Local Knowledge Layer 完整交付。
-
-### 新增
-- **知识内容管线全链闭环**：role gold 双尺评测（用户盲标 199 条）→ 规则修复（amod 修饰过滤/endpoint 值域/解剖形容词停用表）→ 跨家族复核（DeepSeek 82%）→ 预注册两轮评测（Food 59/60；context 9 维过线+2 维未验证明示+2 维未评测）
-- **provenance 四列真值回填**：merge_qc 收尾内联回填（根因修复）+ candidate_v2 真值落库（六源/retrieved_at/knowledge_layer 20840/20840）
-- **背景病补充集**：图谱断言池 190 条→50 条盲标（D 3/3 vs mesh 0/3 背景类）
-- **发布三关制**：机检（38 PASS）→ 独立审查（13 份报告）→ 用户授权（write_guard 键核销）
-
-### 变更
-- **双终端→单开发模式**：辅助开发分支 已删除，服务器唯一路径 项目根目录
-- **serving 从冻结基线（4,304 断言）切换到 candidate_v2（5,742 断言/12,015 节点/20,840 边）**
-- **数据范围**：剔除 1,167 个孤立种子节点（690 药物+443 疾病等无关联节点未入图）
-- crontab/status.sh 全部改指主目录
-
-### 已知限制
-- context 精度：anatomical_site（6/8）与 disease_subtype（5/8）未达 85% 门槛，已标"未验证"
-- study_type 与 geography 维度因样本池耗尽未评测
-- 3 项机检（Span norm/Batch completion/Comparability Gate）为写死 PASS，待改真实计算
-- LightRAG 问答索引因环境损坏待重建
-- GitHub PAT 缺 workflow scope，CI src/** 触发路径待恢复
-
-## v1.3.1 (2026-10-02) — T1 优化轮（语料扩容启动+可视化升级+项目清理）
-
-### 新增
-- **C1 RotatE 自包含实现**（`src/05_analysis/rotate_embed.py`）——纯 PyTorch，零 PyKEEN 依赖，避免 torch 1.13 版本冲突
-- **C3 交互式网络图**（`kg_browser.py` 第 5 个 Tab）——pyvis 驱动，支持拖拽/缩放/悬停详情/键盘导航
-- **B3 全量重跑启动**（89,404 篇 ark/DeepSeek，~48h 后台）——B2 关口通过（90% test_100）
-
-### 变更
-- `kg_browser.py`：数据源从 legacy `data/merged/` 切换到 `candidate_v2/`；预测文件改读 `rotate_predictions.tsv`
-- `classify_relations.py`：API 端点改为 ARK/DeepSeek（BIGMODEL coding plan 在 test_100 上仅 54%，不通过）
-
-### 移除（→ docs/archive 或 data/archive）
-- `link_prediction.py`（旧版 PyKEEN，被 `rotate_embed.py` 替代）
-- `neo4j_import.py`（旧版导入器，被 `neo4j_materialize.py` 替代）
-- `data/staging/food_v6_*` / `food_v7_*` / `food_sampling*`（Food 校准中间产物，已收口）
-- 全部 `__pycache__/` + `.pytest_cache/`
-
-### 已知问题
-- B3 全量重跑预计 ~48 小时（因 staging 覆盖事故，全量而非增量）
-- CI `src/**` 触发路径待 PAT workflow scope
-- context 精度 anatomical_site/disease_subtype 两维仍为"未验证"状态
-
-## v3.0.0 (2026-10-07) — v3 Release（语料扩容·全链重分类·DeepSeek 官方·跨家族 judge·一次冻结发布）
-
-> **正式定位**：Gut Microbiome Knowledge Graph v3.0.0——89K 语料全链重分类、985 条全 stage=3 断言、91.3% context 精度。
-
-### 新增
-- **B3 全链**（S1 分类 87K 对 + S2 三票 1.8K 候选 + S3 judge 1.2K 条 + v7 否决）——DeepSeek 官方 API 全链
-- **跨家族 S3 judge**：S1/S2 用 DeepSeek（test_100 80%）→ S3 可用 GLM 独立端点
-- **stage=3 契约**：merge_qc 只合并经过完整 S1→S2→S3 的行（stage≠3 的 ok 行排除）
-- **MeSH 解剖词表混合模式**：旧词表保底 + MeSH A 树过滤 + 复合指标词排除
-- **RotatE 自包含实现**（`rotate_embed.py`）：纯 PyTorch 零 PyKEEN 依赖
-- **交互式网络图**（`kg_browser.py` 第 5 Tab）：pyvis 驱动，拖拽/缩放/悬停
-- **⑤ 三项真算**：Span norm / Batch completion / Comparability Gate 从写死 PASS 改为真实计算
-- **E1 阈值统一**：报告层 0.8 → PRE_REGISTERED_GATES 0.85
-
-### 数据变更
-- **语料**：76,108 → 89,404 篇（+13,296）
-- **模型**：GLM MCP（弃用）→ DeepSeek 官方（deepseek-chat）
-- **serving**：candidate_v2 → **candidate_v3**（5,742→985 断言，每条经过 4 层质控）
-- **context 规则**：norm/0.8-c2b（含 MeSH 混合模式 + 中心词约束 + 复合指标词过滤）
-
-### 质量指标
-- **context 精度**：91.3%（10/13 维度 100%，3 维度 n≤4 不显著——用户批准方案 A 接受）
-- **disease_subtype**：v2 5/8 → v3 **100%**（MeSH 混合模式修复成功）
-- **机检**：41 PASS / 0 FAIL / 0 BLOCKER
-- **物化**：7,826 节点 / 20,309 边 / 985 断言 / hold=0 / orphan=0
-
-### 工程修复
-- classify_relations.py：ARK_MODEL 覆盖行删除（S3 全链 error 根因）
-- merge_qc.py：KG_MERGED_DIR 支持 + stage 契约 + SOURCE_MAP→llm_extract_v3
-- review_prep.py：MeSH 性能优化（快速路径跳过非解剖句）+ geography title 过滤
-- adapter.py：MERGED_DIR 参数化
-- write_guard 目标参数化
-
-### 清理
-- data/envs/ 旧 conda 环境（2.4G）
-- MicrobeScholar 原始数据 → data/archive/（7.1G）
-- neo4j-candidates → data/archive/
-- 全部 __pycache__ / .pytest_cache
-- 旧 link_prediction.py / neo4j_import.py → docs/archive/
-- Food 校准中间产物 → data/archive/food_calibration/
-
-### 已知限制
-- anatomical_site 75%（4 条中 1 错，n=4 不显著，v2/v3 一致的长尾难题）
-- geography 0%（2 条，已知遗留——title 来源）
-- RotatE hits@10=1.5%（简化版基线，非 PyKEEN 生产级）
-- LightRAG 索引待重建（环境损坏）
-- CI src/** 触发路径待 PAT workflow scope

@@ -18,7 +18,7 @@
   "Manifest/version/hash": "PASS",
   "Neo4j materialization authorization": "MANUAL_REVIEW_REQUIRED"
  },
- "materialized_to_neo4j": false,
+ "materialized_to_neo4j": true,
  "snapshot_status": "candidate_v3-2026-10-06",
  "P0_status": "PENDING_RELEASE_CHECKS",
  "v1_release_conditions_met": true,

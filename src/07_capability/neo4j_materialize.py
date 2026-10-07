@@ -20,7 +20,7 @@ from neo4j import GraphDatabase
 
 ROOT = Path(__file__).resolve().parents[2]
 import os
-MERGED = Path(os.environ.get("KG_MERGED_DIR", str(ROOT / "data/merged")))  # D1：可指 candidate_v2
+MERGED = Path(os.environ.get("KG_MERGED_DIR", str(ROOT / "data/merged/candidate_v3")))  # D1：serving 主目录
 EXECUTION_ID = f"EX-neo4j-materialize-{uuid.uuid4().hex[:8]}"
 
 

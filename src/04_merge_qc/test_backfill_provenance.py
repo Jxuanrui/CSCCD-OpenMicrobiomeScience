@@ -19,9 +19,9 @@ from knowledge_layer import (FORBIDDEN_IN_KG, KG_ALLOWED_LAYERS,  # noqa: E402
 @pytest.fixture
 def reg():
     return pd.DataFrame({
-        "source_key": ["maier2018_st3", "bugsigdb_export", "glm_extract_v2"],
-        "version": ["2018", "full_dump 2025", "v2.6"],
-        "last_sync": ["2026-09-15", "2026-09-15", "2026-09-23"],
+        "source_key": ["maier2018_st3", "bugsigdb_export", "llm_extract_v3"],
+        "version": ["2018", "full_dump 2025", "pipeline v3"],
+        "last_sync": ["2026-09-15", "2026-09-15", "2026-10-05"],
     }).set_index("source_key")
 
 
@@ -50,11 +50,11 @@ def test_enrich_edges_attribution(reg, lookup):
         "maier2018_st3",       # 跨源重复 → 先到者
         "bugsigdb_export",
         "unattributed",        # curated 但源文件差集 → 不猜归属
-        "glm_extract_v2",      # llm 分流
+        "llm_extract_v3",      # llm 分流（SOURCE_MAP v3：llm_relations→llm_extract_v3）
     ]
     assert out["retrieved_at"].tolist() == [
-        "2026-09-15", "2026-09-15", "", "2026-09-23"]
-    assert out["version"].tolist() == ["2018", "full_dump 2025", "", "v2.6"]
+        "2026-09-15", "2026-09-15", "", "2026-10-05"]
+    assert out["version"].tolist() == ["2018", "full_dump 2025", "", "pipeline v3"]
 
 
 def test_enrich_edges_fact_columns_untouched(reg, lookup):

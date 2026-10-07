@@ -32,7 +32,7 @@ ROOT = Path(__file__).resolve().parents[2]
 REGISTRY_DIR = ROOT / "data/registry"
 LOG_DIR = ROOT / "data/logs"
 import os as _os
-MERGED_DIR = Path(_os.environ.get("KG_MERGED_DIR", str(ROOT / "data/merged")))
+MERGED_DIR = Path(_os.environ.get("KG_MERGED_DIR", str(ROOT / "data/merged/candidate_v3")))
 USAGE_LEDGER = REGISTRY_DIR / "resource_usage.jsonl"
 SOURCE_REGISTRY = REGISTRY_DIR / "source_registry.tsv"
 

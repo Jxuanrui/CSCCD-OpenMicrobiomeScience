@@ -18,7 +18,7 @@ from graph_analysis import EDGES, NODES, load_graph, resolve  # noqa: E402
 ROOT = Path(__file__).resolve().parents[2]
 CANDIDATE = ROOT / "data/merged/candidate_v3"
 PREDS = CANDIDATE / "rotate_predictions.tsv"
-METRICS = ROOT / "data/merged/graph_metrics.json"
+METRICS = CANDIDATE / "graph_metrics.json"  # v3 目录内（未生成时 Metrics/社区 Tab 自动跳过）
 
 st.set_page_config(page_title="肠道菌群知识图谱浏览器", layout="wide", page_icon="🦠")
 st.title("🦠 肠道菌群知识图谱浏览器")

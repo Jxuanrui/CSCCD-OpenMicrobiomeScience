@@ -18,7 +18,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
 import os
-MERGED = Path(os.environ.get("KG_MERGED_DIR", str(ROOT / "data/merged")))  # G7：默认主目录，可指 candidate_v2
+MERGED = Path(os.environ.get("KG_MERGED_DIR", str(ROOT / "data/merged/candidate_v3")))  # G7：serving 主目录（根层 v2 已归档）
 
 # ==== P0-G 预注册门禁（2026-09-29 监工排程令：v6 结果可见前冻结）====
 # batch1 教训制度化：门禁定义写死在 gate 代码（测试锁定），禁止报告层自由填写。

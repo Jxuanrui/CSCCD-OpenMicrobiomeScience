@@ -1,6 +1,28 @@
 # Changelog
 
 
+## v3.0.2 (2026-10-07) — 路径规整（监工打回后整改：默认值统一·radar cron 修复·归档规整）
+
+### 安全修复（P0）
+- **KG_MERGED_DIR 默认值统一 candidate_v3**：release_gate_check / neo4j_materialize / review_prep / adapter / merge_qc 五处原默认根层 `data/merged`（v2 旧数据）——存在不设环境变量物化时**用 v2 覆盖 v3 活库**的风险；新增 `test_merged_dir_defaults.py` 锁定全仓默认值一致 + 禁止 src 根层硬编码
+- **硬编码修复**：sample_supp_bg.py 两处、kg_browser.py METRICS、SKILL.md metrics 示例路径
+- **radar 双 cron 断链修复**：07:30 run_daily 路径错误（mra/radar/run_daily.sh 不存在）自始未启动 → 改指 radar/run_daily.sh 并实测成功；08:30 fetch_pubtator 因 write_guard 授权键全部核销 fail-closed（停摆 7 天）——一次性键与每日 cron 的设计冲突待用户决策
+
+### 归档规整（授权记录 EX-path-cleanup-20261007-a552ddce，清单 sha256 前后核验一致）
+- data/merged 根层 69 个 v2 文件 → data/archive/merged_v2_root/；3 个子目录（candidate_636e59a5_archive / restored_baseline_d8eb3b27_frozen / provenance_backfill_backup）→ data/archive/merged_subdirs/；merged 只剩 candidate_v2（测试引用）/ candidate_v3（serving）/ route_eval
+- staging 去重：llm_relations_v3_work.jsonl 与 llm_relations.jsonl md5 相同（94fc80db…，证据入账）删除副本；13 个 v2 备份文件 → data/archive/staging_v2/（释放 ~430MB）
+- neo4j：v2 副本 379M + 孤儿配置 → data/archive/neo4j_v2/（监工裁定：移归档不删，等 v3 活库 dump 验证后再议删除）；4 个空目录删除
+- logs：58 个 v2 时代文件（含误放的 finish_chain.py）→ data/archive/logs_v2/（监工裁定不进 docs/archive，避免未审脚本入 git）
+
+### 测试
+- test_backfill_provenance.py 夹具更新至 v3 契约（SOURCE_MAP→llm_extract_v3，v3 周期遗留测试债）
+- mra 4 个失败经 git stash 验证为先前已存在（candidate_v2 冻结数据缺 resource_ref ×1 + kg_snapshots 未初始化 ×3），与本次改动无关，如实记录待处理
+
+### 验收
+- 机检（不设 KG_MERGED_DIR）：41 PASS / 0 FAIL
+- SKILL 查询命令回归：F. prausnitzii 1 跳 97 邻居正常
+- radar run_daily 手动实测：2026-10-07 当日 1 篇新论文入库
+
 ## v3.0.1 (2026-10-07) — 收尾整改与 LightRAG 重建（监工收尾审 P0/P1 + C2 轨道）
 
 ### 修复（监工收尾审 P0/P1）

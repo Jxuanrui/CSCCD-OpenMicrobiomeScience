@@ -30,7 +30,7 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
 STAGING = ROOT / "data/staging/llm_relations.jsonl"
-MERGED = Path(os.environ.get("KG_MERGED_DIR", str(ROOT / "data/merged")))  # C2d：可指 candidate_v2（重算目标）
+MERGED = Path(os.environ.get("KG_MERGED_DIR", str(ROOT / "data/merged/candidate_v3")))  # C2d：serving 主目录
 random.seed(20260925)
 
 #: 核心情境维度（裁决 3）

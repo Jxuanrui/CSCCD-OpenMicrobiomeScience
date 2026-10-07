@@ -9,7 +9,7 @@ import pandas as pd
 ROOT=Path(__file__).resolve().parents[2]
 import os as _os
 SEED=ROOT/'data/seed'; STAGING=ROOT/'data/staging'
-MERGED=Path(_os.environ.get('KG_MERGED_DIR', str(ROOT/'data/merged')))
+MERGED=Path(_os.environ.get('KG_MERGED_DIR', str(ROOT/'data/merged/candidate_v3')))
 
 
 # ---- Source Registry 闸门（P0-1）：未登记来源的知识不得进入 KG ----

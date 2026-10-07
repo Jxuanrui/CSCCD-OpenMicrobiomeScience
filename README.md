@@ -90,6 +90,7 @@ Defined in [LinkML](schema/microbiome_kg.linkml.yaml). Key enums:
 
 ## 进展日志（摘要）
 
+- 2026-10-07 **路径规整（监工打回后整改）**：src 修改 7 处——release_gate_check/neo4j_materialize/review_prep/adapter/merge_qc 的 KG_MERGED_DIR 默认值统一 candidate_v3（原默认根层 v2 旧数据，有不设环境变量物化覆盖活库的风险）；sample_supp_bg 两处硬编码、kg_browser METRICS 改指 candidate_v3；新增 test_merged_dir_defaults.py 锁定默认值一致性；radar 双 cron 断链修复（07:30 路径错误从未启动 + 08:30 write_guard 键耗尽 fail-closed——后者待用户决策）
 - 2026-10-07 **C2 LightRAG 重建完成**：candidate_v3 全量索引（6,840 实体/20,309 关系，本地嵌入零 API 费）；lightrag_qa.py 修复（语法错误/BIGMODEL 废键/旧路径）+ 接地双路径（实体型问题确定性证据清单，PMID 保证真实；非实体问题 mix 向量检索+预置关键词）；缓存投毒根因定位（llm_response_cache 平铺 dict）
 - 2026-10-07 **监工收尾审 P0/P1 整改**：hits@10 1.5%→1.0% 修正；CHANGELOG 倒序；节点口径 7826=6840+985+1 说明；孤立实体 1,473 披露；130K 缺口披露；执行规则对齐 6 条治理规则；graph_analysis.py 改读 KG_MERGED_DIR（默认 candidate_v3，原根路径为旧数据）
 - 2026-10-07 **v3.0.0 发布**：B3-B6 全链（985 断言/91.3%/机检 41PASS/物化/serving 切换）
@@ -118,8 +119,11 @@ Defined in [LinkML](schema/microbiome_kg.linkml.yaml). Key enums:
 ├── schema/                 # LinkML schema
 ├── skills/                 # 23 agent skills
 ├── artifact_engine/        # Literature artifact engine
-├── radar/                  # Meta-SeuBiomed
-└── data/                   # Runtime data (gitignored)
+├── radar/                  # Meta-SeuBiomed daily radar (cron 07:30)
+└── data/                   # Runtime data (gitignored; archive convention below)
+    ├── merged/candidate_v3/  # serving KG (git-tracked)
+    ├── archive/              # 历史版本归档（mv 可逆；清单 MANIFEST_*.tsv 带 sha256）
+    └── staging/              # 在制数据（llm_relations.jsonl 为主）
 ```
 
 ## License

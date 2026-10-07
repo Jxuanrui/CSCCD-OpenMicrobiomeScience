@@ -42,7 +42,7 @@ head -50 data/merged/candidate_v3/rotate_predictions.tsv
 ### 4. 图指标/社区
 
 ```bash
-python3 src/05_analysis/graph_analysis.py metrics --json data/merged/graph_metrics.json
+python3 src/05_analysis/graph_analysis.py metrics --json data/logs/graph_metrics_v3.json
 ```
 
 ## 注意事项

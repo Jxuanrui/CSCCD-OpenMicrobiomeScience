@@ -28,6 +28,8 @@ from collections import Counter
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
+import os as _os  # noqa: E402
+MERGED_REL = str((_os.environ.get("KG_MERGED_DIR") or "data/merged/candidate_v3").removeprefix("/"))  # 相对项目根
 RE = ROOT / "data/merged/route_eval"
 SEED = 20261001
 
@@ -45,7 +47,7 @@ def load_node_whitelist(root: Path, category: str) -> set[str]:
     不能用 MESH:D 前缀判定（Chemical/Metabolite 在 MeSH 同样是 D 前缀，首版抽样
     因此混入 LPS/Butyrates 等非疾病客体，作废重抽）。"""
     ids = set()
-    with open(root / "data/merged/merged_nodes.tsv") as f:
+    with open(root / MERGED_REL) as f:
         for r in csv.DictReader(f, delimiter="\t"):
             if r["category"] == category:
                 ids.add(r["id"])
@@ -192,7 +194,7 @@ def main():
       "exclusion": excl_stats, "per_pmid_cap": 1,
       "delivered": {"first30": src_n, "layers": layer_n},
       "microbe_whitelist": {"source": "merged_nodes.tsv category=Microbe",
-                            "n": len(whitelist), "sha": code_sha(ROOT / "data/merged/merged_nodes.tsv")},
+                            "n": len(whitelist), "sha": code_sha(ROOT / MERGED_REL)},
       "disease_whitelist": {"source": "merged_nodes.tsv category=Disease",
                             "n": len(disease_wl), "note": "客体硬约束=疾病节点（首版 MESH:D 前缀误纳 Chemical 已作废）"},
       "mesh_freeze_anchor": {

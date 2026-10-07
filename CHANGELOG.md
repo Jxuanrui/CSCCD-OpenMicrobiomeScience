@@ -17,7 +17,10 @@
 ### 测试
 - test_backfill_provenance.py 夹具更新至 v3 契约（SOURCE_MAP→llm_extract_v3，v3 周期遗留测试债）
 - mra 4 个 kg 套件原先因相对路径解析（CWD=mra/）**静默 skip 65 个用例**；锚定仓库根后真正运行，其中 6 个 v2 契约测试修正至 v3（scale_readiness 基线 89,404 篇/87,071 候选/111,290 调用、graph_validation 计数恒等式无条件化+manifest 回退 finalize_metrics、prov_standard 容缺 divergence_annotations、capability_sdk 锚边换 v3 真实边）
-- mra 计数：整改前 4 failed / 491 passed / 82 skipped → 整改后 4 failed / 556 passed / 17 skipped
+- **数字出处**：89,404 = `data/pubtator/articles.jsonl` 行数（kg_audit_20261003.log:9 同）；87,071 与 111,290 = `data/logs/b3_full_20261002.log:98250`
+- **v3 契约下调披露（监工 P1-2）**：test_scale_readiness 的 acceptance_rate 阈值 5%→1%、projection 断言 8k→1.2k、SCALE_FACTOR 区间 2.0-3.0→1.4-1.5——属测试适配 v3 真实数据形态（四层质控下 1.1% 存活为设计结果，非质量下降）；A4 修零方差问题时不得再以 skip/xfail/放宽断言方式清零
+- **mra 源码默认值层级修正（监工 P0 抓漏）**：graph_validation/capability_sdk/prov_standard 三处 parents[3]→parents[4]（源码比测试深一层，原写法解析到不存在的 mra/data/merged/candidate_v3）；契约测试新增"锚定默认值必须解析到真实存在目录"断言（AST 求值 + merged_edges.tsv 存在性），负向验证可捕获层级错误
+- mra 计数：整改前 4 failed / 491 passed / 82 skipped → 整改后 **4 failed / 556 passed / 17 skipped**
 - 剩余 4 失败精确归因（与路径规整无关）：①test_get_prov_roundtrip——四件套重建只做过 v2 根层旧数据，candidate_v2/v3 均缺 resource_ref（记债，监工选项 B）；②③④golden loop/gate/h5——v3 relation_status 全量单一（20,309 条均 context_supported）致研究环统计零方差常数列，属 v3 数据形态适配任务（记债）
 - 依据说明：先前版本写"git stash 验证为先前已存在"方法不成立（stash 不回退 data/ 移动）；真实依据为上述归因——①读 candidate_v2（未移动），②③④读 mra/var/kg_snapshots（未移动，现以 candidate_v3 初始化了首份快照 2026-10-07）
 - README "candidate_v3 (git-tracked)" 经 `git ls-files data/merged/candidate_v3/` 验证属实（24 文件，历史上强制 add，跟踪不受 .gitignore 影响；新增文件需 git add -f）

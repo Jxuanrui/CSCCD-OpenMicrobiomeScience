@@ -97,7 +97,7 @@ class GraphValidationEngine:
     def __init__(self, merged_dir: str | Path | None = None):
         self.merged_dir = Path(merged_dir or os.environ.get(
             "KG_MERGED_DIR",
-            Path(__file__).resolve().parents[3] / "data" / "merged" / "candidate_v3"))
+            Path(__file__).resolve().parents[4] / "data" / "merged" / "candidate_v3"))
         self._assertions: pd.DataFrame | None = None
         self._edges: pd.DataFrame | None = None
         self._manifest: dict | None = None

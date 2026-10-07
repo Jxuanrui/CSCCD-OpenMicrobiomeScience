@@ -1,0 +1,13 @@
+pandas>=2.0
+neo4j>=5.0
+streamlit>=1.28
+pyvis>=0.3
+networkx>=3.0
+openai>=1.0
+requests
+pyyaml
+linkml
+torch>=1.13
+numpy
+scipy
+scikit-learn

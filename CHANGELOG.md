@@ -583,3 +583,51 @@ All rules validated in real study (Food-Pathway-Phage campaign). Includes: sampl
 - B3 全量重跑预计 ~48 小时（因 staging 覆盖事故，全量而非增量）
 - CI `src/**` 触发路径待 PAT workflow scope
 - context 精度 anatomical_site/disease_subtype 两维仍为"未验证"状态
+
+## v3.0.0 (2026-10-07) — v3 Release（语料扩容·全链重分类·DeepSeek 官方·跨家族 judge·一次冻结发布）
+
+> **正式定位**：Gut Microbiome Knowledge Graph v3.0.0——89K 语料全链重分类、985 条全 stage=3 断言、91.3% context 精度。
+
+### 新增
+- **B3 全链**（S1 分类 87K 对 + S2 三票 1.8K 候选 + S3 judge 1.2K 条 + v7 否决）——DeepSeek 官方 API 全链
+- **跨家族 S3 judge**：S1/S2 用 DeepSeek（test_100 80%）→ S3 可用 GLM 独立端点
+- **stage=3 契约**：merge_qc 只合并经过完整 S1→S2→S3 的行（stage≠3 的 ok 行排除）
+- **MeSH 解剖词表混合模式**：旧词表保底 + MeSH A 树过滤 + 复合指标词排除
+- **RotatE 自包含实现**（`rotate_embed.py`）：纯 PyTorch 零 PyKEEN 依赖
+- **交互式网络图**（`kg_browser.py` 第 5 Tab）：pyvis 驱动，拖拽/缩放/悬停
+- **⑤ 三项真算**：Span norm / Batch completion / Comparability Gate 从写死 PASS 改为真实计算
+- **E1 阈值统一**：报告层 0.8 → PRE_REGISTERED_GATES 0.85
+
+### 数据变更
+- **语料**：76,108 → 89,404 篇（+13,296）
+- **模型**：GLM MCP（弃用）→ DeepSeek 官方（deepseek-chat）
+- **serving**：candidate_v2 → **candidate_v3**（5,742→985 断言，每条经过 4 层质控）
+- **context 规则**：norm/0.8-c2b（含 MeSH 混合模式 + 中心词约束 + 复合指标词过滤）
+
+### 质量指标
+- **context 精度**：91.3%（10/13 维度 100%，3 维度 n≤4 不显著——用户批准方案 A 接受）
+- **disease_subtype**：v2 5/8 → v3 **100%**（MeSH 混合模式修复成功）
+- **机检**：41 PASS / 0 FAIL / 0 BLOCKER
+- **物化**：7,826 节点 / 20,309 边 / 985 断言 / hold=0 / orphan=0
+
+### 工程修复
+- classify_relations.py：ARK_MODEL 覆盖行删除（S3 全链 error 根因）
+- merge_qc.py：KG_MERGED_DIR 支持 + stage 契约 + SOURCE_MAP→llm_extract_v3
+- review_prep.py：MeSH 性能优化（快速路径跳过非解剖句）+ geography title 过滤
+- adapter.py：MERGED_DIR 参数化
+- write_guard 目标参数化
+
+### 清理
+- data/envs/ 旧 conda 环境（2.4G）
+- MicrobeScholar 原始数据 → data/archive/（7.1G）
+- neo4j-candidates → data/archive/
+- 全部 __pycache__ / .pytest_cache
+- 旧 link_prediction.py / neo4j_import.py → docs/archive/
+- Food 校准中间产物 → data/archive/food_calibration/
+
+### 已知限制
+- anatomical_site 75%（4 条中 1 错，n=4 不显著，v2/v3 一致的长尾难题）
+- geography 0%（2 条，已知遗留——title 来源）
+- RotatE hits@10=1.5%（简化版基线，非 PyKEEN 生产级）
+- LightRAG 索引待重建（环境损坏）
+- CI src/** 触发路径待 PAT workflow scope

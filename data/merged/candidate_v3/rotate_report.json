@@ -1,0 +1,14 @@
+{
+ "model": "RotatE (self-contained PyTorch)",
+ "dim": 128,
+ "epochs": 200,
+ "n_triples": 20309,
+ "n_entities": 5367,
+ "n_relations": 11,
+ "test_size": 200,
+ "hits_at_10": 0.01,
+ "mrr": 0.0073,
+ "predictions_exported": 200,
+ "input_sha256": "sha256:0cf41d793a2ada0a2411bfe09aed207da6faef753a3e95fd4da47e06810f50c9",
+ "generated_at": "2026-10-07T01:59:09.307137+00:00"
+}

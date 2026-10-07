@@ -7,7 +7,9 @@ from pathlib import Path
 import pandas as pd
 
 ROOT=Path(__file__).resolve().parents[2]
-SEED=ROOT/'data/seed'; STAGING=ROOT/'data/staging'; MERGED=ROOT/'data/merged'
+import os as _os
+SEED=ROOT/'data/seed'; STAGING=ROOT/'data/staging'
+MERGED=Path(_os.environ.get('KG_MERGED_DIR', str(ROOT/'data/merged')))
 
 
 # ---- Source Registry 闸门（P0-1）：未登记来源的知识不得进入 KG ----
@@ -15,7 +17,7 @@ REGISTRY = ROOT/'data/registry/source_registry.tsv'
 SOURCE_MAP = {  # 输入文件前缀 -> registry source_key（新增数据源必须先登记）
     'seed_': 'maier2018_st3', 'bugsigdb_': 'bugsigdb_export',
     'gutmgene_': 'gutmgene_v3', 'gutmdisorder_': 'gutmdisorder_v3',
-    'kegg_pathway_': 'kegg_rest', 'llm_relations': 'glm_extract_v2',
+    'kegg_pathway_': 'kegg_rest', 'llm_relations': 'llm_extract_v3',
 }
 def registry_gate():
     import pandas as pd
@@ -63,7 +65,8 @@ def main():
     _s.path.insert(0, str(ROOT / 'src/07_capability'))
     from write_guard import guard_write, new_execution_id
     _exec = _o.environ.get('KG_EXECUTION_ID') or new_execution_id('kg.merge_qc')
-    guard_write('data/merged', _exec, _o.environ.get('KG_WRITE_AUTH', 'phase-r-remediation'))
+    _target = str(MERGED.relative_to(ROOT)) if str(MERGED).startswith(str(ROOT)) else 'data/merged'
+    guard_write(_target, _exec, _o.environ.get('KG_WRITE_AUTH', 'phase-r-remediation'))
     print(f'[write_guard] merged 写入放行 exec={_exec}')
     smap = registry_gate(); print(f'[registry] {len(smap)} 个输入来源全部登记在案')
     nodes=pd.read_csv(SEED/'seed_nodes.tsv',sep='\t')

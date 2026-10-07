@@ -1,0 +1,3 @@
+group	gap_type	dimension	origin	record_id
+NCBITaxon:210|MESH:D007249	entity_granularity	inflammation_to_anatomical	object_side_derived	NCBITaxon:210|MESH:D007249|entity_granularity|inflammation_to_anatomical
+NCBITaxon:47715|MESH:D007249	entity_granularity	inflammation_to_anatomical	object_side_derived	NCBITaxon:47715|MESH:D007249|entity_granularity|inflammation_to_anatomical

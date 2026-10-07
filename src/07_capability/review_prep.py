@@ -534,7 +534,7 @@ def load_evidence_index():
 
 def side_ev(idx, sid, pred, oid, pmids: str):
     out = []
-    for pmid in [p for p in pmids.split(";") if p]:
+    for pmid in [p for p in str(pmids).split(";") if p]:
         r = idx.get((sid, pred, oid, pmid))
         if r:
             out.append(f"[{pmid}] {r.get('evidence') or r.get('sentence', '')[:160]}")
@@ -873,7 +873,19 @@ def main():
 # ===== B1': MeSH 解剖词表驱动的 anatomical_site 命中（v3 周期）=====
 # 替代手写词表：通过 MeSH A 树（Anatomy）判定是否为独立解剖部位，
 # 而非修饰语。比手写 epithet 正则更准确（覆盖全部 MeSH 解剖实体）。
+# 已知解剖词缓存（避免每句都做 MeSH 查询）
+_ANATOMY_CACHE = {}
+
 def _mesh_anatomy_hit(evidence_text: str):
+    """性能优化：先用旧词表快速检测，有候选才做 MeSH 精查。"""
+    # 快速路径：旧词表先测（零 MeSH 开销）
+    _legacy = _anatomical_site_hit(evidence_text)
+    if not _legacy:
+        return None  # 旧词表都没命中，MeSH 也大概率没有
+    # 有候选 → 走完整混合模式
+    return _mesh_anatomy_full(evidence_text, _legacy)
+
+def _mesh_anatomy_full(evidence_text: str, legacy_hits=None):
     """MeSH A 树驱动的 anatomical_site 命中。
 
     1. 从文本中抽取候选词（长词优先）

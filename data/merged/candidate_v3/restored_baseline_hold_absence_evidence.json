@@ -1,0 +1,17 @@
+[
+ {
+  "hold": "LFS:FOOD:polyphenol|promotes_growth|NCBITaxon:239759@39875854",
+  "status": "not_in_set",
+  "evidence": "恢复集（v1 内容下界）不含该断言——按 (subject,predicate,object,pmid) 全集检索无命中；该 hold 属 batch 时代内容或 v1 校准剔除项，物理不在集合中，无泄漏可能"
+ },
+ {
+  "hold": "LFS:FOOD:polyphenol|affects|NCBITaxon:447020@39641643",
+  "status": "not_in_set",
+  "evidence": "恢复集（v1 内容下界）不含该断言——按 (subject,predicate,object,pmid) 全集检索无命中；该 hold 属 batch 时代内容或 v1 校准剔除项，物理不在集合中，无泄漏可能"
+ },
+ {
+  "hold": "LFS:FOOD:dairy_product|promotes_growth|NCBITaxon:872@34427092",
+  "status": "not_in_set",
+  "evidence": "恢复集（v1 内容下界）不含该断言——按 (subject,predicate,object,pmid) 全集检索无命中；该 hold 属 batch 时代内容或 v1 校准剔除项，物理不在集合中，无泄漏可能"
+ }
+]

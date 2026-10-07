@@ -1,0 +1,3 @@
+subject	object	predicate_a	pmids_a	predicate_b	pmids_b	state	resolution
+NCBITaxon:47715	MESH:D007249	aggravates	32522072	alleviates	42070309	conflict_state	manual_review_required
+NCBITaxon:210	MESH:D007249	aggravates	40611186	alleviates	25074917;30240703	conflict_state	manual_review_required

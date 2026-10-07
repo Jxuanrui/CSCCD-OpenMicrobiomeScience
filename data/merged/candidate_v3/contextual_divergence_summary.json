@@ -1,0 +1,49 @@
+{
+ "phase": "contextual_divergence_review_v0.2",
+ "total_divergence": 2,
+ "classified": 0,
+ "classification_completeness": 0.0,
+ "types": {},
+ "secondary_types": {},
+ "multi_label_count": 0,
+ "resolution": {},
+ "resolution_path_completeness": 0.0,
+ "comparability": {
+  "partially_comparable": 1,
+  "incomparable": 1
+ },
+ "context_metrics": {
+  "evidence_availability": 1.0,
+  "dimension_coverage": 0.1167,
+  "explicit_rate": 0.1167,
+  "inferred_rate": 0.0,
+  "unknown_rate": 0.8833
+ },
+ "ontology_gap": {
+  "entity_granularity": {
+   "inflammation_to_anatomical": 2
+  }
+ },
+ "ontology_refinement_backlog": 2,
+ "ontology_backlog_qc": {
+  "declared_count": 2,
+  "unique_records": 2,
+  "duplicates_merged": 0,
+  "status": "PASS"
+ },
+ "true_biological_conflict": 0,
+ "assertion_set": {
+  "n_assertions": 985,
+  "assertion_set_hash": "sha256:ce322463cf6924f507097509a48d7f94912e924f8718f0419ea03c082cf6f581",
+  "atomicity_qc": {
+   "n_assertions": 985,
+   "duplicate_ids": 0,
+   "multi_pmid_per_assertion": 0,
+   "replay_identity_stable": true,
+   "span_normalization_version": "norm/0.8-c2b-round2",
+   "status": "PASS"
+  }
+ },
+ "ai_first_pass": true,
+ "human_review": "pending"
+}

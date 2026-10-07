@@ -1,0 +1,21 @@
+subject	out_degree	predicates
+NCBITaxon:166486	268	decreases_abundance_in, increases_abundance_in, produces, regulates_host_gene, sensitive_to
+NCBITaxon:239935	267	alleviates, decreases_abundance_in, increases_abundance_in, produces, regulates_host_gene, sensitive_to
+NCBITaxon:817	264	decreases_abundance_in, increases_abundance_in, produces, regulates_host_gene, sensitive_to
+NCBITaxon:33039	252	decreases_abundance_in, increases_abundance_in, produces, sensitive_to
+NCBITaxon:823	245	aggravates, decreases_abundance_in, increases_abundance_in, produces, regulates_host_gene, sensitive_to
+NCBITaxon:33038	237	decreases_abundance_in, increases_abundance_in, produces, regulates_host_gene, sensitive_to
+NCBITaxon:40520	219	decreases_abundance_in, increases_abundance_in, produces, sensitive_to
+NCBITaxon:820	219	decreases_abundance_in, increases_abundance_in, produces, sensitive_to
+NCBITaxon:410072	216	decreases_abundance_in, produces, sensitive_to
+NCBITaxon:39485	215	decreases_abundance_in, increases_abundance_in, produces, sensitive_to
+NCBITaxon:1502	214	decreases_abundance_in, increases_abundance_in, produces, sensitive_to
+NCBITaxon:46503	212	decreases_abundance_in, increases_abundance_in, sensitive_to
+NCBITaxon:216816	205	decreases_abundance_in, increases_abundance_in, produces, regulates_host_gene, sensitive_to
+NCBITaxon:74426	205	decreases_abundance_in, increases_abundance_in, produces, regulates_host_gene, sensitive_to
+NCBITaxon:818	199	biotransforms, decreases_abundance_in, increases_abundance_in, produces, regulates_host_gene, sensitive_to
+NCBITaxon:40518	191	biotransforms, decreases_abundance_in, increases_abundance_in, produces, sensitive_to
+NCBITaxon:29466	188	decreases_abundance_in, increases_abundance_in, produces, sensitive_to
+NCBITaxon:301301	187	decreases_abundance_in, increases_abundance_in, produces, regulates_host_gene, sensitive_to
+NCBITaxon:1304	186	decreases_abundance_in, increases_abundance_in, produces, regulates_host_gene, sensitive_to
+NCBITaxon:28118	184	decreases_abundance_in, increases_abundance_in, produces, sensitive_to

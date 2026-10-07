@@ -1,0 +1,15 @@
+{
+ "total_nodes": 7826,
+ "entity_nodes": 6840,
+ "assertion_nodes": 985,
+ "canonical_edges": 20309,
+ "has_assertion_links": 985,
+ "target_links": 985,
+ "orphan_assertions": 0,
+ "duplicate_assertions": 0,
+ "manual_hold_leaked": 0,
+ "context_dependent_canonical": 0,
+ "linked_canonical_edges": 82,
+ "execution_id": "EX-neo4j-materialize-5c12a0be",
+ "elapsed_seconds": 55.8
+}

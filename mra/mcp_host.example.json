@@ -4,7 +4,7 @@
       "command": "python",
       "args": ["-m", "mra.mcp_server"],
       "env": {
-        "KG_MERGED_DIR": "/path/to/Knowledge_Graph/data/merged",
+        "KG_MERGED_DIR": "/path/to/Knowledge_Graph/data/merged/candidate_v3",
         "COHORT_CONFIG": "/path/to/var/cohort_config.json",
         "RSCRIPT_BIN": "/path/to/microbiome_R/bin/Rscript",
         "ARK_API_KEY": "<env-injected>",

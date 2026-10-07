@@ -12,13 +12,14 @@
 from __future__ import annotations
 
 import json
+import os
 import uuid
 from pathlib import Path
 
 import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[2]
-MERGED = ROOT / "data/merged"
+MERGED = Path(os.environ.get("KG_MERGED_DIR", str(ROOT / "data/merged/candidate_v3")))
 
 
 def preflight() -> dict:

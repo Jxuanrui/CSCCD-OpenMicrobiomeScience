@@ -15,7 +15,7 @@ import pytest
 
 KG_MERGED = Path(os.environ.get(
     "KG_MERGED_DIR",
-    "./data/merged"))
+    str(Path(__file__).resolve().parents[3] / "data/merged/candidate_v3")))  # 锚定仓库根，免受 CWD 影响
 
 pytestmark = pytest.mark.skipif(
     not (KG_MERGED / "relation_assertions.tsv").exists(),
@@ -118,7 +118,7 @@ class TestIntentionalViolations:
             ac = clone._manifest.get("assertion_counts", {})
             # Simulate: eligible includes hold (count mismatch)
             ac["materialization_eligible_assertion_count"] = (
-                ac.get("retained_assertion_count", 100))
+                ac.get("retained_assertion_count", 100) + 1)  # v3 hold=0：eligible 超过 retained 即必违规
         clone = self._clone_engine(engine, mutate)
         report = clone.validate()
         assert report.failed >= 1

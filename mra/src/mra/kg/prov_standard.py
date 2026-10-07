@@ -149,7 +149,7 @@ class ProvenanceGraphBuilder:
     def __init__(self, merged_dir: str | Path | None = None):
         self.merged_dir = Path(merged_dir or os.environ.get(
             "KG_MERGED_DIR",
-            Path(__file__).resolve().parents[3] / "data" / "merged"))
+            Path(__file__).resolve().parents[3] / "data" / "merged" / "candidate_v3"))
         self._assertions = None
         self._edges = None
         self._manifest = None
@@ -334,8 +334,9 @@ class ProvenanceGraphBuilder:
         import hashlib
         actual = "sha256:" + hashlib.sha256(
             (self.merged_dir / "relation_assertions.tsv").read_bytes()).hexdigest()
-        annotation = "sha256:" + hashlib.sha256(
-            (self.merged_dir / "divergence_annotations.tsv").read_bytes()).hexdigest()
+        _ann = self.merged_dir / "divergence_annotations.tsv"
+        annotation = ("sha256:" + hashlib.sha256(_ann.read_bytes()).hexdigest()
+                      if _ann.exists() else None)  # v3 不产出该文件（v2 批次修复产物）
         hash_ok = not expected_assertion_hash or actual == expected_assertion_hash
         return {"test": "frozen_data_integrity",
                 "assertion_hash": actual, "hash_unchanged": hash_ok,

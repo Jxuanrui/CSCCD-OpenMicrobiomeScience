@@ -17,7 +17,7 @@ import pandas as pd
 SCALE_READINESS_VERSION = "scale-readiness/0.1"
 
 #: 当前基线与目标
-BASELINE_PAPERS = 56_629
+BASELINE_PAPERS = 89_404  # v3 语料（2026-10-07 校准，原 56,629 为 v2）
 TARGET_PAPERS = 130_000
 SCALE_FACTOR = TARGET_PAPERS / BASELINE_PAPERS  # ≈ 2.295
 
@@ -33,8 +33,8 @@ def build_cost_model(merged_dir: Path) -> dict:
     m = json.loads((merged_dir / "snapshot_manifest.json").read_text(encoding="utf-8"))
 
     n_papers = BASELINE_PAPERS
-    n_candidates = 55_461  # from staging log
-    n_api_calls = 28_165   # from recovery log (S1+S2+S3 total)
+    n_candidates = 87_071  # v3 staging（b3_full_20261002.log）
+    n_api_calls = 111_290   # v3 全链（b3_full_20261002.log，DeepSeek 官方）
     n_assertions = len(a)
     n_canonical = len(e)
     n_ok_assertions = n_assertions  # all retained = accepted
@@ -43,14 +43,14 @@ def build_cost_model(merged_dir: Path) -> dict:
     # From finalize_metrics
     fm_path = merged_dir / "finalize_metrics.json"
     fm = json.loads(fm_path.read_text(encoding="utf-8")) if fm_path.exists() else {}
-    precision = fm.get("precision_confirmed_explicit", 0.893)
+    precision = fm.get("precision_confirmed_explicit", 0.913)
     manual_hold = (a["manual_hold"] != "").sum()
-    dropped_judge = 1062  # from staging status
-    dropped_check = 9074
-    no_relation = 40624
+    dropped_judge = 4647  # v3 S3 veto
+    dropped_check = 4959  # v3
+    no_relation = 72604  # v3
 
     # -- Infrastructure metrics --
-    runtime_hours = 46.3  # judge phase wall time
+    runtime_hours = 0.4  # v3 全链 24 分钟（DeepSeek 官方）
     storage_mb = (merged_dir / "relation_assertions.tsv").stat().st_size / 1e6
     edges_mb = (merged_dir / "merged_edges.tsv").stat().st_size / 1e6
 
@@ -260,7 +260,7 @@ def generate_scale_readiness_report(merged_dir: Path) -> dict:
 if __name__ == "__main__":
     merged = Path(os.environ.get(
         "KG_MERGED_DIR",
-        str(Path(__file__).resolve().parents[4] / "data" / "merged")))
+        str(Path(__file__).resolve().parents[4] / "data" / "merged" / "candidate_v3")))
     report = generate_scale_readiness_report(merged)
     print(json.dumps({
         "cost_baseline": report["cost_model"]["baseline"],

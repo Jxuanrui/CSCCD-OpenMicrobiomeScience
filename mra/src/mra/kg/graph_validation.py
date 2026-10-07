@@ -97,7 +97,7 @@ class GraphValidationEngine:
     def __init__(self, merged_dir: str | Path | None = None):
         self.merged_dir = Path(merged_dir or os.environ.get(
             "KG_MERGED_DIR",
-            Path(__file__).resolve().parents[3] / "data" / "merged"))
+            Path(__file__).resolve().parents[3] / "data" / "merged" / "candidate_v3"))
         self._assertions: pd.DataFrame | None = None
         self._edges: pd.DataFrame | None = None
         self._manifest: dict | None = None
@@ -124,6 +124,15 @@ class GraphValidationEngine:
         if self._manifest is None:
             self._manifest = json.loads(
                 (self.merged_dir / "snapshot_manifest.json").read_text(encoding="utf-8"))
+            # v3 起 snapshot_manifest 不携带 assertion_counts（空 dict），计数在
+            # finalize_metrics.json——回退合并，保证 RULE_MATERIALIZATION_ELIGIBLE
+            # 等计数类规则在 v3 数据上仍可执行（2026-10-07）
+            if not self._manifest.get("assertion_counts"):
+                fm_path = self.merged_dir / "finalize_metrics.json"
+                if fm_path.exists():
+                    fm = json.loads(fm_path.read_text(encoding="utf-8"))
+                    if fm.get("assertion_counts"):
+                        self._manifest["assertion_counts"] = fm["assertion_counts"]
         return self._manifest
 
     # ---- Rule implementations ----
@@ -198,18 +207,18 @@ class GraphValidationEngine:
 
     def _check_materialization_eligibility(self, _) -> list[ValidationFailure]:
         failures = []
-        for i, r in self.assertions.iterrows():
-            if r.get("manual_hold"):
-                ac = self.manifest.get("assertion_counts", {})
-                eligible = ac.get("materialization_eligible_assertion_count", -1)
-                retained = ac.get("retained_assertion_count", -1)
-                hold = ac.get("manual_hold_count", -1)
-                if eligible != retained - hold:
-                    failures.append(ValidationFailure(
-                        self.rules[1].rule_id, "manifest",
-                        f"eligible({eligible}) != retained({retained}) - hold({hold})",
-                        "manifest assertion_counts",
-                        "recompute counts"))
+        # manifest 计数恒等式与是否存在 hold 断言无关（2026-10-07 修正：v3 hold=0 时
+        # 原实现因检查嵌在 if r.get("manual_hold") 内而从不执行）
+        ac = self.manifest.get("assertion_counts", {})
+        eligible = ac.get("materialization_eligible_assertion_count", -1)
+        retained = ac.get("retained_assertion_count", -1)
+        hold = ac.get("manual_hold_count", -1)
+        if -1 not in (eligible, retained, hold) and eligible != retained - hold:
+            failures.append(ValidationFailure(
+                self.rules[1].rule_id, "manifest",
+                f"eligible({eligible}) != retained({retained}) - hold({hold})",
+                "manifest assertion_counts",
+                "recompute counts"))
         return failures
 
     def _check_manual_hold_isolation(self, _) -> list[ValidationFailure]:

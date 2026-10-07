@@ -19,7 +19,7 @@ import pytest
 # 定位 KG merged 目录（KG 主线产物）
 KG_MERGED = Path(os.environ.get(
     "KG_MERGED_DIR",
-    "./data/merged"))
+    str(Path(__file__).resolve().parents[3] / "data/merged/candidate_v3")))  # 锚定仓库根，免受 CWD 影响
 
 pytestmark = pytest.mark.skipif(
     not (KG_MERGED / "relation_assertions.tsv").exists(),
@@ -144,9 +144,9 @@ class TestKgEvidence:
 
 class TestKgExplainRelation:
     def test_canonical_edge_found(self, sdk):
-        out = sdk.kg_explain_relation("NCBITaxon:239935", "affects", "MESH:D007249")
+        out = sdk.kg_explain_relation("NCBITaxon:1304", "sensitive_to", "LFS:DRUG:Albendazole")
         assert out["result"]["canonical_relation"] is not None
-        assert out["result"]["canonical_relation"]["relation_status"] == "context_dependent"
+        assert out["result"]["canonical_relation"]["relation_status"] == "context_supported"  # v3 全量状态（v2 时代存在 context_dependent）
 
     def test_supporting_assertions_exist(self, sdk):
         out = sdk.kg_explain_relation("NCBITaxon:239935", "alleviates", "MESH:D007249")

@@ -17,7 +17,7 @@ import pytest
 
 KG_MERGED = Path(os.environ.get(
     "KG_MERGED_DIR",
-    "./data/merged"))
+    str(Path(__file__).resolve().parents[3] / "data/merged/candidate_v3")))  # 锚定仓库根，免受 CWD 影响
 
 pytestmark = pytest.mark.skipif(
     not (KG_MERGED / "relation_assertions.tsv").exists(),

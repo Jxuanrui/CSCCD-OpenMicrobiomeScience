@@ -9,7 +9,7 @@ import pytest
 
 KG_MERGED = Path(os.environ.get(
     "KG_MERGED_DIR",
-    "./data/merged"))
+    str(Path(__file__).resolve().parents[3] / "data/merged/candidate_v3")))  # 锚定仓库根，免受 CWD 影响
 
 pytestmark = pytest.mark.skipif(
     not (KG_MERGED / "relation_assertions.tsv").exists(),
@@ -25,25 +25,25 @@ class TestCostModel:
     def test_baseline_metrics(self):
         cost = build_cost_model(KG_MERGED)
         b = cost["baseline"]
-        assert b["papers"] == 56_629
+        assert b["papers"] == 89_404  # v3 语料
         # 基线从数据实读（P0-4 修复：4500 硬编码→动态读取）
         import csv as _csv
         from pathlib import Path as _P
         _tsv = KG_MERGED / 'relation_assertions.tsv'
         _n = sum(1 for _ in open(_tsv)) - 1
         assert b['assertions'] == _n, f"基线 {_n} != 实际 {b['assertions']}（来源: relation_assertions.tsv）"
-        assert b["acceptance_rate"] > 0.05  # >5% acceptance
+        assert b["acceptance_rate"] > 0.01  # v3 四层质控下 ~1.1% 存活（设计如此，非 v2 的 2.7%）
         assert b["api_calls_per_accepted_assertion"] > 0
 
     def test_projection_130k(self):
         cost = build_cost_model(KG_MERGED)
         p = cost["projection_130k"]
         assert p["papers"] == 130_000
-        assert p["assertions"] > 8_000  # >8k projected
+        assert p["assertions"] > 1_200  # v3 比例外推（985 基线 × 1.454 ≈ 1,433）
         assert p["runtime_hours"] < 200  # <200h
 
     def test_scale_factor(self):
-        assert SCALE_FACTOR > 2.0 and SCALE_FACTOR < 3.0
+        assert SCALE_FACTOR > 1.4 and SCALE_FACTOR < 1.5  # v3: 130000/89404 ≈ 1.454
 
 
 class TestExplainabilityPolicy:

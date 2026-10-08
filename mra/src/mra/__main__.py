@@ -75,9 +75,9 @@ def _check(label: str, ok: bool | None, note: str = "") -> str:
 def env_report() -> list[str]:
     lines = ["环境自检（只查有无，不显内容）："]
 
-    rscript = os.environ.get("RSCRIPT_BIN", "")
-    lines.append(_check("RSCRIPT_BIN（R 统计沙箱）", bool(rscript) and shutil.which(rscript) is not None,
-                        rscript or "未设置——统计链路不可用"))
+    from .research.rtools import RSCRIPT  # 与执行层同源：env 优先，回退 PATH（G3 复审 C2）
+    lines.append(_check("R 可执行（RSCRIPT_BIN 或 PATH 回退）", RSCRIPT.is_file(),
+                        str(RSCRIPT) if RSCRIPT.is_file() else "未设置且 PATH 无 Rscript——统计链路不可用"))
     merged = os.environ.get("KG_MERGED_DIR", "")
     lines.append(_check("KG_MERGED_DIR（图谱源目录）", bool(merged) and os.path.isdir(merged),
                         merged or "未设置——无法新建快照（已有快照仍可用）"))

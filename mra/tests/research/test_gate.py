@@ -65,6 +65,7 @@ def test_constant_exposure_denied_at_gate(tmp_path):
     assert "constant-exposure" in row[1]
 
 
+@pytest.mark.skipif(not RSCRIPT.is_file(), reason="断言 R 端报错文字，需 R（G3 复审 P2）")
 def test_misaligned_exposure_blocked_at_gate(tmp_path):
     """真实门禁案例回归（2026-09-24 层间检验实测）：暴露向量若未随 complete-case
     过滤同步重排（1068 vs 1060），AUDIT-BATCH-001 必须 FAIL 拦截，而非静默错位计算。"""

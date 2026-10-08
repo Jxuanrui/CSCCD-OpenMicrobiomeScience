@@ -1,6 +1,25 @@
 # Changelog
 
 
+## v3.0.4 (2026-10-07) — E1 收口：A4 四失败根因修复（G1 归因修正→R 回退/KB ingest/队列配置）
+
+### 归因修正（G1 复现，详见 v3.0.2 勘误段）
+- 监工预警应验：②③④原"零方差"归因全错——真因分别为 RSCRIPT_BIN 未设（解析为 `.`）、cohort_config 未部署、方法 KB 的 DB 空（"零方差 常数列"是测试传入的 analysis_type 字面量，非统计结果）
+
+### 修复（按监工裁决顺序）
+- **② rtools/gate**：RSCRIPT 解析回退 `shutil.which("Rscript")`（env 优先）；gate 前置 is_file 检查——**置于零方差守卫之后**（G3 复审 C1：无 R 环境下常数暴露仍须先入账 constant-exposure deny，"无 R 也可回归"契约不破）
+- **④ 方法 KB**：`ingest_method_dir` 重建 16 条（检索"零方差"命中 method-zero-variance-guard-001）；未用 cli.py（其相对路径会在错误位置建 var/）
+- **③ 队列配置**：mra/var/cohort_config.json（不入库）features 三键指向课题仓 Harbin 真实表（species/pathway/fungal，1,068 样本）；metadata/exposures 经核实 alpha_shannon 不需要故未填
+- **E2（A3）**：孤立实体 1,473 归因——查询代码与分布见 v3.0.2 勘误段（LFS 词表 1,143 占 77.6% 结构性孤岛 + NCBITaxon 78 含非肠道生物，v4 预注册讨论过滤）
+
+### 计数与整改
+- mra：**1 failed / 562 passed / 14 skipped**（+6 净通过；3 个曾 skip 的 R 测试真跑全绿；唯一剩余=① prov 四件套，转用户拍板）
+- G3 复审整改：C1 R 检查位置、C2 doctor 复用 rtools.RSCRIPT（消除状态与行为相反）、C3 本条目、P2（gate 重复导入/misaligned skipif/注释措辞）
+
+## v3.0.3 (2026-10-07) — mra 默认值层级修正 + 存在性契约测试扩域（补记，原漏条目）
+
+- 对应 commits 69427c3 + 253bd27：graph_validation/capability_sdk/prov_standard 三处 parents[3]→[4]（源码比测试深一层）；存在性测试覆盖 `ROOT / ...` 写法与 getenv/or 变体（含 neo4j_materialize/release_gate_check 高危脚本），负向验证改坏层级即被捕获
+
 ## v3.0.2 (2026-10-07) — 路径规整（监工打回后整改：默认值统一·radar cron 修复·归档规整）
 
 ### 安全修复（P0）

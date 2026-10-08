@@ -72,11 +72,6 @@ def run_gated_association(
     与 rtools 的 ValueError 守卫互为冗余（执行不可绕过治理）。"""
     import tempfile
 
-    from .rtools import RSCRIPT
-    if not RSCRIPT.is_file():
-        raise AuditGateError(
-            f"R 可执行文件不可用（RSCRIPT_BIN 未设且 PATH 无 Rscript，解析为 {RSCRIPT}）"
-            "——受治理的关联执行需要 R")
     ledger = AuditLedger(str(ledger_path or DEFAULT_LEDGER_PATH))
     event_id, request_id = uuid.uuid4().hex, uuid.uuid4().hex
     constraints = {"max_memory_mb": max_memory_mb, "cpu_quota_percent": cpu_quota_percent}
@@ -104,6 +99,12 @@ def run_gated_association(
     )
     ledger.record_event(event)
 
+    # R 可用性检查置于零方差守卫之后：无 R 环境下常数暴露仍须先入账 constant-exposure
+    # deny（"无 R 也可回归"契约，监工 G3 复审 C1，2026-10-07）
+    if not RSCRIPT.is_file():
+        raise AuditGateError(
+            f"R 可执行文件不可用（RSCRIPT_BIN 未设且 PATH 无 Rscript，解析为 {RSCRIPT}）"
+            "——受治理的关联执行需要 R")
     with tempfile.TemporaryDirectory(prefix="mra_gate_") as tmp:
         tmp = Path(tmp)
         exposure.rename("exposure").to_frame().to_csv(tmp / "exp.tsv", sep="\t")

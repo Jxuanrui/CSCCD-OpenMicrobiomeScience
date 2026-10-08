@@ -19,6 +19,13 @@ cd mra && uv sync && uv run pytest -q          # 全量测试
 # 数据契约（不入库）：复制 cohort_config.example.json 到 var/cohort_config.json，
 # 填写部署机的暴露/特征/协变量表绝对路径。
 
+# 首次部署必须初始化方法知识库（否则 gap_check/method_query 全空、研究环以
+# unresolved_method_gap 停止——2026-10-07 G1 实测）：
+uv run python -c "from pathlib import Path; from mra.knowledge.method_rules import ingest_method_dir; print(ingest_method_dir(Path('knowledge/methods').resolve()))"
+# 注意勿在仓库根跑 mra/knowledge/cli.py（相对路径会在错误位置建 var/）；
+# R 沙箱路径经 RSCRIPT_BIN 注入，未设时回退系统 PATH 的 Rscript。
+# 部署自检：uv run python -m mra（doctor 会检查 KG_MERGED_DIR/cohort_config/快照）。
+
 # 一次自主研究会话（需 ARK_API_KEY；GLM_API_KEY 为可选备胎）
 ARK_API_KEY=... python -m mra.research \
     --question "<研究问题>" --target "<数据/队列描述>" --max-iterations 16

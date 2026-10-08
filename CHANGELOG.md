@@ -25,6 +25,24 @@
 - 依据说明：先前版本写"git stash 验证为先前已存在"方法不成立（stash 不回退 data/ 移动）；真实依据为上述归因——①读 candidate_v2（未移动），②③④读 mra/var/kg_snapshots（未移动，现以 candidate_v3 初始化了首份快照 2026-10-07）
 - README "candidate_v3 (git-tracked)" 经 `git ls-files data/merged/candidate_v3/` 验证属实（24 文件，历史上强制 add，跟踪不受 .gitignore 影响；新增文件需 git add -f）
 
+**勘误（G1 复现，2026-10-07，监工裁决"归因可能不对"应验）**：
+- 上方 :21 行"A4 修零方差问题"表述前提不成立；:24 行②③④归因**全部错误**；:25 行"②③④读 mra/var/kg_snapshots"不实（在读到快照之前就失败了）。修正归因（--tb=long 复现 + 代码对照）：
+  - ② test_misaligned_exposure_blocked_at_gate：`RSCRIPT_BIN` 未设 → rtools.py:16 解析为 `.` → `Failed to find executable .`——测试依赖 R 端报错回传包装成 AuditGateError 才命中正则，R 从未跑到，与零方差无关
+  - ③ test_full_7_step_execution_with_replay：`ConfigNotReady: 缺 mra/var/cohort_config.json`（部署配置未初始化），与零方差无关
+  - ④ test_golden_loop_full_chain：`unresolved_method_gap: 零方差 常数列` 中该字符串是**测试传入 gap_check 的 analysis_type 名称**（test_scientific_loop.py:91 字面量），非数据统计结果；真实根因 = mra/var/knowledge/knowledge.db entries 表为空（方法 YAML 从未 ingest），relation_status 与此失败无关
+- 修复（G1 监工批准顺序）：② rtools RSCRIPT 回退 `shutil.which("Rscript")`（env 优先）+ gate.py 前置 is_file 检查；④ `ingest_method_dir(mra/knowledge/methods)` 重建 KB（16 条，检索"零方差"命中 method-zero-variance-guard-001）；③ cohort_config.json 填真实表（Harbin species/pathway/fungal 三表，1,068 样本）
+- 修后计数（重新统计）：**1 failed / 562 passed / 14 skipped**（曾 skip 的 3 个 R 测试真跑全绿，+6 净通过）；唯一剩余 = ①（监工裁：测试读 candidate_v2 与事实不符的注释，转用户拍板"修哪份数据"）
+- A3 孤立实体归因（可复现查询）：
+  ```python
+  nodes = pd.read_csv('data/merged/candidate_v3/merged_nodes.tsv', sep='\t')
+  edges = pd.read_csv('data/merged/candidate_v3/merged_edges.tsv', sep='\t')
+  in_edges = set(edges['subject']) | set(edges['object'])
+  iso = nodes[~nodes['id'].isin(in_edges)]   # 1,473 行
+  iso['category'].value_counts()   # Drug 690 / Disease 519 / Metabolite 169 / Microbe 78 / Food 10 / Gene 7
+  iso['id'].str.split(':').str[0].value_counts()  # LFS 1143(77.6%) / MESH 237 / NCBITaxon 78 / 其余 15
+  ```
+  定性：主体为策展词表整库载入后未获边的结构性孤岛（Maier 药敏库全部化合物+条件词表）；NCBITaxon 78 含非肠道生物（Canna indica 植物、Coptotermitinae 白蚁等）——v4 预注册时讨论过滤
+
 ### 验收
 - 机检（不设 KG_MERGED_DIR）：41 PASS / 0 FAIL
 - SKILL 查询命令回归：F. prausnitzii 1 跳 97 邻居正常

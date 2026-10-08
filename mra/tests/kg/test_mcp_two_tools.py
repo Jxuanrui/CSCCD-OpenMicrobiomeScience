@@ -11,14 +11,14 @@ from pathlib import Path
 import pytest
 
 ROOT = Path(__file__).resolve().parents[3]
-MERGED = ROOT / "data/merged/candidate_v2"  # P0-4: 四件套完备
+MERGED = ROOT / "data/merged/candidate_v2"  # 冻结 v2 基线（G1 勘误：四件套实际缺失，见 CHANGELOG 勘误段）
 pytestmark = pytest.mark.skipif(
     not (MERGED / "relation_assertions.tsv").exists(),
     reason="无恢复基线快照（data/merged）")
 
 
-def test_get_assertions_wraps_sdk():
-    os.environ["KG_MERGED_DIR"] = str(MERGED)
+def test_get_assertions_wraps_sdk(monkeypatch):
+    monkeypatch.setenv("KG_MERGED_DIR", str(MERGED))
     sys.path.insert(0, str(ROOT / "mra/src"))
     from mra.mcp_server import _sdk, kg_get_assertions, kg_get_prov
     out = json.loads(kg_get_assertions("NCBITaxon:853"))  # F. prausnitzii
@@ -30,8 +30,8 @@ def test_get_assertions_wraps_sdk():
     assert r0["evidence_pmid"] and "context" in r0 and "provenance" in r0
 
 
-def test_get_prov_roundtrip():
-    os.environ["KG_MERGED_DIR"] = str(MERGED)
+def test_get_prov_roundtrip(monkeypatch):
+    monkeypatch.setenv("KG_MERGED_DIR", str(MERGED))
     sys.path.insert(0, str(ROOT / "mra/src"))
     from mra.mcp_server import kg_get_assertions, kg_get_prov
     rows = json.loads(kg_get_assertions("NCBITaxon:853"))["result"]["assertions"]
@@ -45,8 +45,8 @@ def test_get_prov_roundtrip():
         assert prov.get(f), f"provenance 四件套缺 {f}"
 
 
-def test_get_prov_missing_id():
-    os.environ["KG_MERGED_DIR"] = str(MERGED)
+def test_get_prov_missing_id(monkeypatch):
+    monkeypatch.setenv("KG_MERGED_DIR", str(MERGED))
     sys.path.insert(0, str(ROOT / "mra/src"))
     from mra.mcp_server import kg_get_prov
     out = json.loads(kg_get_prov("RA-nonexistent000000"))

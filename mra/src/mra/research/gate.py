@@ -72,6 +72,11 @@ def run_gated_association(
     与 rtools 的 ValueError 守卫互为冗余（执行不可绕过治理）。"""
     import tempfile
 
+    from .rtools import RSCRIPT
+    if not RSCRIPT.is_file():
+        raise AuditGateError(
+            f"R 可执行文件不可用（RSCRIPT_BIN 未设且 PATH 无 Rscript，解析为 {RSCRIPT}）"
+            "——受治理的关联执行需要 R")
     ledger = AuditLedger(str(ledger_path or DEFAULT_LEDGER_PATH))
     event_id, request_id = uuid.uuid4().hex, uuid.uuid4().hex
     constraints = {"max_memory_mb": max_memory_mb, "cpu_quota_percent": cpu_quota_percent}

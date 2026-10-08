@@ -13,7 +13,8 @@ from pathlib import Path
 
 import pandas as pd
 
-RSCRIPT = Path(os.environ.get("RSCRIPT_BIN", ""))  # 部署机 R 沙箱路径经环境变量注入
+import shutil
+RSCRIPT = Path(os.environ.get("RSCRIPT_BIN") or shutil.which("Rscript") or "")  # 沙箱路径经环境变量优先注入；未设时回退系统 PATH（G1 修复 2026-10-07）
 
 _R_SCRIPT = r"""
 args <- commandArgs(trailingOnly = TRUE)

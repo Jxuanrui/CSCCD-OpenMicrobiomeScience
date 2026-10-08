@@ -14,7 +14,8 @@
 
 ### 计数与整改
 - mra：**1 failed / 562 passed / 14 skipped**（+6 净通过；3 个曾 skip 的 R 测试真跑全绿；唯一剩余=① prov 四件套，转用户拍板）
-- G3 复审整改：C1 R 检查位置、C2 doctor 复用 rtools.RSCRIPT（消除状态与行为相反）、C3 本条目、P2（gate 重复导入/misaligned skipif/注释措辞）
+- G3 复审整改：C1 R 检查位置、C2 doctor 复用 rtools.RSCRIPT（消除状态与行为相反）、C3 本条目、P2（gate 重复导入/misaligned skipif/注释措辞/勘误段计数指向）
+- **归档条件（第二轮复审）**：新增 test_no_r_environment_contract——monkeypatch 将 gate.RSCRIPT 指向不存在路径，断言①常数暴露仍先入账 constant-exposure deny、②正常暴露报"R 可执行文件不可用"（无 R 环境契约从此有测试兜底）
 
 ## v3.0.3 (2026-10-07) — mra 默认值层级修正 + 存在性契约测试扩域（补记，原漏条目）
 
@@ -50,7 +51,7 @@
   - ③ test_full_7_step_execution_with_replay：`ConfigNotReady: 缺 mra/var/cohort_config.json`（部署配置未初始化），与零方差无关
   - ④ test_golden_loop_full_chain：`unresolved_method_gap: 零方差 常数列` 中该字符串是**测试传入 gap_check 的 analysis_type 名称**（test_scientific_loop.py:91 字面量），非数据统计结果；真实根因 = mra/var/knowledge/knowledge.db entries 表为空（方法 YAML 从未 ingest），relation_status 与此失败无关
 - 修复（G1 监工批准顺序）：② rtools RSCRIPT 回退 `shutil.which("Rscript")`（env 优先）+ gate.py 前置 is_file 检查；④ `ingest_method_dir(mra/knowledge/methods)` 重建 KB（16 条，检索"零方差"命中 method-zero-variance-guard-001）；③ cohort_config.json 填真实表（Harbin species/pathway/fungal 三表，1,068 样本）
-- 修后计数（重新统计）：**1 failed / 562 passed / 14 skipped**（曾 skip 的 3 个 R 测试真跑全绿，+6 净通过）；唯一剩余 = ①（监工裁：测试读 candidate_v2 与事实不符的注释，转用户拍板"修哪份数据"）
+- 修后计数（重新统计）见 **v3.0.4 条目**（1 failed / 562 passed / 14 skipped，曾 skip 的 3 个 R 测试真跑全绿）；唯一剩余 = ①（监工裁：测试读 candidate_v2 与事实不符的注释，转用户拍板"修哪份数据"）
 - A3 孤立实体归因（可复现查询）：
   ```python
   nodes = pd.read_csv('data/merged/candidate_v3/merged_nodes.tsv', sep='\t')

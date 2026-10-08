@@ -113,5 +113,4 @@ def test_golden_loop_full_chain(tmp_path):
     assert st.research_plans == 1 and st.candidate_results == 1
     assert st.governance_decisions == 1 and len(st.evidence) == 1
     assert st.loop_events >= 8
-    kinds = [e for e in range(st.n_events)]
     assert st.evidence[0]["candidate_id"] == "T-G2-G-alpha"

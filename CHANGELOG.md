@@ -13,7 +13,7 @@
 - **E2（A3）**：孤立实体 1,473 归因——查询代码与分布见 v3.0.2 勘误段（LFS 词表 1,143 占 77.6% 结构性孤岛 + NCBITaxon 78 含非肠道生物，v4 预注册讨论过滤）
 
 ### 计数与整改
-- mra：**1 failed / 562 passed / 14 skipped**（+6 净通过；3 个曾 skip 的 R 测试真跑全绿；唯一剩余=① prov 四件套，转用户拍板）
+- mra：**1 failed / 563 passed / 14 skipped**（+6 净通过；3 个曾 skip 的 R 测试真跑全绿；唯一剩余=① prov 四件套，转用户拍板；pytest 尾行原文：1 failed, 563 passed, 14 skipped, 16 warnings in 15.98s）
 - G3 复审整改：C1 R 检查位置、C2 doctor 复用 rtools.RSCRIPT（消除状态与行为相反）、C3 本条目、P2（gate 重复导入/misaligned skipif/注释措辞/勘误段计数指向）
 - **归档条件（第二轮复审）**：新增 test_no_r_environment_contract——monkeypatch 将 gate.RSCRIPT 指向不存在路径，断言①常数暴露仍先入账 constant-exposure deny、②正常暴露报"R 可执行文件不可用"（无 R 环境契约从此有测试兜底）
 

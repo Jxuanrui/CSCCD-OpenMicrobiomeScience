@@ -63,3 +63,5 @@ mra/var/           # 运行态（gitignored）：快照/会话/审计/预算/缓
 - 队列数据与研究思路只存在于部署机本地（`var/`，不入库）；代码零环境特定默认值
 - 凭据一律环境变量注入，禁止写入任何文件
 - 相邻子系统：`../radar`（文献雷达，日更 cron）、`../artifact_engine`（论文代码仓库发现 + 三路分流）
+
+<!-- CI: GitHub Actions 双版本矩阵（3.10/3.11）见 .github/workflows/mra-tests.yml；新仓库首次运行需一次触碰 mra/** 的提交触发（GitHub 初始推送不经路径过滤） -->

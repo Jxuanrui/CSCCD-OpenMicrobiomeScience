@@ -1,6 +1,23 @@
 # Changelog
 
 
+## v3.0.6 (2026-10-09) — T1.1 阶段门：源A 实证阻断（G-T1.1 打回整改）
+
+### 阻断事实（诊断带 sha 落盘 anchors/anchor_diag_sourceA.json）
+- 源A 远程监督交集：断言 985 → ID 直连对命中 21 → 谓词一致 **0**；名称归一化 39 → **6**（全部 produces）——协议要求 R test ≥120 正例，实证不可行
+- 根因：①实体 ID 体系不同（断言=PubTator MESH/CHEBI vs 策展库自有 ID）②谓词词表不同源（共享仅 produces）③LLM 抽取的对 98% 是策展库没有的新知识（本 KG 的价值所在，但使"策展库自验证"交集天然极小）④重叠对中 5-6 对策展库自身含相反极性（冲突数据）
+- 出路 D/E/F 待用户拍板（监工建议 F：X/E 先行 + R 最小人工锚 ~100-120 条 + 修好的源B负例）
+
+### 整改（G-T1.1 P0）
+- leaky() 规则3 收窄至 swap/shuffle（flip 曾被 100% 误剔）；by_kind 计数修复；源A 空集显式报错
+- X 任务 test 判定：c2e_gold_r2 119 条（r1∩r2=0 且 r2 后无调整）；E 任务如实记"暂不可认证"；判定依据落盘 anchors/anchor_task_alignment.json
+- 披露：首版恒等谓词映射偏离协议预注册要求（跨词表映射留作协议 v2，不回溯）；首版试跑 KeyError 崩溃；诊断脚本首轮落盘版归一化口径 bug 已修正（数字与现场探针一致）
+
+### 其他
+- DeepSeek 官方 key 更新入 .env（gitignored/600，已验证连通）
+- anchor-protocol-v1 tag；A1 Food 0.983(59/60) 数字修正；CONTRIBUTING.md 治理规则承载
+
+
 ## v3.0.5 (2026-10-09) — 测试与真表解耦 + 许可核实 + CI 矩阵（监工 G-U2 有条件通过）
 
 ### U2-B：mra 测试不再依赖部署机真实队列（监工处方）

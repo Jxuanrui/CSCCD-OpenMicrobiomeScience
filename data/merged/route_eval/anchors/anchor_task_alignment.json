@@ -1,0 +1,24 @@
+{
+  "X_task": {
+    "test": [
+      "c2e_gold_r2 (119条)——依据：r1∩r2 断言重叠=0 且 r2 计分后无任何规则调整（score_r2 为末轮）；按协议'未参与迭代→test'"
+    ],
+    "dev": [
+      "c2e_gold r1 (80条, 参与 r2 前调整→dev)",
+      "b5_blind 46条 (已作 v3 发布门禁→dev)"
+    ]
+  },
+  "E_task": {
+    "test": [],
+    "dev": [
+      "role_gold_100 (已用于选模→dev)",
+      "supp_bg_50 (保守→dev)"
+    ],
+    "note": "E 任务暂无可认证 test——如实披露（监工 P0-1 条件）"
+  },
+  "R_task": {
+    "status": "阻断——源A不可行（anchor_diag_sourceA.json）；正例来源待用户在 D/E/F 拍板",
+    "negatives": "源B生成器已修（flip 不再被规则3误剔）；待正例基底确定后派生"
+  },
+  "history_evidence": "c2e_sampled_ids_history.tsv 轮次 {c2e_r1:80, 2:119, batch1_legacy:62}；r1/r2 重叠 0"
+}

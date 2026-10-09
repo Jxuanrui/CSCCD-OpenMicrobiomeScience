@@ -1,0 +1,41 @@
+{
+  "diagnostic": "源A远程监督交集漏斗（G-T1.1 阻断证据，2026-10-09）",
+  "assertions_total": 985,
+  "tier_a_edges": 20227,
+  "id_direct_join": {
+    "pairs_hit": 21,
+    "predicate_match": 0,
+    "curated_self_conflicted_pairs": 5
+  },
+  "name_normalized_join": {
+    "pairs_hit": 39,
+    "predicate_match": 6,
+    "curated_self_conflicted_pairs": 6
+  },
+  "assertion_predicates": {
+    "produces": 333,
+    "alleviates": 266,
+    "aggravates": 172,
+    "biotransforms": 111,
+    "promotes_growth": 40,
+    "affects": 32,
+    "consumes": 19,
+    "inhibits_growth": 12
+  },
+  "tier_a_predicates": {
+    "sensitive_to": 5465,
+    "increases_abundance_in": 4162,
+    "decreases_abundance_in": 3553,
+    "participates_in": 2871,
+    "produces": 2099,
+    "regulates_host_gene": 1144,
+    "modulates_host_gene": 933
+  },
+  "conclusion": "协议要求 R test≥120 正例；最高口径（名称归一化）仅 6 条谓词一致——源A实证不可行",
+  "disclosures": [
+    "anchor_build.py 首版采用恒等谓词映射，偏离 external_gold_plan_v1.md L41 的预注册映射表要求（跨词表映射留作协议 v2 预注册项，不回溯使用）",
+    "首版试跑在源A空集时 KeyError 崩溃，已改为显式报错退出",
+    "本诊断脚本首轮落盘版名称归一化口径有 bug（断言侧未归一化，误报 0/0），已修正为双方归一化后数字与现场探针一致（21/0 与 39/6）"
+  ],
+  "method_note": "name_normalized_join=双方 name 列小写直配（ID 体系不同：断言=PubTator MESH/CHEBI，策展库=自有ID）"
+}

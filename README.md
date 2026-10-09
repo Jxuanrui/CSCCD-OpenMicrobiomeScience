@@ -90,6 +90,8 @@ Defined in [LinkML](schema/microbiome_kg.linkml.yaml). Key enums:
 
 ## 进展日志（摘要）
 
+- 2026-10-09 **U2-B/X2/X3/X5（监工 G-U2 有条件通过）**：测试与真表解耦——mra/tests/conftest.py（新建，监工处方）autouse 合成队列契约（独立 mktemp 目录，避免污染测试 tmp_path 断言）；真表保留 1 条部署级冒烟（REAL_COHORT_CONFIG 缺省自动 skip，实测 1,068 样本通过）；①标 xfail(U1)。**实测 563 passed / 15 skipped / 1 xfailed / 0 failed**（CI 模拟：COHORT_CONFIG 指向不存在路径）。X3 CI 双版本矩阵已完成但 **2dd9561 因 PAT 缺 workflow scope 推送被拒（GitHub 原文报错）——U5 从待办变实证阻塞**。X2 许可核实：KEGG 官方条款（学术免费/商业须授权/自称非公共库）+ DiMB-RE 论文 CC BY 4.0/仓库无 LICENSE，写入注册表 license 列附 URL+日期；**注册表首次强制入库（补报审：治理数据应入库，先例同 candidate_v3）**。X5 批次授权模型草案写入 radar 节。X1 dump 冻结转拍板（监工：活库在心血管项目路径下跨项目风险+serving KG 已在 git 可重物化，dump 或非必要）
+
 - 2026-10-08 **G3 复审整改+归档条件**：C1 gate R 检查挪至零方差守卫后（无 R 环境常数暴露仍入账 deny）；C2 doctor 与执行层同源解析 RSCRIPT；C3 CHANGELOG 补 v3.0.4/v3.0.3；归档条件 test_no_r_environment_contract 锁定无 R 契约（gate 套件 6 passed）
 - 2026-10-07 **E1 执行（G1 门通过后）**：A4 四失败复现归因修正——监工预警应验，②③④原"零方差"归因全错（真因：RSCRIPT_BIN 未设→`.`/cohort_config 未部署/方法 KB 的 DB 空——"零方差 常数列"实为测试传入的 analysis_type 名）；按裁决顺序修复：rtools RSCRIPT 回退 which+gate 前置检查→KB ingest 16 条→cohort_config 填 Harbin 真实三表；**mra 1 failed / 562 passed / 14 skipped**（+6 净通过，3 个曾 skip 的 R 测试真跑全绿）；① prov 四件套转用户拍板；A3 孤立实体归因完成（LFS 词表 1,143 占 77.6%+MESH 237+NCBITaxon 78 含非肠道生物）；CHANGELOG 勘误段+P1（monkeypatch 化 env/README 部署注记）
 - 2026-10-07 **复审整改（监工有条件放行 3 条）**：mra 侧 10 处指向统一 candidate_v3（.env.example/mcp_host/4 测试+4 源码）——mra 4 个 kg 套件原静默 skip 65 用例被激活（6 个 v2 契约修正至 v3）；CHANGELOG 更正 stash 说法；git-tracked 证据（24 文件）入账；契约测试扩域 mra+堵 or-default 漏洞；neo4j_preflight 对齐；kg_snapshots 以 candidate_v3 初始化首份（监工指示）；08:30 fetch cron 注释暂停（监工建议：一次性键与每日 cron 冲突，v4 按批签发后重启）
@@ -125,6 +127,7 @@ Defined in [LinkML](schema/microbiome_kg.linkml.yaml). Key enums:
 ├── radar/                  # Meta-SeuBiomed daily radar (cron 07:30)
 └── data/                   # Runtime data (gitignored; archive convention below)
     ├── merged/candidate_v3/  # serving KG (git-tracked)
+    ├── registry/             # 数据源注册表（source_registry.tsv 入库，强制 add 例外）
     ├── archive/              # 历史版本归档（mv 可逆；清单 MANIFEST_*.tsv 带 sha256）
     └── staging/              # 在制数据（llm_relations.jsonl 为主）
 ```

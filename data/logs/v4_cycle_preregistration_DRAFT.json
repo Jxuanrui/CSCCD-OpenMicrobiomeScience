@@ -1,0 +1,29 @@
+{
+  "_status": "DRAFT——未经用户签字冻结；任何评测脚本不得读取本文件（监工 X4 批准条件）",
+  "_location_note": "终位 data/merged/route_eval/v4_cycle_preregistration.json 需 write_guard 授权后迁移；现暂存 data/logs",
+  "version": "v4-cycle-preregistration-DRAFT/0.1",
+  "created_at": "2026-10-09",
+  "scope": "130K 语料补跑（89,404 → ≥130,000 篇）全链重分类",
+  "preregistered_parameters": {
+    "corpus_target_min": 130000,
+    "context_precision_min": 0.85,
+    "food_precision_min": 0.85,
+    "flip_rate_max": 0.15,
+    "stop_rule": "最多 2 轮校准（继承 v3 STOP 规则）",
+    "model_family": "S1/S2=DeepSeek 官方 deepseek-chat；S3 judge=跨家族（GLM 独立端点）"
+  },
+  "schema_changes_preregistered": {
+    "relation_status_redefinition": {
+      "problem": "v3 全量 20,309 边均为 context_supported——该字段无区分度（监工 v3.0.4 风险预警 4）",
+      "proposal": "枚举改为 context_supported / context_divergent / context_partial 三态；divergent=同断言多证据句方向不一致；partial=仅部分维度有上下文支持；S3 输出新增 context_verdict 字段供 merge_qc 归类",
+      "rationale": "恢复字段区分度供下游统计与 RAG 排序使用；避免 v3 零方差形态复发"
+    },
+    "non_gut_taxon_filter": {
+      "problem": "A3 归因发现 78 个孤立 NCBITaxon 实体含植物（Canna indica）/白蚁（Coptotermitinae）/线虫等非肠道生物",
+      "proposal": "种子过滤=肠道相关目/科白名单（Lactobacillales/Bacteroidales/Clostridiales/Enterobacterales 等）+ NCBITaxon rank 校验；PubTator 实体闭包阶段过滤；存量 78 实体 v4 重跑自然消解（无边的实体不入新图）",
+      "expected_effect": "Microbe 类目纯度提升；孤立实体数预期显著下降（当前 1,473 中 NCBITaxon 占 78）"
+    }
+  },
+  "authorization_model": "批次键（README X5 草案）：本次批次签发 data/pubtator 限路径限量限期键",
+  "user_signoff": "待用户：预算批准 + 本预注册签字（签字后去 DRAFT 冻结）"
+}

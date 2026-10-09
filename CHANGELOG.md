@@ -1,6 +1,28 @@
 # Changelog
 
 
+## v3.0.5 (2026-10-09) — 测试与真表解耦 + 许可核实 + CI 矩阵（监工 G-U2 有条件通过）
+
+### U2-B：mra 测试不再依赖部署机真实队列（监工处方）
+- mra/tests/conftest.py（新建）：autouse synthetic_cohort——确定性合成 species/pathway/fungal 表（s__ 与谱系尾段对齐 diversity 过滤器；跨样本变化防常数列守卫误触）；**独立 mktemp 目录**（初版写入测试自身 tmp_path，污染 3 个"目录应为空"断言，已修正）
+- _write_omics_table/_use_contract 自 test_h5_multi_omics 上移共享
+- 真表保留 1 条部署级冒烟 test_real_cohort_smoke（skipif 无 REAL_COHORT_CONFIG；断言 n_samples≥100 区分合成 12 样本；本机实测 1,068 样本通过）
+- ①标 xfail(strict=True) 附 U1 编号（用户拍板 #4）
+- **验收**：`COHORT_CONFIG=/nonexistent/cohort.json uv run pytest -q` → **563 passed / 15 skipped / 1 xfailed / 0 failed**（passed 持平不减）
+
+### X2：上游许可官方核实（注册表 license 列附 URL+日期；注册表首次入库）
+- KEGG（kegg.jp/kegg/legal.html, 2026-10-09）："Academic users may freely use the KEGG website" / "Non-academic use of KEGG requires a commercial license" / "KEGG is not a public database"
+- DiMB-RE：GitHub API 证实仓库无 LICENSE；Crossref 证实论文 CC BY 4.0
+- 执行者核验，状态维持 candidate_research
+
+### X3：CI 双版本矩阵（3.10+3.11）——本地完成（2dd9561），推送被 PAT 拒（缺 workflow scope）→ **U5 实证阻塞**
+
+### X5：radar 批次授权模型草案写入 README（v4 重启 08:30 cron 前实施；治理机制变更仅草案）
+
+### X1：dump 冻结转用户拍板（监工：活库数据目录在心血管项目路径下跨项目风险；serving KG 已在 git + neo4j_materialize.py 可重物化——dump 或非必要）
+
+
+
 ## v3.0.4 (2026-10-07) — E1 收口：A4 四失败根因修复（G1 归因修正→R 回退/KB ingest/队列配置）
 
 ### 归因修正（G1 复现，详见 v3.0.2 勘误段）

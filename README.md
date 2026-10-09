@@ -102,7 +102,7 @@ Every row carries the evidence tier (`A` curated · `B` ≥2 papers · `C` singl
 | Gate (pre-registered, test-locked) | Threshold | v3 result |
 | --- | --- | --- |
 | Context precision (blind-annotated) | ≥ 0.85 | **0.913** (42/46) |
-| Food dimension precision | ≥ 0.85 | 0.933 (Wilson [0.84, 0.98]) |
+| Food dimension precision | ≥ 0.85 | 0.983 (59/60, Wilson [0.91, 1.00]) |
 | Machine release checks | 41 PASS / 0 FAIL | **41 / 0** |
 | Provenance completeness | 4 columns on every edge | 20,309 / 20,309 |
 | Link prediction baseline | report only | RotatE hits@10 = 1.0%, MRR = 0.0073 (raw, n=200) |

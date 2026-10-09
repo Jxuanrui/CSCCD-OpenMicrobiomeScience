@@ -10,11 +10,14 @@ jobs:
     defaults:
       run:
         working-directory: mra
+    strategy:
+      matrix:
+        python-version: ["3.10", "3.11"]  # 与本地 mra/.venv(3.11) 对齐双测（监工 X3 裁决）
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
         with:
-          python-version: "3.10"
+          python-version: ${{ matrix.python-version }}
       - run: uv sync
       - run: uv run pytest -q
         env:

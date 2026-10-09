@@ -1,0 +1,14 @@
+source_key	name	source_type	license	version	retrieval_method	base_url	last_sync	status	notes
+maier2018_st3	Maier 2018 Nature Chem Biol Supplementary Table 3	DATABASE	CC BY 4.0	2018	manual_download	nature.com/articles/s41589-018-0043-1	2026-09-15	active	35 strains x 1197 drugs sensitive_to
+bugsigdb_export	BugSigDB (waldronlab Exports)	DATABASE	CC BY 4.0	full_dump 2025	git_clone	github.com/waldronlab/BugSigDBExports	2026-09-15	active	335 body sites (multi-site opened 2026-09-21)
+gutmgene_v3	gutMGene	DATABASE	academic (cite paper)	v3	manual_upload	gutmgene.org	2026-09-15	active	microbe-metabolite-gene
+gutmdisorder_v3	gutMDisorder	DATABASE	academic (cite paper)	v3	manual_upload	gutmdisorder.org	2026-09-15	active	disorder-health associations
+kegg_rest	KEGG REST Pathway	DATABASE	academic-only (Kanehisa Lab)[核实2026-10-09 kegg.jp/kegg/legal.html:"Academic users may freely use"+"Non-academic use requires a commercial license"+自称非公共数据库]	2025-09	rest_api	rest.kegg.jp	2026-09-17	active	gene-pathway; citation in README
+pubtator3	PubTator 3.0 corpus	DATABASE_API	public	2026-09	rest_api	ncbi.nlm.nih.gov/research/pubtator3-api	2026-09-23	active	corpus+entity normalization
+food_lexicon_v1	FOOD_LEXICON internal dictionary	CURATED	internal	v1.0	inline_dict	src/03_llm_relation/classify_relations.py	2026-09-21	active	20 food groups; CFCD crosswalk planned
+radar_daily	MRA radar daily PMIDs	TRANSFER	internal	rolling	cron_pmids_dir	Knowledge_Graph-mra/radar/data/daily	2026-09-23	active	daily 07:30
+glm_extract_v2	LLM literature extraction pipeline	LITERATURE	internal pipeline	v2.6 (8 defenses + 4 calibrations)	pubtator_corpus_plus_llm	internal	2026-09-23	active	tier B/C only via verification
+europepmc	Europe PMC REST	rest_api	OA全文逐篇许可(CC BY/CC0/PD白名单,禁NC/SA/ND/未标注)	rest_api	api_query	https://www.ebi.ac.uk/europepmc/webservices/rest		active	Phase F 语料源(用户拍板#5 2026-09-29:保守白名单;每篇入库须带 source_provider/source_id/license/license_url/retrieved_at/content_hash/ingestion_policy_version;角色=Local KG context 富集语料,先 pilot 后放量)
+dimb-re	DiMB-RE(JAMIA 2025 PMID 40152137)	github_corpus	论文CC BY 4.0[核实2026-10-09 Crossref:creativecommons.org/licenses/by/4.0];仓库未标LICENSE[核实2026-10-09 api.github.com:ScienceNLP-Lab/DiMB-RE license=None;学术评测引用,商用前邮件作者]	brat_v1@clone-2026-09-30	git_clone	github.com/ScienceNLP-Lab/DiMB-RE	2026-09-30	candidate_research	eval_only_no_kg：仅评测不进KG/serving；data/已gitignore无公开远端风险；官方核验=165文献✓/Factuality 877✓/实体16,740(论文14,450为论文口径)
+nlm-mesh-desc	NLM MeSH Descriptors 2026	官方词表	public domain(NLM)	2026	nlmpubs下载	https://nlmpubs.nlm.nih.gov/projects/mesh/MESH_FILES/xmlmesh/	2026-09-30	candidate_research	解析前candidate；用于normalize_mesh(object→preferred_name+synonyms+tree_numbers)
+llm_extract_v3	LLM relation extraction (DeepSeek official)	LLM	paid API	pipeline v3	deepseek-chat	https://api.deepseek.com/v1	2026-10-05	active	B3 v3 全链：S1+S2+S3（test_100 80% @ 100/100 用户批准）

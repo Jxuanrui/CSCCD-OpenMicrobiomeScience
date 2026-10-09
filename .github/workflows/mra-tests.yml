@@ -19,6 +19,10 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: uv sync
+      - name: Prepare runtime state (snapshot + method KB, both gitignored)
+        run: |
+          uv run python -c "from pathlib import Path; from mra.kg.snapshot import create_snapshot; create_snapshot(source=Path('../data/merged/candidate_v3'))"
+          uv run python -c "from pathlib import Path; from mra.knowledge.method_rules import ingest_method_dir; print('KB:', ingest_method_dir(Path('knowledge/methods').resolve()))"
       - run: uv run pytest -q
         env:
           # 行为检查里跳过依赖宿主/网络/凭据的用例（与本地 skip 口径一致）

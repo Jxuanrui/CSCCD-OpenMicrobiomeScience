@@ -5,6 +5,8 @@ Case：设计一个 7 步计划（gap→knowledge→method→compute×2→sensit
 """
 from __future__ import annotations
 
+import os
+
 import pytest
 
 from mra.capability import build_default_registry
@@ -117,6 +119,24 @@ def test_method_constraint_change_mid_plan(tmp_path):
                          "method_constraints": ["method-multiple-testing-001"]})
     v3 = plan_gate(p3, reg)
     assert v3["allow"]
+
+
+@pytest.mark.skipif(not os.environ.get("REAL_COHORT_CONFIG"),
+                    reason="真表部署级冒烟：需 REAL_COHORT_CONFIG 指向部署机真实契约（监工 U2-B 裁决）")
+def test_real_cohort_smoke(monkeypatch):
+    """真表端到端冒烟（部署机手动跑）：真实 Harbin 表上只读计算 Shannon 并校验量级。
+
+    与合成夹具的分工：日常测试验证治理机制（合成数据），本条验证部署机真表
+    的数据契约端到端连通（真实样本量级断言：n_samples 应等于真实队列规模）。
+    """
+    from mra.research import datasources as ds
+    monkeypatch.setenv("COHORT_CONFIG", os.environ["REAL_COHORT_CONFIG"])
+    monkeypatch.setattr(ds, "_CONFIG_CACHE", None)
+    reg = build_default_registry()
+    out = reg.invoke("diversity.alpha_shannon",
+                     {"features": "species", "analysis_id": "real-smoke"})
+    n = out["candidate"]["metrics"]["n_samples"]
+    assert n >= 100, f"真实队列样本量异常：{n}（合成夹具应为 12，真表应为千级）"
 
 
 def test_full_7_step_execution_with_replay(tmp_path):

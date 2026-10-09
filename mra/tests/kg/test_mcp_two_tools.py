@@ -30,6 +30,8 @@ def test_get_assertions_wraps_sdk(monkeypatch):
     assert r0["evidence_pmid"] and "context" in r0 and "provenance" in r0
 
 
+@pytest.mark.xfail(strict=True, reason="U1 待拍板：四件套（resource_ref 等）未在 "
+             "candidate_v2/v3 重建（CHANGELOG v3.0.2 勘误+v3.0.4）；U1 落地后移除本标记")
 def test_get_prov_roundtrip(monkeypatch):
     monkeypatch.setenv("KG_MERGED_DIR", str(MERGED))
     sys.path.insert(0, str(ROOT / "mra/src"))

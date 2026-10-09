@@ -31,25 +31,8 @@ from mra.workspace import (CandidateResult, ResearchTask, Workspace, digest)
 METHODS_DIR = Path(__file__).resolve().parents[1] / "knowledge" / "methods"
 N_SAMPLES = 12
 
-
-def _write_omics_table(path: Path, prefix: str, n_feats: int = 8) -> None:
-    """确定性合成特征表（特征行×样本列，全正值；load_table 转置为样本×特征）。"""
-    cols = [f"S{j}" for j in range(N_SAMPLES)]
-    lines = ["feature\t" + "\t".join(cols)]
-    for i in range(n_feats):
-        vals = [f"{0.01 * ((i * 7 + j * 3) % 9 + 1):.6f}" for j in range(N_SAMPLES)]
-        lines.append(f"{prefix}{i}\t" + "\t".join(vals))
-    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
-
-
-def _use_contract(monkeypatch, tmp_path: Path, features: dict) -> None:
-    """临时数据契约（零核心改动的新组学入口）+ 重置配置缓存。"""
-    cfg = tmp_path / "cohort.json"
-    cfg.write_text(json.dumps({"exposures": {}, "features": features,
-                               "metadata": "", "default_covariates": []}),
-                   encoding="utf-8")
-    monkeypatch.setenv("COHORT_CONFIG", str(cfg))
-    monkeypatch.setattr(ds, "_CONFIG_CACHE", None)
+# U2-B（监工裁决 2026-10-08）：合成表工具上移 tests/conftest.py 共享
+from conftest import _use_contract, _write_omics_table  # noqa: E402
 
 
 @pytest.fixture()

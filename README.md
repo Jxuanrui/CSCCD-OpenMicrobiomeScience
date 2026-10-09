@@ -129,6 +129,14 @@ Defined in [LinkML](schema/microbiome_kg.linkml.yaml). Key enums:
     └── staging/              # 在制数据（llm_relations.jsonl 为主）
 ```
 
+### radar 数据落盘的批次授权模型（X5 草案，2026-10-09，v4 重启 08:30 cron 前实施）
+
+每日 PubMed 抓取需写 `data/pubtator`（write_guard 保护），与一次性授权键天然冲突。方案：
+1. **按批次签发**：每次扩语料批次（如 v4 补跑）开始时，用户为该批次签发一把**限路径、限量、限有效期**的批次键（registry 新增 scope 列：`path=data/pubtator; quota=<篇数>; expires=<日期>`）；
+2. **cron 侧换券**：fetch_pubtator 首次用批次键换取一个**本地会话凭证**（root-only 文件），有效期内每日 cron 持会话凭证而非原始键——write_guard 校验会话凭证与批次 scope；
+3. **fail-closed 不变**：会话凭证过期/超量即拒绝，恢复需用户重新签发——不放宽闸门，只把"每日要钥匙"变成"每批换一次钥匙"；
+4. radar 每日 PMID 列表（07:30 run_daily 写 radar/data/daily）不经 write_guard，不受影响。
+
 ## License
 
 TBD

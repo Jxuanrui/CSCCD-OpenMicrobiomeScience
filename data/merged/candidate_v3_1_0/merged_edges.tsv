@@ -13425,8 +13425,7 @@ PUBCHEM:5481990	modulates_host_gene	NCBIGene:7157	curated	A	29805567		1	1.0		202
 NCBITaxon:100175	increases_abundance_in	MESH:D016776	curated	A	27147260	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:100176	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:100176	increases_abundance_in	MESH:D010300	curated	A	28429209	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1003367	decreases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1003367	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:1003367	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1003372	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:100883	decreases_abundance_in	MESH:D000368	curated	A	19703328	2010	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:100883	decreases_abundance_in	MESH:D000894	curated	A	19703328	2010	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -13469,7 +13468,7 @@ NCBITaxon:102148	increases_abundance_in	MESH:D010510	curated	A	37698410	2023	4	1
 NCBITaxon:102148	increases_abundance_in	MESH:D065631	curated	A	39614169	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:102234	decreases_abundance_in	MESH:D017963	curated	A	28402408	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:103892	increases_abundance_in	MESH:D043183	curated	A	39243395	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:105335	decreases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:105335	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1055686	decreases_abundance_in	MESH:D003731	curated	A	41654739	2026	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1056807	increases_abundance_in	MESH:D005891	curated	A	38762482	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:105841	increases_abundance_in	MESH:D043183	curated	A	39243395	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -13616,8 +13615,8 @@ NCBITaxon:123375	decreases_abundance_in	MESH:D002532	curated	A	39415150	2024	1	1
 NCBITaxon:123375	decreases_abundance_in	MESH:D003863	curated	A	38763328	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:123375	decreases_abundance_in	MESH:D003865	curated	A	40718680	2025	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:123375	decreases_abundance_in	MESH:D008103	curated	A	37483387	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:123375	decreases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:123375	decreases_abundance_in	MESH:D012516	curated	A	39055977	2024	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:123375	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:123375	decreases_abundance_in	MESH:D051436	curated	A	35348181	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:123375	increases_abundance_in	MESH:D015658	curated	A	39090139	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1236	decreases_abundance_in	MESH:D000077277	curated	A	36222897	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -13667,7 +13666,7 @@ NCBITaxon:1239	decreases_abundance_in	MESH:D019283	curated	A	29409589	2018	1	1.0
 NCBITaxon:1239	decreases_abundance_in	MESH:D020148	curated	A	27886121	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1239	decreases_abundance_in	MESH:D020345	curated	A	21674011	2011	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1239	decreases_abundance_in	MESH:D029801	curated	A	26890232	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1239	decreases_abundance_in	MESH:D050154	curated	A	26973703	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:1239	decreases_abundance_in	MESH:D050197	curated	A	26973703	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1239	increases_abundance_in	MESH:C563924	curated	A	27194068	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1239	increases_abundance_in	MESH:D000083023	curated	A	27863401	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1239	increases_abundance_in	MESH:D003248	curated	A	29340896	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -13712,7 +13711,6 @@ NCBITaxon:1263	decreases_abundance_in	MESH:D000368	curated	A	19703328	2010	1	1.0
 NCBITaxon:1263	decreases_abundance_in	MESH:D003863	curated	A	38763328	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1263	decreases_abundance_in	MESH:D003967	curated	A	37231829	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1263	decreases_abundance_in	MESH:D004485	curated	A	27812181	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1263	decreases_abundance_in	MESH:D007639	curated	A	29933394	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1263	decreases_abundance_in	MESH:D007669	curated	A	29353409	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1263	decreases_abundance_in	MESH:D008795	curated	A	35311555	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1263	decreases_abundance_in	MESH:D010300	curated	A	28536926	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -13733,20 +13731,18 @@ NCBITaxon:1263	increases_abundance_in	MESH:D016640	curated	A	39059479	2024	1	1.0
 NCBITaxon:1263	increases_abundance_in	MESH:D016776	curated	A	27147260	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1263052	increases_abundance_in	MESH:D004485	curated	A	27812181	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1265	decreases_abundance_in	MESH:D000070642	curated	A	30546361	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1265	decreases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1265	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:1265	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	3	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1268	increases_abundance_in	MESH:D003731	curated	A	35686590|41654739	2022|2026	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1268	increases_abundance_in	MESH:D003863	curated	A	36946910	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1268	increases_abundance_in	MESH:D003924	curated	A	37025407	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1268	increases_abundance_in	MESH:D009007	curated	A	37899472	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1268	increases_abundance_in	MESH:D012891	curated	A	40995218	2025	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1279	decreases_abundance_in	MESH:D001323	curated	A	26068542	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1279	decreases_abundance_in	MESH:D003731	curated	A	37571254	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1279	decreases_abundance_in	MESH:D003922	curated	A	26068542	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:1279	decreases_abundance_in	MESH:D003922	curated	A	26068542	2015	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1279	decreases_abundance_in	MESH:D009062	curated	A	35433507	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1279	decreases_abundance_in	MESH:D010518	curated	A	35732628	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1279	decreases_abundance_in	MESH:D020345	curated	A	26787171	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1279	increases_abundance_in	MESH:D001323	curated	A	26068542	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:1279	increases_abundance_in	MESH:D003922	curated	A	26068542	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1279	increases_abundance_in	MESH:D003929	curated	A	30358922	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1279	increases_abundance_in	MESH:D015179	curated	A	28153960	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1279	increases_abundance_in	MESH:D016638	curated	A	27837233	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -13775,8 +13771,7 @@ NCBITaxon:1283313	increases_abundance_in	MESH:D015179	curated	A	28600626	2017	1	
 NCBITaxon:1283313	increases_abundance_in	MESH:D015658	curated	A	39090139	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1283313	increases_abundance_in	MESH:D016606	curated	A	36034695	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1283313	increases_abundance_in	MESH:D018281	curated	A	36345047	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1288121	decreases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1288121	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:1288121	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:128827	decreases_abundance_in	MESH:D000073932	curated	A	38926079	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:128827	decreases_abundance_in	MESH:D000079424	curated	A	31326413	2019	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:128827	decreases_abundance_in	MESH:D010661	curated	A	27336782	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -13904,7 +13899,7 @@ NCBITaxon:1350	decreases_abundance_in	MESH:D001172	curated	A	34721377	2021	1	1.0
 NCBITaxon:1350	decreases_abundance_in	MESH:D010518	curated	A	35672331	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1350	decreases_abundance_in	MESH:D015179	curated	A	28153960	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1350	increases_abundance_in	MESH:D000067011	curated	A	31959047	2020	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1350	increases_abundance_in	MESH:D003015	curated	A	39294333	2024	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:1350	increases_abundance_in	MESH:D003015	curated	A	39294333	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1350	increases_abundance_in	MESH:D003093	curated	A	17897884	2008	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1350	increases_abundance_in	MESH:D003424	curated	A	17897884|23276768	2008|2013	3	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1350	increases_abundance_in	MESH:D003731	curated	A	39661115	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -13923,7 +13918,6 @@ NCBITaxon:135079	increases_abundance_in	MESH:D003731	curated	A	37698410	2023	1	1
 NCBITaxon:135079	increases_abundance_in	MESH:D010510	curated	A	37698410	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:135083	decreases_abundance_in	MESH:D010300	curated	A	35057536	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:135083	increases_abundance_in	MESH:D003876	curated	A	39523189	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1351	decreases_abundance_in	MESH:C563477	curated	A	29705728	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1351	increases_abundance_in	MESH:D003924	curated	A	25327485	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1351	increases_abundance_in	MESH:D019694	curated	A	21286703	2011	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1351	increases_abundance_in	MESH:D054328	curated	A	38050061	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14033,7 +14027,7 @@ NCBITaxon:1392389	decreases_abundance_in	MESH:D003922	curated	A	27231166	2016	1	
 NCBITaxon:1392389	decreases_abundance_in	MESH:D004443	curated	A	30555437	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1392389	increases_abundance_in	MESH:D000544	curated	A	38535538	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1392389	increases_abundance_in	MESH:D003093	curated	A	27604252	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:140458	increases_abundance_in	MESH:D000069467	curated	A	27559357	2016	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:140458	increases_abundance_in	MESH:D009765	curated	A	27559357	2016	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:140625	decreases_abundance_in	MESH:D003093	curated	A	29632427	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:140626	increases_abundance_in	MESH:D043183	curated	A	39243395	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1407607	decreases_abundance_in	MESH:D000152	curated	A	29756631	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14044,10 +14038,9 @@ NCBITaxon:1407607	decreases_abundance_in	MESH:D015658	curated	A	39090139	2024	1	
 NCBITaxon:1407607	increases_abundance_in	MESH:D003967	curated	A	37231829	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1407607	increases_abundance_in	MESH:D018792	curated	A	35157224	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1407607	increases_abundance_in	MESH:D023921	curated	A	38111089	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1409	decreases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:1409	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1410626	decreases_abundance_in	MESH:D015658	curated	A	39090139	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1423764	decreases_abundance_in	MESH:D000073932	curated	A	38926079	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1427378	decreases_abundance_in	MESH:D002784	curated	A	32330092	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1432051	decreases_abundance_in	MESH:D003731	curated	A	41654739	2026	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1432051	increases_abundance_in	MESH:D004443	curated	A	30555437	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1432056	decreases_abundance_in	MESH:D003731	curated	A	35686590	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14071,18 +14064,15 @@ NCBITaxon:1485	decreases_abundance_in	MESH:D001120	curated	A	35579969	2022	1	1.0
 NCBITaxon:1485	decreases_abundance_in	MESH:D003093	curated	A	22170749	2011	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1485	decreases_abundance_in	MESH:D003424	curated	A	21253779	2011	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1485	decreases_abundance_in	MESH:D004485	curated	A	16601353	2006	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1485	decreases_abundance_in	MESH:D007639	curated	A	29933394	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1485	decreases_abundance_in	MESH:D009203	curated	A	40253360	2025	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1485	decreases_abundance_in	MESH:D010518	curated	A	41053144	2025	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1485	decreases_abundance_in	MESH:D013315	curated	A	35613108	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1485	decreases_abundance_in	MESH:D018256	curated	A	36703031	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1485	decreases_abundance_in	MESH:D043183	curated	A	21330412	2011	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1485	increases_abundance_in	MESH:D000067877	curated	A	31026579	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1485	increases_abundance_in	MESH:D000069467	curated	A	27559357	2016	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1485	increases_abundance_in	MESH:D002784	curated	A	32330092	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1485	increases_abundance_in	MESH:D003876	curated	A	39523189	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1485	increases_abundance_in	MESH:D009369	curated	A	27384052	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1485	increases_abundance_in	MESH:D009765	curated	A	27559357	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:1485	increases_abundance_in	MESH:D009765	curated	A	27559357	2016	3	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1485	increases_abundance_in	MESH:D010518	curated	A	35732628	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1485	increases_abundance_in	MESH:D010661	curated	A	39599702	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1485	increases_abundance_in	MESH:D015179	curated	A	28153960|29687353	2017|2018	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14101,7 +14091,6 @@ NCBITaxon:1501226	increases_abundance_in	MESH:C085278	curated	A	29787870	2018	1	
 NCBITaxon:1501226	increases_abundance_in	MESH:D002583	curated	A	39289617	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1501226	increases_abundance_in	MESH:D003924	curated	A	39257903	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1501226	increases_abundance_in	MESH:D043183	curated	A	31681624	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1501329	decreases_abundance_in	MESH:C563477	curated	A	29705728	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1501329	decreases_abundance_in	MESH:D009765	curated	A	41305578	2025	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1501329	decreases_abundance_in	MESH:D010842	curated	A	42102024	2026	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1501332	increases_abundance_in	MESH:D010300	curated	A	40420833	2025	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14118,10 +14107,8 @@ NCBITaxon:1506553	increases_abundance_in	MESH:D003928	curated	A	38346799	2024	1	
 NCBITaxon:1506553	increases_abundance_in	MESH:D003929	curated	A	30358922	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1506553	increases_abundance_in	MESH:D004761	curated	A	30211217	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1506553	increases_abundance_in	MESH:D043183	curated	A	31681624	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1506577	decreases_abundance_in	MESH:D002784	curated	A	32330092	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1506577	decreases_abundance_in	MESH:D009203	curated	A	40253360	2025	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1506577	increases_abundance_in	MESH:D003863	curated	A	38763328	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1508657	decreases_abundance_in	MESH:D013514	curated	A	30680947	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1508657	increases_abundance_in	MESH:D013514	curated	A	30680947	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1508657	increases_abundance_in	MESH:D043183	curated	A	31681624	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1512	increases_abundance_in	MESH:D043183	curated	A	39243395	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14154,7 +14141,6 @@ NCBITaxon:157	increases_abundance_in	MESH:D000077195	curated	A	38589501	2024	1	1
 NCBITaxon:157	increases_abundance_in	MESH:D003731	curated	A	41534871	2026	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:157	increases_abundance_in	MESH:D003876	curated	A	39523189	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:157	increases_abundance_in	MESH:D006973	curated	A	41923033	2026	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:157	increases_abundance_in	MESH:D007639	curated	A	29933394	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:157	increases_abundance_in	MESH:D008180	curated	A	36755319	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:157	increases_abundance_in	MESH:D009625	curated	A	41860897	2026	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:157	increases_abundance_in	MESH:D010510	curated	A	37698410	2023	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14179,11 +14165,10 @@ NCBITaxon:157691	increases_abundance_in	MESH:D011565	curated	A	39117753	2024	1	1
 NCBITaxon:157692	decreases_abundance_in	MESH:D010842	curated	A	42102024	2026	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:157692	increases_abundance_in	MESH:D005891	curated	A	38762482	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1578	decreases_abundance_in	MESH:D000667	curated	A	35311555	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1578	decreases_abundance_in	MESH:D001323	curated	A	26068542	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1578	decreases_abundance_in	MESH:D002583	curated	A	39289617	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1578	decreases_abundance_in	MESH:D003093	curated	A	23239920	2012	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1578	decreases_abundance_in	MESH:D003248	curated	A	30785176	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1578	decreases_abundance_in	MESH:D003922	curated	A	26068542	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:1578	decreases_abundance_in	MESH:D003922	curated	A	26068542	2015	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1578	decreases_abundance_in	MESH:D004485	curated	A	27812181	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1578	decreases_abundance_in	MESH:D006980	curated	A	24969306	2014	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1578	decreases_abundance_in	MESH:D008795	curated	A	35311555	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14202,11 +14187,11 @@ NCBITaxon:1578	increases_abundance_in	MESH:D000067877	curated	A	29564487	2018	1	
 NCBITaxon:1578	increases_abundance_in	MESH:D000073600	curated	A	32199523	2020	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1578	increases_abundance_in	MESH:D000544	curated	A	38535538	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1578	increases_abundance_in	MESH:D001172	curated	A	23483307	2013	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1578	increases_abundance_in	MESH:D001323	curated	A	26068542	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1578	increases_abundance_in	MESH:D002583	curated	A	39289617	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1578	increases_abundance_in	MESH:D003093	curated	A	17897884	2008	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1578	increases_abundance_in	MESH:D003424	curated	A	17897884|24478468|26261163	2008|2014|2015	4	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1578	increases_abundance_in	MESH:D003731	curated	A	41534871	2026	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:1578	increases_abundance_in	MESH:D003922	curated	A	26068542	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1578	increases_abundance_in	MESH:D003924	curated	A	27151248|28782784|28912092	2017|2018	3	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1578	increases_abundance_in	MESH:D008103	curated	A	37483387	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1578	increases_abundance_in	MESH:D009007	curated	A	37899472	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14247,19 +14232,16 @@ NCBITaxon:158846	increases_abundance_in	MESH:D003924	curated	A	37025407|39257903
 NCBITaxon:158846	increases_abundance_in	MESH:D004403	curated	A	28767339	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:158846	increases_abundance_in	MESH:D006527	curated	A	30075590	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:158846	increases_abundance_in	MESH:D007669	curated	A	29353409	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1591	decreases_abundance_in	MESH:D010361	curated	A	25063078	2014	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1596	decreases_abundance_in	MESH:D000070642	curated	A	30546361	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1596	increases_abundance_in	MESH:D003731	curated	A	37698410	2023	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1596	increases_abundance_in	MESH:D009203	curated	A	39447641	2024	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1596	increases_abundance_in	MESH:D010510	curated	A	37698410	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1596	increases_abundance_in	MESH:D043183	curated	A	39243395	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1597	increases_abundance_in	MESH:D016031	curated	A	21965156	2012	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1598	decreases_abundance_in	MESH:D059305	curated	A	33210367	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1604	increases_abundance_in	MESH:D014212	curated	A	36590585	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:160404	decreases_abundance_in	MESH:D003424	curated	A	26789999	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1605	decreases_abundance_in	MESH:D059305	curated	A	40866466	2025	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1609545	decreases_abundance_in	MESH:D001007	curated	A	30824791	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1613	decreases_abundance_in	MESH:D016031	curated	A	21965156	2012	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1613	increases_abundance_in	MESH:D003424	curated	A	20848492	2010	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1613	increases_abundance_in	MESH:D003731	curated	A	37698410	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1613	increases_abundance_in	MESH:D009203	curated	A	39447641	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14271,7 +14253,6 @@ NCBITaxon:1622	increases_abundance_in	MESH:D003731	curated	A	39661115	2024	1	1.0
 NCBITaxon:162289	decreases_abundance_in	MESH:D017963	curated	A	28402408	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:162289	increases_abundance_in	MESH:D023241	curated	A	28118207	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1624	increases_abundance_in	MESH:D010300	curated	A	35057536	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1624	increases_abundance_in	MESH:D016031	curated	A	21965156	2012	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1633	increases_abundance_in	MESH:D043183	curated	A	39243395	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:164	increases_abundance_in	MESH:D017963	curated	A	28402408	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1643805	increases_abundance_in	MESH:D000077195	curated	A	38589501	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14332,7 +14313,7 @@ NCBITaxon:1663	decreases_abundance_in	MESH:D008103	curated	A	37483387	2023	1	1.0
 NCBITaxon:1663	increases_abundance_in	MESH:D010518	curated	A	35732628	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:166486	decreases_abundance_in	MESH:D000690	curated	A	33135936	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:166486	decreases_abundance_in	MESH:D003424	curated	A	26789999	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:166486	decreases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:166486	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1678	decreases_abundance_in	MESH:D003093	curated	A	17897884|23239920|27604252	2008|2012|2018	4	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1678	decreases_abundance_in	MESH:D003248	curated	A	30785176	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1678	decreases_abundance_in	MESH:D003424	curated	A	17897884|19235886|23276768	2008|2009|2013	4	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14353,7 +14334,6 @@ NCBITaxon:1678	decreases_abundance_in	MESH:D043183	curated	A	21330412	2011	1	1.0
 NCBITaxon:1678	decreases_abundance_in	MESH:D050031	curated	A	28903182	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1678	increases_abundance_in	MESH:C564133	curated	A	26840903	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1678	increases_abundance_in	MESH:D000067877	curated	A	29564487	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1678	increases_abundance_in	MESH:D000069467	curated	A	27559357	2016	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1678	increases_abundance_in	MESH:D001120	curated	A	35579969	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1678	increases_abundance_in	MESH:D001289	curated	A	28863139	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1678	increases_abundance_in	MESH:D003093	curated	A	24478468	2014	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14363,7 +14343,7 @@ NCBITaxon:1678	increases_abundance_in	MESH:D003731	curated	A	41534871	2026	2	1.0
 NCBITaxon:1678	increases_abundance_in	MESH:D003924	curated	A	28782784|28912092|37025407	2017|2023	3	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1678	increases_abundance_in	MESH:D003967	curated	A	37231829	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1678	increases_abundance_in	MESH:D009062	curated	A	41534871	2026	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1678	increases_abundance_in	MESH:D009765	curated	A	27559357|29214176	2016|2017	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:1678	increases_abundance_in	MESH:D009765	curated	A	27559357|29214176	2016|2017	4	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1678	increases_abundance_in	MESH:D010300	curated	A	28195358|28429209	2017	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1678	increases_abundance_in	MESH:D015179	curated	A	28153960	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1678	increases_abundance_in	MESH:D015431	curated	A	33341454	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14372,7 +14352,6 @@ NCBITaxon:1678	increases_abundance_in	MESH:D063766	curated	A	27450202	2018	1	1.0
 NCBITaxon:1679001	decreases_abundance_in	MESH:D003731	curated	A	35686590	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1680	decreases_abundance_in	MESH:D000079424	curated	A	31326413	2019	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1680	decreases_abundance_in	MESH:D000375	curated	A	28181098	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1680	decreases_abundance_in	MESH:D007639	curated	A	29933394	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1680	increases_abundance_in	MESH:C564133	curated	A	26840903	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1680	increases_abundance_in	MESH:D010300	curated	A	40420833	2025	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1681	decreases_abundance_in	MESH:D000079424	curated	A	31326413	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14382,7 +14361,6 @@ NCBITaxon:1681	decreases_abundance_in	MESH:D004485	curated	A	27812181	2018	1	1.0
 NCBITaxon:1681	increases_abundance_in	MESH:D006967	curated	A	17430346	2007	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1681	increases_abundance_in	MESH:D008687	curated	A	27999002	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:168384	increases_abundance_in	MESH:D000070642	curated	A	30546361	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1685	decreases_abundance_in	MESH:C563477	curated	A	29705728	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1685	increases_abundance_in	MESH:D002446	curated	A	29458413	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1686	increases_abundance_in	MESH:D006967	curated	A	17430346	2007	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1689	increases_abundance_in	MESH:D003731	curated	A	37698410	2023	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14394,7 +14372,6 @@ NCBITaxon:1696	decreases_abundance_in	MESH:D004485	curated	A	27812181	2018	1	1.0
 NCBITaxon:1696	increases_abundance_in	MESH:D003921	curated	A	30667148	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1705617	decreases_abundance_in	MESH:D003731	curated	A	35686590	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171	decreases_abundance_in	MESH:D017963	curated	A	28402408	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1710	increases_abundance_in	MESH:C563477	curated	A	29705728	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171549	decreases_abundance_in	MESH:D003924	curated	A	37025407	2023	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171549	decreases_abundance_in	MESH:D003928	curated	A	38346799	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171549	decreases_abundance_in	MESH:D063766	curated	A	27450202	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14405,13 +14382,11 @@ NCBITaxon:171549	increases_abundance_in	MESH:D006232	curated	A	39574007	2024	1	1
 NCBITaxon:171549	increases_abundance_in	MESH:D013964	curated	A	36034695	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171549	increases_abundance_in	MESH:D046290	curated	A	29637226	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171550	decreases_abundance_in	MESH:D000081029	curated	A	29946072	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:171550	decreases_abundance_in	MESH:D000768	curated	A	30489316	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171550	decreases_abundance_in	MESH:D000900	curated	A	33157256	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171550	decreases_abundance_in	MESH:D009765	curated	A	26230509	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171550	decreases_abundance_in	MESH:D011471	curated	A	35296557	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171550	decreases_abundance_in	MESH:D059305	curated	A	33210367	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171550	increases_abundance_in	MESH:D012859	curated	A	38079342	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:171550	increases_abundance_in	MESH:D013514	curated	A	30680947	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171550	increases_abundance_in	MESH:D015179	curated	A	29687353	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171550	increases_abundance_in	MESH:D016640	curated	A	39059479	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171550	increases_abundance_in	MESH:D016925	curated	A	38934644	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14428,12 +14403,12 @@ NCBITaxon:171552	decreases_abundance_in	MESH:D000067011	curated	A	31959047	2020	
 NCBITaxon:171552	decreases_abundance_in	MESH:D000081029	curated	A	29946072	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171552	decreases_abundance_in	MESH:D003731	curated	A	41654739	2026	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171552	decreases_abundance_in	MESH:D003924	curated	A	37025407	2023	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:171552	decreases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171552	decreases_abundance_in	MESH:D013315	curated	A	35613108	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:171552	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171552	decreases_abundance_in	MESH:D019936	curated	A	32300799	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:171552	increases_abundance_in	MESH:D001323	curated	A	26068542	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171552	increases_abundance_in	MESH:D003248	curated	A	30785176	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171552	increases_abundance_in	MESH:D003876	curated	A	42036885	2026	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:171552	increases_abundance_in	MESH:D003922	curated	A	26068542	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171552	increases_abundance_in	MESH:D003928	curated	A	38346799	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171552	increases_abundance_in	MESH:D007938	curated	A	26098097	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:171552	increases_abundance_in	MESH:D009055	curated	A	35038733	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14505,7 +14480,7 @@ NCBITaxon:174708	increases_abundance_in	MESH:D003248	curated	A	30785176	2019	1	1
 NCBITaxon:174708	increases_abundance_in	MESH:D003924	curated	A	28782784	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:174708	increases_abundance_in	MESH:D013605	curated	A	38896898	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:174708	increases_abundance_in	MESH:D015179	curated	A	22622349	2012	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:174708	increases_abundance_in	MESH:D050154	curated	A	26973703	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:174708	increases_abundance_in	MESH:D050197	curated	A	26973703	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1750	increases_abundance_in	MESH:D005891	curated	A	38762482	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1759399	increases_abundance_in	MESH:D003731	curated	A	35686590	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1760	increases_abundance_in	MESH:D002285	curated	A	39470189	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14552,7 +14527,6 @@ NCBITaxon:1857532	increases_abundance_in	MESH:D012149	curated	A	38763328	2024	2	
 NCBITaxon:186126	decreases_abundance_in	MESH:D012859	curated	A	38079342	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186329	increases_abundance_in	MESH:D010518	curated	A	38062089	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186329	increases_abundance_in	MESH:D016606	curated	A	36034695	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:186333	decreases_abundance_in	MESH:D013514	curated	A	30680947	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186333	increases_abundance_in	MESH:D000900	curated	A	33157256	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186333	increases_abundance_in	MESH:D013514	curated	A	30680947	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186801	decreases_abundance_in	MESH:D001943	curated	A	39470189	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14572,7 +14546,6 @@ NCBITaxon:186801	increases_abundance_in	MESH:D015390	curated	A	19164560	2009	1	1
 NCBITaxon:186801	increases_abundance_in	MESH:D016606	curated	A	36034695	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186801	increases_abundance_in	MESH:D016776	curated	A	27147260	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186801	increases_abundance_in	MESH:D063766	curated	A	27450202	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:186802	decreases_abundance_in	MESH:D000768	curated	A	30489316	2019	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186802	decreases_abundance_in	MESH:D001943	curated	A	39470189	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186802	decreases_abundance_in	MESH:D002583	curated	A	39289617	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186802	decreases_abundance_in	MESH:D003093	curated	A	28039159	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14612,7 +14585,6 @@ NCBITaxon:186803	increases_abundance_in	MESH:D000856	curated	A	26428446	2015	1	1
 NCBITaxon:186803	increases_abundance_in	MESH:D000900	curated	A	33157256	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186803	increases_abundance_in	MESH:D001007	curated	A	30824791	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186803	increases_abundance_in	MESH:D001249	curated	A	27634868	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:186803	increases_abundance_in	MESH:D002784	curated	A	32330092	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186803	increases_abundance_in	MESH:D003924	curated	A	37025407	2023	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186803	increases_abundance_in	MESH:D003928	curated	A	38346799	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186803	increases_abundance_in	MESH:D007003	curated	A	28806487	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14621,19 +14593,18 @@ NCBITaxon:186803	increases_abundance_in	MESH:D010300	curated	A	28506555	2017	1	1
 NCBITaxon:186803	increases_abundance_in	MESH:D010510	curated	A	37698410	2023	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186803	increases_abundance_in	MESH:D010518	curated	A	35732628	2022	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186803	increases_abundance_in	MESH:D010661	curated	A	39599702	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:186803	increases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186803	increases_abundance_in	MESH:D012210	curated	A	38926079	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186803	increases_abundance_in	MESH:D014212	curated	A	36590585	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:186803	increases_abundance_in	MESH:D015658	curated	A	28362071	2017	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:186803	increases_abundance_in	MESH:D015658	curated	A	28362071	2017	3	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186803	increases_abundance_in	MESH:D016640	curated	A	39059479	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186803	increases_abundance_in	MESH:D050197	curated	A	30021609	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186803	increases_abundance_in	MESH:D065626	curated	A	28823367	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186804	decreases_abundance_in	MESH:D000690	curated	A	33135936	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186804	decreases_abundance_in	MESH:D002446	curated	A	29458413	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:186804	increases_abundance_in	MESH:D000069467	curated	A	27559357	2016	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186804	increases_abundance_in	MESH:D000081029	curated	A	29946072	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186804	increases_abundance_in	MESH:D002583	curated	A	39289617	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186804	increases_abundance_in	MESH:D009369	curated	A	27384052	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:186804	increases_abundance_in	MESH:D009765	curated	A	27559357	2016	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186804	increases_abundance_in	MESH:D010510	curated	A	37698410	2023	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186804	increases_abundance_in	MESH:D010518	curated	A	35732628|38062089	2022|2023	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186806	increases_abundance_in	MESH:D009355	curated	A	35311555	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14641,8 +14612,8 @@ NCBITaxon:186807	decreases_abundance_in	MESH:D006232	curated	A	39574007	2024	1	1
 NCBITaxon:186807	increases_abundance_in	MESH:D065626	curated	A	29948900	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186817	increases_abundance_in	MESH:D000900	curated	A	33157256	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186822	increases_abundance_in	MESH:D000900	curated	A	33157256	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:186826	decreases_abundance_in	MESH:D000069467	curated	A	27559357	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186826	decreases_abundance_in	MESH:D000856	curated	A	26428446	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:186826	decreases_abundance_in	MESH:D009765	curated	A	27559357	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186826	decreases_abundance_in	MESH:D011565	curated	A	39117753	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186826	decreases_abundance_in	MESH:D013605	curated	A	38896898	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:186826	decreases_abundance_in	MESH:D016925	curated	A	38934644	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14673,7 +14644,6 @@ NCBITaxon:187326	increases_abundance_in	MESH:D003731	curated	A	37698410	2023	3	1
 NCBITaxon:187326	increases_abundance_in	MESH:D009203	curated	A	39447641	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:187326	increases_abundance_in	MESH:D010510	curated	A	37698410	2023	6	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:187326	increases_abundance_in	MESH:D043183	curated	A	39243395	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:187327	increases_abundance_in	MESH:C563477	curated	A	29705728	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1879010	decreases_abundance_in	MESH:D013605	curated	A	38896898	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1883	decreases_abundance_in	MESH:D008103	curated	A	37483387	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:189326	decreases_abundance_in	MESH:D003248	curated	A	29340896	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14690,7 +14660,6 @@ NCBITaxon:189330	increases_abundance_in	MESH:D000690	curated	A	33135936	2021	1	1
 NCBITaxon:189330	increases_abundance_in	MESH:D003424	curated	A	29335008	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:189330	increases_abundance_in	MESH:D003924	curated	A	37025407	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:189330	increases_abundance_in	MESH:D003967	curated	A	37231829	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:189330	increases_abundance_in	MESH:D007639	curated	A	29933394	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:189330	increases_abundance_in	MESH:D010518	curated	A	35732628	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:189330	increases_abundance_in	MESH:D017963	curated	A	28402408	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:189330	increases_abundance_in	MESH:D043183	curated	A	21741921	2011	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14702,7 +14671,7 @@ NCBITaxon:1898203	decreases_abundance_in	MESH:D003731	curated	A	37698410	2023	1	
 NCBITaxon:1898203	increases_abundance_in	MESH:D000077277	curated	A	36222897	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1898203	increases_abundance_in	MESH:D003731	curated	A	37698410	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1898207	increases_abundance_in	MESH:D010510	curated	A	37698410	2023	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1898207	increases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:1898207	increases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1898207	increases_abundance_in	MESH:D016606	curated	A	36034695	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1902136	increases_abundance_in	MESH:D003731	curated	A	35686590	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1904861	decreases_abundance_in	MESH:D010510	curated	A	37698410	2023	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14718,10 +14687,9 @@ NCBITaxon:191303	decreases_abundance_in	MESH:D004485	curated	A	27812181	2018	1	1
 NCBITaxon:191303	decreases_abundance_in	MESH:D009765	curated	A	30064988	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:191303	decreases_abundance_in	MESH:D013167	curated	A	30886835	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:191303	decreases_abundance_in	MESH:D054328	curated	A	38050061	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:191303	increases_abundance_in	MESH:D000069467	curated	A	27559357	2016	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:191303	increases_abundance_in	MESH:D000544	curated	A	38535538	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:191303	increases_abundance_in	MESH:D003092	curated	A	29766049	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:191303	increases_abundance_in	MESH:D009765	curated	A	27559357	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:191303	increases_abundance_in	MESH:D009765	curated	A	27559357	2016	3	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:191303	increases_abundance_in	MESH:D015179	curated	A	22622349	2012	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1913599	increases_abundance_in	MESH:D000077195	curated	A	38589501	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:191393	increases_abundance_in	MESH:D003928	curated	A	38346799	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14732,7 +14700,7 @@ NCBITaxon:191675	decreases_abundance_in	MESH:D002318	curated	A	29998997	2018	1	1
 NCBITaxon:1918540	decreases_abundance_in	MESH:D003928	curated	A	38346799	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1926307	increases_abundance_in	MESH:D003731	curated	A	39707459	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1935176	increases_abundance_in	MESH:D003929	curated	A	30358922	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:1937008	decreases_abundance_in	MESH:D003015	curated	A	39294333	2024	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:1937008	decreases_abundance_in	MESH:D003015	curated	A	39294333	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1937008	decreases_abundance_in	MESH:D003929	curated	A	30358922	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1937008	decreases_abundance_in	MESH:D016925	curated	A	38934644	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1937008	increases_abundance_in	MESH:D003562	curated	A	36904146	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14769,7 +14737,6 @@ NCBITaxon:1940338	increases_abundance_in	MESH:D065626	curated	A	28823367	2017	1	
 NCBITaxon:1940339	decreases_abundance_in	MESH:D018120	curated	A	32951160	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:1940340	increases_abundance_in	MESH:D003865	curated	A	33421868	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:194702	increases_abundance_in	MESH:D003876	curated	A	39523189	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:194843	decreases_abundance_in	MESH:D013514	curated	A	30680947	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:194924	decreases_abundance_in	MESH:D007444	curated	A	26098097	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:194924	decreases_abundance_in	MESH:D007938	curated	A	26098097	2015	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:194924	decreases_abundance_in	MESH:D008103	curated	A	37483387	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14809,8 +14776,7 @@ NCBITaxon:199	increases_abundance_in	MESH:D011565	curated	A	39117753	2024	1	1.0	
 NCBITaxon:199	increases_abundance_in	MESH:D043183	curated	A	39243395	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2	decreases_abundance_in	MESH:D000079424	curated	A	31326413	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:20	increases_abundance_in	MESH:C536315	curated	A	27217061	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:2005473	decreases_abundance_in	MESH:D000768	curated	A	30489316	2019	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:2005473	decreases_abundance_in	MESH:D003015	curated	A	39294333	2024	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:2005473	decreases_abundance_in	MESH:D003015	curated	A	39294333	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2005473	decreases_abundance_in	MESH:D003928	curated	A	38346799	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2005473	decreases_abundance_in	MESH:D004761	curated	A	30211217	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2005473	decreases_abundance_in	MESH:D011085	curated	A	28045919	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14927,7 +14893,7 @@ NCBITaxon:203692	decreases_abundance_in	MESH:D006232	curated	A	39574007	2024	1	1
 NCBITaxon:203692	increases_abundance_in	MESH:D010518	curated	A	35732628	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:203692	increases_abundance_in	MESH:D016606	curated	A	36034695	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2037	decreases_abundance_in	MESH:D008103	curated	A	37483387	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:2037	decreases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:2037	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2037	increases_abundance_in	MESH:D002285	curated	A	39470189	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2037	increases_abundance_in	MESH:D003863	curated	A	36946910	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2037	increases_abundance_in	MESH:D003924	curated	A	37025407	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14944,7 +14910,7 @@ NCBITaxon:204037	decreases_abundance_in	MESH:D002532	curated	A	39415150	2024	1	1
 NCBITaxon:204286	decreases_abundance_in	MESH:D010518	curated	A	35732628	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:204455	decreases_abundance_in	MESH:D013964	curated	A	36034695	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:204455	decreases_abundance_in	MESH:D016606	curated	A	36034695	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:204457	decreases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:204457	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:204458	decreases_abundance_in	MESH:D003922	curated	A	27231166	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:204458	decreases_abundance_in	MESH:D010518	curated	A	38062089	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:204458	increases_abundance_in	MESH:D010518	curated	A	35732628	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -14992,7 +14958,6 @@ NCBITaxon:207244	increases_abundance_in	MESH:D003248	curated	A	29340896	2018	1	1
 NCBITaxon:207244	increases_abundance_in	MESH:D004485	curated	A	27812181	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:207244	increases_abundance_in	MESH:D017963	curated	A	28402408	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:207244	increases_abundance_in	MESH:D018792	curated	A	35157224	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:2086	decreases_abundance_in	MESH:D013514	curated	A	30680947	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2086	increases_abundance_in	MESH:D000067877	curated	A	31026579	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2086	increases_abundance_in	MESH:D000073932	curated	A	38926079	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2086	increases_abundance_in	MESH:D003924	curated	A	37715517	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15066,7 +15031,6 @@ NCBITaxon:216572	decreases_abundance_in	MESH:D010195	curated	A	30519748	2019	1	1
 NCBITaxon:216572	decreases_abundance_in	MESH:D010661	curated	A	39599702	2024	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:216572	decreases_abundance_in	MESH:D011471	curated	A	35296557	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:216572	decreases_abundance_in	MESH:D012149	curated	A	38763328	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:216572	decreases_abundance_in	MESH:D013514	curated	A	30680947	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:216572	decreases_abundance_in	MESH:D025241	curated	A	37117227	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:216572	decreases_abundance_in	MESH:D059305	curated	A	33210367	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:216572	increases_abundance_in	MESH:D000856	curated	A	26428446	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15162,7 +15126,6 @@ NCBITaxon:239759	increases_abundance_in	MESH:D004761	curated	A	30211217	2018	1	1
 NCBITaxon:239759	increases_abundance_in	MESH:D016925	curated	A	38934644	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:239759	increases_abundance_in	MESH:D059305	curated	A	30782617	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:239934	decreases_abundance_in	MESH:C536315	curated	A	27217061	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:239934	decreases_abundance_in	MESH:D000069467	curated	A	27559357	2016	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:239934	decreases_abundance_in	MESH:D001120	curated	A	35579969	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:239934	decreases_abundance_in	MESH:D002583	curated	A	39289617	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:239934	decreases_abundance_in	MESH:D003092	curated	A	29766049	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15171,7 +15134,7 @@ NCBITaxon:239934	decreases_abundance_in	MESH:D003731	curated	A	41654739	2026	1	1
 NCBITaxon:239934	decreases_abundance_in	MESH:D003929	curated	A	30358922	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:239934	decreases_abundance_in	MESH:D004761	curated	A	30211217	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:239934	decreases_abundance_in	MESH:D005512	curated	A	29017394	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:239934	decreases_abundance_in	MESH:D009765	curated	A	27559357	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:239934	decreases_abundance_in	MESH:D009765	curated	A	27559357	2016	3	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:239934	decreases_abundance_in	MESH:D015658	curated	A	39090139	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:239934	increases_abundance_in	MESH:C085278	curated	A	29787870	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:239934	increases_abundance_in	MESH:C535244	curated	A	30211217	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15209,7 +15172,6 @@ NCBITaxon:244127	decreases_abundance_in	MESH:D012149	curated	A	38763328	2024	1	1
 NCBITaxon:244127	decreases_abundance_in	MESH:D013167	curated	A	30886835	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:244127	increases_abundance_in	MESH:D003924	curated	A	37715517	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:244127	increases_abundance_in	MESH:D003928	curated	A	38346799	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:244366	decreases_abundance_in	MESH:C563477	curated	A	29705728	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:245186	decreases_abundance_in	MESH:D023921	curated	A	38111089	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:248038	decreases_abundance_in	MESH:D029801	curated	A	26890232	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:248038	increases_abundance_in	MESH:D003876	curated	A	42036885	2026	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15237,7 +15199,6 @@ NCBITaxon:2601703	increases_abundance_in	MESH:D059305	curated	A	40866466	2025	1	
 NCBITaxon:2624479	increases_abundance_in	MESH:D003562	curated	A	36904146	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2624479	increases_abundance_in	MESH:D014529	curated	A	36904146	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:264639	decreases_abundance_in	MESH:D010300	curated	A	35057536	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:265975	decreases_abundance_in	MESH:C563477	curated	A	29705728	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:265975	decreases_abundance_in	MESH:D002532	curated	A	39415150	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:265975	decreases_abundance_in	MESH:D010518	curated	A	35732628	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:265975	decreases_abundance_in	MESH:D010661	curated	A	39599702	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15266,9 +15227,9 @@ NCBITaxon:2734614	increases_abundance_in	MESH:D001172	curated	A	34721377	2021	1	
 NCBITaxon:2740	decreases_abundance_in	MESH:D006232	curated	A	39574007	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2740	decreases_abundance_in	MESH:D015658	curated	A	39090139	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2740	decreases_abundance_in	MESH:D017963	curated	A	28402408	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:2740	increases_abundance_in	MESH:D000069467	curated	A	27559357	2016	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2740	increases_abundance_in	MESH:D000077195	curated	A	38589501	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2740	increases_abundance_in	MESH:D008180	curated	A	36755319	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:2740	increases_abundance_in	MESH:D009765	curated	A	27559357	2016	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2740	increases_abundance_in	MESH:D012859	curated	A	38079342	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2740	increases_abundance_in	MESH:D051436	curated	A	35348181	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2740	increases_abundance_in	MESH:D065626	curated	A	29948900	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15301,7 +15262,6 @@ NCBITaxon:28050	decreases_abundance_in	MESH:D001249	curated	A	27634868	2018	1	1.
 NCBITaxon:28050	decreases_abundance_in	MESH:D003248	curated	A	30669509	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:28050	decreases_abundance_in	MESH:D003922	curated	A	27231166	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:28050	decreases_abundance_in	MESH:D003924	curated	A	27151248	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:28050	decreases_abundance_in	MESH:D007639	curated	A	29933394	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:28050	decreases_abundance_in	MESH:D010190	curated	A	39256134	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:28050	decreases_abundance_in	MESH:D010661	curated	A	27336782	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:28050	decreases_abundance_in	MESH:D015658	curated	A	27048741|39090139	2018|2024	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15413,9 +15373,9 @@ NCBITaxon:28449	increases_abundance_in	MESH:D009765	curated	A	40302925	2025	1	1.
 NCBITaxon:28453	decreases_abundance_in	MESH:D017963	curated	A	28402408	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:28453	decreases_abundance_in	MESH:D019936	curated	A	26238090	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:286	decreases_abundance_in	MESH:D003731	curated	A	35686590	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:286	decreases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:286	decreases_abundance_in	MESH:D012516	curated	A	39055977	2024	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:286	decreases_abundance_in	MESH:D015179	curated	A	28600626	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:286	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:286	decreases_abundance_in	MESH:D019936	curated	A	26238090	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:286	increases_abundance_in	MESH:C563924	curated	A	27194068	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:286	increases_abundance_in	MESH:D000544	curated	A	38535538	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15445,7 +15405,7 @@ NCBITaxon:292632	increases_abundance_in	MESH:D000544	curated	A	38535538	2024	1	1
 NCBITaxon:292632	increases_abundance_in	MESH:D051436	curated	A	35348181	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:292632	increases_abundance_in	MESH:D063766	curated	A	27450202	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:292800	decreases_abundance_in	MESH:D003424	curated	A	26789999	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:292800	increases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:292800	increases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:293	decreases_abundance_in	MESH:C046366	curated	A	32843357	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:293	increases_abundance_in	MESH:C046366	curated	A	32843357	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:293	increases_abundance_in	MESH:D005221	curated	A	28083922	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15459,7 +15419,6 @@ NCBITaxon:29391	increases_abundance_in	MESH:D009203	curated	A	39447641	2024	2	1.
 NCBITaxon:29391	increases_abundance_in	MESH:D043183	curated	A	39243395	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:294	decreases_abundance_in	MESH:D003731	curated	A	35686590	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:294	decreases_abundance_in	MESH:D009203	curated	A	40253360	2025	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:29465	decreases_abundance_in	MESH:C563477	curated	A	29705728	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:29465	decreases_abundance_in	MESH:D000077195	curated	A	36445134|38589501	2022|2024	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:29465	decreases_abundance_in	MESH:D002532	curated	A	39415150	2024	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:29465	decreases_abundance_in	MESH:D002971	curated	A	38807164	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15508,7 +15467,6 @@ NCBITaxon:29580	decreases_abundance_in	MESH:D019936	curated	A	26238090	2015	1	1.
 NCBITaxon:29580	increases_abundance_in	MESH:D003093	curated	A	29632427	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:296051	decreases_abundance_in	MESH:D023921	curated	A	38111089	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:2975519	increases_abundance_in	MESH:D010518	curated	A	38062089	2023	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:301302	decreases_abundance_in	MESH:D007639	curated	A	29933394	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:301302	decreases_abundance_in	MESH:D010300	curated	A	40420833	2025	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:3024411	increases_abundance_in	MESH:D010518	curated	A	38062089	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:302485	increases_abundance_in	MESH:D009369	curated	A	27384052	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15528,7 +15486,6 @@ NCBITaxon:3085642	increases_abundance_in	MESH:D003876	curated	A	42036885	2026	1	
 NCBITaxon:3085642	increases_abundance_in	MESH:D003928	curated	A	38346799	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:3085642	increases_abundance_in	MESH:D009007	curated	A	37899472	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:310297	decreases_abundance_in	MESH:D001171	curated	A	27861762	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:310297	decreases_abundance_in	MESH:D007639	curated	A	29933394	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:310297	decreases_abundance_in	MESH:D010300	curated	A	28429209	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:310297	increases_abundance_in	MESH:C563365	curated	A	28341746	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:310297	increases_abundance_in	MESH:D018256	curated	A	36703031	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15575,7 +15532,6 @@ NCBITaxon:31979	decreases_abundance_in	MESH:D000067011	curated	A	31959047	2020	1
 NCBITaxon:31979	decreases_abundance_in	MESH:D010661	curated	A	27336782	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:31979	decreases_abundance_in	MESH:D013315	curated	A	35613108	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:31979	increases_abundance_in	MESH:D009369	curated	A	27384052	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:31979	increases_abundance_in	MESH:D013514	curated	A	30680947	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:31989	decreases_abundance_in	MESH:D013964	curated	A	36034695	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:31989	decreases_abundance_in	MESH:D016606	curated	A	36034695	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:31989	increases_abundance_in	MESH:D009369	curated	A	27384052	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15611,7 +15567,6 @@ NCBITaxon:32067	increases_abundance_in	MESH:D010510	curated	A	37698410	2023	5	1.
 NCBITaxon:32067	increases_abundance_in	MESH:D012859	curated	A	38079342	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:32067	increases_abundance_in	MESH:D018281	curated	A	36345047	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:32067	increases_abundance_in	MESH:D051436	curated	A	35348181	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:32207	decreases_abundance_in	MESH:C563477	curated	A	29705728	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:32207	decreases_abundance_in	MESH:D000077195	curated	A	38589501	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:32207	decreases_abundance_in	MESH:D002971	curated	A	38807164	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:32207	decreases_abundance_in	MESH:D003731	curated	A	41534871	2026	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15680,7 +15635,6 @@ NCBITaxon:33042	decreases_abundance_in	MESH:D015658	curated	A	39090139	2024	1	1.
 NCBITaxon:33042	decreases_abundance_in	MESH:D019936	curated	A	26238090	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:33042	decreases_abundance_in	MESH:D025241	curated	A	37117227	2023	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:33042	decreases_abundance_in	MESH:D054198	curated	A	27527070	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:33042	increases_abundance_in	MESH:D002784	curated	A	32330092	2021	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:33042	increases_abundance_in	MESH:D003924	curated	A	37025407	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:33042	increases_abundance_in	MESH:D004485	curated	A	27812181	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:33042	increases_abundance_in	MESH:D014640	curated	A	35311555	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15753,7 +15707,7 @@ NCBITaxon:35833	increases_abundance_in	MESH:D015179	curated	A	28153960	2017	1	1.
 NCBITaxon:358742	increases_abundance_in	MESH:D043183	curated	A	39243395	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:360807	decreases_abundance_in	MESH:D000079424	curated	A	31326413	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:360807	decreases_abundance_in	MESH:D003424	curated	A	26789999	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:360807	decreases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:360807	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:363265	increases_abundance_in	MESH:D025241	curated	A	37117227	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:363464	increases_abundance_in	MESH:D003731	curated	A	39661115	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:363464	increases_abundance_in	MESH:D010518	curated	A	38062089	2023	3	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15798,8 +15752,7 @@ NCBITaxon:38402	increases_abundance_in	MESH:D009203	curated	A	39447641	2024	1	1.
 NCBITaxon:393661	increases_abundance_in	MESH:D009369	curated	A	27384052	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:39484	decreases_abundance_in	MESH:D003424	curated	A	26789999	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:39485	decreases_abundance_in	MESH:D000690	curated	A	33135936	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:39485	decreases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:39485	decreases_abundance_in	MESH:D015658	curated	A	28362071|39090139	2017|2024	3	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:39485	decreases_abundance_in	MESH:D015658	curated	A	28362071|39090139	2017|2024	4	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:39486	decreases_abundance_in	MESH:D006635	curated	A	38050061	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:39488	decreases_abundance_in	MESH:D007669	curated	A	29353409	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:39488	decreases_abundance_in	MESH:D009203	curated	A	40253360	2025	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15819,7 +15772,8 @@ NCBITaxon:39778	increases_abundance_in	MESH:D010510	curated	A	37698410	2023	1	1.
 NCBITaxon:39778	increases_abundance_in	MESH:D043183	curated	A	39243395	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:39778	increases_abundance_in	MESH:D054328	curated	A	38050061	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:39779	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:39779	increases_abundance_in	MESH:D050154	curated	A	26973703	2016	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:39779	increases_abundance_in	MESH:D050154	curated	A	26973703	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:39779	increases_abundance_in	MESH:D050197	curated	A	26973703	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:397864	decreases_abundance_in	MESH:D009765	curated	A	30064988	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:397864	decreases_abundance_in	MESH:D010661	curated	A	39599702	2024	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:397864	decreases_abundance_in	MESH:D015658	curated	A	39090139	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15829,7 +15783,6 @@ NCBITaxon:39948	decreases_abundance_in	MESH:D001172	curated	A	34721377	2021	1	1.
 NCBITaxon:39948	decreases_abundance_in	MESH:D003922	curated	A	27231166	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:39948	decreases_abundance_in	MESH:D004485	curated	A	27812181	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:39948	decreases_abundance_in	MESH:D006232	curated	A	39574007	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:39948	decreases_abundance_in	MESH:D007639	curated	A	29933394	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:39948	decreases_abundance_in	MESH:D007669	curated	A	29353409	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:39948	decreases_abundance_in	MESH:D008694	curated	A	38112416	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:39948	decreases_abundance_in	MESH:D011565	curated	A	39117753	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15868,7 +15821,6 @@ NCBITaxon:40544	decreases_abundance_in	MESH:D003248	curated	A	30669509	2019	1	1.
 NCBITaxon:40544	decreases_abundance_in	MESH:D003550	curated	A	31992345	2020	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:40544	decreases_abundance_in	MESH:D003924	curated	A	37025407	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:40544	decreases_abundance_in	MESH:D004485	curated	A	27812181	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:40544	decreases_abundance_in	MESH:D007639	curated	A	29933394	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:40544	decreases_abundance_in	MESH:D008795	curated	A	35311555	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:40544	decreases_abundance_in	MESH:D015658	curated	A	27048741	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:40544	decreases_abundance_in	MESH:D017963	curated	A	28402408	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -15936,7 +15888,7 @@ NCBITaxon:433	increases_abundance_in	MESH:D011565	curated	A	39117753	2024	1	1.0	
 NCBITaxon:433334	decreases_abundance_in	MESH:D004485	curated	A	27812181	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:433334	increases_abundance_in	MESH:D002318	curated	A	29998997	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:433337	decreases_abundance_in	MESH:D005690	curated	A	38825119	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:433337	decreases_abundance_in	MESH:D050154	curated	A	26973703	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:433337	decreases_abundance_in	MESH:D050197	curated	A	26973703	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:434	increases_abundance_in	MESH:D009967	curated	A	39709380	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:434	increases_abundance_in	MESH:D011565	curated	A	39117753	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:43668	decreases_abundance_in	MESH:D004485	curated	A	27812181	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -16065,7 +16017,6 @@ NCBITaxon:47671	decreases_abundance_in	MESH:D003731	curated	A	37698410	2023	2	1.
 NCBITaxon:47671	decreases_abundance_in	MESH:D010300	curated	A	35057536	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:47671	decreases_abundance_in	MESH:D010510	curated	A	37698410	2023	3	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:47678	decreases_abundance_in	MESH:D000079424	curated	A	31326413	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:47715	decreases_abundance_in	MESH:D016031	curated	A	21965156	2012	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:480	decreases_abundance_in	MESH:D065631	curated	A	39614169	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:481	decreases_abundance_in	MESH:D000077277	curated	A	36222897	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:481	decreases_abundance_in	MESH:D002583	curated	A	39289617	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -16155,7 +16106,6 @@ NCBITaxon:52225	increases_abundance_in	MESH:D009967	curated	A	39709380	2024	1	1.
 NCBITaxon:52225	increases_abundance_in	MESH:D010510	curated	A	37698410	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:52225	increases_abundance_in	MESH:D015658	curated	A	39090139	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:52225	increases_abundance_in	MESH:D065626	curated	A	29948900	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:52226	decreases_abundance_in	MESH:D007639	curated	A	29933394	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:526524	increases_abundance_in	MESH:D003093	curated	A	22170749	2011	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:526524	increases_abundance_in	MESH:D003924	curated	A	37025407	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:526524	increases_abundance_in	MESH:D010518	curated	A	35732628	2022	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -16243,8 +16193,6 @@ NCBITaxon:54448	increases_abundance_in	MESH:D000900	curated	A	33157256	2021	1	1.
 NCBITaxon:544580	decreases_abundance_in	MESH:D000077195	curated	A	38589501	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:544580	decreases_abundance_in	MESH:D010510	curated	A	37698410	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:544581	increases_abundance_in	MESH:D005891	curated	A	38762482	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:545	decreases_abundance_in	MESH:C563477	curated	A	29705728	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:547	decreases_abundance_in	MESH:C563477	curated	A	29705728	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:547	increases_abundance_in	MESH:D001172	curated	A	34721377	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:547	increases_abundance_in	MESH:D004485	curated	A	27812181	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:547	increases_abundance_in	MESH:D010518	curated	A	35672331	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -16325,7 +16273,6 @@ NCBITaxon:574697	decreases_abundance_in	MESH:D003550	curated	A	31992345	2020	1	1
 NCBITaxon:574697	decreases_abundance_in	MESH:D009103	curated	A	27352007	2018	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:574697	decreases_abundance_in	MESH:D016640	curated	A	39059479	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:574697	increases_abundance_in	MESH:C085278	curated	A	29787870	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:574697	increases_abundance_in	MESH:D013514	curated	A	30680947	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:574697	increases_abundance_in	MESH:D015179	curated	A	29687353	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:574697	increases_abundance_in	MESH:D018792	curated	A	35157224	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:57494	decreases_abundance_in	MESH:D019936	curated	A	26238090	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -16344,11 +16291,10 @@ NCBITaxon:577310	decreases_abundance_in	MESH:D003929	curated	A	30358922	2018	1	1
 NCBITaxon:577310	decreases_abundance_in	MESH:D007669	curated	A	29353409	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:577310	decreases_abundance_in	MESH:D008103	curated	A	37483387	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:577310	decreases_abundance_in	MESH:D011695	curated	A	29525681	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:577310	increases_abundance_in	MESH:D003015	curated	A	39294333	2024	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:577310	increases_abundance_in	MESH:D003015	curated	A	39294333	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:577310	increases_abundance_in	MESH:D004761	curated	A	30211217	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:577310	increases_abundance_in	MESH:D015658	curated	A	39090139	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:577310	increases_abundance_in	MESH:D050031	curated	A	28903182	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:580024	decreases_abundance_in	MESH:C563477	curated	A	29705728	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:580024	decreases_abundance_in	MESH:D000073932	curated	A	38926079	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:580024	decreases_abundance_in	MESH:D001172	curated	A	34721377	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:580596	decreases_abundance_in	MESH:D000152	curated	A	29756631	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -16510,7 +16456,7 @@ NCBITaxon:715	decreases_abundance_in	MESH:D003731	curated	A	35686590	2022	1	1.0	
 NCBITaxon:715221	decreases_abundance_in	MESH:D003928	curated	A	38346799	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:718252	increases_abundance_in	MESH:D003876	curated	A	26431583	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:72274	decreases_abundance_in	MESH:D003731	curated	A	35686590	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:72274	decreases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:72274	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:72274	increases_abundance_in	MESH:D002583	curated	A	39289617	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:72275	increases_abundance_in	MESH:D009369	curated	A	27384052	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:72293	decreases_abundance_in	MESH:D003424	curated	A	23276768	2013	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -16650,7 +16596,6 @@ NCBITaxon:815	increases_abundance_in	MESH:D003928	curated	A	38346799	2024	1	1.0	
 NCBITaxon:815	increases_abundance_in	MESH:D007938	curated	A	26098097	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:815	increases_abundance_in	MESH:D010518	curated	A	35732628	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:815	increases_abundance_in	MESH:D015518	curated	A	28178201	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:816	decreases_abundance_in	MESH:C563477	curated	A	29705728	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:816	decreases_abundance_in	MESH:D002583	curated	A	39289617	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:816	decreases_abundance_in	MESH:D003092	curated	A	29766049	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:816	decreases_abundance_in	MESH:D003876	curated	A	22153774	2012	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -16691,7 +16636,6 @@ NCBITaxon:817	decreases_abundance_in	MESH:D003424	curated	A	17897884|23276768	20
 NCBITaxon:817	decreases_abundance_in	MESH:D004485	curated	A	27812181	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:817	decreases_abundance_in	MESH:D010300	curated	A	26539989	2015	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:817	decreases_abundance_in	MESH:D065626	curated	A	28705785	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:817	increases_abundance_in	MESH:D007639	curated	A	29933394	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:817	increases_abundance_in	MESH:D014676	curated	A	32987642	2020	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:818	decreases_abundance_in	MESH:D003093	curated	A	17897884	2008	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:818	decreases_abundance_in	MESH:D059305	curated	A	33210367	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -16700,7 +16644,6 @@ NCBITaxon:81852	decreases_abundance_in	MESH:D016776	curated	A	27147260	2016	1	1.
 NCBITaxon:81852	increases_abundance_in	MESH:D000900	curated	A	33157256	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:81852	increases_abundance_in	MESH:D010195	curated	A	30519748	2019	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:81852	increases_abundance_in	MESH:D010300	curated	A	28506555	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:820	decreases_abundance_in	MESH:C563477	curated	A	29705728	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:820	decreases_abundance_in	MESH:D003424	curated	A	26789999	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:820	decreases_abundance_in	MESH:D010300	curated	A	35057536	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:820	increases_abundance_in	MESH:D008107	curated	A	27036035	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -16776,9 +16719,9 @@ NCBITaxon:838	decreases_abundance_in	MESH:D006527	curated	A	30075590	2018	1	1.0	
 NCBITaxon:838	decreases_abundance_in	MESH:D008010	curated	A	41419527	2025	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:838	decreases_abundance_in	MESH:D009103	curated	A	27352007	2018	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:838	decreases_abundance_in	MESH:D010300	curated	A	28429209	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:838	decreases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:838	decreases_abundance_in	MESH:D013315	curated	A	35613108	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:838	decreases_abundance_in	MESH:D015431	curated	A	33341454	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:838	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:838	decreases_abundance_in	MESH:D018256	curated	A	36703031	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:838	decreases_abundance_in	MESH:D045730	curated	A	32620337	2020	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:838	decreases_abundance_in	MESH:D051436	curated	A	35348181	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -16824,7 +16767,6 @@ NCBITaxon:841	decreases_abundance_in	MESH:D003924	curated	A	27151248|37025407	20
 NCBITaxon:841	decreases_abundance_in	MESH:D004403	curated	A	28767339	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:841	decreases_abundance_in	MESH:D006527	curated	A	30075590	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:841	decreases_abundance_in	MESH:D007597	curated	A	30121305	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:841	decreases_abundance_in	MESH:D007639	curated	A	29933394	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:841	decreases_abundance_in	MESH:D009203	curated	A	40253360	2025	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:841	decreases_abundance_in	MESH:D009549	curated	A	30121305	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:841	decreases_abundance_in	MESH:D009765	curated	A	35664075	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -16856,8 +16798,7 @@ NCBITaxon:84108	increases_abundance_in	MESH:D065626	curated	A	29948900	2018	1	1.
 NCBITaxon:84109	increases_abundance_in	MESH:C535916	curated	A	38637854	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:84111	increases_abundance_in	MESH:D003093	curated	A	29632427	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:84111	increases_abundance_in	MESH:D003924	curated	A	39257903	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:84111	increases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:84111	increases_abundance_in	MESH:D015658	curated	A	39090139	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:84111	increases_abundance_in	MESH:D015658	curated	A	28362071|39090139	2017|2024	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:84112	decreases_abundance_in	MESH:D015673	curated	A	27338587	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:84112	increases_abundance_in	MESH:D010661	curated	A	39599702	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:84162	increases_abundance_in	MESH:D009967	curated	A	39709380	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -16930,13 +16871,12 @@ NCBITaxon:851	increases_abundance_in	MESH:D043183	curated	A	39243395	2024	1	1.0	
 NCBITaxon:853	decreases_abundance_in	MESH:D003093	curated	A	26296733|27833384|28039159	2015|2017|2018	3	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:853	decreases_abundance_in	MESH:D003424	curated	A	19235886|21910165|22102318|24478468|26296733	2009|2011|2012|2014|2015	6	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:853	decreases_abundance_in	MESH:D003550	curated	A	29232848	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:853	decreases_abundance_in	MESH:D007639	curated	A	29933394	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:853	decreases_abundance_in	MESH:D008180	curated	A	39511594	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:853	decreases_abundance_in	MESH:D009765	curated	A	27007700	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:853	decreases_abundance_in	MESH:D010300	curated	A	40420833	2025	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:853	decreases_abundance_in	MESH:D010661	curated	A	39599702	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:853	decreases_abundance_in	MESH:D011480	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:853	decreases_abundance_in	MESH:D014676	curated	A	32987642	2020	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:853	decreases_abundance_in	MESH:D015658	curated	A	28362071	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:853	decreases_abundance_in	MESH:D015673	curated	A	27338587	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:853	decreases_abundance_in	MESH:D019694	curated	A	21286703	2011	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:853	decreases_abundance_in	MESH:D043183	curated	A	39243395	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -16997,9 +16937,7 @@ NCBITaxon:904	decreases_abundance_in	MESH:D001172	curated	A	34721377	2021	1	1.0	
 NCBITaxon:904	decreases_abundance_in	MESH:D003248	curated	A	29340896	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:904	decreases_abundance_in	MESH:D003922	curated	A	24448554|27231166	2014|2016	2	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:904	decreases_abundance_in	MESH:D004485	curated	A	27812181	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:904	decreases_abundance_in	MESH:D007639	curated	A	29933394	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:904	decreases_abundance_in	MESH:D010661	curated	A	39599702	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:904	increases_abundance_in	MESH:C563477	curated	A	29705728	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:904	increases_abundance_in	MESH:D003924	curated	A	39257903	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:906	decreases_abundance_in	MESH:D000077195	curated	A	38589501	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:906	decreases_abundance_in	MESH:D001172	curated	A	34721377	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -17008,7 +16946,6 @@ NCBITaxon:906	decreases_abundance_in	MESH:D003093	curated	A	27604252	2018	1	1.0	
 NCBITaxon:906	decreases_abundance_in	MESH:D003248	curated	A	29340896	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:906	decreases_abundance_in	MESH:D004485	curated	A	27812181	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:906	decreases_abundance_in	MESH:D005221	curated	A	28083922	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:906	decreases_abundance_in	MESH:D007639	curated	A	29933394	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:906	decreases_abundance_in	MESH:D008694	curated	A	38112416	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:906	decreases_abundance_in	MESH:D010190	curated	A	39256134	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:906	decreases_abundance_in	MESH:D010518	curated	A	35732628	2022	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -17064,7 +17001,6 @@ NCBITaxon:91994	decreases_abundance_in	MESH:D003731	curated	A	37571254	2023	1	1.
 NCBITaxon:92793	increases_abundance_in	MESH:D015179	curated	A	22622349	2012	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:93681	decreases_abundance_in	MESH:D008103	curated	A	37483387	2023	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:94008	decreases_abundance_in	MESH:D017963	curated	A	28402408	2017	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:946234	decreases_abundance_in	MESH:D002784	curated	A	32330092	2021	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:946234	decreases_abundance_in	MESH:D003093	curated	A	27604252	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:946234	increases_abundance_in	MESH:D000544	curated	A	38535538	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:946234	increases_abundance_in	MESH:D004485	curated	A	27812181	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
@@ -17135,7 +17071,7 @@ NCBITaxon:976	increases_abundance_in	MESH:D015179	curated	A	28600626	2017	1	1.0	
 NCBITaxon:976	increases_abundance_in	MESH:D019283	curated	A	29409589	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:976	increases_abundance_in	MESH:D029801	curated	A	26890232	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:976	increases_abundance_in	MESH:D043183	curated	A	21330412	2011	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
-NCBITaxon:976	increases_abundance_in	MESH:D050154	curated	A	26973703	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
+NCBITaxon:976	increases_abundance_in	MESH:D050197	curated	A	26973703	2016	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:976	increases_abundance_in	MESH:D054328	curated	A	29105152	2018	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:979627	decreases_abundance_in	MESH:D002532	curated	A	39415150	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated
 NCBITaxon:979627	increases_abundance_in	MESH:D002532	curated	A	39415150	2024	1	1.0		2026-10-10	context_supported	derived_summary	unattributed	automated_pipeline	gutmdisorder_v3	2026-09-15	v3	local_kg_curated

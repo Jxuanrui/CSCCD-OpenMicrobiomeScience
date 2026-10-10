@@ -1,0 +1,18 @@
+authorization_key	targets	granted_by	status	note
+phase-r-remediation	data/merged;data/merged/restored_baseline_d8eb3b27_frozen;neo4j_materialize	用户(2026-09-29 Phase R 批复"按照监工的建议执行")	consumed	R2 恢复基线 d8eb3b27 追认紧急回滚/重建授权（P1 项，监工 2026-09-29 复审要求补记）（2026-10-01 监工 G0 裁定核销：任务完成/事故相关键优先核销）
+v6-food-rerun	data/staging	用户(2026-09-28 v6 重审启动授权)	consumed	classify_relations v6 续跑与收尾链 staging 写入（2026-10-01 监工 G0 裁定核销：任务完成/事故相关键优先核销）
+provenance-rebuild-mvp	data/pubtator	用户(2026-09-29 拍板#6 四件套重建范围=batch1+serving)	consumed	P0-5 provenance 四件套重取重建（2026-10-01 监工 G0 裁定核销：任务完成/事故相关键优先核销）
+external-gold-eval	data/sources	用户(2026-09-30 按监工建议执行)	consumed	外部评测 gold 下载(DiMB-RE eval_only_no_kg——不进KG/serving，data/整体已gitignore故无公开远端风险)（2026-10-01 监工 G0 裁定核销：任务完成/事故相关键优先核销）
+phase-v-prime-merge	data/merged/candidate_v2	用户(2026-09-30 同意登记)	consumed	已完成任务核销（v3 发布后收尾清理 2026-10-07）
+neo4j-materialize	neo4j_materialize	用户(2026-09-30 按监工建议授权物化)	consumed	Phase V步骤⑥——写入Neo4j两层物化（canonical+assertion）；条件:步骤⑤通过+gate全过+用户明确授权；与发布授权分离
+neo4j-materialize-v2	neo4j_materialize	用户(2026-10-01 步骤⑤有条件通过后重授权)	consumed	Phase V步骤⑥重做——条件:步骤⑤C1-C5闭环+guard_write审计+清库全量重建（2026-10-01 监工并行计划 Q1 核销：一次执行即核销）
+neo4j-materialize-v3	neo4j_materialize	用户(2026-10-01 G5收口后授权"授权，按照监工的建议执行")	consumed	D1 已执行（EX-neo4j-materialize-9189680a，G6 六断言全过）——一次执行即核销
+neo4j-materialize-v4	neo4j_materialize	用户(2026-10-02 G7打回P0-1整改重物化——hold泄漏修正后须重跑)	consumed	D1 整改重物化已执行（EX-neo4j-materialize-3e3ac0cc，G6v2 五断言全过）
+corpus-expansion-v3	data/pubtator	用户(2026-10-02 T1 批准语料扩容)	consumed	已完成任务核销（v3 发布后收尾清理 2026-10-07）
+v3-merge-backfill	data/merged/candidate_v3	用户(2026-10-06 批准 B4 启动)	consumed	已完成任务核销（v3 发布后收尾清理 2026-10-07）
+neo4j-materialize-v6	neo4j_materialize	用户(2026-10-06 T3 授权物化 candidate_v3)	consumed	B6 已执行（EX-5c12a0be）
+v31-fix-merge	data/merged/candidate_v3_1_0	用户(2026-10-10 资源论文优先指令+监工签认路线 S3)	active	mesh_id 修复后 ETL 重跑→merge_qc 产出到新目录 candidate_v3_1_0（不覆盖 serving；物化 Neo4j 前须关口③报审）
+v31-fix-merge2	data/merged/candidate_v3_1_0	用户(2026-10-10 资源论文优先指令+监工路线 S3 延续)	active	finalize 携注拷贝后重跑 merge_qc 刷 manifest(嵌入 assertion_counts)
+v31-fix-merge3	data/merged/candidate_v3_1_0	用户(2026-10-10 S3 延续)	active	携注拷贝 manual_hold/assertion_baseline 后重跑 merge_qc 补 manifest 哈希
+v31-fix-merge4	data/merged/candidate_v3_1_0	用户(2026-10-10 关口③整改)	active	错配分支拒绝后重跑 ETL+merge_qc
+v31-fix-merge5	data/merged/candidate_v3_1_0	用户(2026-10-10 关口③P0-2整改)	active	星号行CF树校验后重跑

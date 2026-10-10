@@ -31,10 +31,10 @@ def mesh_id(v):
         return ""
     # 按去前缀后的本地部分校验：空或 "*"（占位符）一律拒绝——
     # 修复 459 条 MESH:* 畸形边根因（监工 C2，2026-10-10）
-    local = x[5:] if x.startswith("MESH:") else x
+    local = x[5:] if x.upper().startswith("MESH:") else x
     if not local or local == "*":
         return ""
-    return x if x.startswith("MESH:") else f"MESH:{x}"
+    return x if x.upper().startswith("MESH:") else f"MESH:{x}"
 
 
 # Disorder_Health 表的复合条件清洗（人工抽检发现的词表问题）：
@@ -42,13 +42,39 @@ def mesh_id(v):
 # MeSH ID 的疾病侧；Health/Diet/Age 等非疾病概念一律剔除。
 NON_DISEASE = {"health", "healthy", "diet", "age", "*", ""}
 
+# MeSH 树号缓存（关口③整改 2026-10-10）：星号行改挂的目标必须是疾病类概念
+#（C=Conditions 或 F=精神障碍树；D=药物/E=手术/G=饮食/Z=地理等一律拒绝）。
+import pandas as _pd
+_TREE_CACHE = {}
+_tc_path = Path(__file__).resolve().parents[2] / "data/seed/mesh_tree_cache.tsv"
+if _tc_path.exists():
+    for _r in _pd.read_csv(_tc_path, sep="\t").fillna("").itertuples(index=False):
+        _TREE_CACHE[_r.uid] = str(_r.trees)
+
+def _is_disease_concept(mid: str) -> bool:
+    """MESH:Dxxxx 依树号判定是否疾病类（C/F 树；无缓存条目保守放行——仅源数据覆盖核验）。"""
+    uid = mid[5:] if mid.startswith("MESH:") else mid
+    trees = _TREE_CACHE.get(uid)
+    if trees is None:
+        return True
+    return any(t.startswith(("C", "F")) for t in trees.split(";") if t)
+
 
 def clean_condition(dname, dids):
-    """返回 (清洗后名称, MeSH ID)；复合条件选首个有效疾病侧，无可留部分返回空。"""
+    """返回 (清洗后名称, MeSH ID)；复合条件选首个有效疾病侧，无可留部分返回空。
+
+    星号行（ID 列含 "*"，此前产出 MESH:* 被删除的对象）的任何重解析目标
+    必须通过 _is_disease_concept 校验——关口③抽检实证改挂曾混入
+    Patients/Cholesterol(0.2%)/Protease Inhibitors/Autoantibodies 等非疾病概念。
+    """
     dname, dids = text(dname), text(dids)
+    star_row = "*" in dids
     if ";" not in dname and ";" not in dids and "," not in dids:
         mid = mesh_id(dids)
-        return (dname, mid) if mid and dname.lower() not in NON_DISEASE else ("", "")
+        ok = mid and dname.lower() not in NON_DISEASE
+        if ok and star_row and not _is_disease_concept(mid):
+            return "", ""
+        return (dname, mid) if ok else ("", "")
     nps = [x.strip() for x in dname.split(";") if x.strip()]
     ips = [x.strip() for x in re.split(r"[;,]", dids) if x.strip()]
     if len(nps) == len(ips):
@@ -57,13 +83,13 @@ def clean_condition(dname, dids):
                 continue
             mid = mesh_id(v)
             if mid:
+                if star_row and not _is_disease_concept(mid):
+                    continue
                 return n, mid
         return "", ""
-    # 长度不齐：MeSH 倒序名可能被分号拆开，整体视为单一概念取首个有效 ID。
-    for v in ips:
-        mid = mesh_id(v)
-        if mid:
-            return dname.replace(";", ", "), mid
+    # 长度不齐：整体名与首个有效 ID 无法保证对应（关口③抽检实证混入
+    # Patients/Cholesterol(0.2%, wt/wt)/Protease Inhibitors 等非疾病概念，
+    # 2026-10-10 监工 P0-2 裁定改为拒绝——宁缺勿错配）。
     return "", ""
 
 

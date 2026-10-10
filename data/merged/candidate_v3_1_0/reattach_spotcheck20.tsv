@@ -1,0 +1,21 @@
+subject	s_name	predicate	object	o_name	pmids
+NCBITaxon:815	Bacteroidaceae	increases_abundance_in	MESH:D010518	Periodontitis	35732628
+NCBITaxon:1003367	Clostridium sp. Clone-24	decreases_abundance_in	MESH:D015658	HIV Infections	28362071
+NCBITaxon:712	Pasteurellaceae	decreases_abundance_in	MESH:D000067011	Severe Acute Malnutrition	31959047
+NCBITaxon:2037	Actinomycetales	increases_abundance_in	MESH:D010518	Periodontitis	35732628
+NCBITaxon:213115	Desulfovibrionales	increases_abundance_in	MESH:D015658	HIV Infections	28362071
+NCBITaxon:286	Pseudomonas	decreases_abundance_in	MESH:D015658	HIV Infections	28362071
+NCBITaxon:186802	Eubacteriales	increases_abundance_in	MESH:D010518	Periodontitis	35732628
+NCBITaxon:1898207	Clostridiales bacterium	increases_abundance_in	MESH:D015658	HIV Infections	28362071
+NCBITaxon:69823	Selenomonas sputigena	increases_abundance_in	MESH:D005891	Gingivitis	38762482
+NCBITaxon:216572	Oscillospiraceae	decreases_abundance_in	MESH:D000856	Anorexia Nervosa	26428446
+NCBITaxon:2049	Actinomycetaceae	decreases_abundance_in	MESH:D000856	Anorexia Nervosa	26428446
+NCBITaxon:1257	Peptostreptococcus	increases_abundance_in	MESH:D010518	Periodontitis	35732628
+NCBITaxon:31957	Propionibacteriaceae	increases_abundance_in	MESH:D010518	Periodontitis	35732628
+NCBITaxon:283168	Odoribacter	decreases_abundance_in	MESH:D004761	Enterocolitis, Pseudomembranous	30211217
+NCBITaxon:102148	Solobacterium moorei	increases_abundance_in	MESH:D005891	Gingivitis	38762482
+NCBITaxon:2718	Cardiobacterium hominis	increases_abundance_in	MESH:D005891	Gingivitis	38762482
+NCBITaxon:712	Pasteurellaceae	decreases_abundance_in	MESH:D010518	Periodontitis	35732628
+NCBITaxon:60133	Prevotella pallens	increases_abundance_in	MESH:D005891	Gingivitis	38762482
+NCBITaxon:204286	Cobetia	decreases_abundance_in	MESH:D010518	Periodontitis	35732628
+NCBITaxon:652708	Bacteroidetes oral taxon 274	increases_abundance_in	MESH:D005891	Gingivitis	38762482

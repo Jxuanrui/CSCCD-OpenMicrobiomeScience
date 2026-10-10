@@ -5432,13 +5432,11 @@ MESH:C535916	Cartilage-hair hypoplasia	Disease				local_kg_curated
 MESH:C536315	Pediatric ulcerative colitis	Disease				local_kg_curated
 MESH:C551158	CPPS3 polysaccharide, Codonopsis pilosula	Disease				local_kg_curated
 MESH:C563365	Polyposis Syndrome, Hereditary Mixed, 1	Disease				local_kg_curated
-MESH:C563477	Nephrolithiasis, Calcium Oxalate	Disease				local_kg_curated
 MESH:C563924	Colorectal Adenomatous Polyposis, Autosomal Recessive	Disease				local_kg_curated
 MESH:C564133	Ige Responsiveness, Atopic [Supplementary Concept]	Disease				local_kg_curated
 MESH:D000067011	Severe Acute Malnutrition	Disease				local_kg_curated
 MESH:D000067877	Autism Spectrum Disorder	Disease				local_kg_curated
 MESH:D000069279	Drug Resistant Epilepsy	Disease				local_kg_curated
-MESH:D000069467	Fecal Microbiota Transplantation(Normal diet mice stool)	Disease				local_kg_curated
 MESH:D000069983	Saccharomyces boulardii	Disease				local_kg_curated
 MESH:D000070642	Brain Injuries, Traumatic	Disease				local_kg_curated
 MESH:D000073600	Diet, High-Protein	Disease				local_kg_curated
@@ -5455,7 +5453,6 @@ MESH:D000375	Aging	Disease				local_kg_curated
 MESH:D000544	Alzheimer Disease	Disease				local_kg_curated
 MESH:D000667	Ampicillin	Disease				local_kg_curated
 MESH:D000690	Amyotrophic Lateral Sclerosis	Disease				local_kg_curated
-MESH:D000768	Anesthesia, General	Disease				local_kg_curated
 MESH:D000789	Angina, Unstable	Disease				local_kg_curated
 MESH:D000856	Anorexia Nervosa	Disease				local_kg_curated
 MESH:D000894	Anti-Inflammatory Agents, Non-Steroidal(indomethacin, ibuprofen, ketoprofen, diclofenac, piroxicam, celecoxib, nimesulid and aspirin)	Disease				local_kg_curated
@@ -5466,7 +5463,6 @@ MESH:D001171	Arthritis, Juvenile	Disease				local_kg_curated
 MESH:D001172	Arthritis, Rheumatoid	Disease				local_kg_curated
 MESH:D001249	Asthma	Disease				local_kg_curated
 MESH:D001289	Attention Deficit Disorder with Hyperactivity	Disease				local_kg_curated
-MESH:D001323	Autoantibodies	Disease				local_kg_curated
 MESH:D001382	Azerbaijan	Disease				local_kg_curated
 MESH:D001943	Breast Neoplasms	Disease				local_kg_curated
 MESH:D002285	Carcinoma, Intraductal, Noninfiltrating	Disease				local_kg_curated
@@ -5475,7 +5471,6 @@ MESH:D002353	Carrier State	Disease				local_kg_curated
 MESH:D002446	Celiac Disease	Disease				local_kg_curated
 MESH:D002532	Intracranial Aneurysm	Disease				local_kg_curated
 MESH:D002583	Uterine Cervical Neoplasms	Disease				local_kg_curated
-MESH:D002784	Cholesterol(0.2%, wt/wt)	Disease				local_kg_curated
 MESH:D002971	Cleft Lip	Disease				local_kg_curated
 MESH:D003015	Clostridium Infections	Disease				local_kg_curated
 MESH:D003092	Colitis	Disease				local_kg_curated
@@ -5514,7 +5509,6 @@ MESH:D006980	Hyperthyroid	Disease				local_kg_curated
 MESH:D007003	Hypoglycemia	Disease				local_kg_curated
 MESH:D007444	Inulin	Disease				local_kg_curated
 MESH:D007597	Jordan	Disease				local_kg_curated
-MESH:D007639	Keratoconjunctivitis, Infectious	Disease				local_kg_curated
 MESH:D007669	Kidney Calculi	Disease				local_kg_curated
 MESH:D007938	Leukemia	Disease				local_kg_curated
 MESH:D008010	Oral Lichen Planus	Disease				local_kg_curated
@@ -5539,7 +5533,6 @@ MESH:D009967	Orthodontic Appliances	Disease				local_kg_curated
 MESH:D010190	Pancreatic Neoplasms	Disease				local_kg_curated
 MESH:D010195	Pancreatitis	Disease				local_kg_curated
 MESH:D010300	Parkinson Disease	Disease				local_kg_curated
-MESH:D010361	Patients	Disease				local_kg_curated
 MESH:D010505	Familial Mediterranean Fever	Disease				local_kg_curated
 MESH:D010510	Periodontal Diseases	Disease				local_kg_curated
 MESH:D010518	Periodontitis	Disease				local_kg_curated
@@ -5548,7 +5541,6 @@ MESH:D010661	Phenylketonuria	Disease				local_kg_curated
 MESH:D010842	Pica	Disease				local_kg_curated
 MESH:D011085	Polycystic Ovary Syndrome	Disease				local_kg_curated
 MESH:D011471	Prostate cancer	Disease				local_kg_curated
-MESH:D011480	Protease Inhibitors	Disease				local_kg_curated
 MESH:D011565	Psoriasis	Disease				local_kg_curated
 MESH:D011695	IgA Vasculitis	Disease				local_kg_curated
 MESH:D012149	Restraint, Physical	Disease				local_kg_curated
@@ -5582,7 +5574,6 @@ MESH:D015658	HIV Infections	Disease				local_kg_curated
 MESH:D015671	Electroacupuncture	Disease				local_kg_curated
 MESH:D015673	Fatigue Syndrome, Chronic	Disease				local_kg_curated
 MESH:D016030	Kidney Transplantation	Disease				local_kg_curated
-MESH:D016031	Liver Transplantation	Disease				local_kg_curated
 MESH:D016606	Thyroid Nodule	Disease				local_kg_curated
 MESH:D016638	Critical Illness	Disease				local_kg_curated
 MESH:D016640	Diabetes, Gestational	Disease				local_kg_curated
@@ -5732,7 +5723,6 @@ NCBITaxon:168934	Thalassospira	Microbe			genus	local_kg_curated
 NCBITaxon:1696	Brevibacterium	Microbe			genus	local_kg_curated
 NCBITaxon:1705617	Capnocytophaga sp. oral taxon 323	Microbe			species	local_kg_curated
 NCBITaxon:171	Leptospira	Microbe			genus	local_kg_curated
-NCBITaxon:1710	Cellulosimicrobium cellulans	Microbe			species	local_kg_curated
 NCBITaxon:171551	Porphyromonadaceae	Microbe			family	local_kg_curated
 NCBITaxon:1716	Corynebacterium	Microbe			genus	local_kg_curated
 NCBITaxon:172900	Victivallis	Microbe			genus	local_kg_curated
@@ -5775,7 +5765,6 @@ NCBITaxon:186826	Lactobacillales	Microbe			order	local_kg_curated
 NCBITaxon:186828	Carnobacteriaceae	Microbe			family	local_kg_curated
 NCBITaxon:1872421	Akkermansia sp.	Microbe			species	local_kg_curated
 NCBITaxon:1872650	Atopobium sp.	Microbe			species	local_kg_curated
-NCBITaxon:187327	Acidaminococcus intestini	Microbe			species	local_kg_curated
 NCBITaxon:189326	Gelria	Microbe			genus	local_kg_curated
 NCBITaxon:1902136	Streptococcus sp. NPS 308	Microbe			species	local_kg_curated
 NCBITaxon:191	Azospirillum	Microbe			genus	local_kg_curated
@@ -5865,7 +5854,6 @@ NCBITaxon:237576	Oribacterium sinus	Microbe			species	local_kg_curated
 NCBITaxon:238783	Pseudorhodobacter	Microbe			genus	local_kg_curated
 NCBITaxon:241189	Hespellia	Microbe			genus	local_kg_curated
 NCBITaxon:244093	Proteobacteria	Microbe			genus	local_kg_curated
-NCBITaxon:244366	Klebsiella variicola	Microbe			species	local_kg_curated
 NCBITaxon:245186	Loktanella	Microbe			genus	local_kg_curated
 NCBITaxon:2484550	stercorea	Microbe			species	local_kg_curated
 NCBITaxon:249411	Paracoccus	Microbe			genus	local_kg_curated

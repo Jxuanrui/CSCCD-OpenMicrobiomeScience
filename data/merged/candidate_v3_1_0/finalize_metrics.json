@@ -164,5 +164,5 @@
   },
   "v3_model": "DeepSeek official (deepseek-chat) test_100 80% @ 100/100",
   "v3_pipeline": "S1+S2+S3+v7 全链（stage=3 契约），2026-10-06",
-  "_v3_1_0_erratum": "2026-10-10 数据修复版：gutMDisorder ETL mesh_id 过滤 '*' 后重产（边 -209/节点 -25，MESH:* 清零）；断言集(985)/语料(89,404)/Tier-C(822) 与 v3.0 完全一致，故全部质量指标自 v3.0 原样沿袭（B5 盲标 91.3% 等不受本次修复影响）"
+  "_v3_1_0_erratum": "2026-10-10 数据修复版：gutMDisorder ETL ①mesh_id 本地部分校验空/* ②星号行改挂须过 MeSH C/F 树校验（关口③P0-2 整改，剔除 Patients/Cholesterol(0.2%)/Protease Inhibitors/Autoantibodies 等非疾病混入）③长度不齐分支拒绝。边 20309→20036/节点 6840→6803；断言集(985)/语料/Tier-C(822) 不变，质量指标沿袭 v3.0"
 }

@@ -1,0 +1,20 @@
+{
+ "assertion_count": 985,
+ "unique_assertion_id": 985,
+ "predicate_distribution": {
+  "produces": 333,
+  "alleviates": 266,
+  "aggravates": 172,
+  "biotransforms": 111,
+  "promotes_growth": 40,
+  "affects": 32,
+  "consumes": 19,
+  "inhibits_growth": 12
+ },
+ "unique_subjects": 267,
+ "unique_objects": 336,
+ "unique_pmids": 729,
+ "divergence_pending_assertions": 5,
+ "assertion_set_hash": "sha256:ce322463cf6924f507097509a48d7f94912e924f8718f0419ea03c082cf6f581",
+ "note": "批次 judge 运行中为中间态；终态以收口链 rerun 后为准"
+}

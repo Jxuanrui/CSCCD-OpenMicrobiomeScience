@@ -1,0 +1,27 @@
+{
+ "candidate": "2026-10-10-v3",
+ "items": {
+  "CURIE ID check": "PASS",
+  "Batch completion": "PASS",
+  "Atomicity": "PASS",
+  "Assertion replay identity": "PASS",
+  "Span normalization": "PASS",
+  "Context Precision (confirmed explicit)": "PASS",
+  "Generic context match safety": "PASS",
+  "Disease-context contract": "PASS",
+  "Comparability Gate": "PASS",
+  "Anatomical site": "PASS",
+  "Object-side ontology gap": "PASS",
+  "Ontology backlog consistency": "PASS",
+  "Pending review (2 dropped + 7 hold)": "PASS",
+  "Conflicts/divergence review": "PASS",
+  "Canonical derivation": "PASS",
+  "Manifest/version/hash": "PASS",
+  "Neo4j materialization authorization": "MANUAL_REVIEW_REQUIRED"
+ },
+ "materialized_to_neo4j": false,
+ "snapshot_status": "2026-10-10-v3",
+ "P0_status": "PENDING_RELEASE_CHECKS",
+ "v1_release_conditions_met": true,
+ "note": "状态由 automated checks 推导（2026-09-29 去硬编码）；materialized_to_neo4j 采用物化前/后两套口径一致性判定；人工终审项：conflicts_review 机器一致性核验 + 用户终审"
+}

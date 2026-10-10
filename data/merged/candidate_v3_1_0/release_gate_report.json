@@ -1,0 +1,72 @@
+{
+ "phase": "v1-rc1 release gate",
+ "automated_checks": {
+  "zero_duplicate_assertion_id": "PASS",
+  "zero_multi_pmid_atomic_assertions": "PASS",
+  "stable_replay_identity": "PASS",
+  "unknown_never_treated_as_match": "PASS",
+  "inferred_cannot_upgrade_comparable": "PASS",
+  "not_applicable_distinguished_from_unknown": "PASS",
+  "object_side_gap_covered": "PASS",
+  "anatomical_site_covered": "PASS",
+  "canonical_view_is_derived": "PASS",
+  "no_cross_context_majority_vote": "PASS",
+  "manifest_versions_complete": "PASS",
+  "assertion_count_consistent": "PASS",
+  "ontology_backlog_consistent": "PASS",
+  "final_hashes_present": "PASS",
+  "assertion_set_hash_consistent": "PASS",
+  "review_sample_arithmetic_invariant": "PASS",
+  "eligible_triple_consistent": "PASS",
+  "assertion_count_invariant": "PASS",
+  "materialized_to_neo4j_phase_consistent": "PASS",
+  "batch_completion": "PASS",
+  "span_normalization_valid": "PASS",
+  "comparability_gate": "PASS",
+  "generic_token_no_hard_match": "PASS",
+  "disease_target_context_separated": "PASS",
+  "dropped_manual_excluded": "PASS",
+  "manual_hold_quarantined": "PASS"
+ },
+ "all_automated_pass": true,
+ "gate_transition": {
+  "n_pairs": 2,
+  "v04": {
+   "partially_comparable": 2
+  },
+  "v05_pre": {
+   "?": 2
+  },
+  "post_disease_fix": {
+   "partially_comparable": 1,
+   "incomparable": 1
+  },
+  "changed_pairs": 2
+ },
+ "assertion_baseline": {
+  "assertion_count": 985,
+  "unique_assertion_id": 985,
+  "predicate_distribution": {
+   "produces": 333,
+   "alleviates": 266,
+   "aggravates": 172,
+   "biotransforms": 111,
+   "promotes_growth": 40,
+   "affects": 32,
+   "consumes": 19,
+   "inhibits_growth": 12
+  },
+  "unique_subjects": 267,
+  "unique_objects": 336,
+  "unique_pmids": 729,
+  "divergence_pending_assertions": 5,
+  "assertion_set_hash": "sha256:ce322463cf6924f507097509a48d7f94912e924f8718f0419ea03c082cf6f581",
+  "note": "批次 judge 运行中为中间态；终态以收口链 rerun 后为准"
+ },
+ "canonical_dependent": [],
+ "manual_gates_remaining": [
+  "Context Precision QC（context_precision_sample.tsv 人工复核）",
+  "整体人工抽检（pending_review_sample.tsv + conflicts_review.tsv）"
+ ],
+ "materialization_authorized": false
+}

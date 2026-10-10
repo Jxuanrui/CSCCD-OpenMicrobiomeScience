@@ -224,6 +224,16 @@ def _materialization_phase_check(manifest) -> bool:
             and res.get("assertion_nodes") == manifest.get("eligible_assertions"))
 
 
+def check_curie_ids(nodes_df, edges_df):
+    """S3 门禁补洞：节点/边端点 ID 须为合法 CURIE（拒绝 MESH:* 等占位符）。"""
+    import re
+    pat = re.compile(r"^[A-Za-z][A-Za-z0-9_]*:[A-Za-z0-9_.\-]+(:[A-Za-z0-9_.\-]+)*$")
+    bad = [i for i in nodes_df["id"].astype(str) if not pat.match(i)]
+    for col in ("subject", "object"):
+        bad += [f"{col}:{i}" for i in edges_df[col].astype(str) if not pat.match(i)]
+    return ("PASS" if not bad else f"FAIL({len(bad)} malformed, e.g. {bad[:3]})")
+
+
 def main():
     trans = transition_report()
     base = assertion_baseline()
@@ -425,9 +435,12 @@ def main():
         "materialization_authorized": False}
     def _v(cond):
         return "PASS" if cond else "BLOCKER"
+    nodes_df = pd.read_csv(MERGED / "merged_nodes.tsv", sep="\t", dtype=str).fillna("")
+    edges_df = pd.read_csv(MERGED / "merged_edges.tsv", sep="\t", dtype=str).fillna("")
     v1_report = {
         "candidate": str(manifest.get("snapshot_id", "unknown-snapshot")),
         "items": {
+            "CURIE ID check": check_curie_ids(nodes_df, edges_df),
             "Batch completion": _v(checks.get("batch_completion", False)),
             "Atomicity": _v(checks["zero_duplicate_assertion_id"] and checks["zero_multi_pmid_atomic_assertions"]),
             "Assertion replay identity": _v(checks["stable_replay_identity"]),

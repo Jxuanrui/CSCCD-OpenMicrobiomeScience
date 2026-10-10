@@ -35,7 +35,7 @@ A local knowledge layer for gut-microbiome research: curated databases (drug–m
 | ------------ | ------------------- |
 | Check what the literature says about a microbe | Multi-hop fan-out across diseases, metabolites, drugs, genes and pathways, each edge with tier + PMIDs — minutes instead of an afternoon of PubMed searches. |
 | Draft an introduction or review section | Evidence-backed sentences ("*F. prausnitzii* is decreased in Crohn's disease — PMIDs …") you can cite directly. |
-| Pick a hypothesis worth bench time | RotatE link predictions ranked by score, always labelled `predicted` — a shortlist of untested microbe–disease–metabolite triples. |
+| Browse experimental link predictions (unvalidated) | RotatE link predictions ranked by score, always labelled `predicted` — a shortlist of untested microbe–disease–metabolite triples. |
 | Ask questions in natural language | Grounded QA: entity questions return a numbered evidence list with verbatim PMIDs; anything the graph cannot support returns "insufficient evidence" instead of a guess. |
 | Build on it programmatically | Plain TSVs (`data/merged/candidate_v3/`) plus a Streamlit browser — no lock-in, load it into pandas/Neo4j/anything. |
 
@@ -77,7 +77,7 @@ Every row carries the evidence tier (`A` curated · `B` ≥2 papers · `C` singl
 | ---- | ------------- |
 | **Query the graph** | Single-microbe multi-hop fan-out across 7 entity types, with per-edge tier + PMID. |
 | **Ask questions** | Grounded QA over the serving KG: entity questions get a deterministic evidence list; the rest get hybrid retrieval. |
-| **Generate hypotheses** | RotatE link prediction (`rotate_predictions.tsv`) — always labelled `evidence=predicted`. |
+| **Generate hypotheses** | RotatE link prediction (`rotate_predictions.tsv`) — **experimental**; embeddings are undertrained (raw hits@10 = 1.0%), treat output as unvalidated until retrained with a filtered protocol. |
 | **Run governed research** | The `mra/` research loop plans → executes → audits → files evidence, with R-side statistics behind an audit gate that rejects constant exposures. |
 | **Audit any release** | Release-gate reports, write-key ledger, snapshot manifests and sha256-checked archives are all in-repo. |
 | **Rebuild everything** | Serving KG is git-tracked; `neo4j_materialize.py` rebuilds the live graph from TSVs. |
@@ -105,7 +105,7 @@ Every row carries the evidence tier (`A` curated · `B` ≥2 papers · `C` singl
 | Food dimension precision | ≥ 0.85 | 0.983 (59/60, Wilson [0.91, 1.00]) |
 | Machine release checks | 41 PASS / 0 FAIL | **41 / 0** |
 | Provenance completeness | 4 columns on every edge | 20,309 / 20,309 |
-| Link prediction baseline | report only | RotatE hits@10 = 1.0%, MRR = 0.0073 (raw, n=200) |
+| Link prediction baseline | report only | experimental: RotatE hits@10 = 1.0%, MRR = 0.0073 (raw, undertrained — not a validated predictor) |
 
 | Compared with | [MicrobiomeKG](https://www.frontiersin.org/journals/systems-biology/articles/10.3389/fsysb.2025.1544432/full) | [MINERVA](https://academic.oup.com/bib/article/26/5/bbaf472/8261764) |
 | --- | --- | --- |

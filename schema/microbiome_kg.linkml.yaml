@@ -95,6 +95,7 @@ slots:
   id:
     identifier: true
     description: 节点唯一 ID，带前缀（如 NCBITaxon:1639）。
+    pattern: "^[A-Za-z][A-Za-z0-9_]*:[A-Za-z0-9_.\\-]+(:[A-Za-z0-9_.\\-]+)*$"  # CURIE；拒绝 MESH:* 等占位/畸形 ID（S3 门禁补洞）
   name:
     required: true
   aliases:

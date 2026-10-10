@@ -29,6 +29,11 @@ def mesh_id(v):
     x = clean_id(v)
     if not x or x.lower() in {"nan", "none", "health", "d006262"}:
         return ""
+    # 按去前缀后的本地部分校验：空或 "*"（占位符）一律拒绝——
+    # 修复 459 条 MESH:* 畸形边根因（监工 C2，2026-10-10）
+    local = x[5:] if x.startswith("MESH:") else x
+    if not local or local == "*":
+        return ""
     return x if x.startswith("MESH:") else f"MESH:{x}"
 
 

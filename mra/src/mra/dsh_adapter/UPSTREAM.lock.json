@@ -7,5 +7,5 @@
   "pnpm_lock_sha256": "f561d4d2b02ca15f94fc9177500ab4646c38d847cf1c52ac50bd4022690d2f50",
   "stage": "developer_preview",
   "pin_policy": "精确commit钉版，禁用浮动semver；升级必须走独立upgrade branch+完整compatibility suite（用户裁决 2026-09-24）",
-  "audit_doc": "DEEPSEEK_HARNESS_INTEGRATION_DECISION.md (G0.5)"
+  "audit_doc": "DEEPSEEK_HARNESS_INTEGRATION_DECISION.md@d803780(删除前快照,见git历史)"
 }

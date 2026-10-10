@@ -24,4 +24,4 @@
 
 ## 版本记录
 
-历史变更见 [CHANGELOG.md](CHANGELOG.md)（v1.2.0 → v3.0.5 完整条目）。
+历史变更见 [CHANGELOG.md](CHANGELOG.md)（v1.2.0 → v3.0.6 完整条目）。

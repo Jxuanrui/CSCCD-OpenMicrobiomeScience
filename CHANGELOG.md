@@ -233,7 +233,7 @@
 > Not yet production-ready for：EXTERNAL_WRITE execution / untrusted
 > multi-user / SaaS multi-tenancy / distributed execution / H6 自主能力。
 > 评审：Production Hardening Review 五项复核全过（见
-> PRODUCTION_READINESS_REVIEW.md v1.2.0 节）；最终门禁 **505 passed /
+> PRODUCTION_READINESS_REVIEW.md（已移除，见 git 历史） v1.2.0 节）；最终门禁 **505 passed /
 > 2 skipped**。
 
 ### Migration / Compatibility（v1.1.0 → v1.2.0）
@@ -569,7 +569,7 @@ Tests：447 → **452 passed / 2 skipped**（+5：RB1 快照区分×1、RB2
 durability×4）。Golden / B3 / B4 回归全绿；credential leakage = 0；
 governance bypass = 0；duplicate semantic commit = 0；ledger corruption
 fail-closed；declared production scope 内无 critical blocker。
-明细见 `PRODUCTION_READINESS_REVIEW.md`。
+明细见 `PRODUCTION_READINESS_REVIEW.md（已移除，见 git 历史）`。
 
 ### Production-readiness Hardening（评审第 4/5/6/10/12 节落地项）
 
@@ -591,7 +591,7 @@ fail-closed；declared production scope 内无 critical blocker。
   随行（capability/implementation/model/client/policy）。
 - **Benchmark Case 005（No-valid-conclusion）**：证据不足 →
   evidence_insufficient 诚实终止，零强产证据。
-- 详见 `PRODUCTION_READINESS_REVIEW.md`（分项判级 + 四部输出）。
+- 详见 `PRODUCTION_READINESS_REVIEW.md（已移除，见 git 历史）`（分项判级 + 四部输出）。
 
 ### B4.1 — Identity & Idempotency Hardening
 

@@ -1,0 +1,27 @@
+# 运行时数据（由管线再生，20GB+，不入库；含语料/种子/合并结果/staging/吸收资产/Neo4j/RAG 索引）
+data/
+# Python
+__pycache__/
+*.pyc
+.venv/
+# OS/编辑器
+.DS_Store
+.idea/
+.vscode/
+# 本地环境
+.env
+
+# 运行时状态（vecstore 索引/LLM 预算/审计账本/执行注册表台账）——本机生成，不入库
+var/vecstore/
+var/llm_budget.json
+var/exec_registry/audit.db
+var/exec_registry/registry.json
+# AI 开发工具配置（不入库）
+.claude/
+.zcode/
+.cursor/
+.windsurf/
+
+# 评测中间产物（含 AI 审计细节，不入库）
+.venv-lightrag/
+.venv-pykeen/

@@ -1,29 +1,33 @@
-# kg-tool
+# CSCCD-OpenMicrobiomeScience
 
-Gut Microbiome Multi-layer Knowledge Platform —— 输入疾病名与宏基因组测序数据，
-输出带全链路证据溯源的机制假设卡片（菌 → 代谢物 → 基因 → 通路）。
+**A multi-layer gut microbiome knowledge platform** — literature-curated knowledge
+graphs × cohort-scale multi-omics, with a deterministic, evidence-traceable toolkit
+for microbiome-driven scientific discovery.
 
-## 特性
+## What's in this repository
 
-- **确定性内核**：同输入永远逐字节同输出（四票全机械排序，零 LLM 零拟合零黑箱）
-- **证据溯源**：每张假设卡片的每一步可回溯文献原句（PMID 级）
-- **一条命令全流程**：`kg run --disease <key> --cohort <key> …`（六步依赖序+断点续跑）
-- **AI 原生**：`kg mcp` 起 stdio MCP 插座，任何 MCP 客户端（Claude/DeepResearch 类代理）可直连调用
-- **方法配方**：`kg recipes` 给出带实测证据的分析方法推荐
+1. **Literature layer (data)** — a provenance-complete knowledge graph of
+   microbe–disease/drug/metabolite relations (`data/literature_layer/`), built from
+   license-clean curated sources (Maier 2018 ST3, BugSigDB) and LLM-extracted
+   assertions with cross-model adjudication. Every edge is traceable to its source.
+   See `DATA_LICENSE.md` and `PROVENANCE.md`.
+2. **Observation layer (in development)** — cross-cohort metagenomic measurements,
+   physically separated from the literature graph.
+3. **kg-tool (code)** — the deterministic toolkit (`src/kg_tool/`, `src/06_tool/`):
+   one command (`kg run`) from disease profile to ranked, fully traceable mechanism
+   hypothesis cards (microbe → metabolite → gene → pathway). Zero LLM scoring,
+   byte-reproducible outputs, MCP socket for AI assistants.
 
-## 快速开始
+## Quick start (kg-tool)
 
-见 [QUICKSTART.md](QUICKSTART.md)。安装：`pip install -e .`（依赖仅 typer/requests/mcp，已钉扎）。
+See [QUICKSTART.md](QUICKSTART.md). Install: `pip install -e .` (deps: typer /
+requests / mcp, pinned). Data packages are distributed separately via `kg init`.
 
-## 数据
+## Testing
 
-图谱数据包（CC BY-NC 4.0）与 tier2 批次经 `kg init`（发布通道）分发，不入本仓。
-`configs/local/` 放本机数据路径（gitignore）。
+`pytest -m "not needs_data"` (public CI profile; data-dependent tests require local
+data legs).
 
-## 引用
+## License
 
-DOI 见 Releases（Zenodo）。许可证：代码 MIT / 数据 CC BY-NC 4.0 分层。
-
-## 测试
-
-`pytest -m "not needs_data"`（公网 CI 口径；带数据的完整测试需自备数据腿）。
+Code: MIT. Data: CC BY-NC 4.0 (per-layer details in `DATA_LICENSE.md`).

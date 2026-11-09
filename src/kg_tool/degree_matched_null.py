@@ -30,7 +30,11 @@
 - 故本件**注册主臂=真实链构造图口径（construction，规格 v1.6 A13 落定）**，同档并列**参考臂=原规格字面口径（spec）**；原 v01 全表口径经磁盘证伪（hop1 覆盖 3.52%/293 零度节点）→ 降为参考臂
   （construction：子图 merged_edges 的 produces/biotransforms 即链条真实 hop1
   源 + v01 participates_in + 表3）**。两臂都出全量数字，谁也不藏；主臂口径
+<<<<<<< HEAD
   未改（A13 报 A' 类，待评审分类+用户知情）。
+=======
+  未改（A13 报 A' 类，待监工分类+用户知情）。
+>>>>>>> origin/main
 
 伪代码（spec §3.2 逐行，行 2/6/6b/7 是硬口径）：
 - 行2 分箱：精确 degree 值；箱内 <5 **向 degree 更大一侧合并**，至箱内≥5 或
@@ -56,7 +60,11 @@
 - 两条都不触发且无差异 → "路径无信息"。
 - 两句解读句均预写在常量里，测试断言它们逐字出现在冻结规格档（防"顺手润色"）。
 
+<<<<<<< HEAD
 校准"可算"的操作定义（评审 v1.5 冻结审 P0 第 3 条前置要求，`review_
+=======
+校准"可算"的操作定义（监工 v1.5 冻结审 P0 第 3 条前置要求，`supervisor_
+>>>>>>> origin/main
 v03_v15_freeze_verdict_20261105.md:48`）：票②=链构造即定、恒可算；票④=
 KO 查表非空即可算。本模块 `VOTES_COMPUTABLE`/`vote4_computable` 逐字照此。
 """
@@ -90,7 +98,11 @@ from kg_tool.hop1_shuffle import (  # noqa: E402
 from kg_tool.proximity import degree_bins  # noqa: E402
 
 # ---------------------------------------------------------------
+<<<<<<< HEAD
 # 冻结常量（spec §三，逐字）——改这里=过审（评审+用户）。
+=======
+# 冻结常量（spec §三，逐字）——改这里=过审（监工+用户）。
+>>>>>>> origin/main
 # ---------------------------------------------------------------
 RNG_SEED = 20261105          # spec §3.2：random.Random(20261105) 钉扎
 ALPHA = 0.05                 # spec §3.3：双侧 α=0.05
@@ -167,7 +179,11 @@ EXT102_DEFAULT = ("data/observation/h1_htn_external_20261030_151856/"
                   "ext_21612_D_vs_H_discovery_20261030_151856.tsv")
 BRIDGE_DEFAULT = "data/logs/name_bridge_20261101/name_bridge_cohorts.tsv"
 GUTMGENE_DIR_DEFAULT = (
+<<<<<<< HEAD
     "<LYTEAMWORK>/<USER>/Project/Dietary_cohort_of_intestinal_flora/"
+=======
+    "<LYTEAMWORK>/JiXuanRui/Project/Dietary_cohort_of_intestinal_flora/"
+>>>>>>> origin/main
     "Project/Project03_公共数据库/gutMGene")
 OBS_DIR_DEFAULT = "data/observation/htn_v1"
 GUTMGENE_TABLE3_NAME = "Microbial metabolite-Host Gene.csv"
@@ -598,7 +614,11 @@ def sample_random_chains(cards: list[dict], cat: dict[str, str],
 
 def vote4_computable(metabolite_id: str, chebi_of: dict[str, str],
                      ko_map: dict[str, list[str]]) -> int:
+<<<<<<< HEAD
     """票④"可算"判定（评审 v1.5 冻结审 P0 第 3 条的操作定义）。
+=======
+    """票④"可算"判定（监工 v1.5 冻结审 P0 第 3 条的操作定义）。
+>>>>>>> origin/main
 
     口径逐字：票②=链构造即定、恒可算；票④=**KO 查表非空**即可算。
     为什么不能用"vote4 值非零"当可算：不可测（ko_absent）是有效的 0 值，
@@ -1022,7 +1042,11 @@ AMBIGUITIES = [
      "的 hop1 源是子图 merged_edges，v01 边表只供 hop3）。"
      "处置（v1.6 A13 落定）：**主口径已改为 construction（真实链构造图）**，spec 降参考臂"
      "（construction=子图 hop1 ∪ v01 participates_in ∪ 表3）；两臂全量数字"
+<<<<<<< HEAD
      "并列，结论若不因臂而变即为稳健性证据。**本项须评审分类+用户知情**"
+=======
+     "并列，结论若不因臂而变即为稳健性证据。**本项须监工分类+用户知情**"
+>>>>>>> origin/main
      "（v1.6 已落定：construction 即主口径，spec 为参考臂——依据=该口径经磁盘证伪）。"
      "边谓词取 v01 **全表**（produces/biotransforms/modulates_host_gene/"
      "regulates_host_gene/participates_in），不只取规格点名的四个：规格主句"
@@ -1030,8 +1054,13 @@ AMBIGUITIES = [
      "**modulates_host_gene 主体为 CHEBI→NCBIGene（代谢物-基因），真正的"
      "菌-基因谓词是 regulates_host_gene**（规格把后者漏了、把前者的端点"
      "标错）——两个都收才既不丢菌-基因层，也不丢规格点名的那条。"),
+<<<<<<< HEAD
     ("A14", "区分器「可算票」的操作定义（评审 P0 前置）",
      "按 `review_v03_v15_freeze_verdict_20261105.md:48` 逐字：票②=链"
+=======
+    ("A14", "区分器「可算票」的操作定义（监工 P0 前置）",
+     "按 `supervisor_v03_v15_freeze_verdict_20261105.md:48` 逐字：票②=链"
+>>>>>>> origin/main
      "构造即定、恒可算；票④=KO 查表非空即可算（不是「值为 0 即不可算」——"
      "ko_absent 是有效 0 值）。可算票比例=(1+票④可算)/2 的链均值。"),
     ("A15", "两臂的边源是否算「加第三源」",
@@ -1116,7 +1145,11 @@ def render_report(paths: dict, stats: dict) -> str:
     a("")
     a("**源贡献边数**（读法：v01 保留行数≠边数——同一节点对可能由多条边/多"
       "谓词重复出现，n_edges 才是去重后的度基；重叠列即「多源 ∪ 去重」的双算"
+<<<<<<< HEAD
       "兜底，spec v1.2 评审 P1-1 要求的正是这个数）")
+=======
+      "兜底，spec v1.2 监工 P1-1 要求的正是这个数）")
+>>>>>>> origin/main
     a("")
     a("**真链三层边在图中的覆盖率**（图保真度，非检验——它决定「这张图是不是"
       "链条走过的图」）：")
@@ -1200,7 +1233,11 @@ def render_report(paths: dict, stats: dict) -> str:
       f"{stats['skip_alt_per_category']['n_skipped']} 条"
       f"（按位置类别：{_fmt_pred(stats['skip_alt_per_category']['by_category'])}）"
       "——与上表全局箱口径的 "
+<<<<<<< HEAD
       f"{prim['sampling']['n_skipped_by_pool']} 条并列，供评审裁定"
+=======
+      f"{prim['sampling']['n_skipped_by_pool']} 条并列，供监工裁定"
+>>>>>>> origin/main
       "「分箱对象」这一处口径值多少条链。")
     a("")
     a("**有放回的定量证据**：`n_duplicate_draws` = 总抽取次数 − 被抽中的不同"
@@ -1323,7 +1360,11 @@ def render_report(paths: dict, stats: dict) -> str:
     a("")
     a("## 九、零模型校准两指标与区分器（spec §3.1，按键前写死）")
     a("")
+<<<<<<< HEAD
     a("**「可算票」操作定义**（A14，评审 v1.5 冻结审 P0 前置）：票②=链构造"
+=======
+    a("**「可算票」操作定义**（A14，监工 v1.5 冻结审 P0 前置）：票②=链构造"
+>>>>>>> origin/main
       "即定、恒可算；票④=KO 查表非空即可算。")
     a("")
     a("| 指标 | 阈值 | 主臂实测 | 敏感性臂实测 | 触发？ |")
@@ -1541,7 +1582,11 @@ def _skip_count_per_category_bins(cards: list[dict], cat: dict[str, str],
 
     只用于报告并列，不参与主检验。逐类别分箱后"某节点的同箱同类别候选
     为空"只在整类别 <2 个节点时成立，故跳链数应远低于全局箱口径——这个
+<<<<<<< HEAD
     对照数是让评审看见"分箱对象"这一处口径选择值多少条链。
+=======
+    对照数是让监工看见"分箱对象"这一处口径选择值多少条链。
+>>>>>>> origin/main
     """
     d2b: dict[str, dict[int, int]] = {}
     b2m: dict[str, dict[int, list[str]]] = {}

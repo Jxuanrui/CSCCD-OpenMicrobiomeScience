@@ -2,7 +2,11 @@
 """golden_check——阶段 2+ 每件改造后的等价硬闸（golden 规格 §四.5 三合一档）。
 
 为什么是脚本而不是人工比对：一步一审制下每道关口都要档化证据
+<<<<<<< HEAD
 （评审 W0.1 审条件 2："终端输出不作为证据"）——比对逻辑必须可复算。
+=======
+（监工 W0.1 审条件 2："终端输出不作为证据"）——比对逻辑必须可复算。
+>>>>>>> origin/main
 
 三合一（顺序即规格）：
   ①先核输入：打印并比对 run 侧与交付版侧 manifest 内嵌的输入 sha 组
@@ -24,7 +28,11 @@ ROOT = Path(__file__).resolve().parents[1]
 FROZEN = ROOT / "data/logs/golden_baseline_v3_20261102_sha256.txt"
 DELIVERED = ROOT / "data/kg/subgraph_htn_20261101_120403_t2merge"
 
+<<<<<<< HEAD
 # 与 golden 规格 §1.2 完全一致的 9 键白名单（勿增删——增删须过评审勘误）
+=======
+# 与 golden 规格 §1.2 完全一致的 9 键白名单（勿增删——增删须过监工勘误）
+>>>>>>> origin/main
 WHITELIST = re.compile(
     r"^created_at$|^subgraph_id$|^lineage\.merged_from_subgraph$"
     r"|^lineage\.tier1_json$|^params\.subgraph_dir$|^params\.obs_dir$"

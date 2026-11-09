@@ -382,7 +382,11 @@ def test_boundary_band_keeps_conclusion_wording_and_adds_no_test(tmp_path, monke
 
 
 def test_effect_size_reported_in_same_paragraph_as_p(tmp_path):
+<<<<<<< HEAD
     """评审风险提醒的机器化：p 与 r 必须同段并列（防 p 极小 + r≈0 被误读）。"""
+=======
+    """监工风险提醒的机器化：p 与 r 必须同段并列（防 p 极小 + r≈0 被误读）。"""
+>>>>>>> origin/main
     d = _make_fixture(tmp_path / "sg")
     cards, chains, irep, ann = _load(d)
     st = hs.compute_shuffle(cards, chains, irep, ann)

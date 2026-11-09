@@ -1,6 +1,10 @@
 """交付A1：假设包交付件生成器——把 43,773 张卡片浓缩成实验室可直接开工的交付包。
 
+<<<<<<< HEAD
 为什么这么做（设计约束，均出自 20261102 一次性方案 W-交付A1 + 评审 P0-2）：
+=======
+为什么这么做（设计约束，均出自 20261102 一次性方案 W-交付A1 + 监工 P0-2）：
+>>>>>>> origin/main
 1. 只做"机器字段转印"——详卡上的每一个字都来自既有 TSV 的既有列，
    禁止引入任何未经核验的外部事实（检测法建议等一律不写）；
 2. 前 100 简卡沿用 hypothesize.rank_key 同一排序键，且以
@@ -63,7 +67,11 @@ def main(argv=None) -> int:
     ap = argparse.ArgumentParser(description="假设包交付件生成（交付A1）")
     ap.add_argument("--subgraph-dir", required=True, type=Path)
     ap.add_argument("--top-n", type=int, default=100,
+<<<<<<< HEAD
                     help="简卡行数（评审 D 审建议：首轮反馈载体=前 100）")
+=======
+                    help="简卡行数（监工 D 审建议：首轮反馈载体=前 100）")
+>>>>>>> origin/main
     ap.add_argument("--out-dir", required=True, type=Path)
     args = ap.parse_args(argv)
 
@@ -150,7 +158,11 @@ def main(argv=None) -> int:
 | hypothesis_cards.tsv / top_hypotheses.tsv | 全量卡与 TOP 榜**不在本包**——源目录路径见 delivery_manifest.json（由移交方随附） |
 | delivery_manifest.json | 本交付包指纹（来源文件 sha256 全录） |
 
+<<<<<<< HEAD
 ## 两处防误读（评审 D 审裁定原文要点）
+=======
+## 两处防误读（监工 D 审裁定原文要点）
+>>>>>>> origin/main
 1. **k5_gate_status=False 不是卡片缺陷**：这是主图谱质量门禁里"disgenet 冲突核对 0/28"一项未过线的如实披露——它约束的是**图谱发布层**，不影响本包卡片的四票计算与证据溯源。
 2. **"7 票"≠7 项独立验证**：总票=四票之和（TOP10 全部为 1+3+1+2：票①佐证+票②链深 3+票③交叉+票④可测性 2 的组合），且 **7 票头名全部包含票①**——票①是外部队列（21612，n=102）的**描述性旁证**，带 35% 用药+零个体协变量混杂（每卡 confound_warning 列印警示句）。空证对照臂已验证：掏空 102 条列表后 7 票全消。
 

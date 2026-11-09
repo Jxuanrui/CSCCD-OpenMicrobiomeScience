@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 """crosswalk 资产包生成器（L2 第 2 层，评审批准后的正式产物）。
+=======
+"""crosswalk 资产包生成器（L2 第 2 层，监工批准后的正式产物）。
+>>>>>>> origin/main
 
 产出（新路径 bridge/，2026-11-06 用户 T2 批准）：
   bridge/l2_crosswalk.tsv      —— 逐行带证据的跨体系对照表
@@ -67,7 +71,11 @@ def _pool_tier(pairs, lib_tax, dist_map, cap):
 
     **哨兵教训**：初版写 `dist_map.get(m, 99) <= cap`，当 cap=99 时"没有桥"的病
     （默认 99）也会通过 → 疾病侧过滤空转，第三档数字退化成"仅菌侧匹配数"。
+<<<<<<< HEAD
     评审 2026-11-06 P0-A 抓出。改为**显式要求 m 在 dist_map 里**（即有桥）。
+=======
+    监工 2026-11-06 P0-A 抓出。改为**显式要求 m 在 dist_map 里**（即有桥）。
+>>>>>>> origin/main
     """
     return sum(1 for t, m in pairs
                if t in lib_tax and m in dist_map and dist_map[m] <= cap)

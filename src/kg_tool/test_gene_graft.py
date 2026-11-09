@@ -461,7 +461,11 @@ def test_double_run_all_bytes_equal(fx, tmp_path):
 
 
 def test_eval_md_contains_p1_conditions(fx, tmp_path):
+<<<<<<< HEAD
     """评审 P1 两条件强制入档：SCFA 限定句 + join 键未改声明；且不写 H1。"""
+=======
+    """监工 P1 两条件强制入档：SCFA 限定句 + join 键未改声明；且不写 H1。"""
+>>>>>>> origin/main
     md = _run(fx, tmp_path / "newdir")["eval_md"]
     assert "主要反映 SCFA 主轴" in md
     assert "有效自由度远小于链数" in md

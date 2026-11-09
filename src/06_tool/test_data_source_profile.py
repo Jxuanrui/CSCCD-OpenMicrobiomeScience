@@ -15,7 +15,11 @@ pytestmark = pytest.mark.needs_data  # CI 分流标记（A2：公网 CI 无私�
 
 import data_source_profile as dsp
 
+<<<<<<< HEAD
 GM = ("<LYTEAMWORK>/<USER>/Project/Dietary_cohort_of_intestinal_flora"
+=======
+GM = ("<LYTEAMWORK>/JiXuanRui/Project/Dietary_cohort_of_intestinal_flora"
+>>>>>>> origin/main
       "/Project/Project03_公共数据库/gutMGene")
 ROOT = dsp.ROOT
 

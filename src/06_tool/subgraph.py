@@ -1100,7 +1100,11 @@ def main(argv: list[str] | None = None) -> int:
         "kg_dir": str(ROOT / "data/kg/k4_full_20261028_155020"),
         "library": str(ROOT / "data/literature/20261015_154252/articles.jsonl"),
         "k3_batch": [str(ROOT / "data/kg/20261016_165931")],
+<<<<<<< HEAD
         "gutmgene_dir": ("<LYTEAMWORK>/<USER>/Project/Dietary_cohort"
+=======
+        "gutmgene_dir": ("<LYTEAMWORK>/JiXuanRui/Project/Dietary_cohort"
+>>>>>>> origin/main
                          "_of_intestinal_flora/Project/Project03_公共数据库/gutMGene"),
     }
     # 数据腿注册表映射（W2.2）：dest → (注册表键, 是否列表型)

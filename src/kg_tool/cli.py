@@ -65,7 +65,11 @@ MODULES = {
     "gene-graft": ("kg_tool/gene_graft.py",
                    "②甲 子图基因层嫁接+proximity 激活（新目录隔离，"
                    "主子图零改动，U2 十列 degraded_mode=0）"),
+<<<<<<< HEAD
     # ---- v0.4 四能力并入（roadmap 阶段一 1.1，评审 2026-11-08 批薄转发）----
+=======
+    # ---- v0.4 四能力并入（roadmap 阶段一 1.1，监工 2026-11-08 批薄转发）----
+>>>>>>> origin/main
     "crosswalk": ("kg_tool/build_crosswalk.py",
                   "跨体系对照表生成（菌/疾病双侧桥接，child_of 只登记，"
                   "评估侧硬过滤）"),

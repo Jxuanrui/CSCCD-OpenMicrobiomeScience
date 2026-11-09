@@ -1,6 +1,10 @@
 """MCP 插座（阶段 3 轨D）——AI 助手直连 kg 工具的薄转发层。
 
+<<<<<<< HEAD
 五护栏（评审 W2.3 审+轨D 批准条件）的机器化：
+=======
+五护栏（监工 W2.3 审+轨D 批准条件）的机器化：
+>>>>>>> origin/main
 1. **纯转发**：每个 tool 都是薄壳——调 runner/recipes/explain 的既有
    main/load，统计逻辑零沾染；
 2. **stdio 本地**：transport 白名单只有 'stdio'（argparse choices 锁死，
@@ -25,7 +29,11 @@ from mcp.server import MCPServer
 
 from kg_tool.cli import kg_root
 
+<<<<<<< HEAD
 ROOT = kg_root()  # 复用 KG_ROOT>自动探测（评审轨D审 P1-2：打包安装后 parents[2] 失效）
+=======
+ROOT = kg_root()  # 复用 KG_ROOT>自动探测（监工轨D审 P1-2：打包安装后 parents[2] 失效）
+>>>>>>> origin/main
 
 mcp = MCPServer("kg")
 

@@ -1,0 +1,11 @@
+{
+  "key": "htn",
+  "display_name": "高血压 Hypertension",
+  "mesh_ids": "D006973,D006976",
+  "name_root": "hypertens",
+  "doid": "DOID:10763",
+  "disease_query": "\"Hypertension\"[MeSH] OR \"hypertension\"[TIAB]",
+  "ext102": "data/observation/h1_htn_external_20261030_151856/ext_21612_D_vs_H_discovery_20261030_151856.tsv",
+  "evidence_cohort": "PRJEB21612",
+  "notes": "字段值与改造前三模块 argparse 默认值逐字一致（golden 等价前提）；ext102=仓内相对路径（configs 路径策略）"
+}

@@ -1,0 +1,49 @@
+{
+  "_readme": "分析配方层（阶段 3 轨C，schema 已冻结——含 _note 的类目禁混词条；candidate 禁推荐措辞断言只护 reason 破折号前段[防否定句误伤的设计取舍]。两硬护栏（评审轨B审）：①recommended/not_recommended 词条的证据文件必须真实在盘（测试强制）；②本 schema 即冻结物，改动须过完成审。candidate=未实测，按三栏轮子调研制补——未实测不推荐。",
+  "key": "htn",
+  "differential_abundance": {
+    "MaAsLin2": {
+      "status": "recommended",
+      "reason": "带协变量纪律的基准轮子：自家 222 与本工具引擎同口径所见完全一致（top20 交叠 12-15、同号 100%、Spearman 0.83-0.91）；21612 上 86 条发现全部落在引擎 102 条内（覆盖 102/102）——方法验证轮实证",
+      "evidence": "data/logs/htn_method_validation_report_20261031.md",
+      "install": "bioconda: maaslin2（R）",
+      "input": "MetaPhlAn 相对丰度 + 协变量表（务必含批次与用药列）"
+    },
+    "ANCOMBC2": {
+      "status": "not_recommended",
+      "reason": "对 MetaPhlAn 相对丰度不可用（计数假设违例——秩诊断实证在档 §五）；仅适用于计数型数据",
+      "evidence": "data/logs/htn_method_validation_report_20261031.md",
+      "install": "Bioconductor: ANCOMBC2（R）",
+      "input": "计数矩阵（相对丰度勿用）"
+    },
+    "LEfSe_零调整秩口径": {
+      "status": "not_recommended",
+      "reason": "零协变量调整口径在自家 222 报 36 条'差异'，但任何带批次+协变量纪律的口径（MaAsLin2/引擎）全部归零——宽口径发现不可作因果解释；文献'普遍有差异'的隐形引擎即此",
+      "evidence": "data/logs/htn_method_validation_report_20261031.md",
+      "install": "bioconda: lefse",
+      "input": "相对丰度（无协变量入口=本口径的根因）"
+    }
+  },
+  "community_level": {
+    "PERMANOVA_Aitchison": {
+      "status": "recommended",
+      "reason": "群落级整体位移标准检验：自家 222 无高血压整体效应（p=0.544/0.102）；21612 干净位置效应（Aitchison p=0.001，R²=2.9%，离散排除后仍在）——先测群落再谈个别菌的正当顺序",
+      "evidence": "data/logs/htn_method_validation_report_20261031.md",
+      "install": "R: vegan::adonis2 + composition::clr",
+      "input": "样本×菌 相对丰度矩阵 + 分组/协变量"
+    }
+  },
+  "causal": {
+    "Mendelian_Randomization": {
+      "status": "candidate",
+      "reason": "微生物 GWAS 汇总统计作工具变量的因果方向先验——湿实验等待期轨备料中（外部 GWAS 源须许可档案+版本钉扎+方法学预注册，宪法第 7 条）",
+      "evidence": "data/logs/review_oneshot_plan_20261102.md",
+      "install": "TwoSampleMR（R，待报审）",
+      "input": "微生物 GWAS 汇总统计（外部源，未接入）"
+    }
+  },
+  "network": {"_note": "候选类目——词条按三栏轮子调研制补入（未实测不推荐）"},
+  "pathway_enrichment": {"_note": "候选类目——词条按三栏轮子调研制补入（未实测不推荐）"},
+  "diversity": {"_note": "候选类目——词条按三栏轮子调研制补入（未实测不推荐）"},
+  "functional_prediction": {"_note": "候选类目——词条按三栏轮子调研制补入（未实测不推荐）"}
+}

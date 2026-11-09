@@ -9,11 +9,7 @@
   sha 核验（`--verify-golden`，沿 ②乙/③甲/③乙 同制）。
 - 不碰 06_tool 生产逻辑：hop3 的 KEGG 通路腿与 V01 三门禁**只 import 复用**
   `deepchain.gate_v01_edges / gate_v01_chains / anchor_check` 原件——复制一份
-<<<<<<< HEAD
   门禁规则就等着两边漂移（③甲 评审硬门禁同款）。
-=======
-  门禁规则就等着两边漂移（③甲 监工硬门禁同款）。
->>>>>>> origin/main
 - 统计腿只 import 复用 `kg_tool.proximity` 原件（AMSPL / 度匹配分箱 / 单侧 p /
   z / Menche），本模块不重写公式——spec §4.3 "公式与 ②乙 同源（§1.3 全条款
   沿用）"要求的就是同一份实现，复制粘贴即口径漂移风险。
@@ -25,11 +21,7 @@
 2. 对每个新基因节点 join V01 kegg_rest 快照的 `participates_in` 边（经 V01
    三门禁 + 节点表 sha 门禁），新增 `KEGG:hsa…` 通路节点 + "基因-通路"边。
 
-<<<<<<< HEAD
 **join 键纪律（评审 P1 条件②，2026-11-05 裁定）**：现用**名字 casefold 精确
-=======
-**join 键纪律（监工 P1 条件②，2026-11-05 裁定）**：现用**名字 casefold 精确
->>>>>>> origin/main
 匹配**（表3 名 vs 子图 Metabolite.name，不去空格内的差异、不用别名、不模糊
 匹配），机器实测命中 23/274——**改 join 键=方向级报审，现场不得自决**。
 为什么坚持窄口径：子图代谢物是 MESH 体系、表3 是 ChEBI/名体系，两库 ID 不
@@ -50,11 +42,7 @@ proximity 激活（spec §4.3）：
    gutMGene 表3）；因此一条完整链的端点对距离恒为 2（菌→代谢物→基因），
    这是**链构造的直接后果**，不是独立验证。本件证明的是"基因层可物化、
    proximity 管线端到端可跑"，不是"图结构独立支持假设"。
-<<<<<<< HEAD
 ② **SCFA 主轴限定**（评审 P1 条件①，probe §七）：可嫁接代谢物仅 23/274
-=======
-② **SCFA 主轴限定**（监工 P1 条件①，probe §七）：可嫁接代谢物仅 23/274
->>>>>>> origin/main
    （8.4%），链覆盖 98.8% 高度集中于 butyrate/acetate/propionate/succinate
    （Top4≈97.6%）——**有效自由度远小于链数**（distinct 代谢物 23、基因 205），
    "结论主要反映 SCFA 主轴"，任何基于链数的显著性叙事均不成立。
@@ -84,11 +72,7 @@ except ImportError:
     import kg_tool.proximity as prox
     import kg_tool.graph_scores as gs
 # ---------------------------------------------------------------
-<<<<<<< HEAD
 # 冻结常量——改这里=过审（评审+用户）。
-=======
-# 冻结常量——改这里=过审（监工+用户）。
->>>>>>> origin/main
 # ---------------------------------------------------------------
 RNG_SEED = prox.RNG_SEED                  # spec §1.3：20261105 钉扎（复用同一常量）
 N_PERM = prox.N_PERM                      # spec §1.3：n_perm=1000
@@ -103,11 +87,7 @@ PATHWAY_CATEGORY = "Pathway"
 TARGET_CATEGORY_ACTIVE = GENE_CATEGORY    # ②甲 靶集=端点基因集（spec §4.3）
 
 TABLE3_NAME = "Microbial metabolite-Host Gene.csv"   # INHERITANCE.md:39（1,049 行）
-<<<<<<< HEAD
 GUTMGENE_DIR_DEFAULT = ("<LYTEAMWORK>/<USER>/Project/"
-=======
-GUTMGENE_DIR_DEFAULT = ("<LYTEAMWORK>/JiXuanRui/Project/"
->>>>>>> origin/main
                         "Dietary_cohort_of_intestinal_flora/Project/"
                         "Project03_公共数据库/gutMGene")
 V01_EDGES_DEFAULT = "archive/Version01/data/merged/candidate_v3/merged_edges.tsv"
@@ -999,11 +979,7 @@ def descriptive_verdict(z, p) -> str:
 
 def render_eval_md(graft: dict, act: dict, spec_sha: str,
                    active_sha: str) -> str:
-<<<<<<< HEAD
     """评估档（§四 验收 + 评审 P1 两条件强制入档）。"""
-=======
-    """评估档（§四 验收 + 监工 P1 两条件强制入档）。"""
->>>>>>> origin/main
     man = graft["manifest"]
     stats = graft["stats"]
     join_s, graft_s, counts = stats["join"], stats["graft"], stats["counts"]
@@ -1058,11 +1034,7 @@ def render_eval_md(graft: dict, act: dict, spec_sha: str,
         a(f"| {labels.get(k, k)} | {v['expect']:,} | **{v['got']:,}** | "
           f"{'PASS' if v['pass'] else 'DEVIATE'} |")
     a("")
-<<<<<<< HEAD
     a(f"- **join 键（评审 P1 条件②：禁擅改）**：`{join_s['key']}`"
-=======
-    a(f"- **join 键（监工 P1 条件②：禁擅改）**：`{join_s['key']}`"
->>>>>>> origin/main
       f"（去首尾空白 + casefold 精确匹配；不用别名、不模糊、不做 ID 映射）")
     a(f"- 覆盖窄的根因=**两库代谢物 ID 体系不互通**（子图 MESH vs 表3 "
       f"ChEBI/名）；命中 {join_s['n_matched_metabolites']}/"
@@ -1099,11 +1071,7 @@ def render_eval_md(graft: dict, act: dict, spec_sha: str,
     for k, v in man["n_edges_by_source"].items():
         a(f"| {k} | {v:,} |")
     a("")
-<<<<<<< HEAD
     a("## 三、SCFA 主轴限定（评审 P1 条件①：强制继承 probe §七；本表为本次机器重算）")
-=======
-    a("## 三、SCFA 主轴限定（监工 P1 条件①：强制继承 probe §七；本表为本次机器重算）")
->>>>>>> origin/main
     a("")
     a("| 代谢物 | 链数 | 占比 |")
     a("|---|---|---|")
@@ -1279,11 +1247,7 @@ def render_eval_md(graft: dict, act: dict, spec_sha: str,
     for name, sha in graft["product_shas"].items():
         a(f"| `{name}` | {_product_semantics(name)} | {sha[:20]} |")
     a("")
-<<<<<<< HEAD
     a("## 十一、待拍板项（呈评审/用户；本件不自决）")
-=======
-    a("## 十一、待拍板项（呈监工/用户；本件不自决）")
->>>>>>> origin/main
     a("")
     a("| # | 事项 | 通俗解释 | 若拍板\"改\"要做什么 |")
     a("|---|---|---|---|")

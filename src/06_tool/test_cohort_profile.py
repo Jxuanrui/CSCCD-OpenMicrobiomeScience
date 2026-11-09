@@ -11,11 +11,7 @@ pytestmark = pytest.mark.needs_data  # CI 分流标记（A2：公网 CI 无私�
 
 import cohort_profile
 import ingest
-<<<<<<< HEAD
 htn_ingest = ingest  # 旧名兼容别名（评审 P1-1：旧名 grep 清零后此行可删）
-=======
-htn_ingest = ingest  # 旧名兼容别名（监工 P1-1：旧名 grep 清零后此行可删）
->>>>>>> origin/main
 
 
 def test_htn_cohort_matches_legacy_defaults():
@@ -27,11 +23,7 @@ def test_htn_cohort_matches_legacy_defaults():
         == str(cohort_profile.ROOT
                / "data/logs/name_bridge_20261101/name_bridge_cohorts.tsv")
     assert d["source_names"] == ["SelfData_222", "PRJEB13870", "PRJEB21612"]
-<<<<<<< HEAD
     # 双档一致性（评审 W2.4 审 P2-1）：git 锚档与 local 功能档 expected_n 防漂移
-=======
-    # 双档一致性（监工 W2.4 审 P2-1）：git 锚档与 local 功能档 expected_n 防漂移
->>>>>>> origin/main
     assert d["expected_n"] == {k: v["expected_n"]
                                for k, v in d["ingest_sources"].items()}
     # 本机覆盖件合并后：ingest 三源 root 与模块内 SOURCES 逐字一致

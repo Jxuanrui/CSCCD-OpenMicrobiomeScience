@@ -7,11 +7,7 @@
 4. 平票（含各 1 篇）→ 两侧全部 predicate → affects，对标 unresolved_tie；
 5. 台账逐对登记：两侧 PMID 数、胜方、动作。重跑逐字节同输出。
 
-<<<<<<< HEAD
 产物（评审三锁②：只增不改）：
-=======
-产物（监工三锁②：只增不改）：
->>>>>>> origin/main
   data/kg/k5_full_<ts>/  —— merged_edges 改写版 + 其余文件逐字节复制
                            + conflict_resolution_ledger.tsv（新）
                            + disease_class_annotation.tsv（新，只加注记不删节点）

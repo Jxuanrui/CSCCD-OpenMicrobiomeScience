@@ -5,11 +5,7 @@
 换对象都绕不开。本审计换一个轴：**原文句子是客观事实**（有无因果动词可机械
 判定、任何人可逐句复核），**谓词是我们的判定**——两者不一致即解读偏差。
 
-<<<<<<< HEAD
 **定位（评审 2026-11-06 裁定）**：本审计度量的是**忠实度 faithfulness**（内部
-=======
-**定位（监工 2026-11-06 裁定）**：本审计度量的是**忠实度 faithfulness**（内部
->>>>>>> origin/main
 一致性），不是**准确率 accuracy**（对外部金标准）。全文禁以 accuracy/精确率指称。
 与 A（外部银标准）、L1（结构校验）、L3（judge/MedNLI 旗标）**并列互补**。
 
@@ -34,11 +30,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "06_tool"))
 
 ROOT = Path(__file__).resolve().parents[2]
 
-<<<<<<< HEAD
 # 词表引用不复制（评审 P0-1）：从 B1 冻结模块 import
-=======
-# 词表引用不复制（监工 P0-1）：从 B1 冻结模块 import
->>>>>>> origin/main
 from causal_marks import CAUSAL_TRIGGERS, CORRELATIONAL_TRIGGERS  # noqa: E402
 
 # 谓词方向归类（因果型断言方向/机制；中性型不主张方向）——冻结

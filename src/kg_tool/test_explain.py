@@ -54,11 +54,7 @@ def test_llm_without_env_fails_closed(tmp_path, monkeypatch):
 
 
 def test_redline_isolation():
-<<<<<<< HEAD
     """评审护栏：06_tool 主模块禁 LLM/联网红线——explain 层不得引入泄漏。
-=======
-    """监工护栏：06_tool 主模块禁 LLM/联网红线——explain 层不得引入泄漏。
->>>>>>> origin/main
 
     只查真实 import/调用行：FORBIDDEN_PATTERNS 正则定义行与注释天然含
     禁用词（那是门禁本身），不算泄漏（与 hypothesize 原门禁同口径）。

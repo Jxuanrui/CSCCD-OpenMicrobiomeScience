@@ -3,11 +3,7 @@
 为什么需要：提案档里的 +76/84.0%/698 等数字若只活在 Markdown 里，即违
 "数字机器输出制"（AGENTS 规则 5）。本脚本把三路桥接（exact/synonym/parent_of）
 与疾病侧基数全部变成可复算产物，含**内容锚**（父 taxid+rank 实值）而非仅行号
-<<<<<<< HEAD
 ——NCBI 周更，行号只在钉扎 sha 下可复现（评审 2026-11-06 P0-3④）。
-=======
-——NCBI 周更，行号只在钉扎 sha 下可复现（监工 2026-11-06 P0-3④）。
->>>>>>> origin/main
 
 只读：不写任何图谱产物，只落 data/logs 探测档。
 """
@@ -74,11 +70,7 @@ def our_microbe_disease_pairs():
     dis = {i for i, n in nodes.items() if n.get("category") == "Disease"}
     pairs = set()
     malformed = set()
-<<<<<<< HEAD
     # 规范化（评审 P0-3①：MESH:/MeSH: 双拼写实证 390+3,793）
-=======
-    # 规范化（监工 P0-3①：MESH:/MeSH: 双拼写实证 390+3,793）
->>>>>>> origin/main
     for e in csv.DictReader(open(kg / "merged_edges.tsv", encoding="utf-8"),
                             delimiter="\t"):
         s, o = e["subject"], e["object"]
@@ -167,11 +159,7 @@ def load_crosswalk_for_eval(path: Path, max_dist: int = MAX_ANCESTOR_DIST
     """读 crosswalk 供**评估**用：硬编码丢弃 child_of + 未知 relation 直接报错。
 
     为什么写死而不是靠调用方自觉：child_of=向下匹配（拿库内更细的证据支撑我方
-<<<<<<< HEAD
     更粗的主张），语义上是"沾边算对"，一旦混进评估分母就污染主数字（评审
-=======
-    更粗的主张），语义上是"沾边算对"，一旦混进评估分母就污染主数字（监工
->>>>>>> origin/main
     P0-3③）。未知 relation 一律 fail-closed——防未来加新类时被默认放进分母。
     """
     out = []
@@ -215,11 +203,7 @@ def main(argv=None) -> int:
         lib_names |= names.get(t, set())
 
     exact, synonym, parent_of, child_of = {}, {}, {}, {}
-<<<<<<< HEAD
     # 多步披露（评审 P0-2：1/2/3 步全报，禁看增量挑步数）
-=======
-    # 多步披露（监工 P0-2：1/2/3 步全报，禁看增量挑步数）
->>>>>>> origin/main
     # 主参数事前定为 **1 步**，依据是本体结构而非增量：
     # ① 我方 312 个菌 taxid 绝大多数是 species，库也以 species(761)/genus(513) 为主；
     # ② 每多跨一级（genus→family→order），主张范围成倍放宽，属"语义降格"，
@@ -250,11 +234,7 @@ def main(argv=None) -> int:
                 hit_hop = hop
                 multistep[hop][t] = f"hop{hop}:{cur}|rank={ranks.get(cur, ('', ''))[1]}"
                 break
-<<<<<<< HEAD
         # child_of：仅登记（评审 P0-3③：不进评估判定）
-=======
-        # child_of：仅登记（监工 P0-3③：不进评估判定）
->>>>>>> origin/main
         kids = [c for c, (p, _) in ranks.items() if p == t and c in lib_tax]
         if kids:
             child_of[t] = f"child_of:{sorted(kids)[0]}"
@@ -329,11 +309,7 @@ def main(argv=None) -> int:
             "parent_of": "src 的父节点=dst（内容锚=父 taxid+rank 实值）",
             "child_of": "src 的子节点=dst —— **只登记不进评估判定**"
                         "（向下匹配=拿库内更细证据支撑我方更粗主张，"
-<<<<<<< HEAD
                         "类比已否决 B 案，评审 2026-11-06 P0-3③）",
-=======
-                        "类比已否决 B 案，监工 2026-11-06 P0-3③）",
->>>>>>> origin/main
         },
     }
     (args.out / "bridge_probe.json").write_text(

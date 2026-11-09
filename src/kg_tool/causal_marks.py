@@ -25,11 +25,7 @@ import sys
 from pathlib import Path
 
 # ---------------------------------------------------------------
-<<<<<<< HEAD
 # 词表逐字冻结（spec v1.1，2026-11-05）——改这里=过审（评审+用户），
-=======
-# 词表逐字冻结（spec v1.1，2026-11-05）——改这里=过审（监工+用户），
->>>>>>> origin/main
 # 任何"顺手补一个词"都是违例：词表是预注册口径，不是待办清单。
 # ---------------------------------------------------------------
 CAUSAL_TRIGGERS = [
@@ -38,11 +34,7 @@ CAUSAL_TRIGGERS = [
     "leads to", "results in", "drives", "regulates", "stimulates",
     "produces", "converts", "degrades", "secret", "secrete", "secretes",
     "secreted", "secretion", "converts to", "degraded",
-<<<<<<< HEAD
 ]  # v1.1 补齐屈折形（评审 P2-1）
-=======
-]  # v1.1 补齐屈折形（监工 P2-1）
->>>>>>> origin/main
 CORRELATIONAL_TRIGGERS = [
     "associated with", "correlated with", "linked to", "related to",
     "enriched in", "depleted in", "abundance of", "positively associated",

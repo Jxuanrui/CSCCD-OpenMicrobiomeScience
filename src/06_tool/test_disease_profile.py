@@ -64,11 +64,7 @@ def test_null_ext102_fails_closed(tmp_path, monkeypatch):
 
 
 def test_null_generic_field_fails_closed(tmp_path, monkeypatch):
-<<<<<<< HEAD
     """非 ext102 字段显式 null/空串同样 fail-closed（评审 P1 收口）。"""
-=======
-    """非 ext102 字段显式 null/空串同样 fail-closed（监工 P1 收口）。"""
->>>>>>> origin/main
     p = tmp_path / "hole.json"
     p.write_text('{"key":"x","mesh_ids":null,"name_root":"n","doid":"d",'
                  '"disease_query":"q","ext102":"some/file.tsv"}',

@@ -1,10 +1,6 @@
 """L2 分层对齐评估器（strict 主数字 + 扩展层 + 部分分计 + 诊断 0a/0b）。
 
-<<<<<<< HEAD
 为什么这样设计（评审 2026-11-06 分层体系，五红线）：
-=======
-为什么这样设计（监工 2026-11-06 分层体系，五红线）：
->>>>>>> origin/main
 - **strict 层是永久主数字**：只用"菌 taxid 直接同 + 疾病 MeSH 直接同"的对，
   不掺任何桥接；扩展层（crosswalk 祖先桥）有自己的分母，**只增不替换**；
 - **分母只许按预声明规则单方向扩展**：距离档 1/2/3 **全档披露**，禁看增量挑步数；
@@ -415,11 +411,7 @@ def main(argv=None) -> int:
             w.writerow([k[0], k[1], preds, ",".join(sorted(our[k]["pmids"])),
                         alts, ",".join(sorted(shared)), "yes" if k in lib_pairs else "no"])
 
-<<<<<<< HEAD
     # ---------- 全池自相矛盾清单（评审 P0-1②） ----------
-=======
-    # ---------- 全池自相矛盾清单（监工 P0-1②） ----------
->>>>>>> origin/main
     conflict_rows = []
     for k in sorted(keys):
         preds = our[k]["preds"] & set(POLAR_PREDICATES)
@@ -508,11 +500,7 @@ def main(argv=None) -> int:
         json.dumps(res, ensure_ascii=False, indent=1), encoding="utf-8")
 
     _write_report(args.out, res)
-<<<<<<< HEAD
     # 目录内 SHA256SUMS（评审 P0-1③：不靠 CHANGELOG 截断引用）
-=======
-    # 目录内 SHA256SUMS（监工 P0-1③：不靠 CHANGELOG 截断引用）
->>>>>>> origin/main
     import hashlib
     sumlines = []
     for f in sorted(args.out.iterdir()):

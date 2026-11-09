@@ -1,0 +1,2600 @@
+id	name	category	aliases	xrefs	tax_rank	knowledge_layer
+LFS:DRUG:3_alpha_Hydroxy_5_beta_androstan_17_one	3-alpha-Hydroxy-5-beta-androstan-17-one	Drug				local_kg_curated
+LFS:DRUG:5_fluorouracil	5-fluorouracil	Drug				local_kg_curated
+LFS:DRUG:Abacavir_Sulfate	Abacavir Sulfate	Drug				local_kg_curated
+LFS:DRUG:Acarbose	Acarbose	Drug				local_kg_curated
+LFS:DRUG:Acenocoumarol	Acenocoumarol	Drug				local_kg_curated
+LFS:DRUG:Acetopromazine_maleate_salt	Acetopromazine maleate salt	Drug				local_kg_curated
+LFS:DRUG:Adenosine_5_monophosphate_monohydrate	Adenosine 5'-monophosphate monohydrate	Drug				local_kg_curated
+LFS:DRUG:Albendazole	Albendazole	Drug				local_kg_curated
+LFS:DRUG:Alexidine_dihydrochloride	Alexidine dihydrochloride	Drug				local_kg_curated
+LFS:DRUG:Alfacalcidol	Alfacalcidol	Drug				local_kg_curated
+LFS:DRUG:Alfuzosin_hydrochloride	Alfuzosin hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Althiazide	Althiazide	Drug				local_kg_curated
+LFS:DRUG:Alverine_citrate_salt	Alverine citrate salt	Drug				local_kg_curated
+LFS:DRUG:Amethopterin_R_S_	Amethopterin (R,S)	Drug				local_kg_curated
+LFS:DRUG:Amikacin_hydrate	Amikacin hydrate	Drug				local_kg_curated
+LFS:DRUG:Amiodarone_hydrochloride	Amiodarone hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Amiprilose_hydrochloride	Amiprilose hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Amlodipine	Amlodipine	Drug				local_kg_curated
+LFS:DRUG:Amodiaquin_dihydrochloride_dihydrate	Amodiaquin dihydrochloride dihydrate	Drug				local_kg_curated
+LFS:DRUG:Amoxapine	Amoxapine	Drug				local_kg_curated
+LFS:DRUG:Amoxicillin	Amoxicillin	Drug				local_kg_curated
+LFS:DRUG:Ampicillin_trihydrate	Ampicillin trihydrate	Drug				local_kg_curated
+LFS:DRUG:Amprolium_hydrochloride	Amprolium hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Anastrozole	Anastrozole	Drug				local_kg_curated
+LFS:DRUG:Anethole_trithione	Anethole-trithione	Drug				local_kg_curated
+LFS:DRUG:Anthralin	Anthralin	Drug				local_kg_curated
+LFS:DRUG:Apramycin	Apramycin	Drug				local_kg_curated
+LFS:DRUG:Aprepitant	Aprepitant	Drug				local_kg_curated
+LFS:DRUG:Aripiprazole	Aripiprazole	Drug				local_kg_curated
+LFS:DRUG:Artemisinin	Artemisinin	Drug				local_kg_curated
+LFS:DRUG:Asenapine_maleate	Asenapine maleate	Drug				local_kg_curated
+LFS:DRUG:Astemizole	Astemizole	Drug				local_kg_curated
+LFS:DRUG:Atorvastatin	Atorvastatin	Drug				local_kg_curated
+LFS:DRUG:Atovaquone	Atovaquone	Drug				local_kg_curated
+LFS:DRUG:Auranofin	Auranofin	Drug				local_kg_curated
+LFS:DRUG:Avermectin_B1a	Avermectin B1a	Drug				local_kg_curated
+LFS:DRUG:Azacytidine_5	Azacytidine-5	Drug				local_kg_curated
+LFS:DRUG:Azaguanine_8	Azaguanine-8	Drug				local_kg_curated
+LFS:DRUG:Azathioprine	Azathioprine	Drug				local_kg_curated
+LFS:DRUG:Azelastine_HCl	Azelastine HCl	Drug				local_kg_curated
+LFS:DRUG:Azithromycin	Azithromycin	Drug				local_kg_curated
+LFS:DRUG:Azlocillin_sodium_salt	Azlocillin sodium salt	Drug				local_kg_curated
+LFS:DRUG:Aztreonam	Aztreonam	Drug				local_kg_curated
+LFS:DRUG:Bacampicillin_hydrochloride	Bacampicillin hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Bacitracin	Bacitracin	Drug				local_kg_curated
+LFS:DRUG:Benfluorex_hydrochloride	Benfluorex hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Benzamil_hydrochloride	Benzamil hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Benzathine_benzylpenicillin	Benzathine benzylpenicillin	Drug				local_kg_curated
+LFS:DRUG:Benzbromarone	Benzbromarone	Drug				local_kg_curated
+LFS:DRUG:Benzethonium_chloride	Benzethonium chloride	Drug				local_kg_curated
+LFS:DRUG:Benztropine_mesylate	Benztropine mesylate	Drug				local_kg_curated
+LFS:DRUG:Benzydamine_hydrochloride	Benzydamine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Benzylpenicillin_sodium	Benzylpenicillin sodium	Drug				local_kg_curated
+LFS:DRUG:Bepridil_hydrochloride	Bepridil hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Betaxolol_hydrochloride	Betaxolol hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Bicalutamide	Bicalutamide	Drug				local_kg_curated
+LFS:DRUG:Bifonazole	Bifonazole	Drug				local_kg_curated
+LFS:DRUG:Biotin	Biotin	Drug				local_kg_curated
+LFS:DRUG:Bosentan	Bosentan	Drug				local_kg_curated
+LFS:DRUG:Bromocryptine_mesylate	Bromocryptine mesylate	Drug				local_kg_curated
+LFS:DRUG:Bromperidol	Bromperidol	Drug				local_kg_curated
+LFS:DRUG:Brompheniramine_maleate	Brompheniramine maleate	Drug				local_kg_curated
+LFS:DRUG:Budesonide	Budesonide	Drug				local_kg_curated
+LFS:DRUG:Bufexamac	Bufexamac	Drug				local_kg_curated
+LFS:DRUG:Buspirone_hydrochloride	Buspirone hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Butamben	Butamben	Drug				local_kg_curated
+LFS:DRUG:Butenafine_Hydrochloride	Butenafine Hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Butoconazole_nitrate	Butoconazole nitrate	Drug				local_kg_curated
+LFS:DRUG:Butylparaben	Butylparaben	Drug				local_kg_curated
+LFS:DRUG:Carbachol	Carbachol	Drug				local_kg_curated
+LFS:DRUG:Carbadox	Carbadox	Drug				local_kg_curated
+LFS:DRUG:Carbenoxolone_disodium_salt	Carbenoxolone disodium salt	Drug				local_kg_curated
+LFS:DRUG:Carbidopa	Carbidopa	Drug				local_kg_curated
+LFS:DRUG:Carvedilol	Carvedilol	Drug				local_kg_curated
+LFS:DRUG:Catharanthine	Catharanthine	Drug				local_kg_curated
+LFS:DRUG:Cefaclor_hydrate	Cefaclor hydrate	Drug				local_kg_curated
+LFS:DRUG:Cefadroxil	Cefadroxil	Drug				local_kg_curated
+LFS:DRUG:Cefazolin_sodium_salt	Cefazolin sodium salt	Drug				local_kg_curated
+LFS:DRUG:Cefdinir	Cefdinir	Drug				local_kg_curated
+LFS:DRUG:Cefepime_hydrochloride	Cefepime hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Cefixime	Cefixime	Drug				local_kg_curated
+LFS:DRUG:Cefmetazole_sodium_salt	Cefmetazole sodium salt	Drug				local_kg_curated
+LFS:DRUG:Cefoperazone_dihydrate	Cefoperazone dihydrate	Drug				local_kg_curated
+LFS:DRUG:Ceforanide	Ceforanide	Drug				local_kg_curated
+LFS:DRUG:Cefotaxime_sodium_salt	Cefotaxime sodium salt	Drug				local_kg_curated
+LFS:DRUG:Cefotetan	Cefotetan	Drug				local_kg_curated
+LFS:DRUG:Cefotiam_hydrochloride	Cefotiam hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Cefoxitin_sodium_salt	Cefoxitin sodium salt	Drug				local_kg_curated
+LFS:DRUG:Cefsulodin_sodium_salt	Cefsulodin sodium salt	Drug				local_kg_curated
+LFS:DRUG:Ceftazidime_pentahydrate	Ceftazidime pentahydrate	Drug				local_kg_curated
+LFS:DRUG:Cefuroxime_sodium_salt	Cefuroxime sodium salt	Drug				local_kg_curated
+LFS:DRUG:Celecoxib	Celecoxib	Drug				local_kg_curated
+LFS:DRUG:Cephalosporanic_acid_7_amino	Cephalosporanic acid, 7-amino	Drug				local_kg_curated
+LFS:DRUG:Cephalothin_sodium_salt	Cephalothin sodium salt	Drug				local_kg_curated
+LFS:DRUG:Chenodiol	Chenodiol	Drug				local_kg_curated
+LFS:DRUG:Chloramphenicol	Chloramphenicol	Drug				local_kg_curated
+LFS:DRUG:Chlorcyclizine_hydrochloride	Chlorcyclizine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Chlorhexidine	Chlorhexidine	Drug				local_kg_curated
+LFS:DRUG:Chlorotrianisene	Chlorotrianisene	Drug				local_kg_curated
+LFS:DRUG:Chloroxine	Chloroxine	Drug				local_kg_curated
+LFS:DRUG:Chlorpheniramine_maleate	Chlorpheniramine maleate	Drug				local_kg_curated
+LFS:DRUG:Chlorpromazine_hydrochloride	Chlorpromazine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Chlorpropamide	Chlorpropamide	Drug				local_kg_curated
+LFS:DRUG:Chlorprothixene_hydrochloride	Chlorprothixene hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Chlortetracycline_hydrochloride	Chlortetracycline hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Ciclopirox_ethanolamine	Ciclopirox ethanolamine	Drug				local_kg_curated
+LFS:DRUG:Cilnidipine	Cilnidipine	Drug				local_kg_curated
+LFS:DRUG:Cilostazol	Cilostazol	Drug				local_kg_curated
+LFS:DRUG:Cinnarizine	Cinnarizine	Drug				local_kg_curated
+LFS:DRUG:Cinoxacin	Cinoxacin	Drug				local_kg_curated
+LFS:DRUG:Ciprofloxacin_hydrochloride_monohydrate	Ciprofloxacin hydrochloride monohydrate	Drug				local_kg_curated
+LFS:DRUG:Cisapride	Cisapride	Drug				local_kg_curated
+LFS:DRUG:Cladribine	Cladribine	Drug				local_kg_curated
+LFS:DRUG:Clarithromycin	Clarithromycin	Drug				local_kg_curated
+LFS:DRUG:Clavulanate_potassium_salt	Clavulanate potassium salt	Drug				local_kg_curated
+LFS:DRUG:Clemastine_fumarate	Clemastine fumarate	Drug				local_kg_curated
+LFS:DRUG:Clemizole_hydrochloride	Clemizole hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Clenbuterol_hydrochloride	Clenbuterol hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Clinafloxacin	Clinafloxacin	Drug				local_kg_curated
+LFS:DRUG:Clindamycin_hydrochloride	Clindamycin hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Clioquinol	Clioquinol	Drug				local_kg_curated
+LFS:DRUG:Clofazimine	Clofazimine	Drug				local_kg_curated
+LFS:DRUG:Clofilium_tosylate	Clofilium tosylate	Drug				local_kg_curated
+LFS:DRUG:Clomiphene_citrate_Z_E_	Clomiphene citrate (Z,E)	Drug				local_kg_curated
+LFS:DRUG:Clomipramine_hydrochloride	Clomipramine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Clopamide	Clopamide	Drug				local_kg_curated
+LFS:DRUG:Cloperastine_hydrochloride	Cloperastine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Closantel	Closantel	Drug				local_kg_curated
+LFS:DRUG:Clotrimazole	Clotrimazole	Drug				local_kg_curated
+LFS:DRUG:Cloxacillin_sodium_salt	Cloxacillin sodium salt	Drug				local_kg_curated
+LFS:DRUG:Clozapine	Clozapine	Drug				local_kg_curated
+LFS:DRUG:Colchicine	Colchicine	Drug				local_kg_curated
+LFS:DRUG:Colistin_sulfate	Colistin sulfate	Drug				local_kg_curated
+LFS:DRUG:Cyclobenzaprine_hydrochloride	Cyclobenzaprine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Cyclopenthiazide	Cyclopenthiazide	Drug				local_kg_curated
+LFS:DRUG:Cyclosporin_A	Cyclosporin A	Drug				local_kg_curated
+LFS:DRUG:Cyproheptadine_hydrochloride	Cyproheptadine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:DO_897_99	DO 897/99	Drug				local_kg_curated
+LFS:DRUG:Dantrolene_sodium_salt	Dantrolene sodium salt	Drug				local_kg_curated
+LFS:DRUG:Daunorubicin_hydrochloride	Daunorubicin hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Demecarium_bromide	Demecarium bromide	Drug				local_kg_curated
+LFS:DRUG:Demeclocycline_hydrochloride	Demeclocycline hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Deoxycorticosterone	Deoxycorticosterone	Drug				local_kg_curated
+LFS:DRUG:Deptropine_citrate	Deptropine citrate	Drug				local_kg_curated
+LFS:DRUG:Dequalinium_dichloride	Dequalinium dichloride	Drug				local_kg_curated
+LFS:DRUG:Desipramine_hydrochloride	Desipramine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Diacerein	Diacerein	Drug				local_kg_curated
+LFS:DRUG:Dibenzepine_hydrochloride	Dibenzepine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Dibucaine	Dibucaine	Drug				local_kg_curated
+LFS:DRUG:Diclazuril	Diclazuril	Drug				local_kg_curated
+LFS:DRUG:Diclofenac_sodium	Diclofenac sodium	Drug				local_kg_curated
+LFS:DRUG:Dicloxacillin_sodium_salt_hydrate	Dicloxacillin sodium salt hydrate	Drug				local_kg_curated
+LFS:DRUG:Dicumarol	Dicumarol	Drug				local_kg_curated
+LFS:DRUG:Dicyclomine_hydrochloride	Dicyclomine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Dienestrol	Dienestrol	Drug				local_kg_curated
+LFS:DRUG:Diethylstilbestrol	Diethylstilbestrol	Drug				local_kg_curated
+LFS:DRUG:Digoxin	Digoxin	Drug				local_kg_curated
+LFS:DRUG:Dihydrostreptomycin_sulfate	Dihydrostreptomycin sulfate	Drug				local_kg_curated
+LFS:DRUG:Diloxanide_furoate	Diloxanide furoate	Drug				local_kg_curated
+LFS:DRUG:Dimethisoquin_hydrochloride	Dimethisoquin hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Dirithromycin	Dirithromycin	Drug				local_kg_curated
+LFS:DRUG:Disulfiram	Disulfiram	Drug				local_kg_curated
+LFS:DRUG:Dorzolamide_hydrochloride	Dorzolamide hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Doxazosin_mesylate	Doxazosin mesylate	Drug				local_kg_curated
+LFS:DRUG:Doxepin_hydrochloride	Doxepin hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Doxorubicin_hydrochloride	Doxorubicin hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Doxycycline_hydrochloride	Doxycycline hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Droperidol	Droperidol	Drug				local_kg_curated
+LFS:DRUG:Ebselen	Ebselen	Drug				local_kg_curated
+LFS:DRUG:Eburnamonine_	Eburnamonine (-)	Drug				local_kg_curated
+LFS:DRUG:Econazole_nitrate	Econazole nitrate	Drug				local_kg_curated
+LFS:DRUG:Efavirenz	Efavirenz	Drug				local_kg_curated
+LFS:DRUG:Enilconazole	Enilconazole	Drug				local_kg_curated
+LFS:DRUG:Enoxacin	Enoxacin	Drug				local_kg_curated
+LFS:DRUG:Entacapone	Entacapone	Drug				local_kg_curated
+LFS:DRUG:Epirizole	Epirizole	Drug				local_kg_curated
+LFS:DRUG:Equilin	Equilin	Drug				local_kg_curated
+LFS:DRUG:Erlotinib	Erlotinib	Drug				local_kg_curated
+LFS:DRUG:Erythromycin	Erythromycin	Drug				local_kg_curated
+LFS:DRUG:Estradiol_Valerate	Estradiol Valerate	Drug				local_kg_curated
+LFS:DRUG:Estropipate	Estropipate	Drug				local_kg_curated
+LFS:DRUG:Ethacrynic_acid	Ethacrynic acid	Drug				local_kg_curated
+LFS:DRUG:Ethaverine_hydrochloride	Ethaverine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Ethopropazine_hydrochloride	Ethopropazine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Ethotoin	Ethotoin	Drug				local_kg_curated
+LFS:DRUG:Ethoxyquin	Ethoxyquin	Drug				local_kg_curated
+LFS:DRUG:Ethynodiol_diacetate	Ethynodiol diacetate	Drug				local_kg_curated
+LFS:DRUG:Etilefrine_hydrochloride	Etilefrine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Etofenamate	Etofenamate	Drug				local_kg_curated
+LFS:DRUG:Etomidate	Etomidate	Drug				local_kg_curated
+LFS:DRUG:Etoposide	Etoposide	Drug				local_kg_curated
+LFS:DRUG:Etretinate	Etretinate	Drug				local_kg_curated
+LFS:DRUG:Exemestane	Exemestane	Drug				local_kg_curated
+LFS:DRUG:Fadrozole_hydrochloride	Fadrozole hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Famotidine	Famotidine	Drug				local_kg_curated
+LFS:DRUG:Famprofazone	Famprofazone	Drug				local_kg_curated
+LFS:DRUG:Felodipine	Felodipine	Drug				local_kg_curated
+LFS:DRUG:Fenbendazole	Fenbendazole	Drug				local_kg_curated
+LFS:DRUG:Fenbufen	Fenbufen	Drug				local_kg_curated
+LFS:DRUG:Fendiline_hydrochloride	Fendiline hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Fenofibrate	Fenofibrate	Drug				local_kg_curated
+LFS:DRUG:Fexofenadine_HCl	Fexofenadine HCl	Drug				local_kg_curated
+LFS:DRUG:Fleroxacin	Fleroxacin	Drug				local_kg_curated
+LFS:DRUG:Florfenicol	Florfenicol	Drug				local_kg_curated
+LFS:DRUG:Floxuridine	Floxuridine	Drug				local_kg_curated
+LFS:DRUG:Flucloxacillin_sodium	Flucloxacillin sodium	Drug				local_kg_curated
+LFS:DRUG:Flucytosine	Flucytosine	Drug				local_kg_curated
+LFS:DRUG:Fludarabine	Fludarabine	Drug				local_kg_curated
+LFS:DRUG:Flufenamic_acid	Flufenamic acid	Drug				local_kg_curated
+LFS:DRUG:Flumequine	Flumequine	Drug				local_kg_curated
+LFS:DRUG:Flunarizine_dihydrochloride	Flunarizine dihydrochloride	Drug				local_kg_curated
+LFS:DRUG:Flunixin_meglumine	Flunixin meglumine	Drug				local_kg_curated
+LFS:DRUG:Fluorometholone	Fluorometholone	Drug				local_kg_curated
+LFS:DRUG:Fluoxetine_hydrochloride	Fluoxetine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Fluphenazine_dihydrochloride	Fluphenazine dihydrochloride	Drug				local_kg_curated
+LFS:DRUG:Fluspirilen	Fluspirilen	Drug				local_kg_curated
+LFS:DRUG:Flutamide	Flutamide	Drug				local_kg_curated
+LFS:DRUG:Fluvoxamine_maleate	Fluvoxamine maleate	Drug				local_kg_curated
+LFS:DRUG:Furaltadone_hydrochloride	Furaltadone hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Furazolidone	Furazolidone	Drug				local_kg_curated
+LFS:DRUG:Fusidic_acid_sodium_salt	Fusidic acid sodium salt	Drug				local_kg_curated
+LFS:DRUG:GBR_12909_dihydrochloride	GBR 12909 dihydrochloride	Drug				local_kg_curated
+LFS:DRUG:Gatifloxacin	Gatifloxacin	Drug				local_kg_curated
+LFS:DRUG:Gefitinib	Gefitinib	Drug				local_kg_curated
+LFS:DRUG:Gemcitabine	Gemcitabine	Drug				local_kg_curated
+LFS:DRUG:Gentamicine_sulfate	Gentamicine sulfate	Drug				local_kg_curated
+LFS:DRUG:Glafenine_hydrochloride	Glafenine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Glipizide	Glipizide	Drug				local_kg_curated
+LFS:DRUG:Gliquidone	Gliquidone	Drug				local_kg_curated
+LFS:DRUG:Granisetron	Granisetron	Drug				local_kg_curated
+LFS:DRUG:Guanadrel_sulfate	Guanadrel sulfate	Drug				local_kg_curated
+LFS:DRUG:Halofantrine_hydrochloride	Halofantrine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Haloperidol	Haloperidol	Drug				local_kg_curated
+LFS:DRUG:Haloprogin	Haloprogin	Drug				local_kg_curated
+LFS:DRUG:Hexachlorophene	Hexachlorophene	Drug				local_kg_curated
+LFS:DRUG:Hexestrol	Hexestrol	Drug				local_kg_curated
+LFS:DRUG:Hexetidine	Hexetidine	Drug				local_kg_curated
+LFS:DRUG:Homochlorcyclizine_dihydrochloride	Homochlorcyclizine dihydrochloride	Drug				local_kg_curated
+LFS:DRUG:Hycanthone	Hycanthone	Drug				local_kg_curated
+LFS:DRUG:Hydrocortisone_base	Hydrocortisone base	Drug				local_kg_curated
+LFS:DRUG:Hydroxyzine_dihydrochloride	Hydroxyzine dihydrochloride	Drug				local_kg_curated
+LFS:DRUG:Hyoscyamine_L_	Hyoscyamine (L)	Drug				local_kg_curated
+LFS:DRUG:Ibutilide_fumarate	Ibutilide fumarate	Drug				local_kg_curated
+LFS:DRUG:Idebenone	Idebenone	Drug				local_kg_curated
+LFS:DRUG:Idoxuridine	Idoxuridine	Drug				local_kg_curated
+LFS:DRUG:Imipenem	Imipenem	Drug				local_kg_curated
+LFS:DRUG:Indatraline_hydrochloride	Indatraline hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Iocetamic_acid	Iocetamic acid	Drug				local_kg_curated
+LFS:DRUG:Iohexol	Iohexol	Drug				local_kg_curated
+LFS:DRUG:Iopanoic_acid	Iopanoic acid	Drug				local_kg_curated
+LFS:DRUG:Ipsapirone	Ipsapirone	Drug				local_kg_curated
+LFS:DRUG:Isoconazole	Isoconazole	Drug				local_kg_curated
+LFS:DRUG:Isosorbide_dinitrate	Isosorbide dinitrate	Drug				local_kg_curated
+LFS:DRUG:Isosorbide_mononitrate	Isosorbide mononitrate	Drug				local_kg_curated
+LFS:DRUG:Ivermectin	Ivermectin	Drug				local_kg_curated
+LFS:DRUG:Josamycin	Josamycin	Drug				local_kg_curated
+LFS:DRUG:Ketoconazole	Ketoconazole	Drug				local_kg_curated
+LFS:DRUG:Labetalol_hydrochloride	Labetalol hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Lacidipine	Lacidipine	Drug				local_kg_curated
+LFS:DRUG:Lansoprazole	Lansoprazole	Drug				local_kg_curated
+LFS:DRUG:Leflunomide	Leflunomide	Drug				local_kg_curated
+LFS:DRUG:Lidoflazine	Lidoflazine	Drug				local_kg_curated
+LFS:DRUG:Lincomycin_hydrochloride	Lincomycin hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Linezolid	Linezolid	Drug				local_kg_curated
+LFS:DRUG:Liranaftate	Liranaftate	Drug				local_kg_curated
+LFS:DRUG:Lomefloxacin_hydrochloride	Lomefloxacin hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Loperamide_hydrochloride	Loperamide hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Loracarbef	Loracarbef	Drug				local_kg_curated
+LFS:DRUG:Loratadine	Loratadine	Drug				local_kg_curated
+LFS:DRUG:Loxapine_succinate	Loxapine succinate	Drug				local_kg_curated
+LFS:DRUG:Luteolin	Luteolin	Drug				local_kg_curated
+LFS:DRUG:Lymecycline	Lymecycline	Drug				local_kg_curated
+LFS:DRUG:Lynestrenol	Lynestrenol	Drug				local_kg_curated
+LFS:DRUG:Mafenide_hydrochloride	Mafenide hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Maprotiline_hydrochloride	Maprotiline hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Mebhydroline_1_5_naphtalenedisulfonate	Mebhydroline 1,5-naphtalenedisulfonate	Drug				local_kg_curated
+LFS:DRUG:Meclocycline_sulfosalicylate	Meclocycline sulfosalicylate	Drug				local_kg_curated
+LFS:DRUG:Meclofenamic_acid_sodium_salt_monohydrate	Meclofenamic acid sodium salt monohydrate	Drug				local_kg_curated
+LFS:DRUG:Meclozine_dihydrochloride	Meclozine dihydrochloride	Drug				local_kg_curated
+LFS:DRUG:Mefloquine_hydrochloride	Mefloquine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Megestrol_acetate	Megestrol acetate	Drug				local_kg_curated
+LFS:DRUG:Melengestrol_acetate	Melengestrol acetate	Drug				local_kg_curated
+LFS:DRUG:Meptazinol_hydrochloride	Meptazinol hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Merbromin	Merbromin	Drug				local_kg_curated
+LFS:DRUG:Mercaptopurine	Mercaptopurine	Drug				local_kg_curated
+LFS:DRUG:Meropenem	Meropenem	Drug				local_kg_curated
+LFS:DRUG:Mesoridazine_besylate	Mesoridazine besylate	Drug				local_kg_curated
+LFS:DRUG:Metergoline	Metergoline	Drug				local_kg_curated
+LFS:DRUG:Methacycline_hydrochloride	Methacycline hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Methantheline_bromide	Methantheline bromide	Drug				local_kg_curated
+LFS:DRUG:Methiazole	Methiazole	Drug				local_kg_curated
+LFS:DRUG:Methimazole	Methimazole	Drug				local_kg_curated
+LFS:DRUG:Methiothepin_maleate	Methiothepin maleate	Drug				local_kg_curated
+LFS:DRUG:Methotrexate	Methotrexate	Drug				local_kg_curated
+LFS:DRUG:Methotrimeprazine_maleat_salt	Methotrimeprazine maleat salt	Drug				local_kg_curated
+LFS:DRUG:Methyl_benzethonium_chloride	Methyl benzethonium chloride	Drug				local_kg_curated
+LFS:DRUG:Methyldopate_hydrochloride	Methyldopate hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Metixene_hydrochloride	Metixene hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Metronidazole	Metronidazole	Drug				local_kg_curated
+LFS:DRUG:Mevastatin	Mevastatin	Drug				local_kg_curated
+LFS:DRUG:Miconazole	Miconazole	Drug				local_kg_curated
+LFS:DRUG:Mifepristone	Mifepristone	Drug				local_kg_curated
+LFS:DRUG:Miglitol	Miglitol	Drug				local_kg_curated
+LFS:DRUG:Minocycline_hydrochloride	Minocycline hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Mitotane	Mitotane	Drug				local_kg_curated
+LFS:DRUG:Mometasone_furoate	Mometasone furoate	Drug				local_kg_curated
+LFS:DRUG:Monensin_sodium_salt	Monensin sodium salt	Drug				local_kg_curated
+LFS:DRUG:Montelukast	Montelukast	Drug				local_kg_curated
+LFS:DRUG:Moricizine_hydrochloride	Moricizine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Moxalactam_disodium_salt	Moxalactam disodium salt	Drug				local_kg_curated
+LFS:DRUG:Moxifloxacin	Moxifloxacin	Drug				local_kg_curated
+LFS:DRUG:N6_methyladenosine	N6-methyladenosine	Drug				local_kg_curated
+LFS:DRUG:Nadifloxacin	Nadifloxacin	Drug				local_kg_curated
+LFS:DRUG:Nafcillin_sodium_salt_monohydrate	Nafcillin sodium salt monohydrate	Drug				local_kg_curated
+LFS:DRUG:Naftopidil_dihydrochloride	Naftopidil dihydrochloride	Drug				local_kg_curated
+LFS:DRUG:Nalidixic_acid_sodium_salt	Nalidixic acid sodium salt	Drug				local_kg_curated
+LFS:DRUG:Nefazodone_HCl	Nefazodone HCl	Drug				local_kg_curated
+LFS:DRUG:Neomycin_sulfate	Neomycin sulfate	Drug				local_kg_curated
+LFS:DRUG:Nicardipine_hydrochloride	Nicardipine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Nicergoline	Nicergoline	Drug				local_kg_curated
+LFS:DRUG:Niclosamide	Niclosamide	Drug				local_kg_curated
+LFS:DRUG:Nicorandil	Nicorandil	Drug				local_kg_curated
+LFS:DRUG:Nifuroxazide	Nifuroxazide	Drug				local_kg_curated
+LFS:DRUG:Nifurtimox	Nifurtimox	Drug				local_kg_curated
+LFS:DRUG:Nilutamide	Nilutamide	Drug				local_kg_curated
+LFS:DRUG:Nilvadipine	Nilvadipine	Drug				local_kg_curated
+LFS:DRUG:Nimesulide	Nimesulide	Drug				local_kg_curated
+LFS:DRUG:Nimodipine	Nimodipine	Drug				local_kg_curated
+LFS:DRUG:Niridazole	Niridazole	Drug				local_kg_curated
+LFS:DRUG:Nitrofural	Nitrofural	Drug				local_kg_curated
+LFS:DRUG:Nitrofurantoin	Nitrofurantoin	Drug				local_kg_curated
+LFS:DRUG:Norcyclobenzaprine	Norcyclobenzaprine	Drug				local_kg_curated
+LFS:DRUG:Norfloxacin	Norfloxacin	Drug				local_kg_curated
+LFS:DRUG:Norgestimate	Norgestimate	Drug				local_kg_curated
+LFS:DRUG:Novobiocin_sodium_salt	Novobiocin sodium salt	Drug				local_kg_curated
+LFS:DRUG:Nystatine	Nystatine	Drug				local_kg_curated
+LFS:DRUG:Ofloxacin	Ofloxacin	Drug				local_kg_curated
+LFS:DRUG:Omeprazole	Omeprazole	Drug				local_kg_curated
+LFS:DRUG:Ondansetron_Hydrochloride	Ondansetron Hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Opipramol_dihydrochloride	Opipramol dihydrochloride	Drug				local_kg_curated
+LFS:DRUG:Ornidazole	Ornidazole	Drug				local_kg_curated
+LFS:DRUG:Oxacillin_sodium	Oxacillin sodium	Drug				local_kg_curated
+LFS:DRUG:Oxaprozin	Oxaprozin	Drug				local_kg_curated
+LFS:DRUG:Oxcarbazepine	Oxcarbazepine	Drug				local_kg_curated
+LFS:DRUG:Oxethazaine	Oxethazaine	Drug				local_kg_curated
+LFS:DRUG:Oxibendazol	Oxibendazol	Drug				local_kg_curated
+LFS:DRUG:Oxiconazole_Nitrate	Oxiconazole Nitrate	Drug				local_kg_curated
+LFS:DRUG:Oxolinic_acid	Oxolinic acid	Drug				local_kg_curated
+LFS:DRUG:Oxytetracycline_dihydrate	Oxytetracycline dihydrate	Drug				local_kg_curated
+LFS:DRUG:Paclitaxel	Paclitaxel	Drug				local_kg_curated
+LFS:DRUG:Parbendazole	Parbendazole	Drug				local_kg_curated
+LFS:DRUG:Paromomycin_sulfate	Paromomycin sulfate	Drug				local_kg_curated
+LFS:DRUG:Pefloxacine	Pefloxacine	Drug				local_kg_curated
+LFS:DRUG:Pemirolast_potassium	Pemirolast potassium	Drug				local_kg_curated
+LFS:DRUG:Penbutolol_sulfate	Penbutolol sulfate	Drug				local_kg_curated
+LFS:DRUG:Pentamidine_isethionate	Pentamidine isethionate	Drug				local_kg_curated
+LFS:DRUG:Pentylenetetrazole	Pentylenetetrazole	Drug				local_kg_curated
+LFS:DRUG:Perhexiline_maleate	Perhexiline maleate	Drug				local_kg_curated
+LFS:DRUG:Perphenazine	Perphenazine	Drug				local_kg_curated
+LFS:DRUG:Phenazopyridine_hydrochloride	Phenazopyridine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Phenethicillin_potassium_salt	Phenethicillin potassium salt	Drug				local_kg_curated
+LFS:DRUG:Phenindione	Phenindione	Drug				local_kg_curated
+LFS:DRUG:Phenoxybenzamine_hydrochloride	Phenoxybenzamine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Phenylpropanolamine_hydrochloride	Phenylpropanolamine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Pimethixene_maleate	Pimethixene maleate	Drug				local_kg_curated
+LFS:DRUG:Pimozide	Pimozide	Drug				local_kg_curated
+LFS:DRUG:Pinaverium_bromide	Pinaverium bromide	Drug				local_kg_curated
+LFS:DRUG:Pioglitazone	Pioglitazone	Drug				local_kg_curated
+LFS:DRUG:Pipemidic_acid	Pipemidic acid	Drug				local_kg_curated
+LFS:DRUG:Piperacillin_sodium_salt	Piperacillin sodium salt	Drug				local_kg_curated
+LFS:DRUG:Piromidic_acid	Piromidic acid	Drug				local_kg_curated
+LFS:DRUG:Pivampicillin	Pivampicillin	Drug				local_kg_curated
+LFS:DRUG:Pivmecillinam_hydrochloride	Pivmecillinam hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Pizotifen_malate	Pizotifen malate	Drug				local_kg_curated
+LFS:DRUG:Pranlukast	Pranlukast	Drug				local_kg_curated
+LFS:DRUG:Prenylamine_lactate	Prenylamine lactate	Drug				local_kg_curated
+LFS:DRUG:Pridinol_methanesulfonate_salt	Pridinol methanesulfonate salt	Drug				local_kg_curated
+LFS:DRUG:Prilocaine_hydrochloride	Prilocaine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Proadifen_hydrochloride	Proadifen hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Probucol	Probucol	Drug				local_kg_curated
+LFS:DRUG:Prochlorperazine_dimaleate	Prochlorperazine dimaleate	Drug				local_kg_curated
+LFS:DRUG:Progesterone	Progesterone	Drug				local_kg_curated
+LFS:DRUG:Proglumide	Proglumide	Drug				local_kg_curated
+LFS:DRUG:Promazine_hydrochloride	Promazine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Promethazine_hydrochloride	Promethazine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Pronethalol_hydrochloride	Pronethalol hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Propidium_iodide	Propidium iodide	Drug				local_kg_curated
+LFS:DRUG:Propylthiouracil	Propylthiouracil	Drug				local_kg_curated
+LFS:DRUG:Protriptyline_hydrochloride	Protriptyline hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Pyridoxine_hydrochloride	Pyridoxine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Pyrimethamine	Pyrimethamine	Drug				local_kg_curated
+LFS:DRUG:Pyrvinium_pamoate	Pyrvinium pamoate	Drug				local_kg_curated
+LFS:DRUG:Quinacrine_dihydrochloride_dihydrate	Quinacrine dihydrochloride dihydrate	Drug				local_kg_curated
+LFS:DRUG:Quipazine_dimaleate_salt	Quipazine dimaleate salt	Drug				local_kg_curated
+LFS:DRUG:R_Apomorphine_hydrochloride_hemihydrate	R(-) Apomorphine hydrochloride hemihydrate	Drug				local_kg_curated
+LFS:DRUG:Rabeprazole_Sodium_salt	Rabeprazole Sodium salt	Drug				local_kg_curated
+LFS:DRUG:Racepinephrine_HCl	Racepinephrine HCl	Drug				local_kg_curated
+LFS:DRUG:Raclopride	Raclopride	Drug				local_kg_curated
+LFS:DRUG:Raloxifene_hydrochloride	Raloxifene hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Repaglinide	Repaglinide	Drug				local_kg_curated
+LFS:DRUG:Reserpine	Reserpine	Drug				local_kg_curated
+LFS:DRUG:Retinoic_acid	Retinoic acid	Drug				local_kg_curated
+LFS:DRUG:Ribavirin	Ribavirin	Drug				local_kg_curated
+LFS:DRUG:Ribostamycin_sulfate_salt	Ribostamycin sulfate salt	Drug				local_kg_curated
+LFS:DRUG:Rifabutin	Rifabutin	Drug				local_kg_curated
+LFS:DRUG:Rifampicin	Rifampicin	Drug				local_kg_curated
+LFS:DRUG:Rifapentine	Rifapentine	Drug				local_kg_curated
+LFS:DRUG:Rifaximin	Rifaximin	Drug				local_kg_curated
+LFS:DRUG:Riluzole_hydrochloride	Riluzole hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Rimexolone	Rimexolone	Drug				local_kg_curated
+LFS:DRUG:Rivastigmine	Rivastigmine	Drug				local_kg_curated
+LFS:DRUG:Ronidazole	Ronidazole	Drug				local_kg_curated
+LFS:DRUG:Roxithromycin	Roxithromycin	Drug				local_kg_curated
+LFS:DRUG:Rufloxacin	Rufloxacin	Drug				local_kg_curated
+LFS:DRUG:Salmeterol	Salmeterol	Drug				local_kg_curated
+LFS:DRUG:Saquinavir_mesylate	Saquinavir mesylate	Drug				local_kg_curated
+LFS:DRUG:Sarafloxacin	Sarafloxacin	Drug				local_kg_curated
+LFS:DRUG:Secnidazole	Secnidazole	Drug				local_kg_curated
+LFS:DRUG:Sertaconazole_nitrate	Sertaconazole nitrate	Drug				local_kg_curated
+LFS:DRUG:Sertindole	Sertindole	Drug				local_kg_curated
+LFS:DRUG:Sertraline	Sertraline	Drug				local_kg_curated
+LFS:DRUG:Simvastatin	Simvastatin	Drug				local_kg_curated
+LFS:DRUG:Sisomicin_sulfate	Sisomicin sulfate	Drug				local_kg_curated
+LFS:DRUG:Sparfloxacin	Sparfloxacin	Drug				local_kg_curated
+LFS:DRUG:Spectinomycin_dihydrochloride	Spectinomycin dihydrochloride	Drug				local_kg_curated
+LFS:DRUG:Spiperone	Spiperone	Drug				local_kg_curated
+LFS:DRUG:Spiramycin	Spiramycin	Drug				local_kg_curated
+LFS:DRUG:Spironolactone	Spironolactone	Drug				local_kg_curated
+LFS:DRUG:Stanozolol	Stanozolol	Drug				local_kg_curated
+LFS:DRUG:Streptomycin_sulfate	Streptomycin sulfate	Drug				local_kg_curated
+LFS:DRUG:Streptozotocin	Streptozotocin	Drug				local_kg_curated
+LFS:DRUG:Sulbactam	Sulbactam	Drug				local_kg_curated
+LFS:DRUG:Sulconazole_nitrate	Sulconazole nitrate	Drug				local_kg_curated
+LFS:DRUG:Sulfaguanidine	Sulfaguanidine	Drug				local_kg_curated
+LFS:DRUG:Sulfamethoxazole	Sulfamethoxazole	Drug				local_kg_curated
+LFS:DRUG:Sulfamonomethoxine	Sulfamonomethoxine	Drug				local_kg_curated
+LFS:DRUG:Sulfaphenazole	Sulfaphenazole	Drug				local_kg_curated
+LFS:DRUG:Sulfapyridine	Sulfapyridine	Drug				local_kg_curated
+LFS:DRUG:Suloctidil	Suloctidil	Drug				local_kg_curated
+LFS:DRUG:Sumatriptan_succinate	Sumatriptan succinate	Drug				local_kg_curated
+LFS:DRUG:Talampicillin_hydrochloride	Talampicillin hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Tamoxifen_citrate	Tamoxifen citrate	Drug				local_kg_curated
+LFS:DRUG:Tazobactam	Tazobactam	Drug				local_kg_curated
+LFS:DRUG:Telmisartan	Telmisartan	Drug				local_kg_curated
+LFS:DRUG:Temozolomide	Temozolomide	Drug				local_kg_curated
+LFS:DRUG:Tenatoprazole	Tenatoprazole	Drug				local_kg_curated
+LFS:DRUG:Terfenadine	Terfenadine	Drug				local_kg_curated
+LFS:DRUG:Testosterone_propionate	Testosterone propionate	Drug				local_kg_curated
+LFS:DRUG:Tetracycline_hydrochloride	Tetracycline hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Tetraethylenepentamine_pentahydrochloride	Tetraethylenepentamine pentahydrochloride	Drug				local_kg_curated
+LFS:DRUG:Tetrahydroxy_1_4_quinone_monohydrate	Tetrahydroxy-1,4-quinone monohydrate	Drug				local_kg_curated
+LFS:DRUG:Thiamine_hydrochloride	Thiamine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Thiamphenicol	Thiamphenicol	Drug				local_kg_curated
+LFS:DRUG:Thiethylperazine_dimalate	Thiethylperazine dimalate	Drug				local_kg_curated
+LFS:DRUG:Thimerosal	Thimerosal	Drug				local_kg_curated
+LFS:DRUG:Thioguanosine	Thioguanosine	Drug				local_kg_curated
+LFS:DRUG:Thioproperazine_dimesylate	Thioproperazine dimesylate	Drug				local_kg_curated
+LFS:DRUG:Thioridazine_hydrochloride	Thioridazine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Thiostrepton	Thiostrepton	Drug				local_kg_curated
+LFS:DRUG:Thonzonium_bromide	Thonzonium bromide	Drug				local_kg_curated
+LFS:DRUG:Thyroxine_L_	Thyroxine (L)	Drug				local_kg_curated
+LFS:DRUG:Tiabendazole	Tiabendazole	Drug				local_kg_curated
+LFS:DRUG:Tibolone	Tibolone	Drug				local_kg_curated
+LFS:DRUG:Ticarcillin_sodium	Ticarcillin sodium	Drug				local_kg_curated
+LFS:DRUG:Tinidazole	Tinidazole	Drug				local_kg_curated
+LFS:DRUG:Tioconazole	Tioconazole	Drug				local_kg_curated
+LFS:DRUG:Tiratricol_3_3_5_triiodothyroacetic_acid	Tiratricol, 3,3',5-triiodothyroacetic acid	Drug				local_kg_curated
+LFS:DRUG:Tobramycin	Tobramycin	Drug				local_kg_curated
+LFS:DRUG:Tolfenamic_acid	Tolfenamic acid	Drug				local_kg_curated
+LFS:DRUG:Tolnaftate	Tolnaftate	Drug				local_kg_curated
+LFS:DRUG:Toltrazuril	Toltrazuril	Drug				local_kg_curated
+LFS:DRUG:Topotecan	Topotecan	Drug				local_kg_curated
+LFS:DRUG:Toremifene	Toremifene	Drug				local_kg_curated
+LFS:DRUG:Tosufloxacin_hydrochloride	Tosufloxacin hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Tracazolate_hydrochloride	Tracazolate hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Tramadol_hydrochloride	Tramadol hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Trazodone_hydrochloride	Trazodone hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Tribenoside	Tribenoside	Drug				local_kg_curated
+LFS:DRUG:Trichlorfon	Trichlorfon	Drug				local_kg_curated
+LFS:DRUG:Trichlormethiazide	Trichlormethiazide	Drug				local_kg_curated
+LFS:DRUG:Triclosan	Triclosan	Drug				local_kg_curated
+LFS:DRUG:Tridihexethyl_chloride	Tridihexethyl chloride	Drug				local_kg_curated
+LFS:DRUG:Trifluoperazine_dihydrochloride	Trifluoperazine dihydrochloride	Drug				local_kg_curated
+LFS:DRUG:Triflupromazine_hydrochloride	Triflupromazine hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Trifluridine	Trifluridine	Drug				local_kg_curated
+LFS:DRUG:Triflusal	Triflusal	Drug				local_kg_curated
+LFS:DRUG:Trimeprazine_tartrate	Trimeprazine tartrate	Drug				local_kg_curated
+LFS:DRUG:Trimethadione	Trimethadione	Drug				local_kg_curated
+LFS:DRUG:Trimethoprim	Trimethoprim	Drug				local_kg_curated
+LFS:DRUG:Troglitazone	Troglitazone	Drug				local_kg_curated
+LFS:DRUG:Troleandomycin	Troleandomycin	Drug				local_kg_curated
+LFS:DRUG:Tylosin	Tylosin	Drug				local_kg_curated
+LFS:DRUG:Vancomycin_hydrochloride	Vancomycin hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Vardenafil	Vardenafil	Drug				local_kg_curated
+LFS:DRUG:Vecuronium_bromide	Vecuronium bromide	Drug				local_kg_curated
+LFS:DRUG:Vidarabine	Vidarabine	Drug				local_kg_curated
+LFS:DRUG:Xylazine	Xylazine	Drug				local_kg_curated
+LFS:DRUG:Zafirlukast	Zafirlukast	Drug				local_kg_curated
+LFS:DRUG:Zidovudine_AZT	Zidovudine, AZT	Drug				local_kg_curated
+LFS:DRUG:Zileuton	Zileuton	Drug				local_kg_curated
+LFS:DRUG:Ziprasidone_Hydrochloride	Ziprasidone  Hydrochloride	Drug				local_kg_curated
+LFS:DRUG:Zotepine	Zotepine	Drug				local_kg_curated
+LFS:DRUG:Zoxazolamine	Zoxazolamine	Drug				local_kg_curated
+LFS:DRUG:Zuclopenthixol_dihydrochloride	Zuclopenthixol dihydrochloride	Drug				local_kg_curated
+LFS:DRUG:_Emtricitabine	(-)-Emtricitabine	Drug				local_kg_curated
+LFS:DRUG:_S_Cycloserine	(S)-(-)-Cycloserine	Drug				local_kg_curated
+NCBITaxon:1304	Streptococcus salivarius	Microbe				local_kg_curated
+NCBITaxon:1318	Streptococcus parasanguinis	Microbe				local_kg_curated
+NCBITaxon:1502	Clostridium perfringens	Microbe				local_kg_curated
+NCBITaxon:1597	Lactobacillus paracasei	Microbe				local_kg_curated
+NCBITaxon:166486	Roseburia intestinalis	Microbe				local_kg_curated
+NCBITaxon:1680	Bifidobacterium adolescentis	Microbe				local_kg_curated
+NCBITaxon:208479	Clostridium bolteae	Microbe				local_kg_curated
+NCBITaxon:216816	Bifidobacterium longum	Microbe				local_kg_curated
+NCBITaxon:239935	Akkermansia muciniphila	Microbe				local_kg_curated
+NCBITaxon:28116	Bacteroides ovatus	Microbe				local_kg_curated
+NCBITaxon:28118	Odoribacter splanchnicus	Microbe				local_kg_curated
+NCBITaxon:29466	Veillonella parvula	Microbe				local_kg_curated
+NCBITaxon:301301	Roseburia hominis	Microbe				local_kg_curated
+NCBITaxon:33038	Ruminococcus gnavus	Microbe				local_kg_curated
+NCBITaxon:33039	Ruminococcus torques	Microbe				local_kg_curated
+NCBITaxon:35833	Bilophila wadsworthia	Microbe				local_kg_curated
+NCBITaxon:371601	Bacteroides xylanisolvens	Microbe				local_kg_curated
+NCBITaxon:39485	Eubacterium eligens	Microbe				local_kg_curated
+NCBITaxon:39486	Dorea formicigenerans	Microbe				local_kg_curated
+NCBITaxon:40518	Ruminococcus bromii	Microbe				local_kg_curated
+NCBITaxon:40520	Blautia obeum	Microbe				local_kg_curated
+NCBITaxon:410072	Coprococcus comes	Microbe				local_kg_curated
+NCBITaxon:46503	Parabacteroides merdae	Microbe				local_kg_curated
+NCBITaxon:47678	Bacteroides caccae	Microbe				local_kg_curated
+NCBITaxon:585034	Escherichia coli IAI1	Microbe				local_kg_curated
+NCBITaxon:585397	Escherichia coli ED1a	Microbe				local_kg_curated
+NCBITaxon:74426	Collinsella aerofaciens	Microbe				local_kg_curated
+NCBITaxon:817	Bacteroides fragilis (ET)	Microbe				local_kg_curated
+NCBITaxon:818	Bacteroides thetaiotaomicron	Microbe				local_kg_curated
+NCBITaxon:820	Bacteroides uniformis	Microbe				local_kg_curated
+NCBITaxon:823	Parabacteroides distasonis	Microbe				local_kg_curated
+NCBITaxon:84030	Clostridium saccharolyticum	Microbe				local_kg_curated
+NCBITaxon:84112	Eggerthella lenta	Microbe				local_kg_curated
+NCBITaxon:851	Fusobacterium nucleatum	Microbe				local_kg_curated
+LFS:COND:Cervical_glandular_intraepithelial_neoplasia	Cervical glandular intraepithelial neoplasia	Disease				local_kg_curated
+NCBITaxon:2702	Gardnerella vaginalis	Microbe			species	local_kg_curated
+LFS:COND:Body_odor_measurement	Body odor measurement	Disease				local_kg_curated
+NCBITaxon:1282	Staphylococcus epidermidis	Microbe			species	local_kg_curated
+NCBITaxon:108981	Acinetobacter schindleri	Microbe			species	local_kg_curated
+LFS:COND:Obesity	Obesity	Disease				local_kg_curated
+NCBITaxon:621	Shigella boydii	Microbe			species	local_kg_curated
+NCBITaxon:833	Fibrobacter succinogenes	Microbe			species	local_kg_curated
+LFS:COND:Endometriosis	Endometriosis	Disease				local_kg_curated
+LFS:COND:COVID_19	COVID-19	Disease				local_kg_curated
+LFS:COND:Health_study_participation	Health study participation	Disease				local_kg_curated
+NCBITaxon:47770	Lactobacillus crispatus	Microbe			species	local_kg_curated
+NCBITaxon:1303	Streptococcus oralis	Microbe			species	local_kg_curated
+NCBITaxon:33011	Cutibacterium granulosum	Microbe			species	local_kg_curated
+NCBITaxon:28129	Prevotella denticola	Microbe			species	local_kg_curated
+NCBITaxon:292800	Flavonifractor plautii	Microbe			species	local_kg_curated
+NCBITaxon:1286322	Leishmaniinae	Microbe			species	local_kg_curated
+NCBITaxon:39778	Veillonella dispar	Microbe			species	local_kg_curated
+LFS:COND:Antimicrobial_agent	Antimicrobial agent	Disease				local_kg_curated
+LFS:COND:High_fat_diet	High fat diet	Disease				local_kg_curated
+NCBITaxon:604330	Parafannyhessea umbonata	Microbe			species	local_kg_curated
+NCBITaxon:1499973	Escherichia marmotae	Microbe			species	local_kg_curated
+LFS:COND:Parkinson_s_disease	Parkinson's disease	Disease				local_kg_curated
+LFS:COND:Food_allergy	Food allergy	Disease				local_kg_curated
+NCBITaxon:1280	Staphylococcus aureus	Microbe			species	local_kg_curated
+LFS:COND:healthy	healthy	Disease				local_kg_curated
+NCBITaxon:1580	Levilactobacillus brevis	Microbe			species	local_kg_curated
+LFS:COND:Oral_squamous_cell_carcinoma	Oral squamous cell carcinoma	Disease				local_kg_curated
+NCBITaxon:1018	Capnocytophaga ochracea	Microbe			species	local_kg_curated
+NCBITaxon:467210	Lachnoanaerobaculum saburreum	Microbe			species	local_kg_curated
+LFS:COND:Irritable_bowel_syndrome	Irritable bowel syndrome	Disease				local_kg_curated
+NCBITaxon:853	Faecalibacterium prausnitzii	Microbe			species	local_kg_curated
+LFS:COND:Type_II_diabetes_mellitus	Type II diabetes mellitus	Disease				local_kg_curated
+LFS:COND:Cesarean_section	Cesarean section	Disease				local_kg_curated
+LFS:COND:Autism	Autism	Disease				local_kg_curated
+NCBITaxon:1535	[Clostridium] leptum	Microbe			species	local_kg_curated
+LFS:COND:Autoimmune_disease	Autoimmune disease	Disease				local_kg_curated
+LFS:COND:Place_of_residence_measurement_Ethnic_group	Place of residence measurement,Ethnic group	Disease				local_kg_curated
+NCBITaxon:28025	Bifidobacterium animalis	Microbe			species	local_kg_curated
+NCBITaxon:1686	Bifidobacterium catenulatum	Microbe			species	local_kg_curated
+NCBITaxon:1498	Hathewaya histolytica	Microbe			species	local_kg_curated
+LFS:COND:Smoking_behavior	Smoking behavior	Disease				local_kg_curated
+NCBITaxon:821	Phocaeicola vulgatus	Microbe			species	local_kg_curated
+NCBITaxon:244328	uncultured Clostridia bacterium	Microbe			species	local_kg_curated
+NCBITaxon:152509	uncultured Bacteroidota bacterium	Microbe			species	local_kg_curated
+NCBITaxon:46228	[Ruminococcus] lactaris	Microbe			species	local_kg_curated
+NCBITaxon:1590	Lactiplantibacillus plantarum	Microbe			species	local_kg_curated
+LFS:COND:Colorectal_cancer	Colorectal cancer	Disease				local_kg_curated
+LFS:COND:Sampling_site	Sampling site	Disease				local_kg_curated
+LFS:COND:Response_to_diet	Response to diet	Disease				local_kg_curated
+LFS:COND:Colorectal_carcinoma	Colorectal carcinoma	Disease				local_kg_curated
+NCBITaxon:732	Aggregatibacter aphrophilus	Microbe			species	local_kg_curated
+NCBITaxon:472	Acinetobacter sp.	Microbe			species	local_kg_curated
+LFS:COND:Atopic_eczema	Atopic eczema	Disease				local_kg_curated
+LFS:COND:Ulcerative_colitis	Ulcerative colitis	Disease				local_kg_curated
+NCBITaxon:562	Escherichia coli	Microbe			species	local_kg_curated
+LFS:COND:Rheumatoid_arthritis	Rheumatoid arthritis	Disease				local_kg_curated
+LFS:COND:Colorectal_adenoma	Colorectal adenoma	Disease				local_kg_curated
+NCBITaxon:39491	Agathobacter rectalis	Microbe			species	local_kg_curated
+NCBITaxon:1581	Lentilactobacillus buchneri	Microbe			species	local_kg_curated
+LFS:COND:Pregnancy	Pregnancy	Disease				local_kg_curated
+LFS:COND:Response_to_transplant	Response to transplant	Disease				local_kg_curated
+NCBITaxon:2763066	Ruminococcus intestinalis	Microbe			species	local_kg_curated
+NCBITaxon:847	Oxalobacter formigenes	Microbe			species	local_kg_curated
+NCBITaxon:511	Alcaligenes faecalis	Microbe			species	local_kg_curated
+NCBITaxon:860	Fusobacterium periodonticum	Microbe			species	local_kg_curated
+LFS:COND:Chronic_obstructive_pulmonary_disease	Chronic obstructive pulmonary disease	Disease				local_kg_curated
+LFS:COND:Psoriasis	Psoriasis	Disease				local_kg_curated
+LFS:COND:Influenza_A_H1N1	Influenza A (H1N1)	Disease				local_kg_curated
+NCBITaxon:258515	Acetanaerobacterium elongatum	Microbe			species	local_kg_curated
+LFS:COND:Eczema	Eczema	Disease				local_kg_curated
+NCBITaxon:29343	[Clostridium] cellulosi	Microbe			species	local_kg_curated
+LFS:COND:Lactobacillus_rhamnosus_GG	Lactobacillus rhamnosus GG	Disease				local_kg_curated
+NCBITaxon:39496	Eubacterium ventriosum	Microbe			species	local_kg_curated
+NCBITaxon:1496	Clostridioides difficile	Microbe			species	local_kg_curated
+LFS:COND:Ethnic_group_Socioeconomic_status	Ethnic group,Socioeconomic status	Disease				local_kg_curated
+LFS:COND:Non_alcoholic_fatty_liver_disease	Non-alcoholic fatty liver disease	Disease				local_kg_curated
+NCBITaxon:2173	Methanobrevibacter smithii	Microbe			species	local_kg_curated
+NCBITaxon:1598	Limosilactobacillus reuteri	Microbe			species	local_kg_curated
+NCBITaxon:3814	Papilionoideae	Microbe			species	local_kg_curated
+NCBITaxon:2030927	Bacteroidales bacterium	Microbe			species	local_kg_curated
+NCBITaxon:1512	[Clostridium] symbiosum	Microbe			species	local_kg_curated
+NCBITaxon:839	Xylanibacter ruminicola	Microbe			species	local_kg_curated
+NCBITaxon:39488	Anaerobutyricum hallii	Microbe			species	local_kg_curated
+NCBITaxon:119853	Oscillospira guilliermondii	Microbe			species	local_kg_curated
+NCBITaxon:36835	[Clostridium] colinum	Microbe			species	local_kg_curated
+NCBITaxon:214851	Subdoligranulum variabile	Microbe			species	local_kg_curated
+LFS:COND:Periodontitis	Periodontitis	Disease				local_kg_curated
+NCBITaxon:1302	Streptococcus gordonii	Microbe			species	local_kg_curated
+NCBITaxon:135083	Centipeda noxia	Microbe			species	local_kg_curated
+NCBITaxon:28112	Tannerella forsythia	Microbe			species	local_kg_curated
+NCBITaxon:484	Neisseria flavescens	Microbe			species	local_kg_curated
+NCBITaxon:58231	Treponema medium	Microbe			species	local_kg_curated
+NCBITaxon:158	Treponema denticola	Microbe			species	local_kg_curated
+NCBITaxon:68892	Streptococcus infantis	Microbe			species	local_kg_curated
+NCBITaxon:1591	Lactobacillus sp.	Microbe			species	local_kg_curated
+LFS:COND:Air_pollution	Air pollution	Disease				local_kg_curated
+NCBITaxon:1409	Bacillus sp. (in: firmicutes)	Microbe			species	local_kg_curated
+LFS:COND:Human_papilloma_virus_infection	Human papilloma virus infection	Disease				local_kg_curated
+LFS:COND:Physical_activity	Physical activity	Disease				local_kg_curated
+NCBITaxon:1596	Lactobacillus gasseri	Microbe			species	local_kg_curated
+LFS:COND:Chronic_periodontitis	Chronic periodontitis	Disease				local_kg_curated
+NCBITaxon:53419	Treponema socranskii	Microbe			species	local_kg_curated
+NCBITaxon:143393	[Eubacterium] sulci	Microbe			species	local_kg_curated
+NCBITaxon:712637	Streptococcus sp. oral taxon A95	Microbe			species	local_kg_curated
+NCBITaxon:157688	Leptotrichia hofstadii	Microbe			species	local_kg_curated
+LFS:COND:Chronic_fatigue_syndrome	Chronic fatigue syndrome	Disease				local_kg_curated
+LFS:COND:Oral_mucositis	Oral mucositis	Disease				local_kg_curated
+LFS:COND:Autism_spectrum_disorder	Autism spectrum disorder	Disease				local_kg_curated
+NCBITaxon:1264	Hominimerdicola alba	Microbe			species	local_kg_curated
+LFS:COND:Diabetes_mellitus	Diabetes mellitus	Disease				local_kg_curated
+LFS:COND:Prediabetes_syndrome	Prediabetes syndrome	Disease				local_kg_curated
+LFS:COND:Arthritis	Arthritis	Disease				local_kg_curated
+NCBITaxon:1926307	Veillonella sp.	Microbe			species	local_kg_curated
+LFS:COND:Gestational_diabetes	Gestational diabetes	Disease				local_kg_curated
+LFS:COND:Vulvovaginitis	Vulvovaginitis	Disease				local_kg_curated
+NCBITaxon:1328	Streptococcus anginosus	Microbe			species	local_kg_curated
+LFS:COND:Nasopharyngeal_squamous_cell_carcinoma	Nasopharyngeal squamous cell carcinoma	Disease				local_kg_curated
+LFS:COND:HIV_infection	HIV infection	Disease				local_kg_curated
+LFS:COND:Non_Hodgkins_lymphoma	Non-Hodgkins lymphoma	Disease				local_kg_curated
+LFS:COND:Breast_carcinoma	Breast carcinoma	Disease				local_kg_curated
+LFS:COND:Dental_caries	Dental caries	Disease				local_kg_curated
+NCBITaxon:1309	Streptococcus mutans	Microbe			species	local_kg_curated
+LFS:COND:Premature_birth	Premature birth	Disease				local_kg_curated
+LFS:COND:Crohn_s_disease	Crohn's disease	Disease				local_kg_curated
+LFS:COND:Lifestyle_measurement	Lifestyle measurement	Disease				local_kg_curated
+NCBITaxon:301302	Roseburia faecis	Microbe			species	local_kg_curated
+NCBITaxon:423410	Enterococcaceae bacterium RF39	Microbe			species	local_kg_curated
+NCBITaxon:180978	Candidatus Phytoplasma citri	Microbe			species	local_kg_curated
+NCBITaxon:113287	Pseudoramibacter alactolyticus	Microbe			species	local_kg_curated
+NCBITaxon:272548	Actinomyces dentalis	Microbe			species	local_kg_curated
+LFS:COND:Clostridium_difficile_infection	Clostridium difficile infection	Disease				local_kg_curated
+LFS:COND:Response_to_metformin	Response to metformin	Disease				local_kg_curated
+LFS:COND:Gastric_cancer	Gastric cancer	Disease				local_kg_curated
+LFS:COND:Response_to_antiviral_drug	Response to antiviral drug	Disease				local_kg_curated
+LFS:COND:Constipation	Constipation	Disease				local_kg_curated
+LFS:COND:Ethnic_group	Ethnic group	Disease				local_kg_curated
+NCBITaxon:187101	Sneathia vaginalis	Microbe			species	local_kg_curated
+LFS:COND:Ethnic_group_Bacterial_vaginosis	Ethnic group,Bacterial vaginosis	Disease				local_kg_curated
+NCBITaxon:699240	Candidatus Lachnocurva vaginae	Microbe			species	local_kg_curated
+NCBITaxon:43662	Pseudoalteromonas piscicida	Microbe			species	local_kg_curated
+NCBITaxon:55212	Erwinia rhapontici	Microbe			species	local_kg_curated
+LFS:COND:Squamous_cell_carcinoma	Squamous cell carcinoma	Disease				local_kg_curated
+NCBITaxon:28123	Porphyromonas asaccharolytica	Microbe			species	local_kg_curated
+LFS:COND:Delivery_method	Delivery method	Disease				local_kg_curated
+LFS:COND:Chlamydia_trachomatis	Chlamydia trachomatis	Disease				local_kg_curated
+LFS:COND:Autoimmune_type_1_diabetes	Autoimmune type 1 diabetes	Disease				local_kg_curated
+NCBITaxon:1265	Ruminococcus flavefaciens	Microbe			species	local_kg_curated
+NCBITaxon:1311	Streptococcus agalactiae	Microbe			species	local_kg_curated
+LFS:COND:Socioeconomic_status	Socioeconomic status	Disease				local_kg_curated
+NCBITaxon:88431	Dorea longicatena	Microbe			species	local_kg_curated
+NCBITaxon:100884	Coprobacillus cateniformis	Microbe			species	local_kg_curated
+NCBITaxon:204516	Phocaeicola massiliensis	Microbe			species	local_kg_curated
+NCBITaxon:39777	Veillonella atypica	Microbe			species	local_kg_curated
+NCBITaxon:1656	Actinomyces viscosus	Microbe			species	local_kg_curated
+NCBITaxon:2049040	Roseburia sp.	Microbe			species	local_kg_curated
+LFS:COND:Urinary_tract_infection	Urinary tract infection	Disease				local_kg_curated
+NCBITaxon:287	Pseudomonas aeruginosa	Microbe			species	local_kg_curated
+NCBITaxon:49118	Candidatus Arthromitus sp. SFB-mouse	Microbe			species	local_kg_curated
+NCBITaxon:1532	Blautia producta	Microbe			species	local_kg_curated
+LFS:COND:Unipolar_depression	Unipolar depression	Disease				local_kg_curated
+LFS:COND:Graft_versus_host_disease	Graft versus host disease	Disease				local_kg_curated
+LFS:COND:Response_to_antibiotic	Response to antibiotic	Disease				local_kg_curated
+NCBITaxon:2776143	Sneathia sp.	Microbe			species	local_kg_curated
+NCBITaxon:1898207	Clostridiales bacterium	Microbe			species	local_kg_curated
+LFS:COND:Pneumonia	Pneumonia	Disease				local_kg_curated
+NCBITaxon:552398	Ruminococcaceae bacterium D16	Microbe			species	local_kg_curated
+NCBITaxon:41200	Bifidobacterium sp.	Microbe			species	local_kg_curated
+LFS:COND:Asthma	Asthma	Disease				local_kg_curated
+NCBITaxon:349106	Psychrobacter sp. PRwf-1	Microbe			species	local_kg_curated
+NCBITaxon:33034	Anaerococcus prevotii	Microbe			species	local_kg_curated
+LFS:COND:Multiple_sclerosis	Multiple sclerosis	Disease				local_kg_curated
+NCBITaxon:1308	Streptococcus thermophilus	Microbe			species	local_kg_curated
+NCBITaxon:245010	butyrate-producing bacterium SL7/1	Microbe			species	local_kg_curated
+NCBITaxon:387090	Phocaeicola coprophilus	Microbe			species	local_kg_curated
+NCBITaxon:165179	Segatella copri	Microbe			species	local_kg_curated
+LFS:COND:Anorexia_nervosa	Anorexia nervosa	Disease				local_kg_curated
+NCBITaxon:28131	Prevotella intermedia	Microbe			species	local_kg_curated
+NCBITaxon:59823	Prevotella sp.	Microbe			species	local_kg_curated
+NCBITaxon:76761	Pseudomonas veronii	Microbe			species	local_kg_curated
+NCBITaxon:41978	Ruminococcus sp.	Microbe			species	local_kg_curated
+NCBITaxon:396015	Rothia terrae	Microbe			species	local_kg_curated
+NCBITaxon:68766	Fusobacterium sp.	Microbe			species	local_kg_curated
+NCBITaxon:363265	Leyella stercorea	Microbe			species	local_kg_curated
+NCBITaxon:188932	Pedobacter cryoconitis	Microbe			species	local_kg_curated
+NCBITaxon:1894999	Enhydrobacter sp.	Microbe			species	local_kg_curated
+NCBITaxon:181675	Limosilactobacillus coleohominis	Microbe			species	local_kg_curated
+LFS:COND:Esophageal_cancer	Esophageal cancer	Disease				local_kg_curated
+NCBITaxon:59620	uncultured Clostridium sp.	Microbe			species	local_kg_curated
+NCBITaxon:1310087	uncultured Haematobacter sp.	Microbe			species	local_kg_curated
+LFS:COND:Polycystic_ovary_syndrome	Polycystic ovary syndrome	Disease				local_kg_curated
+LFS:COND:Systemic_scleroderma	Systemic scleroderma	Disease				local_kg_curated
+LFS:COND:Abdominal_distention	Abdominal distention	Disease				local_kg_curated
+LFS:COND:Diarrheal_disease	Diarrheal disease	Disease				local_kg_curated
+LFS:COND:Gastrointestinal_disease	Gastrointestinal disease	Disease				local_kg_curated
+NCBITaxon:460384	Enterocloster lavalensis	Microbe			species	local_kg_curated
+NCBITaxon:469610	Burkholderiales bacterium 1_1_47	Microbe			species	local_kg_curated
+NCBITaxon:651822	Fretibacterium fastidiosum	Microbe			species	local_kg_curated
+NCBITaxon:81462	Thermanaerovibrio acidaminovorans	Microbe			species	local_kg_curated
+NCBITaxon:984	Pedobacter heparinus	Microbe			species	local_kg_curated
+LFS:COND:Human_immunodeficiency_virus	Human immunodeficiency virus	Disease				local_kg_curated
+NCBITaxon:599	Salmonella sp.	Microbe			species	local_kg_curated
+NCBITaxon:1853550	[Candida] sp.	Microbe			species	local_kg_curated
+NCBITaxon:4932	Saccharomyces cerevisiae	Microbe			species	local_kg_curated
+NCBITaxon:1971605	Faecalibacterium sp.	Microbe			species	local_kg_curated
+LFS:COND:Urolithiasis_Nephrolithiasis	Urolithiasis,Nephrolithiasis	Disease				local_kg_curated
+LFS:COND:Pulmonary_tuberculosis	Pulmonary tuberculosis	Disease				local_kg_curated
+LFS:COND:Insecticide	Insecticide	Disease				local_kg_curated
+NCBITaxon:1601	Ligilactobacillus agilis	Microbe			species	local_kg_curated
+NCBITaxon:1261	Peptostreptococcus anaerobius	Microbe			species	local_kg_curated
+LFS:COND:Sex_design	Sex design	Disease				local_kg_curated
+NCBITaxon:310297	Phocaeicola plebeius	Microbe			species	local_kg_curated
+LFS:COND:Behcet_s_syndrome	Behcet's syndrome	Disease				local_kg_curated
+NCBITaxon:729	Haemophilus parainfluenzae	Microbe			species	local_kg_curated
+NCBITaxon:41976	Porphyromonas catoniae	Microbe			species	local_kg_curated
+NCBITaxon:1969407	Oribacterium sp.	Microbe			species	local_kg_curated
+NCBITaxon:1603	Amylolactobacillus amylophilus	Microbe			species	local_kg_curated
+LFS:COND:Breast_cancer	Breast cancer	Disease				local_kg_curated
+NCBITaxon:46506	Bacteroides stercoris	Microbe			species	local_kg_curated
+NCBITaxon:45634	Streptococcus cristatus	Microbe			species	local_kg_curated
+NCBITaxon:649756	Anaerostipes hadrus	Microbe			species	local_kg_curated
+NCBITaxon:290055	Faecalicatena fissicatena	Microbe			species	local_kg_curated
+LFS:COND:Acute_lymphoblastic_leukemia	Acute lymphoblastic leukemia	Disease				local_kg_curated
+NCBITaxon:68904	unidentified Actinomycete OPB41	Microbe			species	local_kg_curated
+NCBITaxon:1940338	Escherichia/Shigella sp.	Microbe			species	local_kg_curated
+LFS:COND:Pancreatic_carcinoma	Pancreatic carcinoma	Disease				local_kg_curated
+LFS:COND:Cognitive_impairment	Cognitive impairment	Disease				local_kg_curated
+LFS:COND:Interleukin_1_beta_measurement	Interleukin-1 beta measurement	Disease				local_kg_curated
+LFS:COND:Inflammation	Inflammation	Disease				local_kg_curated
+LFS:COND:Interleukin_10_measurement	Interleukin 10 measurement	Disease				local_kg_curated
+LFS:COND:Extraction_protocol	Extraction protocol	Disease				local_kg_curated
+LFS:COND:Juvenile_idiopathic_arthritis	Juvenile idiopathic arthritis	Disease				local_kg_curated
+NCBITaxon:1506	Clostridium sp.	Microbe			species	local_kg_curated
+LFS:COND:Atopic_asthma	Atopic asthma	Disease				local_kg_curated
+LFS:COND:Endometrial_cancer	Endometrial cancer	Disease				local_kg_curated
+LFS:COND:Bipolar_disorder	Bipolar disorder	Disease				local_kg_curated
+LFS:COND:Hyperplastic_Polyp	Hyperplastic Polyp	Disease				local_kg_curated
+NCBITaxon:57037	Lacticaseibacillus zeae	Microbe			species	local_kg_curated
+LFS:COND:Age_related_macular_degeneration	Age-related macular degeneration	Disease				local_kg_curated
+NCBITaxon:28111	Bacteroides eggerthii	Microbe			species	local_kg_curated
+LFS:COND:Microbiome	Microbiome	Disease				local_kg_curated
+LFS:COND:Head_and_neck_squamous_cell_carcinoma	Head and neck squamous cell carcinoma	Disease				local_kg_curated
+NCBITaxon:133926	Olsenella uli	Microbe			species	local_kg_curated
+NCBITaxon:204	Campylobacter showae	Microbe			species	local_kg_curated
+NCBITaxon:152490	Helicobacter marmotae	Microbe			species	local_kg_curated
+LFS:COND:Acute_myeloid_leukemia	Acute myeloid leukemia	Disease				local_kg_curated
+LFS:COND:Systemic_lupus_erythematosus	Systemic lupus erythematosus	Disease				local_kg_curated
+NCBITaxon:172042	Rothia aeria	Microbe			species	local_kg_curated
+NCBITaxon:327575	Capnocytophaga leadbetteri	Microbe			species	local_kg_curated
+NCBITaxon:156456	Megasphaera geminata	Microbe			species	local_kg_curated
+LFS:COND:Response_to_ketogenic_diet	Response to ketogenic diet	Disease				local_kg_curated
+NCBITaxon:42445	Sinorhizobium sp.	Microbe			species	local_kg_curated
+LFS:COND:Response_to_immunochemotherapy	Response to immunochemotherapy	Disease				local_kg_curated
+NCBITaxon:360807	Roseburia inulinivorans	Microbe			species	local_kg_curated
+NCBITaxon:1735	Holdemanella biformis	Microbe			species	local_kg_curated
+NCBITaxon:89152	Peptacetobacter hiranonis	Microbe			species	local_kg_curated
+NCBITaxon:100176	Papillibacter cinnamivorans	Microbe			species	local_kg_curated
+NCBITaxon:33043	Coprococcus eutactus	Microbe			species	local_kg_curated
+LFS:COND:Psychosis	Psychosis	Disease				local_kg_curated
+NCBITaxon:1689	Bifidobacterium dentium	Microbe			species	local_kg_curated
+NCBITaxon:115778	Leuconostoc gasicomitatum	Microbe			species	local_kg_curated
+LFS:COND:Allergic_rhinitis	Allergic rhinitis	Disease				local_kg_curated
+LFS:COND:Hidradenitis_suppurativa	Hidradenitis suppurativa	Disease				local_kg_curated
+NCBITaxon:470	Acinetobacter baumannii	Microbe			species	local_kg_curated
+NCBITaxon:1031694	Pleosporales sp. PIMO_118	Microbe			species	local_kg_curated
+LFS:COND:Ankylosing_spondylitis	Ankylosing spondylitis	Disease				local_kg_curated
+NCBITaxon:658659	Erysipelotrichaceae bacterium 3_1_53	Microbe			species	local_kg_curated
+LFS:COND:Treatment_outcome_measurement	Treatment outcome measurement	Disease				local_kg_curated
+LFS:COND:Gingivitis	Gingivitis	Disease				local_kg_curated
+LFS:COND:REM_sleep_behavior_disorder	REM sleep behavior disorder	Disease				local_kg_curated
+NCBITaxon:1662277	uncultured Stomatobaculum sp.	Microbe			species	local_kg_curated
+NCBITaxon:159275	uncultured Selenomonas sp.	Microbe			species	local_kg_curated
+LFS:COND:Chronic_constipation	Chronic constipation	Disease				local_kg_curated
+NCBITaxon:1978181	Cercidoideae	Microbe			species	local_kg_curated
+LFS:COND:Attention_deficit_hyperactivity_disorder	Attention deficit hyperactivity disorder	Disease				local_kg_curated
+LFS:COND:Population	Population	Disease				local_kg_curated
+NCBITaxon:302911	Bifidobacterium animalis subsp. lactis	Microbe			species	local_kg_curated
+NCBITaxon:33035	Blautia producta	Microbe			species	local_kg_curated
+LFS:COND:Environmental_factor	Environmental factor	Disease				local_kg_curated
+NCBITaxon:615	Serratia marcescens	Microbe			species	local_kg_curated
+LFS:COND:Hashimoto_s_thyroiditis	Hashimoto's thyroiditis	Disease				local_kg_curated
+LFS:COND:Bacterial_vaginosis	Bacterial vaginosis	Disease				local_kg_curated
+NCBITaxon:1351	Enterococcus faecalis	Microbe			species	local_kg_curated
+LFS:COND:Biofilm	Biofilm	Disease				local_kg_curated
+LFS:COND:Ketogenic_diet	Ketogenic diet	Disease				local_kg_curated
+LFS:COND:Epilepsy	Epilepsy	Disease				local_kg_curated
+LFS:COND:Chronic_periodontitis_Dental_caries	Chronic periodontitis,Dental caries	Disease				local_kg_curated
+NCBITaxon:738	Glaesserella parasuis	Microbe			species	local_kg_curated
+NCBITaxon:409322	Treponema pedis	Microbe			species	local_kg_curated
+NCBITaxon:47715	Lacticaseibacillus rhamnosus	Microbe			species	local_kg_curated
+LFS:COND:Lung_cancer	Lung cancer	Disease				local_kg_curated
+LFS:COND:Alzheimer_s_disease	Alzheimer's disease	Disease				local_kg_curated
+LFS:COND:Hepatitis_Alcoholic	Hepatitis, Alcoholic	Disease				local_kg_curated
+NCBITaxon:351	Azotobacter group	Microbe			species	local_kg_curated
+LFS:COND:Disease_staging	Disease staging	Disease				local_kg_curated
+LFS:COND:Timepoint	Timepoint	Disease				local_kg_curated
+LFS:COND:Non_small_cell_lung_carcinoma_Renal_cell_carcinoma_Disease_progression_measurement	Non-small cell lung carcinoma,Renal cell carcinoma,Disease progression measurement	Disease				local_kg_curated
+NCBITaxon:169292	Corynebacterium aurimucosum	Microbe			species	local_kg_curated
+LFS:COND:Menopause	Menopause	Disease				local_kg_curated
+LFS:COND:Exercise	Exercise	Disease				local_kg_curated
+NCBITaxon:8710	Crotalinae	Microbe			species	local_kg_curated
+NCBITaxon:1288121	Alistipes senegalensis	Microbe			species	local_kg_curated
+NCBITaxon:1766	Mycolicibacterium fortuitum	Microbe			species	local_kg_curated
+NCBITaxon:33917	Microbacterium barkeri	Microbe			species	local_kg_curated
+NCBITaxon:69710	Treponema vincentii	Microbe			species	local_kg_curated
+LFS:COND:Age_at_assessment	Age at assessment	Disease				local_kg_curated
+NCBITaxon:956	Wolbachia sp.	Microbe			species	local_kg_curated
+NCBITaxon:1747	Cutibacterium acnes	Microbe			species	local_kg_curated
+LFS:COND:Biological_sex	Biological sex	Disease				local_kg_curated
+LFS:COND:Anxiety	Anxiety	Disease				local_kg_curated
+LFS:COND:Depressive_disorder	Depressive disorder	Disease				local_kg_curated
+NCBITaxon:507843	Sporobacterium sp. WAL 1855D	Microbe			species	local_kg_curated
+LFS:COND:Gestational_age	Gestational age	Disease				local_kg_curated
+LFS:COND:Chlamydia_trachomatis_infectious_disease	Chlamydia trachomatis infectious disease	Disease				local_kg_curated
+NCBITaxon:87541	Aerococcus christensenii	Microbe			species	local_kg_curated
+LFS:COND:Chlamydophila_infectious_disease_Human_papilloma_virus_infection	Chlamydophila infectious disease,Human papilloma virus infection	Disease				local_kg_curated
+NCBITaxon:813	Chlamydia trachomatis	Microbe			species	local_kg_curated
+NCBITaxon:69823	Selenomonas sputigena	Microbe			species	local_kg_curated
+NCBITaxon:1305	Streptococcus sanguinis	Microbe			species	local_kg_curated
+NCBITaxon:419208	Veillonella denticariosi	Microbe			species	local_kg_curated
+NCBITaxon:33033	Parvimonas micra	Microbe			species	local_kg_curated
+LFS:COND:Schizophrenia	Schizophrenia	Disease				local_kg_curated
+NCBITaxon:2212467	Bacteroidaceae bacterium	Microbe			species	local_kg_curated
+NCBITaxon:1343	Streptococcus vestibularis	Microbe			species	local_kg_curated
+LFS:COND:Chronic_pancreatitis	Chronic pancreatitis	Disease				local_kg_curated
+NCBITaxon:160404	Anaerotignum lactatifermentans	Microbe			species	local_kg_curated
+LFS:COND:Sampling_time	Sampling time	Disease				local_kg_curated
+LFS:COND:Helminthiasis	Helminthiasis	Disease				local_kg_curated
+LFS:COND:Phenylketonuria	Phenylketonuria	Disease				local_kg_curated
+NCBITaxon:713070	Veillonellaceae bacterium oral taxon 483	Microbe			species	local_kg_curated
+NCBITaxon:423477	Veillonella rogosae	Microbe			species	local_kg_curated
+NCBITaxon:208968	Alkanindiges hongkongensis	Microbe			species	local_kg_curated
+LFS:COND:Henoch_Schoenlein_purpura	Henoch-Schoenlein purpura	Disease				local_kg_curated
+NCBITaxon:166	Treponema sp.	Microbe			species	local_kg_curated
+NCBITaxon:827	Campylobacter ureolyticus	Microbe			species	local_kg_curated
+NCBITaxon:82135	Fannyhessea vaginae	Microbe			species	local_kg_curated
+NCBITaxon:1584	Lactobacillus delbrueckii	Microbe			species	local_kg_curated
+NCBITaxon:351091	Oscillibacter valericigenes	Microbe			species	local_kg_curated
+NCBITaxon:1872444	Alistipes sp.	Microbe			species	local_kg_curated
+LFS:COND:HIV_mother_to_child_transmission	HIV mother to child transmission	Disease				local_kg_curated
+NCBITaxon:150055	Streptococcus lutetiensis	Microbe			species	local_kg_curated
+NCBITaxon:684066	Streptococcus lactarius	Microbe			species	local_kg_curated
+LFS:COND:Cell_activation	Cell activation	Disease				local_kg_curated
+NCBITaxon:549	Pantoea agglomerans	Microbe			species	local_kg_curated
+NCBITaxon:1837329	Lachnospiraceae bacterium DW52	Microbe			species	local_kg_curated
+NCBITaxon:32025	Helicobacter hepaticus	Microbe			species	local_kg_curated
+LFS:COND:Alcohol_drinking	Alcohol drinking	Disease				local_kg_curated
+NCBITaxon:137732	Granulicatella elegans	Microbe			species	local_kg_curated
+LFS:COND:Acne	Acne	Disease				local_kg_curated
+NCBITaxon:162156	uncultured Bacteroides sp.	Microbe			species	local_kg_curated
+NCBITaxon:626947	Parasutterella secunda	Microbe			species	local_kg_curated
+NCBITaxon:40543	Sneathia sanguinegens	Microbe			species	local_kg_curated
+LFS:COND:Cervical_cancer	Cervical cancer	Disease				local_kg_curated
+NCBITaxon:33007	Winkia neuii	Microbe			species	local_kg_curated
+NCBITaxon:29318	Winkia neuii subsp. anitrata	Microbe			species	local_kg_curated
+NCBITaxon:28125	Prevotella bivia	Microbe			species	local_kg_curated
+NCBITaxon:755172	Aedoeadaptatus coxii	Microbe			species	local_kg_curated
+LFS:COND:Human_papilloma_virus_infection_Cervical_cancer	Human papilloma virus infection,Cervical cancer	Disease				local_kg_curated
+NCBITaxon:187328	Veillonella montpellierensis	Microbe			species	local_kg_curated
+NCBITaxon:76860	Streptococcus constellatus	Microbe			species	local_kg_curated
+NCBITaxon:52768	Schaalia georgiae	Microbe			species	local_kg_curated
+NCBITaxon:1226342	SR1 bacterium oral taxon 875	Microbe			species	local_kg_curated
+NCBITaxon:2049048	Rikenellaceae bacterium	Microbe			species	local_kg_curated
+LFS:COND:Viral_load	Viral load	Disease				local_kg_curated
+NCBITaxon:53418	Treponema lecithinolyticum	Microbe			species	local_kg_curated
+NCBITaxon:1796646	Muribaculum intestinale	Microbe			species	local_kg_curated
+LFS:COND:CD4_positive_T_lymphocyte_count	CD4-positive T-lymphocyte count	Disease				local_kg_curated
+LFS:COND:Bladder_carcinoma	Bladder carcinoma	Disease				local_kg_curated
+LFS:COND:Disease_recurrence	Disease recurrence	Disease				local_kg_curated
+LFS:COND:Disease_progression_measurement	Disease progression measurement	Disease				local_kg_curated
+NCBITaxon:159447	uncultured Corynebacterium sp.	Microbe			species	local_kg_curated
+LFS:COND:Diarrhea	Diarrhea	Disease				local_kg_curated
+NCBITaxon:1268254	Peptoniphilus timonensis	Microbe			species	local_kg_curated
+NCBITaxon:1586779	uncultured Lachnoclostridium sp.	Microbe			species	local_kg_curated
+LFS:COND:Hepatic_steatosis	Hepatic steatosis	Disease				local_kg_curated
+NCBITaxon:147802	Lactobacillus iners	Microbe			species	local_kg_curated
+NCBITaxon:1833	Rhodococcus erythropolis	Microbe			species	local_kg_curated
+NCBITaxon:2807717	Ruminococcaceae bacterium EM3	Microbe			species	local_kg_curated
+NCBITaxon:536633	Blautia glucerasea	Microbe			species	local_kg_curated
+NCBITaxon:1537	Romboutsia lituseburensis	Microbe			species	local_kg_curated
+LFS:COND:Anxiety_disorder	Anxiety disorder	Disease				local_kg_curated
+NCBITaxon:290252	uncultured Synergistes sp.	Microbe			species	local_kg_curated
+NCBITaxon:2044938	candidate division SR1 bacterium	Microbe			species	local_kg_curated
+LFS:COND:Cotinine_measurement	Cotinine measurement	Disease				local_kg_curated
+NCBITaxon:1540874	SR1 bacterium human oral taxon HOT-345	Microbe			species	local_kg_curated
+NCBITaxon:2942972	Crudevirinae	Microbe			species	local_kg_curated
+NCBITaxon:2955582	Carjivirus communis	Microbe			species	local_kg_curated
+NCBITaxon:1262970	Subdoligranulum sp. CAG:314	Microbe			species	local_kg_curated
+NCBITaxon:5141	Neurospora crassa	Microbe			species	local_kg_curated
+NCBITaxon:79591	Epichloe glyceriae	Microbe			species	local_kg_curated
+NCBITaxon:24	Shewanella putrefaciens	Microbe			species	local_kg_curated
+NCBITaxon:1633	Limosilactobacillus vaginalis	Microbe			species	local_kg_curated
+LFS:COND:Chronic_kidney_disease	Chronic kidney disease	Disease				local_kg_curated
+NCBITaxon:1522	[Clostridium] innocuum	Microbe			species	local_kg_curated
+LFS:COND:Prostate_cancer	Prostate cancer	Disease				local_kg_curated
+LFS:COND:Head_and_neck_carcinoma	Head and neck carcinoma	Disease				local_kg_curated
+LFS:COND:Maternal_milk	Maternal milk	Disease				local_kg_curated
+LFS:COND:Neonatal_jaundice	Neonatal jaundice	Disease				local_kg_curated
+NCBITaxon:1694	Bifidobacterium pseudolongum	Microbe			species	local_kg_curated
+LFS:COND:Inflammatory_bowel_disease	Inflammatory bowel disease	Disease				local_kg_curated
+LFS:COND:Graves_disease	Graves disease	Disease				local_kg_curated
+NCBITaxon:582	Morganella morganii	Microbe			species	local_kg_curated
+NCBITaxon:56774	[Eubacterium] infirmum	Microbe			species	local_kg_curated
+NCBITaxon:157692	Pseudoleptotrichia goodfellowii	Microbe			species	local_kg_curated
+LFS:COND:Breastfeeding_duration	Breastfeeding duration	Disease				local_kg_curated
+NCBITaxon:142586	Eubacterium sp.	Microbe			species	local_kg_curated
+NCBITaxon:387661	Parabacteroides johnsonii	Microbe			species	local_kg_curated
+NCBITaxon:2130	Ureaplasma urealyticum	Microbe			species	local_kg_curated
+NCBITaxon:457412	Ruminococcus sp. 5_1_39BFAA	Microbe			species	local_kg_curated
+LFS:COND:Iron_deficiency_anemia	Iron deficiency anemia	Disease				local_kg_curated
+NCBITaxon:137838	Clostridium neonatale	Microbe			species	local_kg_curated
+NCBITaxon:879970	Defluviitalea saccharophila	Microbe			species	local_kg_curated
+NCBITaxon:1623	Ligilactobacillus ruminis	Microbe			species	local_kg_curated
+NCBITaxon:134821	Ureaplasma parvum	Microbe			species	local_kg_curated
+NCBITaxon:218538	Dialister invisus	Microbe			species	local_kg_curated
+NCBITaxon:1763509	Lachnotalea glycerini	Microbe			species	local_kg_curated
+NCBITaxon:1297424	Anaerobacterium chartisolvens	Microbe			species	local_kg_curated
+LFS:COND:Azithromycin	Azithromycin	Disease				local_kg_curated
+NCBITaxon:165187	uncultured Bifidobacterium sp.	Microbe			species	local_kg_curated
+NCBITaxon:879276	Mannheimia caviae	Microbe			species	local_kg_curated
+NCBITaxon:77917	Fusobacterium naviforme	Microbe			species	local_kg_curated
+NCBITaxon:39824	Klebsiella granulomatis	Microbe			species	local_kg_curated
+NCBITaxon:626343	Sphingobacterium shayense	Microbe			species	local_kg_curated
+NCBITaxon:1290	Staphylococcus hominis	Microbe			species	local_kg_curated
+NCBITaxon:76773	Malassezia globosa	Microbe			species	local_kg_curated
+NCBITaxon:61235	Fusarium equiseti	Microbe			species	local_kg_curated
+NCBITaxon:35518	[Eubacterium] nodatum	Microbe			species	local_kg_curated
+LFS:COND:Gastric_adenocarcinoma	Gastric adenocarcinoma	Disease				local_kg_curated
+LFS:COND:Gingival_disease	Gingival disease	Disease				local_kg_curated
+NCBITaxon:1077464	Streptococcus oralis subsp. tigurinus	Microbe			species	local_kg_curated
+NCBITaxon:257462	uncultured Phyllobacteriaceae bacterium	Microbe			species	local_kg_curated
+LFS:COND:Traditional_Chinese_medicine_type	Traditional Chinese medicine type	Disease				local_kg_curated
+LFS:COND:Esophageal_adenocarcinoma	Esophageal adenocarcinoma	Disease				local_kg_curated
+LFS:COND:Gastroesophageal_reflux_disease	Gastroesophageal reflux disease	Disease				local_kg_curated
+NCBITaxon:487	Neisseria meningitidis	Microbe			species	local_kg_curated
+NCBITaxon:2169595	Firstpapillomavirinae	Microbe			species	local_kg_curated
+NCBITaxon:651591	Bacteroidetes bacterium oral taxon 272	Microbe			species	local_kg_curated
+NCBITaxon:837	Porphyromonas gingivalis	Microbe			species	local_kg_curated
+NCBITaxon:2137877	Eubacteriales Family XIII. Incertae Sedis bacterium	Microbe			species	local_kg_curated
+NCBITaxon:735	Haemophilus parahaemolyticus	Microbe			species	local_kg_curated
+NCBITaxon:228604	Segatella salivae	Microbe			species	local_kg_curated
+NCBITaxon:318552	Astronotinae	Microbe			species	local_kg_curated
+NCBITaxon:172044	Sphingomonas yabuuchiae	Microbe			species	local_kg_curated
+NCBITaxon:121428	Sphingobium xenophagum	Microbe			species	local_kg_curated
+LFS:COND:Preterm_premature_rupture_of_the_membranes	Preterm premature rupture of the membranes	Disease				local_kg_curated
+LFS:COND:Titanium_dioxide_nanoparticle	Titanium dioxide nanoparticle	Disease				local_kg_curated
+NCBITaxon:234266	bacterium Ellin6075	Microbe			species	local_kg_curated
+NCBITaxon:286136	uncultured Coriobacterium sp.	Microbe			species	local_kg_curated
+LFS:COND:Graves_ophthalmopathy	Graves ophthalmopathy	Disease				local_kg_curated
+LFS:COND:Hepatocellular_carcinoma	Hepatocellular carcinoma	Disease				local_kg_curated
+LFS:COND:Nutraceutical_Colorectal_cancer	Nutraceutical,Colorectal cancer	Disease				local_kg_curated
+NCBITaxon:2098	Metamycoplasma hominis	Microbe			species	local_kg_curated
+LFS:COND:Ovarian_cancer	Ovarian cancer	Disease				local_kg_curated
+NCBITaxon:330920	Sphingomonas azotifigens	Microbe			species	local_kg_curated
+NCBITaxon:1364	Pseudolactococcus piscium	Microbe			species	local_kg_curated
+LFS:COND:Ascariasis	Ascariasis	Disease				local_kg_curated
+NCBITaxon:165186	uncultured Ruminococcus sp.	Microbe			species	local_kg_curated
+LFS:COND:Stroke	Stroke	Disease				local_kg_curated
+NCBITaxon:423432	Streptococcaceae bacterium RF32	Microbe			species	local_kg_curated
+LFS:COND:Equol	Equol	Disease				local_kg_curated
+NCBITaxon:446660	Adlercreutzia equolifaciens	Microbe			species	local_kg_curated
+NCBITaxon:572010	Slackia isoflavoniconvertens	Microbe			species	local_kg_curated
+NCBITaxon:852	Fusobacterium perfoetens	Microbe			species	local_kg_curated
+NCBITaxon:856	Fusobacterium varium	Microbe			species	local_kg_curated
+NCBITaxon:3068309	Ruminococcaceae bacterium UCG-005	Microbe			species	local_kg_curated
+LFS:COND:Otitis_media_with_effusion	Otitis media with effusion	Disease				local_kg_curated
+LFS:COND:Environmental_exposure_measurement	Environmental exposure measurement	Disease				local_kg_curated
+LFS:COND:Acute_graft_vs_host_disease	Acute graft vs. host disease	Disease				local_kg_curated
+LFS:COND:Cervical_cerclage	Cervical cerclage	Disease				local_kg_curated
+NCBITaxon:257758	Streptococcus pseudopneumoniae	Microbe			species	local_kg_curated
+NCBITaxon:1681	Bifidobacterium bifidum	Microbe			species	local_kg_curated
+NCBITaxon:214856	Alistipes finegoldii	Microbe			species	local_kg_curated
+NCBITaxon:1531	Enterocloster clostridioformis	Microbe			species	local_kg_curated
+LFS:COND:Severe_aplastic_anemia	Severe aplastic anemia	Disease				local_kg_curated
+NCBITaxon:1924944	Porphyromonas sp.	Microbe			species	local_kg_curated
+NCBITaxon:425941	Hoylesella nanceiensis	Microbe			species	local_kg_curated
+NCBITaxon:84135	Gemella sanguinis	Microbe			species	local_kg_curated
+NCBITaxon:43675	Rothia mucilaginosa	Microbe			species	local_kg_curated
+NCBITaxon:290053	Bacteroides helcogenes	Microbe			species	local_kg_curated
+NCBITaxon:1904861	Peptostreptococcaceae bacterium	Microbe			species	local_kg_curated
+NCBITaxon:113107	Streptococcus australis	Microbe			species	local_kg_curated
+LFS:COND:Estradiol_measurement	Estradiol measurement	Disease				local_kg_curated
+LFS:COND:HIV_infection_Antimicrobial_agent	HIV infection,Antimicrobial agent	Disease				local_kg_curated
+NCBITaxon:2585118	Alistipes communis	Microbe			species	local_kg_curated
+LFS:COND:Phenotype	Phenotype	Disease				local_kg_curated
+NCBITaxon:28135	Segatella oris	Microbe			species	local_kg_curated
+LFS:COND:Tobacco_smoke_exposure_measurement	Tobacco smoke exposure measurement	Disease				local_kg_curated
+NCBITaxon:876091	uncultured Oscillibacter sp.	Microbe			species	local_kg_curated
+NCBITaxon:512314	uncultured Roseburia sp.	Microbe			species	local_kg_curated
+NCBITaxon:1945593	Oscillibacter sp.	Microbe			species	local_kg_curated
+NCBITaxon:544580	Actinomyces oris	Microbe			species	local_kg_curated
+NCBITaxon:279828	Microcella alkaliphila	Microbe			species	local_kg_curated
+LFS:COND:Periodontitis_Type_II_diabetes_mellitus	Periodontitis,Type II diabetes mellitus	Disease				local_kg_curated
+NCBITaxon:39950	Dialister pneumosintes	Microbe			species	local_kg_curated
+NCBITaxon:824	Campylobacter gracilis	Microbe			species	local_kg_curated
+NCBITaxon:28251	Ornithobacterium rhinotracheale	Microbe			species	local_kg_curated
+NCBITaxon:1539298	Treponema sp. OMZ 838	Microbe			species	local_kg_curated
+NCBITaxon:102148	Solobacterium moorei	Microbe			species	local_kg_curated
+NCBITaxon:28051	Lachnospira multipara	Microbe			species	local_kg_curated
+NCBITaxon:201571	Oleidesulfovibrio vietnamensis	Microbe			species	local_kg_curated
+NCBITaxon:29505	Desulfovibrio longreachensis	Microbe			species	local_kg_curated
+NCBITaxon:1872413	Aggregatibacter sp.	Microbe			species	local_kg_curated
+NCBITaxon:712711	Tannerella sp. oral taxon 808	Microbe			species	local_kg_curated
+NCBITaxon:325787	Streptococcus sp. oral clone ASCB04	Microbe			species	local_kg_curated
+LFS:COND:Autoimmune_Hepatitis	Autoimmune Hepatitis	Disease				local_kg_curated
+LFS:COND:Pemphigus_vulgaris	Pemphigus vulgaris	Disease				local_kg_curated
+LFS:COND:Acetaldehyde	Acetaldehyde	Disease				local_kg_curated
+NCBITaxon:470565	Prevotella histicola	Microbe			species	local_kg_curated
+LFS:COND:Fibromyalgia	Fibromyalgia	Disease				local_kg_curated
+LFS:COND:Non_alcoholic_steatohepatitis	Non-alcoholic steatohepatitis	Disease				local_kg_curated
+LFS:COND:Liver_fibrosis_measurement	Liver fibrosis measurement	Disease				local_kg_curated
+NCBITaxon:1335	Streptococcus equinus	Microbe			species	local_kg_curated
+NCBITaxon:109790	Lactobacillus jensenii	Microbe			species	local_kg_curated
+LFS:COND:Hyperglycemia	Hyperglycemia	Disease				local_kg_curated
+LFS:COND:Waist_circumference	Waist circumference	Disease				local_kg_curated
+LFS:COND:Hypertension	Hypertension	Disease				local_kg_curated
+NCBITaxon:29347	[Clostridium] scindens	Microbe			species	local_kg_curated
+LFS:COND:Carcinogenicity	Carcinogenicity	Disease				local_kg_curated
+NCBITaxon:758	Rodentibacter pneumotropicus	Microbe			species	local_kg_curated
+NCBITaxon:1624	Ligilactobacillus salivarius	Microbe			species	local_kg_curated
+NCBITaxon:1639133	Citrobacter portucalensis	Microbe			species	local_kg_curated
+LFS:COND:Digestive_system_cancer	Digestive system cancer	Disease				local_kg_curated
+LFS:COND:Tongue_neoplasm	Tongue neoplasm	Disease				local_kg_curated
+NCBITaxon:1306	Streptococcus sp.	Microbe			species	local_kg_curated
+LFS:COND:Diet_measurement	Diet measurement	Disease				local_kg_curated
+LFS:COND:Dry_eye_syndrome	Dry eye syndrome	Disease				local_kg_curated
+NCBITaxon:70775	Pseudomonas plecoglossicida	Microbe			species	local_kg_curated
+NCBITaxon:1408	Bacillus pumilus	Microbe			species	local_kg_curated
+LFS:COND:Cannabis_use	Cannabis use	Disease				local_kg_curated
+NCBITaxon:227945	Lactobacillus ultunensis	Microbe			species	local_kg_curated
+NCBITaxon:712149	Aggregatibacter sp. oral taxon 512	Microbe			species	local_kg_curated
+LFS:COND:Rosacea	Rosacea	Disease				local_kg_curated
+NCBITaxon:38313	Shewanella algae	Microbe			species	local_kg_curated
+LFS:COND:Delivery_measurement	Delivery measurement	Disease				local_kg_curated
+NCBITaxon:1352	Enterococcus faecium	Microbe			species	local_kg_curated
+NCBITaxon:573	Klebsiella pneumoniae	Microbe			species	local_kg_curated
+NCBITaxon:1685	Bifidobacterium breve	Microbe			species	local_kg_curated
+LFS:COND:Place_of_residence_measurement	Place of residence measurement	Disease				local_kg_curated
+NCBITaxon:1379	Gemella haemolysans	Microbe			species	local_kg_curated
+NCBITaxon:33010	Cutibacterium avidum	Microbe			species	local_kg_curated
+NCBITaxon:1260	Finegoldia magna	Microbe			species	local_kg_curated
+NCBITaxon:571	Klebsiella oxytoca	Microbe			species	local_kg_curated
+NCBITaxon:68891	Streptococcus peroris	Microbe			species	local_kg_curated
+NCBITaxon:418240	Blautia wexlerae	Microbe			species	local_kg_curated
+LFS:COND:Smoking_status_measurement	Smoking status measurement	Disease				local_kg_curated
+NCBITaxon:29434	Neisseria pharyngis	Microbe			species	local_kg_curated
+LFS:COND:Spontaneous_abortion	Spontaneous abortion	Disease				local_kg_curated
+LFS:COND:Vulvovaginal_candidiasis	Vulvovaginal candidiasis	Disease				local_kg_curated
+NCBITaxon:186265	Cactoideae	Microbe			species	local_kg_curated
+NCBITaxon:29387	Staphylococcus sp.	Microbe			species	local_kg_curated
+NCBITaxon:1909303	Roseateles sp.	Microbe			species	local_kg_curated
+NCBITaxon:161879	Corynebacterium kroppenstedtii	Microbe			species	local_kg_curated
+LFS:COND:Lower_respiratory_tract_disease	Lower respiratory tract disease	Disease				local_kg_curated
+NCBITaxon:29321	Corynebacterium otitidis	Microbe			species	local_kg_curated
+NCBITaxon:45579	Dujonia railenensis	Microbe			species	local_kg_curated
+NCBITaxon:1853546	Debaryomyces sp.	Microbe			species	local_kg_curated
+LFS:COND:Multiple_myeloma	Multiple myeloma	Disease				local_kg_curated
+NCBITaxon:28141	Cronobacter sakazakii	Microbe			species	local_kg_curated
+NCBITaxon:424554	Nicotianoideae	Microbe			species	local_kg_curated
+NCBITaxon:28121	Butyrivibrio sp.	Microbe			species	local_kg_curated
+NCBITaxon:671267	Phocaeicola sartorii	Microbe			species	local_kg_curated
+LFS:COND:Relapsing_remitting_multiple_sclerosis	Relapsing-remitting multiple sclerosis	Disease				local_kg_curated
+NCBITaxon:487174	Barnesiella intestinihominis	Microbe			species	local_kg_curated
+NCBITaxon:341694	Peptostreptococcus stomatis	Microbe			species	local_kg_curated
+NCBITaxon:1898203	Lachnospiraceae bacterium	Microbe			species	local_kg_curated
+NCBITaxon:230143	Scardovia wiggsiae	Microbe			species	local_kg_curated
+NCBITaxon:152682	Sphingomonas melonis	Microbe			species	local_kg_curated
+LFS:COND:Restricted_to_specific_location	Restricted to specific location	Disease				local_kg_curated
+NCBITaxon:78448	Bifidobacterium pullorum	Microbe			species	local_kg_curated
+NCBITaxon:206096	uncultured Dysgonomonas sp.	Microbe			species	local_kg_curated
+NCBITaxon:1676614	Xylanibacter rarus	Microbe			species	local_kg_curated
+NCBITaxon:1501392	Coprobacter secundus	Microbe			species	local_kg_curated
+NCBITaxon:1965550	Faecalibacterium sp. An121	Microbe			species	local_kg_curated
+NCBITaxon:712621	Streptococcus sp. oral taxon 057	Microbe			species	local_kg_curated
+LFS:COND:Sexually_transmitted_disease	Sexually transmitted disease	Disease				local_kg_curated
+LFS:COND:Phenotypic_sex	Phenotypic sex	Disease				local_kg_curated
+NCBITaxon:438033	Ruminococcus gauvreauii	Microbe			species	local_kg_curated
+NCBITaxon:35517	[Eubacterium] brachy	Microbe			species	local_kg_curated
+NCBITaxon:5480	Lodderomyces parapsilosis	Microbe			species	local_kg_curated
+NCBITaxon:76775	Malassezia restricta	Microbe			species	local_kg_curated
+LFS:COND:Esophageal_squamous_cell_carcinoma	Esophageal squamous cell carcinoma	Disease				local_kg_curated
+LFS:COND:Response_to_vaccine	Response to vaccine	Disease				local_kg_curated
+LFS:COND:Vitiligo	Vitiligo	Disease				local_kg_curated
+LFS:COND:Abnormality_of_the_gastrointestinal_tract	Abnormality of the gastrointestinal tract	Disease				local_kg_curated
+NCBITaxon:31971	Amedibacillus dolichus	Microbe			species	local_kg_curated
+LFS:COND:Response_to_stress	Response to stress	Disease				local_kg_curated
+LFS:COND:Renal_transplant_outcome_measurement	Renal transplant outcome measurement	Disease				local_kg_curated
+NCBITaxon:328868	Trapezitinae	Microbe			species	local_kg_curated
+NCBITaxon:82877	Oxytelinae	Microbe			species	local_kg_curated
+LFS:COND:Major_depressive_disorder	Major depressive disorder	Disease				local_kg_curated
+NCBITaxon:658655	Lachnospiraceae bacterium 1_4_56FAA	Microbe			species	local_kg_curated
+NCBITaxon:707003	uncultured Oscillospiraceae bacterium	Microbe			species	local_kg_curated
+LFS:COND:Remission	Remission	Disease				local_kg_curated
+LFS:COND:Fasting	Fasting	Disease				local_kg_curated
+LFS:COND:Colorectal_adenocarcinoma	Colorectal adenocarcinoma	Disease				local_kg_curated
+LFS:COND:Intestinal_polyp	Intestinal polyp	Disease				local_kg_curated
+NCBITaxon:1583331	Porphyromonas pasteri	Microbe			species	local_kg_curated
+NCBITaxon:391	Rhizobium sp.	Microbe			species	local_kg_curated
+LFS:COND:Nephrolithiasis	Nephrolithiasis	Disease				local_kg_curated
+NCBITaxon:35783	Enterococcus sp.	Microbe			species	local_kg_curated
+LFS:COND:Aging	Aging	Disease				local_kg_curated
+NCBITaxon:2902634	Candidatus Nanosynbacter sp. TM7-053	Microbe			species	local_kg_curated
+LFS:COND:Gingival_bleeding	Gingival bleeding	Disease				local_kg_curated
+NCBITaxon:2572088	Candidatus Nanosynbacter featherlites	Microbe			species	local_kg_curated
+LFS:COND:Dentures	Dentures	Disease				local_kg_curated
+LFS:COND:Coffee_consumption	Coffee consumption	Disease				local_kg_curated
+NCBITaxon:288965	Acetivibrio clariflavus	Microbe			species	local_kg_curated
+LFS:COND:Serum_alanine_aminotransferase_measurement	Serum alanine aminotransferase measurement	Disease				local_kg_curated
+NCBITaxon:39492	[Eubacterium] siraeum	Microbe			species	local_kg_curated
+NCBITaxon:245014	butyrate-producing bacterium SS3/4	Microbe			species	local_kg_curated
+LFS:COND:Antipsychotic_drug	Antipsychotic drug	Disease				local_kg_curated
+NCBITaxon:548	Klebsiella aerogenes	Microbe			species	local_kg_curated
+LFS:COND:Genital_neoplasm_female	Genital neoplasm, female	Disease				local_kg_curated
+NCBITaxon:1871336	Criibacterium bergeronii	Microbe			species	local_kg_curated
+NCBITaxon:877420	Lachnospiraceae bacterium NK4A136	Microbe			species	local_kg_curated
+LFS:COND:Kidney_disease	Kidney disease	Disease				local_kg_curated
+NCBITaxon:3062497	Ruminococcus bicirculans (ex Liu et al. 2021)	Microbe			species	local_kg_curated
+LFS:COND:Oral_lichen_planus	Oral lichen planus	Disease				local_kg_curated
+NCBITaxon:2049031	Lachnospira sp.	Microbe			species	local_kg_curated
+LFS:COND:Preeclampsia	Preeclampsia	Disease				local_kg_curated
+LFS:COND:Mood_disorder	Mood disorder	Disease				local_kg_curated
+NCBITaxon:2049024	Coprococcus sp.	Microbe			species	local_kg_curated
+LFS:COND:Obsessive_compulsive_disorder	Obsessive-compulsive disorder	Disease				local_kg_curated
+LFS:COND:Respiratory_system_disease	Respiratory system disease	Disease				local_kg_curated
+LFS:COND:Male_infertility_due_to_sperm_disorder	Male infertility due to sperm disorder	Disease				local_kg_curated
+NCBITaxon:233502	Brevibacterium aureum	Microbe			species	local_kg_curated
+LFS:COND:Reduced_sperm_motility	Reduced sperm motility	Disease				local_kg_curated
+LFS:COND:Reduced_sperm_motility_Sperm_measurement	Reduced sperm motility,Sperm measurement	Disease				local_kg_curated
+NCBITaxon:386414	Hoylesella timonensis	Microbe			species	local_kg_curated
+NCBITaxon:1262740	Bacteroides sp. CAG:462	Microbe			species	local_kg_curated
+NCBITaxon:1262936	Prevotella sp. CAG:873	Microbe			species	local_kg_curated
+NCBITaxon:487175	Parasutterella excrementihominis	Microbe			species	local_kg_curated
+NCBITaxon:1378168	Firmicutes bacterium ASF500	Microbe			species	local_kg_curated
+NCBITaxon:291645	Bacteroides nordii	Microbe			species	local_kg_curated
+NCBITaxon:28037	Streptococcus mitis	Microbe			species	local_kg_curated
+NCBITaxon:1492	Clostridium butyricum	Microbe			species	local_kg_curated
+LFS:COND:Body_mass_index	Body mass index	Disease				local_kg_curated
+LFS:COND:Body_fat_percentage	Body fat percentage	Disease				local_kg_curated
+LFS:COND:Ischemic_stroke	Ischemic stroke	Disease				local_kg_curated
+NCBITaxon:225992	Comamonas kerstersii	Microbe			species	local_kg_curated
+NCBITaxon:3700837	Jacobvirinae	Microbe			species	local_kg_curated
+NCBITaxon:665949	Tannerella sp. 6_1_58FAA_CT1	Microbe			species	local_kg_curated
+LFS:COND:Female_infertility	Female infertility	Disease				local_kg_curated
+NCBITaxon:154288	Turicibacter sanguinis	Microbe			species	local_kg_curated
+NCBITaxon:1872530	Anaerostipes sp.	Microbe			species	local_kg_curated
+NCBITaxon:1773	Mycobacterium tuberculosis	Microbe			species	local_kg_curated
+NCBITaxon:2301481	uncultured Muribaculaceae bacterium	Microbe			species	local_kg_curated
+NCBITaxon:329911	uncultured Peptococcaceae bacterium	Microbe			species	local_kg_curated
+LFS:COND:Response_to_heat	Response to heat	Disease				local_kg_curated
+NCBITaxon:56448	Xanthomonas arboricola	Microbe			species	local_kg_curated
+NCBITaxon:1200751	Ruminococcaceae bacterium P7	Microbe			species	local_kg_curated
+LFS:COND:Ruminative_stress_response	Ruminative stress response	Disease				local_kg_curated
+NCBITaxon:1945890	Bacteroidales bacterium WCE2004	Microbe			species	local_kg_curated
+NCBITaxon:495	Neisseria elongata	Microbe			species	local_kg_curated
+NCBITaxon:931244	Alphapapillomavirus 14	Microbe			species	local_kg_curated
+NCBITaxon:27978	Nosema bombycis	Microbe			species	local_kg_curated
+LFS:COND:Meibomian_cyst	Meibomian cyst	Disease				local_kg_curated
+NCBITaxon:4952	Yarrowia lipolytica	Microbe			species	local_kg_curated
+NCBITaxon:29388	Staphylococcus capitis	Microbe			species	local_kg_curated
+NCBITaxon:1609977	Sphingomonas hengshuiensis	Microbe			species	local_kg_curated
+NCBITaxon:80869	Paracidovorax citrulli	Microbe			species	local_kg_curated
+LFS:COND:Dementia	Dementia	Disease				local_kg_curated
+NCBITaxon:1946507	Faecalibacterium sp. UBA1819	Microbe			species	local_kg_curated
+NCBITaxon:328813	Alistipes onderdonkii	Microbe			species	local_kg_curated
+LFS:COND:Mucositis	Mucositis	Disease				local_kg_curated
+NCBITaxon:248039	Mucispirillum schaedleri	Microbe			species	local_kg_curated
+NCBITaxon:2052	Mobiluncus mulieris	Microbe			species	local_kg_curated
+NCBITaxon:1703	Brevibacterium linens	Microbe			species	local_kg_curated
+NCBITaxon:33036	Anaerococcus tetradius	Microbe			species	local_kg_curated
+NCBITaxon:419005	Prevotella amnii	Microbe			species	local_kg_curated
+NCBITaxon:33031	Peptoniphilus lacrimalis	Microbe			species	local_kg_curated
+NCBITaxon:1955243	Blautia sp.	Microbe			species	local_kg_curated
+NCBITaxon:641107	Clostridium sp. DL-VIII	Microbe			species	local_kg_curated
+NCBITaxon:157687	Leptotrichia wadei	Microbe			species	local_kg_curated
+NCBITaxon:29374	Filifactor villosus	Microbe			species	local_kg_curated
+NCBITaxon:194702	Cardiobacterium valvarum	Microbe			species	local_kg_curated
+NCBITaxon:143361	Filifactor alocis	Microbe			species	local_kg_curated
+NCBITaxon:374811	Rhodothermus clarus	Microbe			species	local_kg_curated
+NCBITaxon:1613	Limosilactobacillus fermentum	Microbe			species	local_kg_curated
+NCBITaxon:1310	Streptococcus sobrinus	Microbe			species	local_kg_curated
+NCBITaxon:2699746	Fretibacterium sp.	Microbe			species	local_kg_curated
+NCBITaxon:1382	Lancefieldella parvula	Microbe			species	local_kg_curated
+NCBITaxon:51123	[Eubacterium] saphenum	Microbe			species	local_kg_curated
+NCBITaxon:217202	Terrahaemophilus aromaticivorans	Microbe			species	local_kg_curated
+LFS:COND:Protein_modification_process	Protein modification process	Disease				local_kg_curated
+NCBITaxon:207598	Homininae	Microbe			species	local_kg_curated
+NCBITaxon:674529	Bacteroides faecis	Microbe			species	local_kg_curated
+LFS:COND:Treatment	Treatment	Disease				local_kg_curated
+NCBITaxon:281920	Porphyromonas uenonis	Microbe			species	local_kg_curated
+LFS:COND:Digestive_System_Carcinoma	Digestive System Carcinoma	Disease				local_kg_curated
+NCBITaxon:1262798	Clostridium sp. CAG:352	Microbe			species	local_kg_curated
+NCBITaxon:297314	uncultured Lachnospiraceae bacterium	Microbe			species	local_kg_curated
+LFS:COND:Esophageal_carcinoma	Esophageal carcinoma	Disease				local_kg_curated
+NCBITaxon:310298	Phocaeicola coprocola	Microbe			species	local_kg_curated
+NCBITaxon:1817405	Abyssicoccus albus	Microbe			species	local_kg_curated
+LFS:COND:Diabetic_neuropathy	Diabetic neuropathy	Disease				local_kg_curated
+NCBITaxon:234908	Sutterella stercoricanis	Microbe			species	local_kg_curated
+LFS:COND:Body_weight	Body weight	Disease				local_kg_curated
+NCBITaxon:331632	uncultured Coriobacteriaceae bacterium	Microbe			species	local_kg_curated
+NCBITaxon:331630	uncultured Erysipelotrichaceae bacterium	Microbe			species	local_kg_curated
+LFS:COND:Contraception	Contraception	Disease				local_kg_curated
+NCBITaxon:508451	Lactobacillus taiwanensis	Microbe			species	local_kg_curated
+NCBITaxon:28130	Prevotella disiens	Microbe			species	local_kg_curated
+LFS:COND:Simian_immunodeficiency_virus_infection	Simian immunodeficiency virus infection	Disease				local_kg_curated
+NCBITaxon:1227267	Leptotrichia sp. oral taxon 879	Microbe			species	local_kg_curated
+NCBITaxon:223184	Kocuria marina	Microbe			species	local_kg_curated
+NCBITaxon:2051	Mobiluncus curtisii	Microbe			species	local_kg_curated
+NCBITaxon:35841	Caldibacillus thermoamylovorans	Microbe			species	local_kg_curated
+NCBITaxon:439703	Segatella maculosa	Microbe			species	local_kg_curated
+NCBITaxon:55507	Schwartzia succinivorans	Microbe			species	local_kg_curated
+LFS:COND:Spontaneous_preterm_birth	Spontaneous preterm birth	Disease				local_kg_curated
+NCBITaxon:1284775	Prevotella sp. S7-1-8	Microbe			species	local_kg_curated
+NCBITaxon:33959	Lactobacillus johnsonii	Microbe			species	local_kg_curated
+NCBITaxon:40324	Stenotrophomonas maltophilia	Microbe			species	local_kg_curated
+NCBITaxon:38815	Trichloromonas acetexigens	Microbe			species	local_kg_curated
+NCBITaxon:1682	Bifidobacterium longum subsp. infantis	Microbe			species	local_kg_curated
+NCBITaxon:380638	Erysipelothrix muris	Microbe			species	local_kg_curated
+NCBITaxon:43948	Tolumonas auensis	Microbe			species	local_kg_curated
+LFS:COND:Transplant_outcome_measurement	Transplant outcome measurement	Disease				local_kg_curated
+LFS:COND:Gestational_weight_gain_measurement	Gestational weight gain measurement	Disease				local_kg_curated
+NCBITaxon:38284	Corynebacterium accolens	Microbe			species	local_kg_curated
+LFS:COND:Vaginal_inflammation	Vaginal inflammation	Disease				local_kg_curated
+NCBITaxon:230139	Megasphaera genomosp. C1	Microbe			species	local_kg_curated
+NCBITaxon:1217282	Parabacteroides faecis	Microbe			species	local_kg_curated
+LFS:COND:Growth_condition	Growth condition	Disease				local_kg_curated
+NCBITaxon:1632	Limosilactobacillus oris	Microbe			species	local_kg_curated
+NCBITaxon:522485	Campylobacter avium	Microbe			species	local_kg_curated
+LFS:COND:Temporomandibular_joint_disorder	Temporomandibular joint disorder	Disease				local_kg_curated
+LFS:COND:Sleep_Disorder	Sleep Disorder	Disease				local_kg_curated
+LFS:COND:Colon_carcinoma	Colon carcinoma	Disease				local_kg_curated
+NCBITaxon:1638786	Ruminococcus sp. UNK.MGS-30	Microbe			species	local_kg_curated
+NCBITaxon:147368	Pooideae	Microbe			species	local_kg_curated
+NCBITaxon:984307	Paraburkholderia kururiensis	Microbe			species	local_kg_curated
+NCBITaxon:424551	Solanoideae	Microbe			species	local_kg_curated
+NCBITaxon:39490	Eubacterium ramulus	Microbe			species	local_kg_curated
+NCBITaxon:1334	Streptococcus dysgalactiae	Microbe			species	local_kg_curated
+NCBITaxon:65764	unidentified rumen bacterium 12-124	Microbe			species	local_kg_curated
+NCBITaxon:1391542	delta proteobacterium WX152	Microbe			species	local_kg_curated
+LFS:COND:Total_cholesterol_measurement	Total cholesterol measurement	Disease				local_kg_curated
+LFS:COND:Triglyceride_measurement	Triglyceride measurement	Disease				local_kg_curated
+LFS:COND:Low_density_lipoprotein_cholesterol_measurement	Low density lipoprotein cholesterol measurement	Disease				local_kg_curated
+LFS:COND:Serum_gamma_glutamyl_transferase_measurement	Serum gamma-glutamyl transferase measurement	Disease				local_kg_curated
+LFS:COND:Insulin_resistance	Insulin resistance	Disease				local_kg_curated
+NCBITaxon:2053608	Ruminiclostridium sp.	Microbe			species	local_kg_curated
+LFS:COND:Non_alcoholic_fatty_liver_disease_Hepatocellular_carcinoma	Non-alcoholic fatty liver disease,Hepatocellular carcinoma	Disease				local_kg_curated
+NCBITaxon:2109691	Lachnospiraceae bacterium GAM79	Microbe			species	local_kg_curated
+NCBITaxon:397865	Barnesiella viscericola	Microbe			species	local_kg_curated
+NCBITaxon:1406512	Candidatus Methanomassiliicoccus intestinalis	Microbe			species	local_kg_curated
+NCBITaxon:1896336	Citrobacter sp.	Microbe			species	local_kg_curated
+NCBITaxon:1869337	Parabacteroides sp.	Microbe			species	local_kg_curated
+NCBITaxon:2292890	Firmicutes bacterium AM10-47	Microbe			species	local_kg_curated
+NCBITaxon:40545	Sutterella wadsworthensis	Microbe			species	local_kg_curated
+LFS:COND:Seasonality_measurement	Seasonality measurement	Disease				local_kg_curated
+NCBITaxon:60686	unidentified rumen bacterium RFP12	Microbe			species	local_kg_curated
+NCBITaxon:1463165	Klebsiella quasipneumoniae	Microbe			species	local_kg_curated
+NCBITaxon:538949	uncultured Alistipes sp.	Microbe			species	local_kg_curated
+LFS:COND:Diabetic_retinopathy	Diabetic retinopathy	Disease				local_kg_curated
+LFS:COND:Dental_fluorosis	Dental fluorosis	Disease				local_kg_curated
+NCBITaxon:1179782	Gemella parahaemolysans	Microbe			species	local_kg_curated
+NCBITaxon:617123	Lachnoanaerobaculum umeaense	Microbe			species	local_kg_curated
+NCBITaxon:1358	Lactococcus lactis	Microbe			species	local_kg_curated
+NCBITaxon:1660	Schaalia odontolytica	Microbe			species	local_kg_curated
+NCBITaxon:28132	Prevotella melaninogenica	Microbe			species	local_kg_curated
+NCBITaxon:2173181	Xylodon flaviporus	Microbe			species	local_kg_curated
+NCBITaxon:258	Sphingobacterium spiritivorum	Microbe			species	local_kg_curated
+NCBITaxon:1194595	Hannaella sp. CMON52	Microbe			species	local_kg_curated
+NCBITaxon:1720	Corynebacterium sp.	Microbe			species	local_kg_curated
+NCBITaxon:550	Enterobacter cloacae	Microbe			species	local_kg_curated
+NCBITaxon:48256	Ruminiclostridium hungatei	Microbe			species	local_kg_curated
+LFS:COND:Metformin	Metformin	Disease				local_kg_curated
+NCBITaxon:29523	Bacteroides sp.	Microbe			species	local_kg_curated
+NCBITaxon:1547	Thomasclavelia ramosa	Microbe			species	local_kg_curated
+NCBITaxon:187326	Megasphaera micronuciformis	Microbe			species	local_kg_curated
+LFS:COND:Protein_intake_measurement	Protein intake measurement	Disease				local_kg_curated
+LFS:COND:Systolic_blood_pressure	Systolic blood pressure	Disease				local_kg_curated
+LFS:COND:Diastolic_blood_pressure	Diastolic blood pressure	Disease				local_kg_curated
+NCBITaxon:338188	Bacteroides finegoldii	Microbe			species	local_kg_curated
+LFS:COND:Electroencephalogram_measurement	Electroencephalogram measurement	Disease				local_kg_curated
+LFS:COND:Anemia	Anemia	Disease				local_kg_curated
+LFS:COND:Increased_intestinal_transit_time	Increased intestinal transit time	Disease				local_kg_curated
+NCBITaxon:658083	Lachnospiraceae bacterium 6_1_63FAA	Microbe			species	local_kg_curated
+NCBITaxon:457392	Bacteroides sp. 3_2_5	Microbe			species	local_kg_curated
+NCBITaxon:1150298	Fusicatenibacter saccharivorans	Microbe			species	local_kg_curated
+NCBITaxon:169388	Fusarium solani	Microbe			species	local_kg_curated
+NCBITaxon:168477	Phialomyces arenicola	Microbe			species	local_kg_curated
+NCBITaxon:474922	Colletotrichum gloeosporioides	Microbe			species	local_kg_curated
+NCBITaxon:64495	Rhizopus arrhizus	Microbe			species	local_kg_curated
+NCBITaxon:1053101	Fusicolla acetilerea	Microbe			species	local_kg_curated
+NCBITaxon:5476	Candida albicans	Microbe			species	local_kg_curated
+NCBITaxon:75750	Aspergillus sydowii	Microbe			species	local_kg_curated
+NCBITaxon:443342	candidate division TM7 genomosp. GTL1	Microbe			species	local_kg_curated
+NCBITaxon:172788	uncultured phototrophic eukaryote	Microbe			species	local_kg_curated
+NCBITaxon:47671	Lautropia mirabilis	Microbe			species	local_kg_curated
+LFS:COND:Osteoarthritis_knee	Osteoarthritis, knee	Disease				local_kg_curated
+LFS:COND:Diffuse_large_B_cell_lymphoma	Diffuse large B-cell lymphoma	Disease				local_kg_curated
+LFS:COND:Glucose_tolerance_test	Glucose tolerance test	Disease				local_kg_curated
+LFS:COND:Follicle_stimulating_hormone_measurement	Follicle stimulating hormone measurement	Disease				local_kg_curated
+LFS:COND:Luteinizing_hormone_measurement	Luteinizing hormone measurement	Disease				local_kg_curated
+LFS:COND:Sex_hormone_binding_globulin_measurement	Sex hormone-binding globulin measurement	Disease				local_kg_curated
+LFS:COND:Sun_exposure_measurement	Sun exposure measurement	Disease				local_kg_curated
+NCBITaxon:328812	Parabacteroides goldsteinii	Microbe			species	local_kg_curated
+LFS:COND:Bronchiectasis	Bronchiectasis	Disease				local_kg_curated
+LFS:COND:Tumor_stage	Tumor stage	Disease				local_kg_curated
+NCBITaxon:1608898	Haemophilus sp. HMSC71H05	Microbe			species	local_kg_curated
+NCBITaxon:901	Desulfovibrio piger	Microbe			species	local_kg_curated
+NCBITaxon:457421	Clostridiales bacterium 1_7_47FAA	Microbe			species	local_kg_curated
+NCBITaxon:116085	Pseudocoprococcus catus	Microbe			species	local_kg_curated
+LFS:COND:Tumor_size	Tumor size	Disease				local_kg_curated
+NCBITaxon:1547597	Sanguibacteroides justesenii	Microbe			species	local_kg_curated
+LFS:COND:Tumor_grading	Tumor grading	Disease				local_kg_curated
+NCBITaxon:358743	Enterocloster citroniae	Microbe			species	local_kg_curated
+NCBITaxon:1034346	Dielma fastidiosa	Microbe			species	local_kg_curated
+NCBITaxon:29361	Faecalimonas nexilis	Microbe			species	local_kg_curated
+NCBITaxon:2946646	Stephanstirmvirinae	Microbe			species	local_kg_curated
+NCBITaxon:358742	Enterocloster aldenensis	Microbe			species	local_kg_curated
+LFS:COND:Response_to_combination_chemotherapy	Response to combination chemotherapy	Disease				local_kg_curated
+NCBITaxon:169435	Anaerotruncus colihominis	Microbe			species	local_kg_curated
+LFS:COND:Adverse_effect	Adverse effect	Disease				local_kg_curated
+NCBITaxon:1262921	Prevotella sp. CAG:1185	Microbe			species	local_kg_curated
+NCBITaxon:1262886	Eubacterium sp. CAG:251	Microbe			species	local_kg_curated
+NCBITaxon:53345	Enterococcus durans	Microbe			species	local_kg_curated
+NCBITaxon:333367	Enterocloster asparagiformis	Microbe			species	local_kg_curated
+NCBITaxon:248315	Veillonella rodentium	Microbe			species	local_kg_curated
+NCBITaxon:1750	Arachnia propionica	Microbe			species	local_kg_curated
+NCBITaxon:82688	Liquorilactobacillus nagelii	Microbe			species	local_kg_curated
+NCBITaxon:292	Burkholderia cepacia	Microbe			species	local_kg_curated
+NCBITaxon:2043424	Metriorrhynchinae	Microbe			species	local_kg_curated
+LFS:COND:Dermatitis	Dermatitis	Disease				local_kg_curated
+NCBITaxon:357276	Phocaeicola dorei	Microbe			species	local_kg_curated
+LFS:COND:Food_allergy_Dermatitis	Food allergy,Dermatitis	Disease				local_kg_curated
+NCBITaxon:55565	Actinomyces graevenitzii	Microbe			species	local_kg_curated
+NCBITaxon:2028282	Lachnoclostridium sp.	Microbe			species	local_kg_curated
+NCBITaxon:1872529	Anaerosporobacter sp.	Microbe			species	local_kg_curated
+NCBITaxon:658082	Lachnospiraceae bacterium 2_1_58FAA	Microbe			species	local_kg_curated
+NCBITaxon:115294	Calobatinae	Microbe			species	local_kg_curated
+NCBITaxon:133076	Aphidinae	Microbe			species	local_kg_curated
+NCBITaxon:622	Shigella dysenteriae	Microbe			species	local_kg_curated
+NCBITaxon:512316	uncultured Oscillospira sp.	Microbe			species	local_kg_curated
+NCBITaxon:28117	Alistipes putredinis	Microbe			species	local_kg_curated
+NCBITaxon:69824	Thomasclavelia cocleata	Microbe			species	local_kg_curated
+LFS:COND:Glaucoma	Glaucoma	Disease				local_kg_curated
+NCBITaxon:1338	Streptococcus intermedius	Microbe			species	local_kg_curated
+NCBITaxon:1708540	Wallemia tropicalis	Microbe			species	local_kg_curated
+NCBITaxon:5482	Candida tropicalis	Microbe			species	local_kg_curated
+LFS:COND:Species_design	Species design	Disease				local_kg_curated
+NCBITaxon:188913	Cetobacterium somerae	Microbe			species	local_kg_curated
+NCBITaxon:43768	Corynebacterium matruchotii	Microbe			species	local_kg_curated
+NCBITaxon:446	Legionella pneumophila	Microbe			species	local_kg_curated
+NCBITaxon:28901	Salmonella enterica	Microbe			species	local_kg_curated
+NCBITaxon:632	Yersinia pestis	Microbe			species	local_kg_curated
+NCBITaxon:197	Campylobacter jejuni	Microbe			species	local_kg_curated
+NCBITaxon:263	Francisella tularensis	Microbe			species	local_kg_curated
+NCBITaxon:630	Yersinia enterocolitica	Microbe			species	local_kg_curated
+NCBITaxon:412384	Priestia aryabhattai	Microbe			species	local_kg_curated
+NCBITaxon:28031	Lysinibacillus fusiformis	Microbe			species	local_kg_curated
+LFS:COND:Metabolic_process	Metabolic process	Disease				local_kg_curated
+NCBITaxon:2897707	Merdimmobilis hominis	Microbe			species	local_kg_curated
+NCBITaxon:1776392	Massiliimicrobium timonense	Microbe			species	local_kg_curated
+NCBITaxon:1383	Lancefieldella rimae	Microbe			species	local_kg_curated
+NCBITaxon:33053	Neisseria perflava	Microbe			species	local_kg_curated
+NCBITaxon:172901	Victivallis vadensis	Microbe			species	local_kg_curated
+NCBITaxon:624	Shigella sonnei	Microbe			species	local_kg_curated
+NCBITaxon:167968	uncultured Desulfovibrio sp.	Microbe			species	local_kg_curated
+NCBITaxon:905011	uncultured Anaerotruncus sp.	Microbe			species	local_kg_curated
+NCBITaxon:59892	Treponema amylovorum	Microbe			species	local_kg_curated
+NCBITaxon:28133	Prevotella nigrescens	Microbe			species	local_kg_curated
+LFS:COND:Gene_expression_protocol	Gene expression protocol	Disease				local_kg_curated
+NCBITaxon:1262942	Roseburia sp. CAG:182	Microbe			species	local_kg_curated
+NCBITaxon:1262988	Firmicutes bacterium CAG:95	Microbe			species	local_kg_curated
+NCBITaxon:29448	Bradyrhizobium elkanii	Microbe			species	local_kg_curated
+NCBITaxon:1872471	Alloprevotella sp.	Microbe			species	local_kg_curated
+NCBITaxon:501571	Butyricicoccus pullicaecorum	Microbe			species	local_kg_curated
+NCBITaxon:1235790	Eubacterium sp. 14-2	Microbe			species	local_kg_curated
+LFS:COND:Chewing_tobacco_behavior	Chewing tobacco behavior	Disease				local_kg_curated
+NCBITaxon:1922	Streptomyces plicatus	Microbe			species	local_kg_curated
+LFS:COND:Metabolic_syndrome	Metabolic syndrome	Disease				local_kg_curated
+LFS:COND:Triple_negative_breast_cancer	Triple-negative breast cancer	Disease				local_kg_curated
+NCBITaxon:327045	Orthoretrovirinae	Microbe			species	local_kg_curated
+NCBITaxon:1938606	Janthinobacterium sp. LM6	Microbe			species	local_kg_curated
+LFS:COND:Sleep_duration	Sleep duration	Disease				local_kg_curated
+NCBITaxon:641148	Neisseria sp. oral taxon 014	Microbe			species	local_kg_curated
+NCBITaxon:1732	Eubacterium oxidoreducens	Microbe			species	local_kg_curated
+LFS:COND:Organism_part_comparison_design	Organism part comparison design	Disease				local_kg_curated
+NCBITaxon:290054	Eubacterium coprostanoligenes	Microbe			species	local_kg_curated
+NCBITaxon:529385	uncultured Bilophila sp.	Microbe			species	local_kg_curated
+NCBITaxon:47846	Brachybacterium conglomeratum	Microbe			species	local_kg_curated
+NCBITaxon:28090	Acinetobacter lwoffii	Microbe			species	local_kg_curated
+LFS:COND:SARS_coronavirus	SARS coronavirus	Disease				local_kg_curated
+NCBITaxon:60133	Prevotella pallens	Microbe			species	local_kg_curated
+NCBITaxon:1984869	Stomatobaculum sp.	Microbe			species	local_kg_curated
+NCBITaxon:713057	TM7 phylum sp. oral taxon 356	Microbe			species	local_kg_curated
+NCBITaxon:29317	Actinomyces sp.	Microbe			species	local_kg_curated
+NCBITaxon:712626	Streptococcus sp. oral taxon 066	Microbe			species	local_kg_curated
+NCBITaxon:39498	[Eubacterium] yurii	Microbe			species	local_kg_curated
+LFS:COND:Gingivitis_Mucositis	Gingivitis,Mucositis	Disease				local_kg_curated
+NCBITaxon:38286	Corynebacterium afermentans	Microbe			species	local_kg_curated
+LFS:COND:Health_related_quality_of_life_measurement	Health-related quality of life measurement	Disease				local_kg_curated
+LFS:COND:Bowel_dysfunction	Bowel dysfunction	Disease				local_kg_curated
+NCBITaxon:135080	Centipeda flueggei	Microbe			species	local_kg_curated
+NCBITaxon:1898104	Bacteroidota bacterium	Microbe			species	local_kg_curated
+LFS:COND:Sensory_perception_of_bitter_taste	Sensory perception of bitter taste	Disease				local_kg_curated
+NCBITaxon:104608	Leptotrichia sp.	Microbe			species	local_kg_curated
+NCBITaxon:1501332	Oribacterium asaccharolyticum	Microbe			species	local_kg_curated
+NCBITaxon:46125	Abiotrophia defectiva	Microbe			species	local_kg_curated
+LFS:COND:Respiratory_Syncytial_Virus_Infection	Respiratory Syncytial Virus Infection	Disease				local_kg_curated
+NCBITaxon:1173061	Geotrichum candidum	Microbe			species	local_kg_curated
+NCBITaxon:88167	Poterioochromonas malhamensis	Microbe			species	local_kg_curated
+LFS:COND:Sample_treatment_protocol	Sample treatment protocol	Disease				local_kg_curated
+NCBITaxon:1293577	candidate division SR1 bacterium MGEHA	Microbe			species	local_kg_curated
+NCBITaxon:284549	Gymnostachydoideae	Microbe			species	local_kg_curated
+NCBITaxon:433515	Luciolinae	Microbe			species	local_kg_curated
+NCBITaxon:204925	Streptomyces nanchangensis	Microbe			species	local_kg_curated
+NCBITaxon:168695	Salinispora tropica	Microbe			species	local_kg_curated
+NCBITaxon:36873	Paraburkholderia xenovorans	Microbe			species	local_kg_curated
+NCBITaxon:480	Moraxella catarrhalis	Microbe			species	local_kg_curated
+NCBITaxon:29484	Yersinia frederiksenii	Microbe			species	local_kg_curated
+NCBITaxon:29382	Staphylococcus cohnii	Microbe			species	local_kg_curated
+NCBITaxon:262209	Janibacter melonis	Microbe			species	local_kg_curated
+NCBITaxon:1017	Capnocytophaga gingivalis	Microbe			species	local_kg_curated
+NCBITaxon:5478	Nakaseomyces glabratus	Microbe			species	local_kg_curated
+NCBITaxon:584	Proteus mirabilis	Microbe			species	local_kg_curated
+LFS:COND:Post_traumatic_stress_disorder	Post-traumatic stress disorder	Disease				local_kg_curated
+LFS:COND:Clinical_treatment	Clinical treatment	Disease				local_kg_curated
+LFS:COND:Melanoma	Melanoma	Disease				local_kg_curated
+NCBITaxon:1521	Ruminiclostridium cellulolyticum	Microbe			species	local_kg_curated
+NCBITaxon:36832	Lacrimispora aerotolerans	Microbe			species	local_kg_curated
+LFS:COND:Fibrosarcoma	Fibrosarcoma	Disease				local_kg_curated
+NCBITaxon:1417852	Flintibacter butyricus	Microbe			species	local_kg_curated
+NCBITaxon:1841857	Culturomica massiliensis	Microbe			species	local_kg_curated
+NCBITaxon:394340	Adlercreutzia equolifaciens subsp. celatus	Microbe			species	local_kg_curated
+NCBITaxon:626929	Bacteroides clarus	Microbe			species	local_kg_curated
+LFS:COND:Renal_cell_carcinoma	Renal cell carcinoma	Disease				local_kg_curated
+NCBITaxon:1605	Ligilactobacillus animalis	Microbe			species	local_kg_curated
+LFS:COND:Response_to_vancomycin	Response to vancomycin	Disease				local_kg_curated
+LFS:COND:Birth_measurement	Birth measurement	Disease				local_kg_curated
+NCBITaxon:1917865	Sediminibacterium sp.	Microbe			species	local_kg_curated
+NCBITaxon:1971214	Peptoniphilus sp.	Microbe			species	local_kg_curated
+NCBITaxon:796942	Stomatobaculum longum	Microbe			species	local_kg_curated
+NCBITaxon:35519	Mogibacterium timidum	Microbe			species	local_kg_curated
+NCBITaxon:726	Haemophilus haemolyticus	Microbe			species	local_kg_curated
+NCBITaxon:2047	Rothia dentocariosa	Microbe			species	local_kg_curated
+NCBITaxon:28449	Neisseria subflava	Microbe			species	local_kg_curated
+NCBITaxon:985266	Moraxella sp. S2	Microbe			species	local_kg_curated
+LFS:COND:Lymph_node_metastatic_carcinoma	Lymph node metastatic carcinoma	Disease				local_kg_curated
+LFS:COND:Gonorrhea	Gonorrhea	Disease				local_kg_curated
+LFS:COND:Diabetic_nephropathy	Diabetic nephropathy	Disease				local_kg_curated
+NCBITaxon:1221381	uncultured Kopriimonas sp.	Microbe			species	local_kg_curated
+NCBITaxon:2053618	Subdoligranulum sp.	Microbe			species	local_kg_curated
+NCBITaxon:1211	uncultured cyanobacterium	Microbe			species	local_kg_curated
+LFS:COND:Creatinine	Creatinine	Disease				local_kg_curated
+NCBITaxon:349920	uncultured Coriobacteriales bacterium	Microbe			species	local_kg_curated
+NCBITaxon:2735681	uncultured Frankiales bacterium	Microbe			species	local_kg_curated
+NCBITaxon:271151	uncultured Rhizobiaceae bacterium	Microbe			species	local_kg_curated
+NCBITaxon:194926	uncultured Desulfovibrionaceae bacterium	Microbe			species	local_kg_curated
+NCBITaxon:666559	uncultured Erysipelotrichia bacterium	Microbe			species	local_kg_curated
+NCBITaxon:2485925	Oscillospiraceae bacterium	Microbe			species	local_kg_curated
+LFS:COND:Response_to_exercise	Response to exercise	Disease				local_kg_curated
+LFS:COND:Energy_expenditure	Energy expenditure	Disease				local_kg_curated
+NCBITaxon:1924094	Anaeromassilibacillus sp.	Microbe			species	local_kg_curated
+LFS:COND:Energy_intake	Energy intake	Disease				local_kg_curated
+LFS:COND:Carbohydrate_intake_measurement	Carbohydrate intake measurement	Disease				local_kg_curated
+NCBITaxon:2048138	Agathobaculum sp.	Microbe			species	local_kg_curated
+LFS:COND:Trans_fatty_acid_measurement	Trans fatty acid measurement	Disease				local_kg_curated
+NCBITaxon:876	Desulfovibrio desulfuricans	Microbe			species	local_kg_curated
+LFS:COND:Cholesterol	Cholesterol	Disease				local_kg_curated
+LFS:COND:Hemoglobin_A1_measurement	Hemoglobin A1 measurement	Disease				local_kg_curated
+LFS:COND:Beverage_consumption_measurement	Beverage consumption measurement	Disease				local_kg_curated
+NCBITaxon:1625	Fructilactobacillus sanfranciscensis	Microbe			species	local_kg_curated
+LFS:COND:Response_to_immune_checkpoint_inhibitor	Response to immune checkpoint inhibitor	Disease				local_kg_curated
+NCBITaxon:1263000	Firmicutes bacterium CAG:110	Microbe			species	local_kg_curated
+NCBITaxon:1299998	Tractidigestivibacter scatoligenes	Microbe			species	local_kg_curated
+NCBITaxon:1653434	Sellimonas intestinalis	Microbe			species	local_kg_curated
+NCBITaxon:1262954	Ruminococcus sp. CAG:330	Microbe			species	local_kg_curated
+NCBITaxon:2292283	Bacteroides sp. OM05-12	Microbe			species	local_kg_curated
+NCBITaxon:437898	Sutterella parvirubra	Microbe			species	local_kg_curated
+LFS:COND:Antibody_measurement	Antibody measurement	Disease				local_kg_curated
+NCBITaxon:53443	Blautia hydrogenotrophica	Microbe			species	local_kg_curated
+LFS:COND:Mycobacterium_tuberculosis_Lung_cancer	Mycobacterium tuberculosis,Lung cancer	Disease				local_kg_curated
+NCBITaxon:1283	Staphylococcus haemolyticus	Microbe			species	local_kg_curated
+LFS:COND:Mycobacterium_tuberculosis	Mycobacterium tuberculosis	Disease				local_kg_curated
+NCBITaxon:305	Ralstonia solanacearum	Microbe			species	local_kg_curated
+NCBITaxon:2099584	Streptomyces sp. ICC4	Microbe			species	local_kg_curated
+NCBITaxon:1151637	Clostridiales bacterium canine oral taxon 260	Microbe			species	local_kg_curated
+NCBITaxon:1230734	Clostridiales bacterium S5-A14a	Microbe			species	local_kg_curated
+LFS:COND:Cutaneous_melanoma	Cutaneous melanoma	Disease				local_kg_curated
+LFS:COND:Breed	Breed	Disease				local_kg_curated
+LFS:COND:Vaginitis	Vaginitis	Disease				local_kg_curated
+LFS:COND:Iron_biomarker_measurement	Iron biomarker measurement	Disease				local_kg_curated
+LFS:COND:Meningioma	Meningioma	Disease				local_kg_curated
+NCBITaxon:1115758	Romboutsia ilealis	Microbe			species	local_kg_curated
+NCBITaxon:1622	Ligilactobacillus murinus	Microbe			species	local_kg_curated
+NCBITaxon:28026	Bifidobacterium pseudocatenulatum	Microbe			species	local_kg_curated
+NCBITaxon:151781	Lactobacillus intestinalis	Microbe			species	local_kg_curated
+LFS:COND:Interleukin_6_measurement	Interleukin-6 measurement	Disease				local_kg_curated
+LFS:COND:Tumor_necrosis_factor_alpha_measurement	Tumor necrosis factor-alpha measurement	Disease				local_kg_curated
+LFS:COND:Cutaneous_T_cell_lymphoma	Cutaneous T-cell lymphoma	Disease				local_kg_curated
+NCBITaxon:1307	Streptococcus suis	Microbe			species	local_kg_curated
+NCBITaxon:158787	Bifidobacterium scardovii	Microbe			species	local_kg_curated
+NCBITaxon:114708	uncultured Variovorax sp.	Microbe			species	local_kg_curated
+NCBITaxon:66219	Lachnoclostridium phytofermentans	Microbe			species	local_kg_curated
+LFS:COND:Lung_transplantation	Lung transplantation	Disease				local_kg_curated
+LFS:COND:Light	Light	Disease				local_kg_curated
+NCBITaxon:163601	TM7 phylum sp. oral clone CW040	Microbe			species	local_kg_curated
+NCBITaxon:2081702	Actinomyces sp. oral taxon 897	Microbe			species	local_kg_curated
+NCBITaxon:223967	Methylorubrum populi	Microbe			species	local_kg_curated
+NCBITaxon:638619	Bifidobacterium actinocoloniiforme	Microbe			species	local_kg_curated
+NCBITaxon:197614	Streptococcus pasteurianus	Microbe			species	local_kg_curated
+NCBITaxon:191610	Corynebacterium atypicum	Microbe			species	local_kg_curated
+NCBITaxon:2026240	Klebsiella quasivariicola	Microbe			species	local_kg_curated
+LFS:COND:COVID_19_symptoms_measurement	COVID-19 symptoms measurement	Disease				local_kg_curated
+NCBITaxon:52773	Schaalia meyeri	Microbe			species	local_kg_curated
+NCBITaxon:85698	Achromobacter xylosoxidans	Microbe			species	local_kg_curated
+NCBITaxon:40542	Leptotrichia buccalis	Microbe			species	local_kg_curated
+NCBITaxon:1396	Bacillus cereus	Microbe			species	local_kg_curated
+NCBITaxon:1679	Bifidobacterium longum subsp. longum	Microbe			species	local_kg_curated
+NCBITaxon:1981025	Sutterella sp.	Microbe			species	local_kg_curated
+NCBITaxon:626932	Alistipes indistinctus	Microbe			species	local_kg_curated
+NCBITaxon:2774292	Lachnobacterium sp.	Microbe			species	local_kg_curated
+NCBITaxon:2023260	Megasphaera sp.	Microbe			species	local_kg_curated
+NCBITaxon:38289	Corynebacterium jeikeium	Microbe			species	local_kg_curated
+NCBITaxon:10357	Betaherpesvirinae	Microbe			species	local_kg_curated
+NCBITaxon:155892	Caulobacter vibrioides	Microbe			species	local_kg_curated
+NCBITaxon:41274	Tissierella sp.	Microbe			species	local_kg_curated
+NCBITaxon:39497	Eubacterium xylanophilum	Microbe			species	local_kg_curated
+NCBITaxon:1486937	Prevotella sp. 1-8	Microbe			species	local_kg_curated
+LFS:COND:Compound_based_treatment	Compound based treatment	Disease				local_kg_curated
+NCBITaxon:397290	Lachnospiraceae bacterium A2	Microbe			species	local_kg_curated
+NCBITaxon:626934	Slackia piriformis	Microbe			species	local_kg_curated
+LFS:COND:Metastatic_colorectal_cancer	Metastatic colorectal cancer	Disease				local_kg_curated
+LFS:COND:Periodontitis_Crohn_s_disease	Periodontitis,Crohn's disease	Disease				local_kg_curated
+NCBITaxon:1151733	TM7 phylum sp. canine oral taxon 237	Microbe			species	local_kg_curated
+LFS:COND:Periodontal_Pocket	Periodontal Pocket	Disease				local_kg_curated
+NCBITaxon:1365	Pseudolactococcus plantarum	Microbe			species	local_kg_curated
+LFS:COND:Distal_colitis_Pancolitis	Distal colitis,Pancolitis	Disease				local_kg_curated
+NCBITaxon:342942	Mediterraneibacter glycyrrhizinilyticus	Microbe			species	local_kg_curated
+LFS:COND:Ileocolitis	Ileocolitis	Disease				local_kg_curated
+NCBITaxon:1583	Weissella confusa	Microbe			species	local_kg_curated
+NCBITaxon:2053632	Tyzzerella sp.	Microbe			species	local_kg_curated
+NCBITaxon:1965233	Odoribacter sp.	Microbe			species	local_kg_curated
+NCBITaxon:76122	Alloprevotella tannerae	Microbe			species	local_kg_curated
+NCBITaxon:205	Campylobacter sp.	Microbe			species	local_kg_curated
+NCBITaxon:2049034	Mitsuokella sp.	Microbe			species	local_kg_curated
+NCBITaxon:159272	uncultured Prevotella sp.	Microbe			species	local_kg_curated
+NCBITaxon:630129	Bifidobacterium catenulatum subsp. kashiwanohense	Microbe			species	local_kg_curated
+LFS:COND:Waist_hip_ratio	Waist-hip ratio	Disease				local_kg_curated
+NCBITaxon:384638	[Bacteroides] pectinophilus	Microbe			species	local_kg_curated
+NCBITaxon:1262979	Tannerella sp. CAG:51	Microbe			species	local_kg_curated
+LFS:COND:Prostate_carcinoma	Prostate carcinoma	Disease				local_kg_curated
+NCBITaxon:164546	Cupriavidus taiwanensis	Microbe			species	local_kg_curated
+NCBITaxon:54007	Anaerococcus octavius	Microbe			species	local_kg_curated
+NCBITaxon:545	Citrobacter koseri	Microbe			species	local_kg_curated
+NCBITaxon:454154	Paraprevotella clara	Microbe			species	local_kg_curated
+LFS:COND:Increased_inflammatory_response	Increased inflammatory response	Disease				local_kg_curated
+NCBITaxon:861	Fusobacterium ulcerans	Microbe			species	local_kg_curated
+NCBITaxon:202789	Actinobaculum massiliense	Microbe			species	local_kg_curated
+NCBITaxon:33012	Propionimicrobium lymphophilum	Microbe			species	local_kg_curated
+NCBITaxon:59505	Actinotignum schaalii	Microbe			species	local_kg_curated
+NCBITaxon:103892	Veillonella ratti	Microbe			species	local_kg_curated
+LFS:COND:Blepharitis	Blepharitis	Disease				local_kg_curated
+NCBITaxon:2842412	Enquatrovirinae	Microbe			species	local_kg_curated
+NCBITaxon:2126319	Variovorax sp. PMC12	Microbe			species	local_kg_curated
+NCBITaxon:1827285	Acinetobacter sp. MYb10	Microbe			species	local_kg_curated
+NCBITaxon:1750560	Parabacteroides massiliensis	Microbe			species	local_kg_curated
+NCBITaxon:1193534	uncultured Flavonifractor sp.	Microbe			species	local_kg_curated
+LFS:COND:Glucose	Glucose	Disease				local_kg_curated
+NCBITaxon:261299	Intestinibacter bartlettii	Microbe			species	local_kg_curated
+LFS:COND:Insulin	Insulin	Disease				local_kg_curated
+LFS:COND:Interleukin_8_measurement	Interleukin 8 measurement	Disease				local_kg_curated
+NCBITaxon:226910	Pseudomonas batumici	Microbe			species	local_kg_curated
+LFS:COND:Small_for_gestational_age	Small for gestational age	Disease				local_kg_curated
+NCBITaxon:329	Ralstonia pickettii	Microbe			species	local_kg_curated
+NCBITaxon:1862668	Ileibacterium valens	Microbe			species	local_kg_curated
+LFS:COND:Sickle_cell_anemia	Sickle cell anemia	Disease				local_kg_curated
+NCBITaxon:1816689	Sutterella massiliensis	Microbe			species	local_kg_curated
+NCBITaxon:157673	[Mannheimia] succiniciproducens	Microbe			species	local_kg_curated
+LFS:COND:Transport	Transport	Disease				local_kg_curated
+NCBITaxon:63612	Sodalis glossinidius	Microbe			species	local_kg_curated
+NCBITaxon:245188	Yoonia vestfoldensis	Microbe			species	local_kg_curated
+NCBITaxon:33903	Streptomyces avermitilis	Microbe			species	local_kg_curated
+NCBITaxon:408	Methylorubrum extorquens	Microbe			species	local_kg_curated
+NCBITaxon:34085	Riemerella anatipestifer	Microbe			species	local_kg_curated
+NCBITaxon:43305	Butyrivibrio proteoclasticus	Microbe			species	local_kg_curated
+NCBITaxon:1376	Aerococcus urinae	Microbe			species	local_kg_curated
+LFS:COND:Hormone_replacement_therapy	Hormone replacement therapy	Disease				local_kg_curated
+NCBITaxon:1313	Streptococcus pneumoniae	Microbe			species	local_kg_curated
+LFS:COND:Down_syndrome	Down syndrome	Disease				local_kg_curated
+NCBITaxon:490	Neisseria sicca	Microbe			species	local_kg_curated
+NCBITaxon:739	Aggregatibacter segnis	Microbe			species	local_kg_curated
+NCBITaxon:1870991	Massilioclostridium coli	Microbe			species	local_kg_curated
+LFS:COND:Glucose_metabolism_measurement	Glucose metabolism measurement	Disease				local_kg_curated
+NCBITaxon:487173	Dialister succinatiphilus	Microbe			species	local_kg_curated
+NCBITaxon:46867	Clostridium chauvoei	Microbe			species	local_kg_curated
+NCBITaxon:47246	[Clostridium] viride	Microbe			species	local_kg_curated
+NCBITaxon:29364	[Clostridium] polysaccharolyticum	Microbe			species	local_kg_curated
+NCBITaxon:138595	Olsenella profusa	Microbe			species	local_kg_curated
+NCBITaxon:361365	Tindallia texcoconensis	Microbe			species	local_kg_curated
+NCBITaxon:342666	Gracilibacter thermotolerans	Microbe			species	local_kg_curated
+NCBITaxon:180332	Robinsoniella peoriensis	Microbe			species	local_kg_curated
+NCBITaxon:69825	Lacrimispora indolis	Microbe			species	local_kg_curated
+NCBITaxon:259063	Anaerocolumna jejuensis	Microbe			species	local_kg_curated
+LFS:COND:Vitamin_supplement_exposure_measurement	Vitamin supplement exposure measurement	Disease				local_kg_curated
+NCBITaxon:1352374	Ruminococcus sp. YE78	Microbe			species	local_kg_curated
+NCBITaxon:1686378	Citrobacter sp. MGH103	Microbe			species	local_kg_curated
+LFS:COND:Vitamin_D	Vitamin D	Disease				local_kg_curated
+NCBITaxon:762210	Bifidobacterium saguini	Microbe			species	local_kg_curated
+NCBITaxon:267212	Neisseria bacilliformis	Microbe			species	local_kg_curated
+NCBITaxon:1898956	Ottowia sp.	Microbe			species	local_kg_curated
+NCBITaxon:286138	uncultured Dorea sp.	Microbe			species	local_kg_curated
+NCBITaxon:850	Fusobacterium mortiferum	Microbe			species	local_kg_curated
+NCBITaxon:237778	uncultured Neisseria sp.	Microbe			species	local_kg_curated
+NCBITaxon:163588	Actinomyces sp. oral clone DR002	Microbe			species	local_kg_curated
+NCBITaxon:1737424	Blautia massiliensis (ex Durand et al. 2017)	Microbe			species	local_kg_curated
+LFS:COND:Menopausal_or_post_menopausal_disease	Menopausal or post-menopausal disease	Disease				local_kg_curated
+LFS:COND:Abnormality_of_the_respiratory_system	Abnormality of the respiratory system	Disease				local_kg_curated
+NCBITaxon:2093824	Nanosynbacter lyticus	Microbe			species	local_kg_curated
+LFS:COND:Meningeal_tuberculosis	Meningeal tuberculosis	Disease				local_kg_curated
+LFS:COND:Memory_impairment	Memory impairment	Disease				local_kg_curated
+LFS:COND:Myostatin_related_muscle_hypertrophy	Myostatin-related muscle hypertrophy	Disease				local_kg_curated
+LFS:COND:Hippocampal_volume	Hippocampal volume	Disease				local_kg_curated
+LFS:COND:Interferon_gamma	Interferon gamma	Disease				local_kg_curated
+LFS:COND:Interleukin_2_measurement	Interleukin 2 measurement	Disease				local_kg_curated
+LFS:COND:Language_measurement	Language measurement	Disease				local_kg_curated
+LFS:COND:Infant_head_circumference	Infant head circumference	Disease				local_kg_curated
+NCBITaxon:71999	Kocuria palustris	Microbe			species	local_kg_curated
+LFS:COND:Curcumin	Curcumin	Disease				local_kg_curated
+NCBITaxon:83427	uncultured Streptococcus sp.	Microbe			species	local_kg_curated
+NCBITaxon:165185	uncultured Eubacterium sp.	Microbe			species	local_kg_curated
+NCBITaxon:1757166	uncultured Ruminiclostridium sp.	Microbe			species	local_kg_curated
+NCBITaxon:45242	Capnocytophaga granulosa	Microbe			species	local_kg_curated
+NCBITaxon:209285	Thermochaetoides thermophila	Microbe			species	local_kg_curated
+NCBITaxon:128442	Talaromyces pinophilus	Microbe			species	local_kg_curated
+NCBITaxon:879612	Megasphaera indica	Microbe			species	local_kg_curated
+LFS:COND:Lewy_body_dementia	Lewy body dementia	Disease				local_kg_curated
+LFS:COND:Respiratory_tract_infectious_disease	Respiratory tract infectious disease	Disease				local_kg_curated
+NCBITaxon:1156431	Streptococcus ilei	Microbe			species	local_kg_curated
+NCBITaxon:485	Neisseria gonorrhoeae	Microbe			species	local_kg_curated
+LFS:COND:Immune_system_disease	Immune system disease	Disease				local_kg_curated
+NCBITaxon:482957	Burkholderia lata	Microbe			species	local_kg_curated
+LFS:COND:Specimen	Specimen	Disease				local_kg_curated
+NCBITaxon:152480	Burkholderia ambifaria	Microbe			species	local_kg_curated
+NCBITaxon:598660	Corynebacterium pyruviciproducens	Microbe			species	local_kg_curated
+NCBITaxon:1723384	Fenollaria timonensis	Microbe			species	local_kg_curated
+LFS:COND:Hypercholesterolemia	Hypercholesterolemia	Disease				local_kg_curated
+NCBITaxon:2320082	Anaerotruncus sp. 1XD22-93	Microbe			species	local_kg_curated
+NCBITaxon:158847	Megamonas hypermegale	Microbe			species	local_kg_curated
+NCBITaxon:491921	Megamonas rupellensis	Microbe			species	local_kg_curated
+LFS:COND:Non_alcoholic_fatty_liver_disease_Obesity	Non-alcoholic fatty liver disease,Obesity	Disease				local_kg_curated
+LFS:COND:Appendicitis	Appendicitis	Disease				local_kg_curated
+NCBITaxon:654	Aeromonas veronii	Microbe			species	local_kg_curated
+NCBITaxon:1042156	Clostridium sp. SY8519	Microbe			species	local_kg_curated
+NCBITaxon:1715860	Staphylococcus sp. AntiMn-1	Microbe			species	local_kg_curated
+LFS:COND:Streptococcal_infection	Streptococcal infection	Disease				local_kg_curated
+NCBITaxon:1852373	Murdochiella vaginalis	Microbe			species	local_kg_curated
+NCBITaxon:33032	Anaerococcus lactolyticus	Microbe			species	local_kg_curated
+LFS:COND:Postpartum	Postpartum	Disease				local_kg_curated
+NCBITaxon:328814	Alistipes shahii	Microbe			species	local_kg_curated
+NCBITaxon:246787	Bacteroides cellulosilyticus	Microbe			species	local_kg_curated
+NCBITaxon:1232426	[Collinsella] massiliensis	Microbe			species	local_kg_curated
+LFS:COND:Colorectal_neoplasm	Colorectal neoplasm	Disease				local_kg_curated
+NCBITaxon:102684	Streptococcus infantarius	Microbe			species	local_kg_curated
+NCBITaxon:1599	Latilactobacillus sakei	Microbe			species	local_kg_curated
+NCBITaxon:745368	Gemmiger formicilis	Microbe			species	local_kg_curated
+NCBITaxon:566	Pseudescherichia vulneris	Microbe			species	local_kg_curated
+LFS:COND:Fasting_blood_insulin_measurement	Fasting blood insulin measurement	Disease				local_kg_curated
+LFS:COND:Triglyceride	Triglyceride	Disease				local_kg_curated
+NCBITaxon:907	Megasphaera elsdenii	Microbe			species	local_kg_curated
+NCBITaxon:457411	Ruminococcus sp. 5_1_39AFAA	Microbe			species	local_kg_curated
+LFS:COND:Psoriasis_vulgaris	Psoriasis vulgaris	Disease				local_kg_curated
+NCBITaxon:2049036	Paraprevotella sp.	Microbe			species	local_kg_curated
+NCBITaxon:89153	[Clostridium] hylemonae	Microbe			species	local_kg_curated
+NCBITaxon:376804	Phocaeicola barnesiae	Microbe			species	local_kg_curated
+NCBITaxon:1056807	Morococcus cerebrosus	Microbe			species	local_kg_curated
+NCBITaxon:596085	Prevotella aurantiaca	Microbe			species	local_kg_curated
+NCBITaxon:706435	Capnocytophaga sp. oral taxon 329	Microbe			species	local_kg_curated
+LFS:COND:Chronic_inflammatory_demyelinating_polyradiculoneuropathy	Chronic inflammatory demyelinating polyradiculoneuropathy	Disease				local_kg_curated
+NCBITaxon:415217	Microbacterium lacus	Microbe			species	local_kg_curated
+NCBITaxon:308994	Dialister propionicifaciens	Microbe			species	local_kg_curated
+NCBITaxon:38304	Corynebacterium tuberculostearicum	Microbe			species	local_kg_curated
+NCBITaxon:76731	Roseateles depolymerans	Microbe			species	local_kg_curated
+NCBITaxon:344338	uncultured Bacillota bacterium	Microbe			species	local_kg_curated
+NCBITaxon:434126	Rarimicrobium hominis	Microbe			species	local_kg_curated
+LFS:COND:Chronic_inflammatory_demyelinating_polyneuropathy	Chronic inflammatory demyelinating polyneuropathy	Disease				local_kg_curated
+LFS:COND:Psychiatric_disorder	Psychiatric disorder	Disease				local_kg_curated
+LFS:COND:Childhood_trauma_measurement	Childhood trauma measurement	Disease				local_kg_curated
+NCBITaxon:2773922	Fusicatenibacter sp.	Microbe			species	local_kg_curated
+LFS:COND:Cytokine	Cytokine	Disease				local_kg_curated
+LFS:COND:HbA1c_measurement	HbA1c measurement	Disease				local_kg_curated
+NCBITaxon:1550024	Ruthenibacterium lactatiformans	Microbe			species	local_kg_curated
+LFS:COND:Adenomatous_colon_polyp	Adenomatous colon polyp	Disease				local_kg_curated
+LFS:COND:Obesity_due_to_congenital_leptin_deficiency	Obesity due to congenital leptin deficiency	Disease				local_kg_curated
+LFS:COND:Peutz_Jeghers_Polyp	Peutz-Jeghers Polyp	Disease				local_kg_curated
+NCBITaxon:1263098	uncultured Parasutterella sp.	Microbe			species	local_kg_curated
+NCBITaxon:1470347	Alistipes ihumii	Microbe			species	local_kg_curated
+NCBITaxon:158836	Enterobacter hormaechei	Microbe			species	local_kg_curated
+LFS:COND:Neutropenia	Neutropenia	Disease				local_kg_curated
+NCBITaxon:33945	Enterococcus avium	Microbe			species	local_kg_curated
+NCBITaxon:1776391	Romboutsia timonensis	Microbe			species	local_kg_curated
+NCBITaxon:158897	Pseudarthrobacter scleromae	Microbe			species	local_kg_curated
+NCBITaxon:1428	Bacillus thuringiensis	Microbe			species	local_kg_curated
+NCBITaxon:356829	Bifidobacterium tsurumiense	Microbe			species	local_kg_curated
+NCBITaxon:1262992	Firmicutes bacterium CAG:83	Microbe			species	local_kg_curated
+LFS:COND:Gastroenteritis	Gastroenteritis	Disease				local_kg_curated
+NCBITaxon:2946630	Ensavirinae	Microbe			species	local_kg_curated
+NCBITaxon:1930013	Christensenellaceae bacterium Phil7	Microbe			species	local_kg_curated
+LFS:COND:Obstructive_sleep_apnea	Obstructive sleep apnea	Disease				local_kg_curated
+NCBITaxon:149016	Streptococcus urinalis	Microbe			species	local_kg_curated
+LFS:COND:Social_anxiety_disorder	Social anxiety disorder	Disease				local_kg_curated
+LFS:COND:Colitis	Colitis	Disease				local_kg_curated
+LFS:COND:Exposure	Exposure	Disease				local_kg_curated
+NCBITaxon:1944660	Parvimonas sp.	Microbe			species	local_kg_curated
+NCBITaxon:2828652	Catellicoccus sp.	Microbe			species	local_kg_curated
+NCBITaxon:2071632	Cetobacterium sp.	Microbe			species	local_kg_curated
+NCBITaxon:1969482	Flaviflexus sp.	Microbe			species	local_kg_curated
+NCBITaxon:2745511	Pseudomonas tensinigenes	Microbe			species	local_kg_curated
+NCBITaxon:406548	Aquisphaera giovannonii	Microbe			species	local_kg_curated
+LFS:COND:Female_reproductive_system_disease	Female reproductive system disease	Disease				local_kg_curated
+NCBITaxon:2583452	Amedibacterium intestinale	Microbe			species	local_kg_curated
+LFS:COND:Natriuretic_peptides_B_measurement	Natriuretic peptides B measurement	Disease				local_kg_curated
+LFS:COND:Vitamin_D_measurement	Vitamin D measurement	Disease				local_kg_curated
+NCBITaxon:256850	uncultured Paenibacillaceae bacterium	Microbe			species	local_kg_curated
+NCBITaxon:1780377	Coriobacteriaceae bacterium CHKCI002	Microbe			species	local_kg_curated
+NCBITaxon:77133	uncultured bacterium	Microbe			species	local_kg_curated
+LFS:COND:Neonatal_death	Neonatal death	Disease				local_kg_curated
+NCBITaxon:33025	Phascolarctobacterium faecium	Microbe			species	local_kg_curated
+LFS:COND:Fungal_infectious_disease	Fungal infectious disease	Disease				local_kg_curated
+LFS:COND:Sample_collection_protocol	Sample collection protocol	Disease				local_kg_curated
+NCBITaxon:1221567	Ralstonia sp. 1-6	Microbe			species	local_kg_curated
+NCBITaxon:42661	Udeniomyces pyricola	Microbe			species	local_kg_curated
+NCBITaxon:2016221	Cladosporium kenpeggii	Microbe			species	local_kg_curated
+NCBITaxon:2489165	Hydnobolites roseus	Microbe			species	local_kg_curated
+NCBITaxon:181171	Vanrija longa	Microbe			species	local_kg_curated
+NCBITaxon:1220210	Aspergillus tennesseensis	Microbe			species	local_kg_curated
+NCBITaxon:1664392	Milospium graphideorum	Microbe			species	local_kg_curated
+NCBITaxon:1019	Capnocytophaga sputigena	Microbe			species	local_kg_curated
+NCBITaxon:671218	Alloprevotella rava	Microbe			species	local_kg_curated
+NCBITaxon:840	Hoylesella loescheii	Microbe			species	local_kg_curated
+LFS:COND:Heart_failure	Heart failure	Disease				local_kg_curated
+NCBITaxon:91626	Mucor ambiguus	Microbe			species	local_kg_curated
+NCBITaxon:796027	Sugiyamaella lignohabitans	Microbe			species	local_kg_curated
+NCBITaxon:1803374	Rhizophagus sp. MUCL 43196	Microbe			species	local_kg_curated
+NCBITaxon:4896	Schizosaccharomyces pombe	Microbe			species	local_kg_curated
+NCBITaxon:1230097	Cytospora leucostoma	Microbe			species	local_kg_curated
+NCBITaxon:718367	Peniophora sp. CBMAI 1063	Microbe			species	local_kg_curated
+LFS:COND:C_reactive_protein_measurement	C-reactive protein measurement	Disease				local_kg_curated
+NCBITaxon:33203	Purpureocillium lilacinum	Microbe			species	local_kg_curated
+LFS:COND:Aspartate_aminotransferase_measurement	Aspartate aminotransferase measurement	Disease				local_kg_curated
+LFS:COND:Colorectal_adenoma_Colorectal_cancer	Colorectal adenoma,Colorectal cancer	Disease				local_kg_curated
+NCBITaxon:626940	Phascolarctobacterium succinatutens	Microbe			species	local_kg_curated
+LFS:COND:Time	Time	Disease				local_kg_curated
+LFS:COND:Drug_resistant_tuberculosis_Multidrug_resistant_tuberculosis	Drug-resistant tuberculosis,Multidrug-resistant tuberculosis	Disease				local_kg_curated
+NCBITaxon:1262986	Proteobacteria bacterium CAG:139	Microbe			species	local_kg_curated
+NCBITaxon:712888	Actinobaculum sp. oral taxon 183	Microbe			species	local_kg_curated
+LFS:COND:Iron	Iron	Disease				local_kg_curated
+NCBITaxon:2710826	Coprococcus sp. ART55_1	Microbe			species	local_kg_curated
+NCBITaxon:1602169	Prevotella pectinovora	Microbe			species	local_kg_curated
+NCBITaxon:2293030	Clostridium sp. AM34-9AC	Microbe			species	local_kg_curated
+NCBITaxon:84024	Clostridium disporicum	Microbe			species	local_kg_curated
+NCBITaxon:1262756	Blautia sp. CAG:257	Microbe			species	local_kg_curated
+NCBITaxon:291644	Bacteroides salyersiae	Microbe			species	local_kg_curated
+NCBITaxon:51160	Treponema maltophilum	Microbe			species	local_kg_curated
+NCBITaxon:76856	Fusobacterium nucleatum subsp. nucleatum	Microbe			species	local_kg_curated
+LFS:COND:Type_II_diabetes_mellitus_Chronic_periodontitis	Type II diabetes mellitus,Chronic periodontitis	Disease				local_kg_curated
+NCBITaxon:3697539	Amaranthoideae	Microbe			species	local_kg_curated
+LFS:COND:Viral_pneumonia	Viral pneumonia	Disease				local_kg_curated
+NCBITaxon:10241	Chordopoxvirinae	Microbe			species	local_kg_curated
+NCBITaxon:207551	Eubacterium sp. oral clone FX028	Microbe			species	local_kg_curated
+NCBITaxon:89014	Blautia luti	Microbe			species	local_kg_curated
+NCBITaxon:471189	Gordonibacter pamelaeae	Microbe			species	local_kg_curated
+NCBITaxon:1897011	Oscillibacter sp. 57_20	Microbe			species	local_kg_curated
+NCBITaxon:1432052	Eisenbergiella tayi	Microbe			species	local_kg_curated
+LFS:COND:Liver_enzyme_measurement	Liver enzyme measurement	Disease				local_kg_curated
+LFS:COND:Gut_microbiome_measurement	Gut microbiome measurement	Disease				local_kg_curated
+NCBITaxon:190721	Ralstonia insidiosa	Microbe			species	local_kg_curated
+NCBITaxon:1869227	bacterium	Microbe			species	local_kg_curated
+LFS:COND:Oral_cavity_carcinoma	Oral cavity carcinoma	Disease				local_kg_curated
+NCBITaxon:2490633	Streptococcus periodonticum	Microbe			species	local_kg_curated
+NCBITaxon:33907	Pseudonocardia alni	Microbe			species	local_kg_curated
+NCBITaxon:1683	Bifidobacterium angulatum	Microbe			species	local_kg_curated
+NCBITaxon:29348	Thomasclavelia spiroformis	Microbe			species	local_kg_curated
+NCBITaxon:147207	Collinsella intestinalis	Microbe			species	local_kg_curated
+NCBITaxon:57732	Enterococcus asini	Microbe			species	local_kg_curated
+NCBITaxon:1288	Staphylococcus xylosus	Microbe			species	local_kg_curated
+LFS:COND:Post_COVID_19_disorder	Post-COVID-19 disorder	Disease				local_kg_curated
+NCBITaxon:997829	Porphyromonas sp. KLE 1280	Microbe			species	local_kg_curated
+NCBITaxon:79681	Tissierella creatinophila	Microbe			species	local_kg_curated
+NCBITaxon:86188	Stenotrophomonas geniculata	Microbe			species	local_kg_curated
+NCBITaxon:36087	Trichuris trichiura	Microbe			species	local_kg_curated
+NCBITaxon:712362	Leptotrichia sp. oral taxon 221	Microbe			species	local_kg_curated
+NCBITaxon:1458253	Streptococcus oralis subsp. dentisani	Microbe			species	local_kg_curated
+NCBITaxon:52769	Actinomyces gerencseriae	Microbe			species	local_kg_curated
+NCBITaxon:1262958	Ruminococcus sp. CAG:403	Microbe			species	local_kg_curated
+NCBITaxon:1262824	Clostridium sp. CAG:58	Microbe			species	local_kg_curated
+NCBITaxon:712469	Alloprevotella sp. oral taxon 473	Microbe			species	local_kg_curated
+NCBITaxon:706562	[Lactobacillus] rogosae	Microbe			species	local_kg_curated
+NCBITaxon:303	Pseudomonas putida	Microbe			species	local_kg_curated
+NCBITaxon:146827	Corynebacterium simulans	Microbe			species	local_kg_curated
+NCBITaxon:1755241	Anaerococcus nagyae	Microbe			species	local_kg_curated
+NCBITaxon:301	Ectopseudomonas oleovorans	Microbe			species	local_kg_curated
+NCBITaxon:38290	Corynebacterium macginleyi	Microbe			species	local_kg_curated
+NCBITaxon:1294150	uncultured Synergistia bacterium	Microbe			species	local_kg_curated
+NCBITaxon:895	Desulfobulbus sp.	Microbe			species	local_kg_curated
+NCBITaxon:2044939	Clostridia bacterium	Microbe			species	local_kg_curated
+NCBITaxon:158877	Yokenella regensburgei	Microbe			species	local_kg_curated
+NCBITaxon:158484	Cedecea davisae	Microbe			species	local_kg_curated
+NCBITaxon:133448	Citrobacter youngae	Microbe			species	local_kg_curated
+NCBITaxon:1873498	Hafnia sp.	Microbe			species	local_kg_curated
+NCBITaxon:31973	Eggerthia catenaformis	Microbe			species	local_kg_curated
+NCBITaxon:796937	Peptoanaerobacter stomatis	Microbe			species	local_kg_curated
+NCBITaxon:2049030	Lachnoanaerobaculum sp.	Microbe			species	local_kg_curated
+NCBITaxon:76631	Abiotrophia sp.	Microbe			species	local_kg_curated
+NCBITaxon:479	Moraxella sp.	Microbe			species	local_kg_curated
+NCBITaxon:1885016	Rothia sp. (in: high G+C Gram-positive bacteria)	Microbe			species	local_kg_curated
+NCBITaxon:46124	Granulicatella adiacens	Microbe			species	local_kg_curated
+NCBITaxon:72	Simonsiella muelleri	Microbe			species	local_kg_curated
+NCBITaxon:638849	Pyramidobacter piscolens	Microbe			species	local_kg_curated
+LFS:COND:Mismatch_repair_cancer_syndrome	Mismatch repair cancer syndrome	Disease				local_kg_curated
+NCBITaxon:343	Xanthomonas translucens	Microbe			species	local_kg_curated
+LFS:COND:Urolithiasis	Urolithiasis	Disease				local_kg_curated
+LFS:COND:Cerebral_small_vessel_disease	Cerebral small vessel disease	Disease				local_kg_curated
+NCBITaxon:1776382	Neglectibacter timonensis	Microbe			species	local_kg_curated
+NCBITaxon:1936062	Veillonella massiliensis	Microbe			species	local_kg_curated
+LFS:COND:Asthma_Allergic_rhinitis_Food_allergy_Dermatitis	Asthma,Allergic rhinitis,Food allergy,Dermatitis	Disease				local_kg_curated
+LFS:COND:Streptococcus_pneumoniae	Streptococcus pneumoniae	Disease				local_kg_curated
+NCBITaxon:28127	Hoylesella buccalis	Microbe			species	local_kg_curated
+NCBITaxon:859	Fusobacterium necrophorum	Microbe			species	local_kg_curated
+NCBITaxon:1274	Dermacoccus nishinomiyaensis	Microbe			species	local_kg_curated
+NCBITaxon:736	Haemophilus paraphrohaemolyticus	Microbe			species	local_kg_curated
+NCBITaxon:2490857	Lautropia dentalis	Microbe			species	local_kg_curated
+LFS:COND:Chronic_granulomatous_disease	Chronic granulomatous disease	Disease				local_kg_curated
+NCBITaxon:2020948	Romboutsia maritimum	Microbe			species	local_kg_curated
+NCBITaxon:242750	Hallella bergensis	Microbe			species	local_kg_curated
+NCBITaxon:2049049	Veillonellaceae bacterium	Microbe			species	local_kg_curated
+LFS:COND:Trichomonas_vaginitis	Trichomonas vaginitis	Disease				local_kg_curated
+LFS:COND:Social_deprivation_Psychological_measurement	Social deprivation,Psychological measurement	Disease				local_kg_curated
+NCBITaxon:2005360	Faecalicatena sp.	Microbe			species	local_kg_curated
+NCBITaxon:1965294	Collinsella sp.	Microbe			species	local_kg_curated
+NCBITaxon:69220	Lelliottia nimipressuralis	Microbe			species	local_kg_curated
+NCBITaxon:564	Escherichia fergusonii	Microbe			species	local_kg_curated
+NCBITaxon:2582419	Dialister hominis	Microbe			species	local_kg_curated
+NCBITaxon:2053610	Sarcina sp.	Microbe			species	local_kg_curated
+NCBITaxon:35761	Nocardioides sp.	Microbe			species	local_kg_curated
+LFS:COND:Social_interaction_measurement	Social interaction measurement	Disease				local_kg_curated
+LFS:COND:Oxidative_Stress	Oxidative Stress	Disease				local_kg_curated
+NCBITaxon:876416	uncultured Odoribacter sp.	Microbe			species	local_kg_curated
+LFS:COND:Pituitary_Gland_Adenoma	Pituitary Gland Adenoma	Disease				local_kg_curated
+LFS:COND:SARS_CoV_2_related_disease	SARS-CoV-2-related disease	Disease				local_kg_curated
+NCBITaxon:153622	Vibrio agarivorans	Microbe			species	local_kg_curated
+NCBITaxon:672	Vibrio vulnificus	Microbe			species	local_kg_curated
+NCBITaxon:2982025	Candidatus Parvibacillus calidus	Microbe			species	local_kg_curated
+LFS:COND:Tuberculosis	Tuberculosis	Disease				local_kg_curated
+NCBITaxon:77094	Candidatus Epulonipiscium fishelsonii	Microbe			species	local_kg_curated
+NCBITaxon:194843	uncultured Bacteroidales bacterium	Microbe			species	local_kg_curated
+LFS:COND:Gut_microbiome_measurement_Acute_graft_vs_host_disease	Gut microbiome measurement,Acute graft vs. host disease	Disease				local_kg_curated
+NCBITaxon:283734	Staphylococcus pseudintermedius	Microbe			species	local_kg_curated
+NCBITaxon:246432	Staphylococcus equorum	Microbe			species	local_kg_curated
+NCBITaxon:1295	Staphylococcus schleiferi	Microbe			species	local_kg_curated
+NCBITaxon:1292	Staphylococcus warneri	Microbe			species	local_kg_curated
+NCBITaxon:1296	Mammaliicoccus sciuri	Microbe			species	local_kg_curated
+NCBITaxon:1884818	Escherichia sp.	Microbe			species	local_kg_curated
+NCBITaxon:576	Klebsiella sp.	Microbe			species	local_kg_curated
+NCBITaxon:2293125	Prevotella sp. AM42-24	Microbe			species	local_kg_curated
+NCBITaxon:2682456	Veillonella nakazawae	Microbe			species	local_kg_curated
+NCBITaxon:2819619	Streptococcus toyakuensis	Microbe			species	local_kg_curated
+NCBITaxon:1435069	Vibrio tritonius	Microbe			species	local_kg_curated
+NCBITaxon:169971	uncultured Peptostreptococcus sp.	Microbe			species	local_kg_curated
+LFS:COND:Coronary_artery_disease	Coronary artery disease	Disease				local_kg_curated
+NCBITaxon:316	Stutzerimonas stutzeri	Microbe			species	local_kg_curated
+NCBITaxon:1789762	Methanosphaera sp. BMS	Microbe			species	local_kg_curated
+NCBITaxon:2283195	Ornithinimicrobium avium	Microbe			species	local_kg_curated
+NCBITaxon:76853	Solibacillus silvestris	Microbe			species	local_kg_curated
+NCBITaxon:370804	uncultured Prevotellaceae bacterium	Microbe			species	local_kg_curated
+LFS:COND:Cognitive_disorder	Cognitive disorder	Disease				local_kg_curated
+LFS:COND:Response_to_surgery	Response to surgery	Disease				local_kg_curated
+LFS:COND:Exploratory_behavior	Exploratory behavior	Disease				local_kg_curated
+NCBITaxon:1804621	Betoideae	Microbe			species	local_kg_curated
+LFS:COND:Hot_flashes	Hot flashes	Disease				local_kg_curated
+NCBITaxon:1579348	Streptococcus sp. 1171_SSPC	Microbe			species	local_kg_curated
+NCBITaxon:28128	Prevotella corporis	Microbe			species	local_kg_curated
+NCBITaxon:67827	Citrobacter werkmanii	Microbe			species	local_kg_curated
+NCBITaxon:1254	Pediococcus acidilactici	Microbe			species	local_kg_curated
+NCBITaxon:693444	Enterobacteriaceae bacterium strain FGI 57	Microbe			species	local_kg_curated
+NCBITaxon:41	Allostigmatella aurantiaca	Microbe			species	local_kg_curated
+NCBITaxon:1743168	Polynucleobacter wuianus	Microbe			species	local_kg_curated
+NCBITaxon:1235990	Candidatus Pantoea carbekii	Microbe			species	local_kg_curated
+NCBITaxon:79604	Denitrobacterium detoxificans	Microbe			species	local_kg_curated
+NCBITaxon:6973	Blattella germanica	Microbe			species	local_kg_curated
+LFS:COND:Vesicle_membrane	Vesicle membrane	Disease				local_kg_curated
+NCBITaxon:1187017	uncultured Allobaculum sp.	Microbe			species	local_kg_curated
+NCBITaxon:1702221	Faecalibaculum rodentium	Microbe			species	local_kg_curated
+NCBITaxon:172733	uncultured Eubacteriales bacterium	Microbe			species	local_kg_curated
+NCBITaxon:46188	Streptosporangium violaceochromogenes	Microbe			species	local_kg_curated
+LFS:COND:Leukopenia	Leukopenia	Disease				local_kg_curated
+NCBITaxon:447454	candidate division TM7 single-cell isolate TM7a	Microbe			species	local_kg_curated
+LFS:COND:Aggressive_periodontitis	Aggressive periodontitis	Disease				local_kg_curated
+NCBITaxon:28151	Serratia proteamaculans	Microbe			species	local_kg_curated
+NCBITaxon:189723	Prevotella micans	Microbe			species	local_kg_curated
+LFS:COND:Hypothyroidism	Hypothyroidism	Disease				local_kg_curated
+LFS:COND:Premature_rupture_of_membranes	Premature rupture of membranes	Disease				local_kg_curated
+NCBITaxon:713049	TM7 phylum sp. oral taxon 346	Microbe			species	local_kg_curated
+NCBITaxon:712459	Prevotella sp. oral taxon 304	Microbe			species	local_kg_curated
+LFS:COND:COPRO_seq	COPRO-seq	Disease				local_kg_curated
+NCBITaxon:286133	uncultured Sutterella sp.	Microbe			species	local_kg_curated
+NCBITaxon:544645	Butyricimonas virosa	Microbe			species	local_kg_curated
+NCBITaxon:1161942	Ruminococcus champanellensis	Microbe			species	local_kg_curated
+LFS:COND:Renal_dialysis	Renal dialysis	Disease				local_kg_curated
+LFS:COND:Serum_albumin_measurement	Serum albumin measurement	Disease				local_kg_curated
+NCBITaxon:249189	Enterococcus hermanniensis	Microbe			species	local_kg_curated
+NCBITaxon:310300	Bacteroides pyogenes	Microbe			species	local_kg_curated
+NCBITaxon:1111137	Slackia sp. CM382	Microbe			species	local_kg_curated
+NCBITaxon:652714	Leptotrichia sp. oral taxon 219	Microbe			species	local_kg_curated
+NCBITaxon:1107316	Neisseria oralis	Microbe			species	local_kg_curated
+NCBITaxon:1227265	Capnocytophaga sp. oral taxon 863	Microbe			species	local_kg_curated
+NCBITaxon:712538	Selenomonas sp. oral taxon 478	Microbe			species	local_kg_curated
+NCBITaxon:712728	Treponema sp. oral taxon 246	Microbe			species	local_kg_curated
+NCBITaxon:671211	Fusobacterium sp. oral taxon 203	Microbe			species	local_kg_curated
+NCBITaxon:76859	Fusobacterium animalis	Microbe			species	local_kg_curated
+LFS:COND:Cystic_fibrosis	Cystic fibrosis	Disease				local_kg_curated
+LFS:COND:Sex_hormone	Sex hormone	Disease				local_kg_curated
+NCBITaxon:1985285	Ounavirinae	Microbe			species	local_kg_curated
+NCBITaxon:74206	uncultured eubacterium WCHB1-41	Microbe			species	local_kg_curated
+NCBITaxon:428712	Jonquetella anthropi	Microbe			species	local_kg_curated
+NCBITaxon:2754	Synergistes jonesii	Microbe			species	local_kg_curated
+LFS:COND:Hepatitis_virus_related_hepatocellular_carcinoma	Hepatitis virus-related hepatocellular carcinoma	Disease				local_kg_curated
+LFS:COND:Sperm_measurement	Sperm measurement	Disease				local_kg_curated
+LFS:COND:Abnormal_sperm_morphology	Abnormal sperm morphology	Disease				local_kg_curated
+LFS:COND:Peri_Implantitis	Peri-Implantitis	Disease				local_kg_curated
+LFS:COND:pus	pus	Disease				local_kg_curated
+LFS:COND:Cardiovascular_disease	Cardiovascular disease	Disease				local_kg_curated
+NCBITaxon:1096246	Hungatella effluvii	Microbe			species	local_kg_curated
+LFS:COND:Treatment_refractory_schizophrenia	Treatment refractory schizophrenia	Disease				local_kg_curated
+LFS:COND:Response_to_clozapine	Response to clozapine	Disease				local_kg_curated
+LFS:COND:Infectious_diarrheal_disease	Infectious diarrheal disease	Disease				local_kg_curated
+NCBITaxon:1262932	Prevotella sp. CAG:604	Microbe			species	local_kg_curated
+LFS:COND:Development_or_differentiation_design	Development or differentiation design	Disease				local_kg_curated
+NCBITaxon:4929	Meyerozyma guilliermondii	Microbe			species	local_kg_curated
+NCBITaxon:397286	Lachnospiraceae bacterium 14-2	Microbe			species	local_kg_curated
+NCBITaxon:1262927	Prevotella sp. CAG:485	Microbe			species	local_kg_curated
+NCBITaxon:1235793	Lachnospiraceae bacterium MD335	Microbe			species	local_kg_curated
+NCBITaxon:1262944	Roseburia sp. CAG:303	Microbe			species	local_kg_curated
+NCBITaxon:97138	Clostridium sp. MD294	Microbe			species	local_kg_curated
+LFS:COND:Overweight_body_mass_index_status	Overweight body mass index status	Disease				local_kg_curated
+NCBITaxon:433338	Anaerocella delicata	Microbe			species	local_kg_curated
+NCBITaxon:478	Moraxella nonliquefaciens	Microbe			species	local_kg_curated
+NCBITaxon:28126	Segatella buccae	Microbe			species	local_kg_curated
+NCBITaxon:28113	Prevotella heparinolytica	Microbe			species	local_kg_curated
+NCBITaxon:221027	Treponema putidum	Microbe			species	local_kg_curated
+NCBITaxon:1015	Bergeyella zoohelcum	Microbe			species	local_kg_curated
+NCBITaxon:40216	Acinetobacter radioresistens	Microbe			species	local_kg_curated
+NCBITaxon:1297617	Intestinimonas butyriciproducens	Microbe			species	local_kg_curated
+NCBITaxon:867	Ruminobacter amylophilus	Microbe			species	local_kg_curated
+LFS:COND:Lean_body_mass	Lean body mass	Disease				local_kg_curated
+NCBITaxon:1263031	Firmicutes bacterium CAG:56	Microbe			species	local_kg_curated
+LFS:COND:Male_homosexuality	Male homosexuality	Disease				local_kg_curated
+NCBITaxon:1852370	Prevotellamassilia timonensis	Microbe			species	local_kg_curated
+NCBITaxon:28052	Lachnospira pectinoschiza	Microbe			species	local_kg_curated
+NCBITaxon:1944635	Sutterella seckii	Microbe			species	local_kg_curated
+NCBITaxon:2049045	Eubacteriaceae bacterium	Microbe			species	local_kg_curated
+NCBITaxon:2212472	Helicobacteraceae bacterium	Microbe			species	local_kg_curated
+NCBITaxon:2518605	Segatella hominis	Microbe			species	local_kg_curated
+NCBITaxon:2126740	Clostridium fessum	Microbe			species	local_kg_curated
+NCBITaxon:1924111	Massilimicrobiota sp.	Microbe			species	local_kg_curated
+NCBITaxon:2053615	Spirochaetia bacterium	Microbe			species	local_kg_curated
+NCBITaxon:1070699	Clostridiaceae bacterium JC118	Microbe			species	local_kg_curated
+NCBITaxon:68887	Torque teno virus	Microbe			species	local_kg_curated
+NCBITaxon:1920861	Webervirus KP36	Microbe			species	local_kg_curated
+NCBITaxon:71452	Enterococcus raffinosus	Microbe			species	local_kg_curated
+NCBITaxon:546	Citrobacter freundii	Microbe			species	local_kg_curated
+NCBITaxon:29391	Gemella morbillorum	Microbe			species	local_kg_curated
+NCBITaxon:447455	candidate division TM7 single-cell isolate TM7b	Microbe			species	local_kg_curated
+NCBITaxon:447456	candidate division TM7 single-cell isolate TM7c	Microbe			species	local_kg_curated
+NCBITaxon:88688	Caulobacter segnis	Microbe			species	local_kg_curated
+LFS:COND:Environmental_stress_treatment	Environmental stress treatment	Disease				local_kg_curated
+NCBITaxon:1650661	Clostridium phoceensis	Microbe			species	local_kg_curated
+NCBITaxon:2292069	Ruminococcus sp. AF41-9	Microbe			species	local_kg_curated
+NCBITaxon:2292961	Blautia sp. AF19-10LB	Microbe			species	local_kg_curated
+NCBITaxon:2709718	Blautia sp. MSK.20.85	Microbe			species	local_kg_curated
+LFS:COND:Fetal_growth_restriction	Fetal growth restriction	Disease				local_kg_curated
+NCBITaxon:2320088	Roseburia sp. 1XD42-69	Microbe			species	local_kg_curated
+LFS:COND:Alcohol_consumption_measurement	Alcohol consumption measurement	Disease				local_kg_curated
+NCBITaxon:2486460	Muribaculaceae bacterium Isolate-036 (Harlan)	Microbe			species	local_kg_curated
+NCBITaxon:1548148	Helicobacter sp. MIT 03-1616	Microbe			species	local_kg_curated
+NCBITaxon:2530390	Muribaculum gordoncarteri	Microbe			species	local_kg_curated
+NCBITaxon:2941507	Senimuribacter intestinalis	Microbe			species	local_kg_curated
+NCBITaxon:2986526	Lawsonibacter celer	Microbe			species	local_kg_curated
+NCBITaxon:85831	Bacteroides acidifaciens	Microbe			species	local_kg_curated
+NCBITaxon:2941326	Alistipes muris	Microbe			species	local_kg_curated
+NCBITaxon:2486461	Muribaculaceae bacterium Isolate-037 (Harlan)	Microbe			species	local_kg_curated
+NCBITaxon:81947	Vagococcus lutrae	Microbe			species	local_kg_curated
+NCBITaxon:1945520	Psychrobacter pasteurii	Microbe			species	local_kg_curated
+NCBITaxon:1337	Streptococcus hyointestinalis	Microbe			species	local_kg_curated
+NCBITaxon:2024224	Prevotella sp. P2-180	Microbe			species	local_kg_curated
+LFS:COND:Smoking_behaviour_measurement	Smoking behaviour measurement	Disease				local_kg_curated
+NCBITaxon:437897	Megamonas funiformis	Microbe			species	local_kg_curated
+LFS:COND:Multiple_chemical_sensitivity	Multiple chemical sensitivity	Disease				local_kg_curated
+NCBITaxon:397291	Lachnospiraceae bacterium A4	Microbe			species	local_kg_curated
+LFS:COND:Peripheral_neuron	Peripheral neuron	Disease				local_kg_curated
+NCBITaxon:105841	Anaerostipes caccae	Microbe			species	local_kg_curated
+NCBITaxon:397287	Lachnospiraceae bacterium 28-4	Microbe			species	local_kg_curated
+NCBITaxon:76123	Hoylesella enoeca	Microbe			species	local_kg_curated
+NCBITaxon:742723	Lachnospiraceae bacterium 2_1_46FAA	Microbe			species	local_kg_curated
+NCBITaxon:10293	Alphaherpesvirinae	Microbe			species	local_kg_curated
+NCBITaxon:192066	Neisseria sp.	Microbe			species	local_kg_curated
+LFS:COND:Hyperinsulinemia_Acute_myeloid_leukemia	Hyperinsulinemia,Acute myeloid leukemia	Disease				local_kg_curated
+LFS:COND:Acute_myeloid_leukemia_Hyperglycemia	Acute myeloid leukemia,Hyperglycemia	Disease				local_kg_curated
+LFS:COND:Carotid_artery_disease	Carotid artery disease	Disease				local_kg_curated
+NCBITaxon:1806836	Selenomonadales bacterium Marseille-P2399	Microbe			species	local_kg_curated
+NCBITaxon:1671661	Clostridiales bacterium DTU089	Microbe			species	local_kg_curated
+NCBITaxon:1235800	Lachnospiraceae bacterium 10-1	Microbe			species	local_kg_curated
+NCBITaxon:1262757	Blautia sp. CAG:37	Microbe			species	local_kg_curated
+LFS:COND:Skin_wound	Skin wound	Disease				local_kg_curated
+NCBITaxon:1235797	Oscillibacter sp. 1-3	Microbe			species	local_kg_curated
+NCBITaxon:1535750	Thermoactinomyces sp. Gus2-1	Microbe			species	local_kg_curated
+NCBITaxon:712710	Tannerella serpentiformis	Microbe			species	local_kg_curated
+NCBITaxon:1884263	Selenomonas sp. oral taxon 920	Microbe			species	local_kg_curated
+NCBITaxon:376805	Phocaeicola salanitronis	Microbe			species	local_kg_curated
+NCBITaxon:2494234	Sutterella megalosphaeroides	Microbe			species	local_kg_curated
+LFS:COND:Physical_activity_measurement	Physical activity measurement	Disease				local_kg_curated
+LFS:COND:Diverticulitis	Diverticulitis	Disease				local_kg_curated
+NCBITaxon:1262878	Eubacterium sp. CAG:115	Microbe			species	local_kg_curated
+NCBITaxon:2086273	Subdoligranulum sp. APC924/74	Microbe			species	local_kg_curated
+LFS:COND:Abortion	Abortion	Disease				local_kg_curated
+NCBITaxon:147369	Panicoideae	Microbe			species	local_kg_curated
+NCBITaxon:4543	Cenchrus americanus	Microbe			species	local_kg_curated
+NCBITaxon:1219613	Lachnospiraceae bacterium S3MV16	Microbe			species	local_kg_curated
+LFS:COND:Blood_protein_measurement	Blood protein measurement	Disease				local_kg_curated
+LFS:COND:Total_blood_protein_measurement	Total blood protein measurement	Disease				local_kg_curated
+NCBITaxon:712622	Streptococcus sp. oral taxon 058	Microbe			species	local_kg_curated
+NCBITaxon:712357	Leptotrichia sp. oral taxon 212	Microbe			species	local_kg_curated
+LFS:COND:Lymphocyte_count	Lymphocyte count	Disease				local_kg_curated
+NCBITaxon:203	Campylobacter rectus	Microbe			species	local_kg_curated
+NCBITaxon:6337	Trichinella pseudospiralis	Microbe			species	local_kg_curated
+LFS:COND:Pulmonary_non_tuberculous_mycobacterial_infection	Pulmonary non-tuberculous mycobacterial infection	Disease				local_kg_curated
+NCBITaxon:1110546	Veillonella tobetsuensis	Microbe			species	local_kg_curated
+NCBITaxon:1234680	Streptococcus rubneri	Microbe			species	local_kg_curated
+NCBITaxon:483	Neisseria cinerea	Microbe			species	local_kg_curated
+NCBITaxon:176090	Streptococcus sinensis	Microbe			species	local_kg_curated
+NCBITaxon:228603	Hoylesella shahii	Microbe			species	local_kg_curated
+NCBITaxon:754	Pasteurella dagmatis	Microbe			species	local_kg_curated
+NCBITaxon:1931	Streptomyces sp.	Microbe			species	local_kg_curated
+NCBITaxon:53558	Mycoplasmopsis edwardii	Microbe			species	local_kg_curated
+LFS:COND:Chronic_gingivitis	Chronic gingivitis	Disease				local_kg_curated
+NCBITaxon:66851	Methanobrevibacter oralis	Microbe			species	local_kg_curated
+NCBITaxon:28115	Porphyromonas macacae	Microbe			species	local_kg_curated
+NCBITaxon:1962306	Bergeyella sp.	Microbe			species	local_kg_curated
+NCBITaxon:2911504	Suttonella sp.	Microbe			species	local_kg_curated
+NCBITaxon:2213	Methanosarcina sp.	Microbe			species	local_kg_curated
+LFS:COND:Drug_resistance	Drug resistance	Disease				local_kg_curated
+NCBITaxon:15945	Zea luxurians	Microbe			species	local_kg_curated
+NCBITaxon:1715008	Rothia sp. HMSC078H08	Microbe			species	local_kg_curated
+NCBITaxon:1524	[Clostridium] piliforme	Microbe			species	local_kg_curated
+LFS:COND:Dysmenorrhea	Dysmenorrhea	Disease				local_kg_curated
+NCBITaxon:2722	unidentified proteobacterium	Microbe			species	local_kg_curated
+NCBITaxon:53442	Eubacterium callanderi	Microbe			species	local_kg_curated
+LFS:COND:Vitamin_A_deficiency	Vitamin A deficiency	Disease				local_kg_curated
+NCBITaxon:666	Vibrio cholerae	Microbe			species	local_kg_curated
+NCBITaxon:1262945	Roseburia sp. CAG:309	Microbe			species	local_kg_curated
+NCBITaxon:1262777	Clostridium sp. CAG:167	Microbe			species	local_kg_curated
+NCBITaxon:1263011	Firmicutes bacterium CAG:238	Microbe			species	local_kg_curated
+LFS:COND:Hepatic_fibrosis	Hepatic fibrosis	Disease				local_kg_curated
+LFS:COND:Clostridium_difficile	Clostridium difficile	Disease				local_kg_curated
+NCBITaxon:649196	Sphingobacterium hotanense	Microbe			species	local_kg_curated
+NCBITaxon:2763670	Wujia chipingensis	Microbe			species	local_kg_curated
+NCBITaxon:2292232	Eubacterium sp. AF22-8LB	Microbe			species	local_kg_curated
+NCBITaxon:2293024	Clostridium sp. AM22-11AC	Microbe			species	local_kg_curated
+NCBITaxon:2022527	Prevotella sp. 885	Microbe			species	local_kg_curated
+NCBITaxon:2564099	Ruminococcus bovis	Microbe			species	local_kg_curated
+NCBITaxon:2212473	Kiritimatiellia bacterium	Microbe			species	local_kg_curated
+LFS:COND:Self_reported_educational_attainment	Self reported educational attainment	Disease				local_kg_curated
+LFS:COND:Water	Water	Disease				local_kg_curated
+NCBITaxon:2292991	Catenibacterium sp. AM22-15	Microbe			species	local_kg_curated
+NCBITaxon:2563662	Treponema sp. OMZ 906	Microbe			species	local_kg_curated
+NCBITaxon:418640	Enterobacter sp. NJ-64	Microbe			species	local_kg_curated
+NCBITaxon:1768113	Candidatus Hemicellulosilyticus sp. P3	Microbe			species	local_kg_curated
+NCBITaxon:1262952	Ruminococcus sp. CAG:177	Microbe			species	local_kg_curated
+NCBITaxon:1262926	Prevotella sp. CAG:474	Microbe			species	local_kg_curated
+NCBITaxon:2109688	Clostridiales bacterium CCNA10	Microbe			species	local_kg_curated
+LFS:COND:HIV_1_infection	HIV-1 infection	Disease				local_kg_curated
+NCBITaxon:454155	Paraprevotella xylaniphila	Microbe			species	local_kg_curated
+NCBITaxon:1628085	Agathobaculum butyriciproducens	Microbe			species	local_kg_curated
+NCBITaxon:1870985	Arabiibacter massiliensis	Microbe			species	local_kg_curated
+NCBITaxon:208962	Escherichia albertii	Microbe			species	local_kg_curated
+NCBITaxon:1529	Clostridium cadaveris	Microbe			species	local_kg_curated
+LFS:COND:Lymphoid_neoplasm	Lymphoid neoplasm	Disease				local_kg_curated
+NCBITaxon:2086585	Maliibacterium massiliense	Microbe			species	local_kg_curated
+LFS:COND:Stomach_neoplasm	Stomach neoplasm	Disease				local_kg_curated
+NCBITaxon:1982626	Faecalibacillus intestinalis	Microbe			species	local_kg_curated
+NCBITaxon:1291540	Methanomethylophilus alvi	Microbe			species	local_kg_curated
+LFS:COND:Extranodal_nasal_NK_T_cell_lymphoma	Extranodal nasal NK/T cell lymphoma	Disease				local_kg_curated
+NCBITaxon:2292441	Paratractidigestivibacter faecalis	Microbe			species	local_kg_curated
+NCBITaxon:2763042	Dysosmobacter segnis	Microbe			species	local_kg_curated
+NCBITaxon:272199	Encyrtinae	Microbe			species	local_kg_curated
+LFS:COND:Systemic_inflammatory_response_syndrome	Systemic inflammatory response syndrome	Disease				local_kg_curated
+NCBITaxon:97478	Limosilactobacillus mucosae	Microbe			species	local_kg_curated
+NCBITaxon:2683688	Lachnospiraceae bacterium 1 4 56FAA	Microbe			species	local_kg_curated
+NCBITaxon:2039	Tropheryma whipplei	Microbe			species	local_kg_curated
+LFS:COND:Diarrhea_Infantile	Diarrhea, Infantile	Disease				local_kg_curated
+NCBITaxon:623	Shigella flexneri	Microbe			species	local_kg_curated
+LFS:COND:Acute_pancreatitis	Acute pancreatitis	Disease				local_kg_curated
+NCBITaxon:2606626	Sodaliphilus pleomorphus	Microbe			species	local_kg_curated
+NCBITaxon:2518971	Duncaniella dubosii	Microbe			species	local_kg_curated
+LFS:COND:Hypertrophy	Hypertrophy	Disease				local_kg_curated
+NCBITaxon:3088136	Lancefieldella sp.	Microbe			species	local_kg_curated
+LFS:COND:Eating_behaviour	Eating behaviour	Disease				local_kg_curated
+NCBITaxon:691816	Bacteroides rodentium	Microbe			species	local_kg_curated
+LFS:COND:Lactose_intolerance	Lactose intolerance	Disease				local_kg_curated
+NCBITaxon:456876	Streptococcus plurextorum	Microbe			species	local_kg_curated
+NCBITaxon:498367	Streptomyces specialis	Microbe			species	local_kg_curated
+NCBITaxon:1339	Streptococcus macacae	Microbe			species	local_kg_curated
+NCBITaxon:240427	Secundilactobacillus paracollinoides	Microbe			species	local_kg_curated
+NCBITaxon:1167569	Penicillium neocrassum	Microbe			species	local_kg_curated
+NCBITaxon:76777	Malassezia sympodialis	Microbe			species	local_kg_curated
+NCBITaxon:1955109	Orbilia sp.	Microbe			species	local_kg_curated
+NCBITaxon:1895944	Vishniacozyma victoriae	Microbe			species	local_kg_curated
+NCBITaxon:1946595	Hungatella sp. UBA3402	Microbe			species	local_kg_curated
+LFS:COND:Visceral_adipose_tissue_measurement	Visceral adipose tissue measurement	Disease				local_kg_curated
+NCBITaxon:188058	uncultured Burkholderia sp.	Microbe			species	local_kg_curated
+NCBITaxon:1822466	uncultured Paraburkholderia sp.	Microbe			species	local_kg_curated
+NCBITaxon:2292269	Ruminococcaceae bacterium AM28-23LB	Microbe			species	local_kg_curated
+NCBITaxon:1262897	Faecalibacterium sp. CAG:74	Microbe			species	local_kg_curated
+LFS:COND:Pancreatic_ductal_adenocarcinoma	Pancreatic ductal adenocarcinoma	Disease				local_kg_curated
+NCBITaxon:1948744	Opitutia bacterium UBA953	Microbe			species	local_kg_curated
+LFS:COND:M1_distant_metastasis_stage	M1 distant metastasis stage	Disease				local_kg_curated
+NCBITaxon:37915	Dietzia maris	Microbe			species	local_kg_curated
+NCBITaxon:306	Pseudomonas sp.	Microbe			species	local_kg_curated
+LFS:COND:Cancer_or_benign_tumor	Cancer or benign tumor	Disease				local_kg_curated
+NCBITaxon:1926495	Paraburkholderia sp.	Microbe			species	local_kg_curated
+NCBITaxon:33885	Microbacterium lacticum	Microbe			species	local_kg_curated
+NCBITaxon:29305	Streptomyces griseoincarnatus	Microbe			species	local_kg_curated
+NCBITaxon:421525	Kaistella haifensis	Microbe			species	local_kg_curated
+LFS:COND:Metabolic_toxicity	Metabolic toxicity	Disease				local_kg_curated
+LFS:COND:Leukocyte	Leukocyte	Disease				local_kg_curated
+NCBITaxon:1780378	Clostridiales bacterium CHKCI001	Microbe			species	local_kg_curated
+NCBITaxon:1384081	Veillonella sp. DNF00869	Microbe			species	local_kg_curated
+NCBITaxon:1203590	Streptococcus sp. HPH0090	Microbe			species	local_kg_curated
+NCBITaxon:1739381	Streptococcus sp. HMSC072D03	Microbe			species	local_kg_curated
+NCBITaxon:1759399	Streptococcus sp. A12	Microbe			species	local_kg_curated
+NCBITaxon:1715176	Streptococcus sp. HMSC064D12	Microbe			species	local_kg_curated
+NCBITaxon:1739517	Bacteroides sp. HMSC073E02	Microbe			species	local_kg_curated
+NCBITaxon:40519	Ruminococcus callidus	Microbe			species	local_kg_curated
+NCBITaxon:2763041	Dysosmobacter hominis	Microbe			species	local_kg_curated
+NCBITaxon:2259133	Mesosutterella multiformis	Microbe			species	local_kg_curated
+NCBITaxon:1262987	Proteobacteria bacterium CAG:495	Microbe			species	local_kg_curated
+NCBITaxon:2049037	Parasutterella sp.	Microbe			species	local_kg_curated
+NCBITaxon:184870	Varibaculum cambriense	Microbe			species	local_kg_curated
+NCBITaxon:1354	Enterococcus hirae	Microbe			species	local_kg_curated
+NCBITaxon:2885357	Hominenteromicrobium mulieris	Microbe			species	local_kg_curated
+LFS:COND:Energy_intake_measurement	Energy intake measurement	Disease				local_kg_curated
+LFS:COND:Fat_intake_measurement	Fat intake measurement	Disease				local_kg_curated
+NCBITaxon:1505	Paraclostridium sordellii	Microbe			species	local_kg_curated
+LFS:COND:Response_to_proton_pump_inhibitor	Response to proton-pump inhibitor	Disease				local_kg_curated
+LFS:COND:Malnutrition	Malnutrition	Disease				local_kg_curated
+LFS:COND:Pulmonary_arterial_hypertension_associated_with_congenital_heart_disease	Pulmonary arterial hypertension associated with congenital heart disease	Disease				local_kg_curated
+NCBITaxon:486	Neisseria lactamica	Microbe			species	local_kg_curated
+NCBITaxon:2720810	Candidatus Gallimonas caecicola	Microbe			species	local_kg_curated
+NCBITaxon:1965650	Alistipes sp. An66	Microbe			species	local_kg_curated
+NCBITaxon:2086579	Bacteroides sp. Marseille-P3684	Microbe			species	local_kg_curated
+NCBITaxon:712620	Streptococcus sp. oral taxon 056	Microbe			species	local_kg_curated
+NCBITaxon:544581	Actinomyces johnsonii	Microbe			species	local_kg_curated
+LFS:COND:Cognitive_function_measurement	Cognitive function measurement	Disease				local_kg_curated
+NCBITaxon:106648	Acinetobacter bereziniae	Microbe			species	local_kg_curated
+NCBITaxon:2161821	Dialister massiliensis	Microbe			species	local_kg_curated
+LFS:COND:Tryptophan_measurement	Tryptophan measurement	Disease				local_kg_curated
+NCBITaxon:1509	Clostridium sporogenes	Microbe			species	local_kg_curated
+NCBITaxon:153152	uncultured Lactobacillus sp.	Microbe			species	local_kg_curated
+NCBITaxon:885	Desulfovibrio sp.	Microbe			species	local_kg_curated
+NCBITaxon:2109718	Dentocorticium bicolor	Microbe			species	local_kg_curated
+NCBITaxon:45525	Dujonia boleticola	Microbe			species	local_kg_curated
+LFS:COND:Response_to_drug	Response to drug	Disease				local_kg_curated
+NCBITaxon:1262874	Eggerthella sp. CAG:1427	Microbe			species	local_kg_curated
+NCBITaxon:671229	Veillonella sp. oral taxon 780	Microbe			species	local_kg_curated
+NCBITaxon:29379	Staphylococcus auricularis	Microbe			species	local_kg_curated
+NCBITaxon:433293	Anaerotaenia torta	Microbe			species	local_kg_curated
+NCBITaxon:122578	uncultured actinomycete GT44	Microbe			species	local_kg_curated
+NCBITaxon:82995	Serratia grimesii	Microbe			species	local_kg_curated
+NCBITaxon:55601	Vibrio anguillarum	Microbe			species	local_kg_curated
+LFS:COND:Acute_Leukemia	Acute Leukemia	Disease				local_kg_curated
+NCBITaxon:2093857	Dysosmobacter welbionis	Microbe			species	local_kg_curated
+NCBITaxon:2714353	Vescimonas fastidiosa	Microbe			species	local_kg_curated
+LFS:COND:Urea_measurement	Urea measurement	Disease				local_kg_curated
+LFS:COND:Adenosine_deaminase_measurement	Adenosine deaminase measurement	Disease				local_kg_curated
+NCBITaxon:29394	Dolosigranulum pigrum	Microbe			species	local_kg_curated
+LFS:COND:Rectal_carcinoma	Rectal carcinoma	Disease				local_kg_curated
+NCBITaxon:411483	Faecalibacterium duncaniae	Microbe			species	local_kg_curated
+NCBITaxon:1110380	Polygonoideae	Microbe			species	local_kg_curated
+NCBITaxon:240184	Rheum spiciforme	Microbe			species	local_kg_curated
+NCBITaxon:97700	Quercus lobata	Microbe			species	local_kg_curated
+NCBITaxon:157468	uncultured Thermoanaerobacterales bacterium	Microbe			species	local_kg_curated
+LFS:COND:HIV_1_infection_Opioid_use_measurement	HIV-1 infection,Opioid use measurement	Disease				local_kg_curated
+LFS:COND:Opioid_use_measurement	Opioid use measurement	Disease				local_kg_curated
+NCBITaxon:52226	Mitsuokella multacida	Microbe			species	local_kg_curated
+NCBITaxon:187979	Mitsuokella jalaludinii	Microbe			species	local_kg_curated
+NCBITaxon:1267	Sarcina ventriculi	Microbe			species	local_kg_curated
+LFS:COND:Drug_use_measurement	Drug use measurement	Disease				local_kg_curated
+NCBITaxon:2877527	Blautia parvula	Microbe			species	local_kg_curated
+NCBITaxon:52774	Actinomyces slackii	Microbe			species	local_kg_curated
+NCBITaxon:2842523	Bronfenbrennervirinae	Microbe			species	local_kg_curated
+NCBITaxon:2722820	Actinomyces faecalis	Microbe			species	local_kg_curated
+NCBITaxon:2086575	Parabacteroides pacaensis	Microbe			species	local_kg_curated
+NCBITaxon:720	Actinobacillus lignieresii	Microbe			species	local_kg_curated
+NCBITaxon:136609	Leuconostoc kimchii	Microbe			species	local_kg_curated
+NCBITaxon:1398	Heyndrickxia coagulans	Microbe			species	local_kg_curated
+NCBITaxon:1805933	Rahnella sikkimica	Microbe			species	local_kg_curated
+NCBITaxon:37919	Rhodococcus opacus	Microbe			species	local_kg_curated
+NCBITaxon:100886	Catenibacterium mitsuokai	Microbe			species	local_kg_curated
+NCBITaxon:1510	Thermoclostridium stercorarium	Microbe			species	local_kg_curated
+NCBITaxon:2049044	Erysipelotrichaceae bacterium	Microbe			species	local_kg_curated
+NCBITaxon:2292272	Lachnospiraceae bacterium OM04-12BH	Microbe			species	local_kg_curated
+LFS:COND:Environmental_samples	Environmental samples	Disease				local_kg_curated
+NCBITaxon:2509153	Rubellimicrobium sp.	Microbe			species	local_kg_curated
+NCBITaxon:671234	Veillonellaceae bacterium oral taxon 150	Microbe			species	local_kg_curated
+NCBITaxon:713048	Syntrophomonadaceae bacterium oral taxon 435	Microbe			species	local_kg_curated
+NCBITaxon:83771	Succinivibrio dextrinosolvens	Microbe			species	local_kg_curated
+NCBITaxon:971	Pseudoselenomonas ruminantium	Microbe			species	local_kg_curated
+NCBITaxon:77768	Segatella albensis	Microbe			species	local_kg_curated
+LFS:COND:Sugar_consumption_measurement	Sugar consumption measurement	Disease				local_kg_curated
+LFS:COND:Non_small_cell_lung_carcinoma	Non-small cell lung carcinoma	Disease				local_kg_curated
+NCBITaxon:1353889	Achromobacter pestifer	Microbe			species	local_kg_curated
+NCBITaxon:2583453	Ochrobactrum sp. CGA5	Microbe			species	local_kg_curated
+LFS:COND:Fatigue	Fatigue	Disease				local_kg_curated
+LFS:COND:Oxalate_measurement	Oxalate measurement	Disease				local_kg_curated
+LFS:COND:Hydroxyproline_measurement	Hydroxyproline measurement	Disease				local_kg_curated
+NCBITaxon:1977087	Pseudomonadota bacterium	Microbe			species	local_kg_curated
+NCBITaxon:1262977	Sutterella sp. CAG:521	Microbe			species	local_kg_curated
+NCBITaxon:29355	Ruminiclostridium cellobioparum	Microbe			species	local_kg_curated
+NCBITaxon:877406	Lachnospiraceae bacterium NK3A20	Microbe			species	local_kg_curated
+NCBITaxon:450471	Microcoleus paludosus	Microbe			species	local_kg_curated
+NCBITaxon:1933	Streptoalloteichus tenebrarius	Microbe			species	local_kg_curated
+NCBITaxon:234356	bacterium Ellin6055	Microbe			species	local_kg_curated
+LFS:COND:Response_to_opioid	Response to opioid	Disease				local_kg_curated
+NCBITaxon:2321402	uncultured Eggerthellaceae bacterium	Microbe			species	local_kg_curated
+NCBITaxon:658266	uncultured Anaeroplasmataceae bacterium	Microbe			species	local_kg_curated
+NCBITaxon:993073	Microbacterium enclense	Microbe			species	local_kg_curated
+NCBITaxon:419475	Brucella pseudogrignonensis	Microbe			species	local_kg_curated
+NCBITaxon:2949643	Rothia santali	Microbe			species	local_kg_curated
+NCBITaxon:2763056	Oscillibacter hominis	Microbe			species	local_kg_curated
+LFS:COND:Body_weight_gain	Body weight gain	Disease				local_kg_curated
+NCBITaxon:831	Butyrivibrio fibrisolvens	Microbe			species	local_kg_curated
+NCBITaxon:1796652	Turicimonas muris	Microbe			species	local_kg_curated
+NCBITaxon:2690837	Eggerthella guodeyinii	Microbe			species	local_kg_curated
+LFS:COND:Triglyceride_change_measurement	Triglyceride change measurement	Disease				local_kg_curated
+LFS:COND:Alanine_measurement	Alanine measurement	Disease				local_kg_curated
+LFS:COND:Response_to_high_fat_food_intake	Response to high fat food intake	Disease				local_kg_curated
+NCBITaxon:100235	uncultured actinomycete	Microbe			species	local_kg_curated
+LFS:COND:Reaction_time_measurement	Reaction time measurement	Disease				local_kg_curated
+NCBITaxon:879969	Macellibacteroides fermentans	Microbe			species	local_kg_curated
+NCBITaxon:1588748	Megasphaera hutchinsoni	Microbe			species	local_kg_curated
+NCBITaxon:242643	Lactobacillus sp. oral clone HT002	Microbe			species	local_kg_curated
+NCBITaxon:34028	Comamonas sp.	Microbe			species	local_kg_curated
+LFS:COND:Weight_percent	Weight percent	Disease				local_kg_curated
+LFS:COND:Regulation_of_defecation	Regulation of defecation	Disease				local_kg_curated
+NCBITaxon:280772	methanotrophic bacterial endosymbiont of Bathymodiolus sp.	Microbe			species	local_kg_curated
+LFS:COND:Viral_disease	Viral disease	Disease				local_kg_curated
+LFS:COND:Body_fat_distribution	Body fat distribution	Disease				local_kg_curated
+LFS:COND:Pulmonary_tuberculosis_Diabetes_mellitus	Pulmonary tuberculosis,Diabetes mellitus	Disease				local_kg_curated
+NCBITaxon:259315	uncultured Faecalibacterium sp.	Microbe			species	local_kg_curated
+NCBITaxon:3040348	Aequorivita marisscotiae	Microbe			species	local_kg_curated
+NCBITaxon:715472	Amycolatopsis nalaikhensis	Microbe			species	local_kg_curated
+NCBITaxon:79329	Chitinophaga pinensis	Microbe			species	local_kg_curated
+NCBITaxon:214909	Byttnerioideae	Microbe			species	local_kg_curated
+NCBITaxon:2949635	Xiashengella succiniciproducens	Microbe			species	local_kg_curated
+NCBITaxon:2932250	Hymenobacter sp. 5317J-9	Microbe			species	local_kg_curated
+NCBITaxon:1712675	Turicibacter sp. H121	Microbe			species	local_kg_curated
+NCBITaxon:2021311	Agathobacter sp.	Microbe			species	local_kg_curated
+NCBITaxon:1241568	Lizanozyma thasaensis	Microbe			species	local_kg_curated
+NCBITaxon:36911	Clavispora lusitaniae	Microbe			species	local_kg_curated
+NCBITaxon:34488	Conidiobolus coronatus	Microbe			species	local_kg_curated
+NCBITaxon:80600	Rhizopogon vinicolor	Microbe			species	local_kg_curated
+NCBITaxon:4950	Torulaspora delbrueckii	Microbe			species	local_kg_curated
+LFS:COND:Shigellosis	Shigellosis	Disease				local_kg_curated
+NCBITaxon:1541	Terrisporobacter mayombei	Microbe			species	local_kg_curated
+NCBITaxon:209880	Dialister histaminiformans	Microbe			species	local_kg_curated
+NCBITaxon:1947467	Solobacterium sp. UBA636	Microbe			species	local_kg_curated
+NCBITaxon:1952150	Lachnospiraceae bacterium UBA7182	Microbe			species	local_kg_curated
+NCBITaxon:2027459	Veillonella sp. T11011-6	Microbe			species	local_kg_curated
+NCBITaxon:2013020	Bifidobacterium sp. N4G05	Microbe			species	local_kg_curated
+NCBITaxon:2292226	Collinsella sp. AF25-2LB	Microbe			species	local_kg_curated
+NCBITaxon:208549	uncultured Hyphomicrobiales bacterium	Microbe			species	local_kg_curated
+NCBITaxon:2545800	Pseudomonas sp. FDAARGOS_761	Microbe			species	local_kg_curated
+NCBITaxon:2841264	Candidatus Minimicrobia vallesae	Microbe			species	local_kg_curated
+NCBITaxon:2220000	[Pseudopropionibacterium] massiliense	Microbe			species	local_kg_curated
+LFS:COND:Sarcopenia	Sarcopenia	Disease				local_kg_curated
+LFS:COND:Myocardial_infarction	Myocardial infarction	Disease				local_kg_curated
+LFS:COND:High_altitude_adaptation	High altitude adaptation	Disease				local_kg_curated
+NCBITaxon:1952410	Ruminococcaceae bacterium UBA5905	Microbe			species	local_kg_curated
+LFS:COND:Pathological_complete_response	Pathological complete response	Disease				local_kg_curated
+NCBITaxon:508460	Cloacibacillus evryensis	Microbe			species	local_kg_curated
+LFS:COND:Rectal_adenocarcinoma	Rectal adenocarcinoma	Disease				local_kg_curated
+NCBITaxon:86473	uncultured Gammaproteobacteria bacterium	Microbe			species	local_kg_curated
+NCBITaxon:42322	Eubacterium ruminantium	Microbe			species	local_kg_curated
+NCBITaxon:200	Campylobacter curvus	Microbe			species	local_kg_curated
+NCBITaxon:105219	Ralstonia mannitolilytica	Microbe			species	local_kg_curated
+LFS:COND:Metalloproteinase_inhibitor_3_measurement	Metalloproteinase inhibitor 3 measurement	Disease				local_kg_curated
+NCBITaxon:29354	Lacrimispora celerecrescens	Microbe			species	local_kg_curated
+LFS:COND:Transferrin_measurement	Transferrin measurement	Disease				local_kg_curated
+LFS:COND:Interleukin_Homo_sapiens	Interleukin (Homo sapiens)	Disease				local_kg_curated
+NCBITaxon:154046	Hungatella hathewayi	Microbe			species	local_kg_curated
+LFS:COND:Male	Male	Disease				local_kg_curated
+NCBITaxon:1322	Blautia hansenii	Microbe			species	local_kg_curated
+NCBITaxon:1852374	Ezakiella massiliensis	Microbe			species	local_kg_curated
+NCBITaxon:2292305	Clostridium sp. AM42-4	Microbe			species	local_kg_curated
+NCBITaxon:273371	Lodderomyces orthopsilosis	Microbe			species	local_kg_curated
+NCBITaxon:36834	Clostridium celatum	Microbe			species	local_kg_curated
+NCBITaxon:1720294	Eisenbergiella massiliensis	Microbe			species	local_kg_curated
+LFS:COND:Response_to_dietary_antigen	Response to dietary antigen	Disease				local_kg_curated
+LFS:COND:High_risk_pregnancy	High-risk pregnancy	Disease				local_kg_curated
+NCBITaxon:54005	Peptoniphilus harei	Microbe			species	local_kg_curated
+NCBITaxon:84026	[Clostridium] methylpentosum	Microbe			species	local_kg_curated
+NCBITaxon:574930	Parabacteroides gordonii	Microbe			species	local_kg_curated
+LFS:COND:Osteoporosis	Osteoporosis	Disease				local_kg_curated
+NCBITaxon:69967	Macrococcus equipercicus	Microbe			species	local_kg_curated
+NCBITaxon:2840922	Candidatus Scatomorpha intestinavium	Microbe			species	local_kg_curated
+NCBITaxon:2292244	Pseudoflavonifractor sp. AF19-9AC	Microbe			species	local_kg_curated
+LFS:COND:Colorectal_Adenosquamous_Carcinoma	Colorectal Adenosquamous Carcinoma	Disease				local_kg_curated
+NCBITaxon:2291991	Ruminococcaceae bacterium AM07-15	Microbe			species	local_kg_curated
+NCBITaxon:2293035	Clostridium sp. AM49-4BH	Microbe			species	local_kg_curated
+NCBITaxon:2292066	Roseburia sp. AM23-20	Microbe			species	local_kg_curated
+NCBITaxon:1285585	Megasphaera sp. BL7	Microbe			species	local_kg_curated
+NCBITaxon:689	Vibrio mediterranei	Microbe			species	local_kg_curated
+LFS:COND:Abnormal_blood_glucose_concentration	Abnormal blood glucose concentration	Disease				local_kg_curated
+LFS:COND:Aggressive_behavior	Aggressive behavior	Disease				local_kg_curated
+NCBITaxon:401472	Corynebacterium ureicelerivorans	Microbe			species	local_kg_curated
+NCBITaxon:766056	Microcyclospora tardicrescens	Microbe			species	local_kg_curated
+NCBITaxon:2011732	Malassezia sp.	Microbe			species	local_kg_curated
+LFS:COND:Vitamin_B_measurement	Vitamin B measurement	Disease				local_kg_curated
+NCBITaxon:179883	uncultured Candidatus Saccharibacteria bacterium	Microbe			species	local_kg_curated
+LFS:COND:Stress_related_disorder	Stress-related disorder	Disease				local_kg_curated
+NCBITaxon:2305240	Clostridium sp. AM25-23AC	Microbe			species	local_kg_curated
+NCBITaxon:512296	uncultured Phascolarctobacterium sp.	Microbe			species	local_kg_curated
+LFS:COND:Alcohol_use_disorder_measurement	Alcohol use disorder measurement	Disease				local_kg_curated
+LFS:COND:Primary_immunodeficiency_disease	Primary immunodeficiency disease	Disease				local_kg_curated
+NCBITaxon:264029	[Eubacterium] yurii subsp. margaretiae	Microbe			species	local_kg_curated
+NCBITaxon:712213	Capnocytophaga sp. oral taxon 332	Microbe			species	local_kg_curated
+NCBITaxon:712623	Streptococcus sp. oral taxon 061	Microbe			species	local_kg_curated
+LFS:COND:Protozoa_infectious_disease	Protozoa infectious disease	Disease				local_kg_curated
+LFS:COND:Urinary_retention	Urinary retention	Disease				local_kg_curated
+NCBITaxon:2606635	Waltera intestinalis	Microbe			species	local_kg_curated
+NCBITaxon:2293011	Clostridium sp. AF34-10BH	Microbe			species	local_kg_curated
+NCBITaxon:2708117	Capnocytophaga endodontalis	Microbe			species	local_kg_curated
+NCBITaxon:2831000	Arthrobacter sp. NicSoilC5	Microbe			species	local_kg_curated
+NCBITaxon:2678261	Pseudomonas sp. Pc102	Microbe			species	local_kg_curated
+NCBITaxon:1655	Actinomyces naeslundii	Microbe			species	local_kg_curated
+NCBITaxon:45547	Starmerella etchellsii	Microbe			species	local_kg_curated
+NCBITaxon:349273	uncultured Phenylobacterium sp.	Microbe			species	local_kg_curated
+NCBITaxon:189667	uncultured Aerococcus sp.	Microbe			species	local_kg_curated
+NCBITaxon:47878	Pseudomonas azotoformans	Microbe			species	local_kg_curated
+LFS:COND:Bone_density	Bone density	Disease				local_kg_curated
+LFS:COND:Bone_mineral_content_measurement	Bone mineral content measurement	Disease				local_kg_curated
+LFS:COND:Response_to_liver_transplant	Response to liver transplant	Disease				local_kg_curated
+NCBITaxon:297	Hydrogenophilus thermoluteolus	Microbe			species	local_kg_curated
+NCBITaxon:1276936	Staphylococcus petrasii	Microbe			species	local_kg_curated
+NCBITaxon:252130	Uruburuella suis	Microbe			species	local_kg_curated
+NCBITaxon:43769	Corynebacterium propinquum	Microbe			species	local_kg_curated
+NCBITaxon:555313	Phocaeicola abscessus	Microbe			species	local_kg_curated
+NCBITaxon:1852377	Actinomyces pacaensis	Microbe			species	local_kg_curated
+NCBITaxon:43995	Johnsonella ignava	Microbe			species	local_kg_curated
+NCBITaxon:1547448	Arachnia rubra	Microbe			species	local_kg_curated
+NCBITaxon:1659	Actinomyces israelii	Microbe			species	local_kg_curated
+NCBITaxon:554406	Leptotrichia hongkongensis	Microbe			species	local_kg_curated
+NCBITaxon:28136	Segatella oulorum	Microbe			species	local_kg_curated
+LFS:COND:Colorectal_cancer_Peripheral_nerve_injury	Colorectal cancer,Peripheral nerve injury	Disease				local_kg_curated
+NCBITaxon:3107375	Eubacteriales Family XIII. Incertae Sedis bacterium	Microbe			species	local_kg_curated
+LFS:COND:Benign_prostatic_hyperplasia	Benign prostatic hyperplasia	Disease				local_kg_curated
+NCBITaxon:43669	Brachybacterium faecium	Microbe			species	local_kg_curated
+LFS:COND:Benign_prostatic_hyperplasia_Periodontitis	Benign prostatic hyperplasia,Periodontitis	Disease				local_kg_curated
+NCBITaxon:2592656	Vogesella urethralis	Microbe			species	local_kg_curated
+LFS:COND:Periodontitis_Benign_prostatic_hyperplasia	Periodontitis,Benign prostatic hyperplasia	Disease				local_kg_curated
+NCBITaxon:118246	Ureibacillus terrenus	Microbe			species	local_kg_curated
+NCBITaxon:47885	Pseudomonas oryzihabitans	Microbe			species	local_kg_curated
+LFS:COND:Hypoxia	Hypoxia	Disease				local_kg_curated
+NCBITaxon:1262816	Clostridium sp. CAG:510	Microbe			species	local_kg_curated
+LFS:COND:Lung_carcinoma	Lung carcinoma	Disease				local_kg_curated
+NCBITaxon:1763549	uncultured Holdemanella sp.	Microbe			species	local_kg_curated
+NCBITaxon:1679169	Bacillus sp. FJAT-27916	Microbe			species	local_kg_curated
+NCBITaxon:1334014	uncultured Leptotrichiaceae bacterium	Microbe			species	local_kg_curated
+LFS:COND:Streptococcal_pneumonia	Streptococcal pneumonia	Disease				local_kg_curated
+LFS:COND:Cerebral_infarction	Cerebral infarction	Disease				local_kg_curated
+LFS:COND:HIV_associated_neurocognitive_disorder	HIV-associated neurocognitive disorder	Disease				local_kg_curated
+NCBITaxon:2860053	Clostridium sp. L2_50	Microbe			species	local_kg_curated
+LFS:COND:Central_nervous_system_disease	Central nervous system disease	Disease				local_kg_curated
+NCBITaxon:2317	Methanosphaera stadtmanae	Microbe			species	local_kg_curated
+NCBITaxon:2714355	Vescimonas coprocola	Microbe			species	local_kg_curated
+NCBITaxon:2135672	Massilia sp. GV045	Microbe			species	local_kg_curated
+LFS:COND:Magnesium	Magnesium	Disease				local_kg_curated
+NCBITaxon:2751	Carnobacterium maltaromaticum	Microbe			species	local_kg_curated
+LFS:COND:Phenotypic_sex_Magnesium_measurement	Phenotypic sex,Magnesium measurement	Disease				local_kg_curated
+LFS:COND:Magnesium_measurement_Phenotypic_sex	Magnesium measurement,Phenotypic sex	Disease				local_kg_curated
+NCBITaxon:114527	Mogibacterium diversum	Microbe			species	local_kg_curated
+LFS:COND:Obstructive_sleep_apnea_Periodontitis	Obstructive sleep apnea,Periodontitis	Disease				local_kg_curated
+NCBITaxon:547520	Bacillus sp. A8 ZZ-2008	Microbe			species	local_kg_curated
+NCBITaxon:189665	uncultured Trichococcus sp.	Microbe			species	local_kg_curated
+NCBITaxon:249188	Haemophilus pittmaniae	Microbe			species	local_kg_curated
+LFS:COND:Coronary_artery_disease_Depressive_disorder	Coronary artery disease,Depressive disorder	Disease				local_kg_curated
+LFS:COND:Periapical_Periodontitis	Periapical Periodontitis	Disease				local_kg_curated
+NCBITaxon:1977	Streptomyces abikoensis	Microbe			species	local_kg_curated
+LFS:COND:Library_preparation	Library preparation	Disease				local_kg_curated
+NCBITaxon:181487	Schaalia cardiffensis	Microbe			species	local_kg_curated
+NCBITaxon:151755	Xenophilus azovorans	Microbe			species	local_kg_curated
+NCBITaxon:445220	Reyranella massiliensis	Microbe			species	local_kg_curated
+NCBITaxon:29567	methanogen sp.	Microbe			species	local_kg_curated
+LFS:COND:Grey_matter_volume_measurement	Grey matter volume measurement	Disease				local_kg_curated
+NCBITaxon:337041	Alphapapillomavirus 9	Microbe			species	local_kg_curated
+NCBITaxon:333767	Alphapapillomavirus 3	Microbe			species	local_kg_curated
+NCBITaxon:36809	Mycobacteroides abscessus	Microbe			species	local_kg_curated
+NCBITaxon:78331	Mycobacterium canetti	Microbe			species	local_kg_curated
+LFS:COND:Wheezing	Wheezing	Disease				local_kg_curated
+NCBITaxon:727	Haemophilus influenzae	Microbe			species	local_kg_curated
+NCBITaxon:2028083	Daedalea confragosa	Microbe			species	local_kg_curated
+NCBITaxon:86828	Sporobolomyces ruberrimus	Microbe			species	local_kg_curated
+LFS:COND:Clonorchiasis	Clonorchiasis	Disease				local_kg_curated
+NCBITaxon:905	Acidaminococcus fermentans	Microbe			species	local_kg_curated
+NCBITaxon:1916	Streptomyces lividans	Microbe			species	local_kg_curated
+NCBITaxon:1249	Weissella paramesenteroides	Microbe			species	local_kg_curated
+NCBITaxon:2779352	Pseudoflavonifractor gallinarum	Microbe			species	local_kg_curated
+NCBITaxon:592978	Mediterraneibacter faecis	Microbe			species	local_kg_curated
+NCBITaxon:1871030	Merdibacter massiliensis	Microbe			species	local_kg_curated
+NCBITaxon:2742600	Limosilactobacillus urinaemulieris	Microbe			species	local_kg_curated
+NCBITaxon:2714358	Pusillibacter faecalis	Microbe			species	local_kg_curated
+NCBITaxon:2838656	Candidatus Mailhella excrementigallinarum	Microbe			species	local_kg_curated
+NCBITaxon:2293107	Eubacterium sp. AF34-35BH	Microbe			species	local_kg_curated
+NCBITaxon:3700660	Cardingvirinae	Microbe			species	local_kg_curated
+NCBITaxon:2732013	Markadamsvirinae	Microbe			species	local_kg_curated
+NCBITaxon:167	Treponema succinifaciens	Microbe			species	local_kg_curated
+NCBITaxon:1637508	Ruminococcus sp. N15.MGS-57	Microbe			species	local_kg_curated
+NCBITaxon:2779518	Blautia liquoris	Microbe			species	local_kg_curated
+NCBITaxon:2764325	Hoskinsella hominis	Microbe			species	local_kg_curated
+NCBITaxon:2956629	Valbvirus ValB1MD2	Microbe			species	local_kg_curated
+NCBITaxon:2779506	Kingella pumchi	Microbe			species	local_kg_curated
+NCBITaxon:871665	Blautia faecis	Microbe			species	local_kg_curated
+LFS:COND:Semen_measurement	Semen measurement	Disease				local_kg_curated
+NCBITaxon:2478483	Erysipelotrichales bacterium	Microbe			species	local_kg_curated
+LFS:COND:Chronic_disease	Chronic disease	Disease				local_kg_curated
+LFS:COND:Microbiome_measurement	Microbiome measurement	Disease				local_kg_curated
+NCBITaxon:1184387	Mesotoga prima	Microbe			species	local_kg_curated
+LFS:COND:Trichuriasis	Trichuriasis	Disease				local_kg_curated
+NCBITaxon:2981769	Waltera acetigignens	Microbe			species	local_kg_curated
+NCBITaxon:315405	Streptococcus gallolyticus	Microbe			species	local_kg_curated
+NCBITaxon:2830659	Clostridiaceae bacterium Marseille-Q4149	Microbe			species	local_kg_curated
+LFS:COND:Response_to_placebo	Response to placebo	Disease				local_kg_curated
+NCBITaxon:1912897	Blautia argi	Microbe			species	local_kg_curated
+LFS:COND:Sodium	Sodium	Disease				local_kg_curated
+NCBITaxon:2719233	Lacrimispora defluvii	Microbe			species	local_kg_curated
+NCBITaxon:2763644	Zhenpiania hominis	Microbe			species	local_kg_curated
+NCBITaxon:419015	Alloscardovia omnicolens	Microbe			species	local_kg_curated
+NCBITaxon:2124	Metamycoplasma salivarium	Microbe			species	local_kg_curated
+LFS:COND:COVID_19_Tuberculosis	COVID-19,Tuberculosis	Disease				local_kg_curated
+NCBITaxon:713054	TM7 phylum sp. oral taxon 352	Microbe			species	local_kg_curated
+LFS:COND:Tuberculosis_COVID_19	Tuberculosis,COVID-19	Disease				local_kg_curated
+NCBITaxon:76776	Malassezia slooffiae	Microbe			species	local_kg_curated
+LFS:COND:Doxycycline	Doxycycline	Disease				local_kg_curated
+NCBITaxon:5319	Irpex lacteus	Microbe			species	local_kg_curated
+NCBITaxon:61592	Corynebacterium durum	Microbe			species	local_kg_curated
+NCBITaxon:1177574	Prevotella jejuni	Microbe			species	local_kg_curated
+NCBITaxon:2804917	Corynebacterium pseudokroppenstedtii	Microbe			species	local_kg_curated
+LFS:COND:Behavior	Behavior	Disease				local_kg_curated
+NCBITaxon:1907662	Raoultibacter timonensis	Microbe			species	local_kg_curated
+LFS:COND:Insomnia	Insomnia	Disease				local_kg_curated
+LFS:COND:Gangrene	Gangrene	Disease				local_kg_curated
+NCBITaxon:2501931	Orthocoronavirinae	Microbe			species	local_kg_curated
+NCBITaxon:2560071	Brockvirinae	Microbe			species	local_kg_curated
+LFS:COND:Inborn_errors_of_metabolism	Inborn errors of metabolism	Disease				local_kg_curated
+LFS:COND:Antiphospholipid_syndrome	Antiphospholipid syndrome	Disease				local_kg_curated
+LFS:COND:Height_growth_measurement	Height growth measurement	Disease				local_kg_curated
+NCBITaxon:713008	Parvimonas sp. oral taxon 393	Microbe			species	local_kg_curated
+LFS:COND:Failure_to_thrive	Failure to thrive	Disease				local_kg_curated
+LFS:COND:Nausea_and_vomiting	Nausea and vomiting	Disease				local_kg_curated
+NCBITaxon:1673721	Intestinimonas massiliensis (ex Afouda et al. 2020)	Microbe			species	local_kg_curated
+LFS:COND:Feeding_difficulties	Feeding difficulties	Disease				local_kg_curated
+NCBITaxon:1262889	Eubacterium sp. CAG:38	Microbe			species	local_kg_curated
+LFS:COND:GBA_carrier_status	GBA carrier status	Disease				local_kg_curated
+NCBITaxon:1262884	Eubacterium sp. CAG:202	Microbe			species	local_kg_curated
+NCBITaxon:1950820	Clostridiales bacterium UBA1381	Microbe			species	local_kg_curated
+NCBITaxon:1262989	Firmicutes bacterium CAG:94	Microbe			species	local_kg_curated
+NCBITaxon:936588	Veillonella sp. ACP1	Microbe			species	local_kg_curated
+NCBITaxon:84163	Cryptobacterium curtum	Microbe			species	local_kg_curated
+NCBITaxon:1262875	Eggerthella sp. CAG:209	Microbe			species	local_kg_curated
+LFS:COND:Trauma_exposure_measurement	Trauma exposure measurement	Disease				local_kg_curated
+NCBITaxon:2763051	Lachnospira hominis (ex Liu et al. 2021)	Microbe			species	local_kg_curated
+LFS:COND:Sugar_sweetened_beverage_consumption_measurement	Sugar sweetened beverage consumption measurement	Disease				local_kg_curated
+NCBITaxon:1519439	Oscillibacter sp. ER4	Microbe			species	local_kg_curated
+LFS:COND:Polyunsaturated_fatty_acid_measurement	Polyunsaturated fatty acid measurement	Disease				local_kg_curated
+LFS:COND:Omega_3_polyunsaturated_fatty_acid_measurement	Omega-3 polyunsaturated fatty acid measurement	Disease				local_kg_curated
+LFS:COND:Fruit	Fruit	Disease				local_kg_curated
+NCBITaxon:2292205	Clostridium sp. AF20-17LB	Microbe			species	local_kg_curated
+NCBITaxon:2292206	Clostridium sp. AF27-2AA	Microbe			species	local_kg_curated
+NCBITaxon:539	Eikenella corrodens	Microbe			species	local_kg_curated
+NCBITaxon:126287	Didelphinae	Microbe			species	local_kg_curated
+NCBITaxon:2049025	Flavonifractor sp.	Microbe			species	local_kg_curated
+NCBITaxon:284059	Stenopeltis gracilis	Microbe			species	local_kg_curated
+NCBITaxon:3062492	Blautia massiliensis (ex Liu et al. 2021)	Microbe			species	local_kg_curated
+NCBITaxon:1926283	Lachnoclostridium edouardi	Microbe			species	local_kg_curated
+LFS:COND:Zinc	Zinc	Disease				local_kg_curated
+NCBITaxon:61171	Holdemania filiformis	Microbe			species	local_kg_curated
+LFS:COND:Calcium_intake_measurement	Calcium intake measurement	Disease				local_kg_curated
+LFS:COND:Vitamin_E_measurement	Vitamin E measurement	Disease				local_kg_curated
+LFS:COND:Vitamin_C_measurement	Vitamin C measurement	Disease				local_kg_curated
+LFS:COND:Vitamin_A_measurement	Vitamin A measurement	Disease				local_kg_curated
+NCBITaxon:2718	Cardiobacterium hominis	Microbe			species	local_kg_curated
+LFS:COND:Response_to_lithium_ion	Response to lithium ion	Disease				local_kg_curated
+NCBITaxon:2177	Methanohalophilus halophilus	Microbe			species	local_kg_curated
+NCBITaxon:119852	Oscillospira	Microbe			genus	local_kg_curated
+NCBITaxon:1263	Ruminococcus	Microbe			genus	local_kg_curated
+NCBITaxon:1578	Lactobacillus	Microbe			genus	local_kg_curated
+NCBITaxon:1579	Lactobacillus acidophilus	Microbe			species	local_kg_curated
+NCBITaxon:1678	Bifidobacterium	Microbe			genus	local_kg_curated
+NCBITaxon:1744	Propionibacterium freudenreichii	Microbe			species	local_kg_curated
+NCBITaxon:1766253	Agathobacter	Microbe			genus	local_kg_curated
+NCBITaxon:210	Helicobacter pylori	Microbe			species	local_kg_curated
+NCBITaxon:216851	Faecalibacterium	Microbe			genus	local_kg_curated
+NCBITaxon:239934	Akkermansia	Microbe			genus	local_kg_curated
+NCBITaxon:33024	Phascolarctobacterium	Microbe			genus	local_kg_curated
+NCBITaxon:33042	Coprococcus	Microbe			genus	local_kg_curated
+NCBITaxon:572511	Blautia	Microbe			genus	local_kg_curated
+NCBITaxon:838	Prevotella	Microbe			genus	local_kg_curated
+NCBITaxon:872	Desulfovibrio	Microbe			genus	local_kg_curated
+MESH:D000077195	Squamous Cell Carcinoma of Head and Neck	Disease				local_kg_curated
+MESH:D001007	Anxiety	Disease				local_kg_curated
+MESH:D003092	Colitis	Disease				local_kg_curated
+MESH:D003093	Colitis, Ulcerative	Disease				local_kg_curated
+MESH:D003731	Dental Caries	Disease				local_kg_curated
+MESH:D003876	Dermatitis, Atopic	Disease				local_kg_curated
+MESH:D009369	Neoplasms	Disease				local_kg_curated
+MESH:D010518	Periodontitis	Disease				local_kg_curated
+MESH:D013274	Stomach Neoplasms	Disease				local_kg_curated
+MESH:D015212	Inflammatory Bowel Diseases	Disease				local_kg_curated
+MESH:D015431	Weight Loss	Disease				local_kg_curated
+NCBITaxon:642	Aeromonas	Microbe			genus	local_kg_curated
+NCBITaxon:830	Butyrivibrio	Microbe			genus	local_kg_curated
+MESH:D007249	Inflammation	Disease				local_kg_llm_extracted
+MESH:D005232	Fatty Acids Volatile	Metabolite				local_kg_llm_extracted
+MESH:C024139	indole-3-lactic acid	Metabolite				local_kg_llm_extracted
+MESH:D002635	Chenodeoxycholic Acid	Metabolite				local_kg_llm_extracted
+MESH:D063646	Carcinogenesis	Disease				local_kg_llm_extracted
+MESH:D002087	Butyrates	Metabolite				local_kg_llm_extracted
+MESH:D011422	Propionates	Metabolite				local_kg_llm_extracted
+MESH:D008070	Lipopolysaccharides	Metabolite				local_kg_llm_extracted
+MESH:D005680	gamma-Aminobutyric Acid	Metabolite				local_kg_llm_extracted
+MESH:D019344	Lactic Acid	Metabolite				local_kg_llm_extracted
+MESH:D001647	Bile Acids and Salts	Metabolite				local_kg_llm_extracted
+MESH:C569566	colibactin	Metabolite				local_kg_llm_extracted
+LFS:FOOD:prebiotic	prebiotic	Food				local_kg_llm_extracted
+MESH:D005234	Fatty Liver	Disease				local_kg_llm_extracted
+MESH:D064806	Dysbiosis	Disease				local_kg_llm_extracted
+MESH:D006862	Hydrogen Sulfide	Metabolite				local_kg_llm_extracted
+MESH:D003866	Depressive Disorder	Disease				local_kg_llm_extracted
+MESH:C032538	4-cresol	Metabolite				local_kg_llm_extracted
+NCBITaxon:5475	Candida	Microbe				local_kg_llm_extracted
+MESH:D006861	Hydrogen Peroxide	Metabolite				local_kg_llm_extracted
+LFS:FOOD:dietary_fiber	dietary fiber	Food				local_kg_llm_extracted
+MESH:D011166	Porphyrins	Metabolite				local_kg_llm_extracted
+MESH:D016301	Alveolar Bone Loss	Disease				local_kg_llm_extracted
+MESH:C009435	tetramic acid	Metabolite				local_kg_llm_extracted
+MESH:D005990	Glycerol	Metabolite				local_kg_llm_extracted
+MESH:D005227	Fatty Acids	Metabolite				local_kg_llm_extracted
+NCBITaxon:55193	Malassezia	Microbe				local_kg_llm_extracted
+MESH:D008697	Methane	Metabolite				local_kg_llm_extracted
+MESH:D007980	Levodopa	Metabolite				local_kg_llm_extracted
+MESH:D010368	Pectins	Metabolite				local_kg_llm_extracted
+MESH:D013213	Starch	Metabolite				local_kg_llm_extracted
+MESH:D000073893	Sugars	Metabolite				local_kg_llm_extracted

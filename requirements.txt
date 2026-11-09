@@ -1,0 +1,5 @@
+# 运行时+开发依赖（阶段 1 W1.1 钉扎；传递依赖见 pip freeze，发布批前再全量冻结）
+typer==0.27.3
+requests==2.34.2
+mcp==2.3.0  # 轨D MCP 插座(B0 转正档 mcp_sdk_survey_20261103; Py3.10 末班车,严禁浮动)
+pytest==9.1.1

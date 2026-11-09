@@ -1,0 +1,13 @@
+Metadata-Version: 2.4
+Name: kg-tool
+Version: 0.4.1
+Summary: Gut Microbiome Multi-layer Knowledge Platform —— 子图/机制链/假设卡片工具链统一入口
+License: MIT
+Requires-Python: >=3.10
+License-File: LICENSE
+Requires-Dist: typer==0.27.3
+Requires-Dist: requests==2.34.2
+Requires-Dist: mcp==2.3.0
+Provides-Extra: dev
+Requires-Dist: pytest==9.1.1; extra == "dev"
+Dynamic: license-file

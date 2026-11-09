@@ -166,7 +166,11 @@ def vote3(chain: dict, idx: dict) -> int:
     return 0
 
 
+<<<<<<< HEAD
 # ---- v0.4 票③多源综合（2026-11-08 项目批准，调和和；见 vote3_redesign_research）----
+=======
+# ---- v0.4 票③多源综合（2026-11-08 用户批，调和和；见 vote3_redesign_research）----
+>>>>>>> origin/main
 import csv as _csv
 import glob as _glob
 

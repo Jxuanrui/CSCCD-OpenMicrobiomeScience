@@ -1,0 +1,2 @@
+[console_scripts]
+kg = kg_tool.cli:app

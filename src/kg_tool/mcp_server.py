@@ -84,6 +84,7 @@ def run_pipeline(disease: str, cohort: str, tier2_batch: str,
     return json.dumps(state, ensure_ascii=False)
 
 
+<<<<<<< HEAD
 @mcp.tool()
 def run_crosswalk(mesh_snapshot_dir: str, out_dir: str) -> str:
     """生成跨体系对照表（薄转发 build_crosswalk；child_of 只登记）。"""
@@ -119,6 +120,8 @@ def run_counterfactual(work_dir: str, out_dir: str, top_n: int = 10) -> str:
     return json.dumps({"rc": rc})
 
 
+=======
+>>>>>>> origin/main
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="kg MCP 插座（stdio 本地）")
     # 护栏②机器化：transport 白名单只有 stdio——sse/http 传不进来

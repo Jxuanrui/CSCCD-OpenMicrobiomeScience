@@ -1,5 +1,5 @@
 {
-  "_readme": "分析配方层（阶段 3 轨C，schema 已冻结——含 _note 的类目禁混词条；candidate 禁推荐措辞断言只护 reason 破折号前段[防否定句误伤的设计取舍]。两硬护栏（评审轨B审）：①recommended/not_recommended 词条的证据文件必须真实在盘（测试强制）；②本 schema 即冻结物，改动须过完成审。candidate=未实测，按三栏轮子调研制补——未实测不推荐。",
+  "_readme": "分析配方层（阶段 3 轨C，schema 已冻结——含 _note 的类目禁混词条；candidate 禁推荐措辞断言只护 reason 破折号前段[防否定句误伤的设计取舍]。两硬护栏（监工轨B审）：①recommended/not_recommended 词条的证据文件必须真实在盘（测试强制）；②本 schema 即冻结物，改动须过完成审。candidate=未实测，按三栏轮子调研制补——未实测不推荐。",
   "key": "htn",
   "differential_abundance": {
     "MaAsLin2": {
@@ -37,7 +37,7 @@
     "Mendelian_Randomization": {
       "status": "candidate",
       "reason": "微生物 GWAS 汇总统计作工具变量的因果方向先验——湿实验等待期轨备料中（外部 GWAS 源须许可档案+版本钉扎+方法学预注册，宪法第 7 条）",
-      "evidence": "data/logs/review_oneshot_plan_20261102.md",
+      "evidence": "data/logs/supervisor_oneshot_plan_20261102.md",
       "install": "TwoSampleMR（R，待报审）",
       "input": "微生物 GWAS 汇总统计（外部源，未接入）"
     }

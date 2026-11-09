@@ -1,6 +1,6 @@
 """卡片讲人话层（阶段 3 轨A2）——LLM 只许翻译，不许发明。
 
-物理隔离设计（B-1 批准位 + 评审护栏）：
+物理隔离设计（B-1 批准位 + 监工护栏）：
 1. 本模块住 src/kg_tool/（NOT 06_tool/）——hypothesize 主模块的
    禁 LLM 红线 grep（llm/http/requests 全族）零命中不受影响；
 2. 输入白名单=top_hypotheses.tsv+hypothesis_manifest.json，

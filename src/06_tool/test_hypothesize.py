@@ -439,7 +439,7 @@ def test_zero_modification(world2, tmp_path, monkeypatch):
 
 
 def test_null_arm_param_contract(tmp_path, monkeypatch):
-    """轨A1 参数契约（评审轨A审 P1-1）：只传 input 不传 out=静默跳过；
+    """轨A1 参数契约（监工轨A审 P1-1）：只传 input 不传 out=静默跳过；
     两参齐=走装配路径（此处只锁分支行为，sha 等价由 golden 证）。"""
     import argparse
     import hypothesize as hyp

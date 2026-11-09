@@ -54,7 +54,7 @@ from importlib.util import module_from_spec, spec_from_file_location
 from pathlib import Path
 
 # ---------------------------------------------------------------
-# 冻结常量（spec 逐字）——改这里=过审（评审+用户）。
+# 冻结常量（spec 逐字）——改这里=过审（监工+用户）。
 # ---------------------------------------------------------------
 RNG_SEED = 20261105          # 钉扎 random.Random(20261105)（spec 预注册）
 

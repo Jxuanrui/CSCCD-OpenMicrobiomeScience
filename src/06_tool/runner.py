@@ -147,7 +147,7 @@ def main(argv: list[str] | None = None) -> int:
         }
         save_state(out, state)
 
-    if "finished_at" not in state:  # 全跳过时不覆写真实完成时间（评审 P2-1）
+    if "finished_at" not in state:  # 全跳过时不覆写真实完成时间（监工 P2-1）
         state["finished_at"] = datetime.now().strftime("%F %T")
     save_state(out, state)
     print(f"[run] 完成：{seq[0]}…{seq[-1]} → {out}")
@@ -159,7 +159,7 @@ def run_null_arm(out_dir: Path, null_arm_input: Path) -> int:
 
     旧"整目录复制+掏空重跑"已由 hypothesize --null-arm-input/out
     进程内直算取代（sha=3d4fa018 等价已证）；本函数保留为便捷入口，
-    一行转发防两套口径分叉（评审轨A审 P1-2）。
+    一行转发防两套口径分叉（监工轨A审 P1-2）。
     """
     import hypothesize
     return hypothesize.main(

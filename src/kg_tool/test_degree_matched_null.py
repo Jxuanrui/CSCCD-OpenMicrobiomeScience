@@ -285,7 +285,7 @@ def test_ambiguities_registered_and_a13_flagged():
     codes = [c for c, _, _ in dmn.AMBIGUITIES]
     assert codes == [f"A{i}" for i in range(1, 16)]
     a13 = next((topic + how) for c, topic, how in dmn.AMBIGUITIES if c == "A13")
-    assert "A'" in a13 and "评审" in a13 and "用户" in a13
+    assert "A'" in a13 and "监工" in a13 and "用户" in a13
     # A13 必须点出"v01 命名空间 vs chains MESH"这条磁盘事实，否则等于空口
     assert "CHEBI" in a13 and "MESH" in a13
 
@@ -694,7 +694,7 @@ def _real_paths() -> dict:
     main = Path("<REPO_ROOT>")
     return {
         "v01": main / "archive/Version01/data/merged/candidate_v3/merged_edges.tsv",
-        "gm": Path("<LYTEAMWORK>/<USER>/Project/"
+        "gm": Path("<LYTEAMWORK>/JiXuanRui/Project/"
                    "Dietary_cohort_of_intestinal_flora/Project/"
                    "Project03_公共数据库/gutMGene"),
         "ext": main / ("data/observation/h1_htn_external_20261030_151856/"

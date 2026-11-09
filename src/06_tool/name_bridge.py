@@ -35,7 +35,7 @@ R4 界域收窄：沿 nodes.dmp parent 链上溯判界——
    →不桥（rank_mismatch）——防把种名桥到 no-rank/strain 节点污染下游 join；
 6. 输出桥接表带 in_main_graph 列（该 taxid 是否为主图节点）——桥到图外的
    taxid 对推演无用，覆盖度报告分列统计。
-P0 named-denominator 口径（review_b_phase_review_20261101 整改）：
+P0 named-denominator 口径（supervisor_b_phase_review_20261101 整改）：
 覆盖度在"全特征"分母之外增设"有名特征"分母（named_d/named_cov 机器字段）
 ——剔除 SGB/GGB/UMGS 基因组码（token 级：MetaPhlAn4 未命名基因组物种常以
 复合名出现，如 Prevotella_SGB1680）、_unclassified 占位、_sp_ 菌株指代；
@@ -79,7 +79,7 @@ STRIP_PAREN_RE = re.compile(r"\s*\([^)]*\)\s*$")
 # MetaPhlAn lineage 分隔符；特征名=最后一个 | 段
 LINEAGE_SPLIT = re.compile(r"\|")
 
-# P0 named-denominator：无名码 token 判定（评审裁定枚举的三族基因组码）
+# P0 named-denominator：无名码 token 判定（监工裁定枚举的三族基因组码）
 # 为什么 token 级而不是整串匹配：MetaPhlAn4 未命名基因组物种多写成复合名
 # （Prevotella_SGB1680 / GGB80011_SGB15265），整串匹配会把它们漏进有名分母
 UNNAMED_CODE_TOKEN_RE = re.compile(r"(?:SGB|GGB|UMGS)\d+$", re.IGNORECASE)
@@ -299,7 +299,7 @@ def enrich_scientific_names(rows: list[dict], names_dmp: Path) -> None:
 def main(argv: list[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description="NCBITaxon↔MetaPhlAn 名称桥接器")
     # W2.2：三个数据腿参数改注册表供应（required → 哨兵 None；仍无值=报错提示，
-    # 不静默通过——评审 W2.1 审 P2 要求）。--taxonomy/--source 属 cohort（W2.4）不动。
+    # 不静默通过——监工 W2.1 审 P2 要求）。--taxonomy/--source 属 cohort（W2.4）不动。
     ap.add_argument("--names-dmp", type=Path, default=None,
                     help="NCBI names.dmp（缺省=注册表 ncbi_names）")
     ap.add_argument("--nodes-dmp", type=Path, default=None,

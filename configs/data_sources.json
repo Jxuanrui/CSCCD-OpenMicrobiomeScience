@@ -1,28 +1,16 @@
 {
   "_readme": "数据腿注册表（W2.2，stage2_spec §二）：git 只带 sha256/版本/许可档位/仓内相对路径；本机绝对路径一律走 configs/local/data_sources_local.json（gitignore）。运行时启动校验锚 sha，不符即 fail-closed。 注意：tier2 冻结批次（20261101_115704_tier2_htn）是 merge 步的运行时输入（--tier2-batch 显式传参），不入注册表。",
   "kg_v2": {
-<<<<<<< HEAD
-    "path": "data/kg/k7_full_20261109_malformed2",
-    "anchor_file": "merged_edges.tsv",
-    "anchor_sha256": "25c1f76a92a6bbfe775ba4fcb8b148a472a5d7f09d4433b9a2f655cfa270338d",
-    "version": "正式图 v2 k7_full_20261109_malformed2",
-=======
     "path": "data/kg/k6_full_20261108_malformedfix",
     "anchor_file": "merged_edges.tsv",
     "anchor_sha256": "25c1f76a92a6bbfe775ba4fcb8b148a472a5d7f09d4433b9a2f655cfa270338d",
     "version": "正式图 v2 k6_full_20261108_malformedfix",
->>>>>>> origin/main
     "license_tier": "内部发布物（release_v1 族，数据 CC BY-NC 4.0）",
     "_anchor_note": "v0.4 升级 k4→k6(malformed修复+去重) 锚同步 25c1f76a92a6bbfe"
   },
   "kg_nodes": {
-<<<<<<< HEAD
-    "path": "data/kg/k7_full_20261109_malformed2/merged_nodes.tsv",
-    "anchor_sha256": "0806f75af17c329648bfa6750d85c4a83607d354c8a5f16aca516bbc44cb9db4",
-=======
     "path": "data/kg/k6_full_20261108_malformedfix/merged_nodes.tsv",
     "anchor_sha256": "d2ee771fb220b4ec724eedcaee8d17e672d330e52f839863c7197436de4650e5",
->>>>>>> origin/main
     "version": "正式图 v2 节点表",
     "license_tier": "内部发布物（同 kg_v2）",
     "_anchor_note": "v0.4 升级 k4→k6(malformed修复+去重) 锚同步 d2ee771fb220b4ec"

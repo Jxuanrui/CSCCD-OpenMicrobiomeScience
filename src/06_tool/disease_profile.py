@@ -38,7 +38,7 @@ def load(key: str) -> dict:
         sys.exit(f"[disease_profile] 无档案 {p.name}；configs/diseases/ 可用: "
                  f"{', '.join(avail)}")
     d = json.loads(p.read_text(encoding="utf-8"))
-    # 值非空校验（评审 W2.1 审 P1：显式 null/空串会静默绕过"键存在"检查）；
+    # 值非空校验（监工 W2.1 审 P1：显式 null/空串会静默绕过"键存在"检查）；
     # ext102 除外——空外证源走下方专门的提示（空票逻辑说明），不用泛化报错
     missing = [f for f in REQUIRED_FIELDS
                if f != "ext102" and not d.get(f)]

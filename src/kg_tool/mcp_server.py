@@ -1,6 +1,6 @@
 """MCP 插座（阶段 3 轨D）——AI 助手直连 kg 工具的薄转发层。
 
-五护栏（监工 W2.3 审+轨D 批准条件）的机器化：
+五护栏（评审 W2.3 审+轨D 批准条件）的机器化：
 1. **纯转发**：每个 tool 都是薄壳——调 runner/recipes/explain 的既有
    main/load，统计逻辑零沾染；
 2. **stdio 本地**：transport 白名单只有 'stdio'（argparse choices 锁死，
@@ -25,7 +25,7 @@ from mcp.server import MCPServer
 
 from kg_tool.cli import kg_root
 
-ROOT = kg_root()  # 复用 KG_ROOT>自动探测（监工轨D审 P1-2：打包安装后 parents[2] 失效）
+ROOT = kg_root()  # 复用 KG_ROOT>自动探测（评审轨D审 P1-2：打包安装后 parents[2] 失效）
 
 mcp = MCPServer("kg")
 
@@ -82,6 +82,41 @@ def run_pipeline(disease: str, cohort: str, tier2_batch: str,
         encoding="utf-8"))
     state["runner_rc"] = rc
     return json.dumps(state, ensure_ascii=False)
+
+
+@mcp.tool()
+def run_crosswalk(mesh_snapshot_dir: str, out_dir: str) -> str:
+    """生成跨体系对照表（薄转发 build_crosswalk；child_of 只登记）。"""
+    from kg_tool import build_crosswalk
+    rc = build_crosswalk.main(["--mesh-snapshot", mesh_snapshot_dir,
+                               "--out-dir", out_dir])
+    return json.dumps({"rc": rc})
+
+
+@mcp.tool()
+def run_timeslice(year_snapshot: str, mesh_tree: str, out_dir: str) -> str:
+    """时间切片验证（cutoff=2023 冻结）。"""
+    from kg_tool import timeslice_eval
+    rc = timeslice_eval.main(["--year-snapshot", year_snapshot,
+                              "--mesh-tree", mesh_tree, "--out", out_dir])
+    return json.dumps({"rc": rc})
+
+
+@mcp.tool()
+def run_discover(gutmgene_t1: str, out_dir: str) -> str:
+    """开放发现三榜（候选≠已证关联）。"""
+    from kg_tool import open_discovery
+    rc = open_discovery.main(["--gutmgene-t1", gutmgene_t1, "--out", out_dir])
+    return json.dumps({"rc": rc})
+
+
+@mcp.tool()
+def run_counterfactual(work_dir: str, out_dir: str, top_n: int = 10) -> str:
+    """反事实证据贡献（TOP-N 卡逐边拔除→排名位移）。"""
+    from kg_tool import counterfactual_eval
+    rc = counterfactual_eval.main(["--work", work_dir, "--out", out_dir,
+                                   "--top-n", str(top_n)])
+    return json.dumps({"rc": rc})
 
 
 def main(argv: list[str] | None = None) -> int:

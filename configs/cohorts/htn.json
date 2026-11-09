@@ -1,0 +1,9 @@
+{
+  "key": "htn",
+  "display_name": "HTN 三队列（SelfData_222 + PRJEB13870 + PRJEB21612）",
+  "obs_dir": "data/observation/htn_v1",
+  "bridge_tsv": "data/logs/name_bridge_20261101/name_bridge_cohorts.tsv",
+  "source_names": ["SelfData_222", "PRJEB13870", "PRJEB21612"],
+  "expected_n": {"SelfData_222": 222, "PRJEB13870": 196, "PRJEB21612": 116},
+  "_local_note": "Nas 绝对路径（ingest_sources 三源 root + taxonomy 三件）按 configs 路径策略不入 git——由 configs/local/cohorts_local.json 提供"
+}

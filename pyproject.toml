@@ -1,0 +1,28 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kg-tool"
+dynamic = ["version"]
+description = "Gut Microbiome Multi-layer Knowledge Platform —— 子图/机制链/假设卡片工具链统一入口"
+requires-python = ">=3.10"
+license = { text = "MIT" }
+# 运行时依赖刻意最小：七模块纯标准库，CLI 底座=typer（版本钉扎=W0.2 实测转正版）
+dependencies = ["typer==0.27.3", "requests==2.34.2", "mcp==2.3.0"]
+
+[project.optional-dependencies]
+dev = ["pytest==9.1.1"]
+
+[project.scripts]
+kg = "kg_tool.cli:app"
+
+[tool.setuptools]
+package-dir = { "" = "src" }
+packages = ["kg_tool"]
+
+[tool.setuptools.dynamic]
+version = { attr = "kg_tool.__version__" }
+
+[tool.pytest.ini_options]
+markers = ["needs_data: 依赖仓内私有数据（公网 CI 跳过）"]

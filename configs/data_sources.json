@@ -1,0 +1,68 @@
+{
+  "_readme": "数据腿注册表（W2.2，stage2_spec §二）：git 只带 sha256/版本/许可档位/仓内相对路径；本机绝对路径一律走 configs/local/data_sources_local.json（gitignore）。运行时启动校验锚 sha，不符即 fail-closed。 注意：tier2 冻结批次（20261101_115704_tier2_htn）是 merge 步的运行时输入（--tier2-batch 显式传参），不入注册表。",
+  "kg_v2": {
+    "path": "data/kg/k6_full_20261108_malformedfix",
+    "anchor_file": "merged_edges.tsv",
+    "anchor_sha256": "25c1f76a92a6bbfe775ba4fcb8b148a472a5d7f09d4433b9a2f655cfa270338d",
+    "version": "正式图 v2 k6_full_20261108_malformedfix",
+    "license_tier": "内部发布物（release_v1 族，数据 CC BY-NC 4.0）",
+    "_anchor_note": "v0.4 升级 k4→k6(malformed修复+去重) 锚同步 25c1f76a92a6bbfe"
+  },
+  "kg_nodes": {
+    "path": "data/kg/k6_full_20261108_malformedfix/merged_nodes.tsv",
+    "anchor_sha256": "d2ee771fb220b4ec724eedcaee8d17e672d330e52f839863c7197436de4650e5",
+    "version": "正式图 v2 节点表",
+    "license_tier": "内部发布物（同 kg_v2）",
+    "_anchor_note": "v0.4 升级 k4→k6(malformed修复+去重) 锚同步 d2ee771fb220b4ec"
+  },
+  "library": {
+    "path": "data/literature/20261015_154252/articles.jsonl",
+    "anchor_sha256": "258f080487bc8b5edd038703cf410fd2f5bca5b3fb53cdd3354b8ba13996c0a6",
+    "version": "K1 语料 116,674 篇（20261015_154252）",
+    "license_tier": "PubMed/PubTator3 摘要标注（NCBI 政策；不入 git）"
+  },
+  "k3_batch": {
+    "path": "data/kg/20261016_165931",
+    "anchor_file": "relations.jsonl",
+    "anchor_sha256": "805b63105697ef214dbce19e455950eae1a0aef540882c7e98419879944e15a4",
+    "version": "K3 批次 20261016_165931（模块 --k3-batch 原默认）",
+    "license_tier": "内部运行产物"
+  },
+  "ncbi_names": {
+    "path": "data/raw/names.dmp",
+    "anchor_sha256": "358d70d5349504b0df6a083890d52fa177cbbe4f8dbefec9a805c3303de8f0a5",
+    "version": "NCBI taxonomy names.dmp（本地快照）",
+    "license_tier": "NCBI 公共领域"
+  },
+  "ncbi_nodes": {
+    "path": "data/raw/nodes.dmp",
+    "anchor_sha256": "5c7e258b55c469df8cd2295b2b4abd355f487760b199c8f2a4e9decbe7abf845",
+    "version": "NCBI taxonomy nodes.dmp（本地快照）",
+    "license_tier": "NCBI 公共领域"
+  },
+  "v01_edges": {
+    "path": "archive/Version01/data/merged/candidate_v3/merged_edges.tsv",
+    "anchor_sha256": "41833d39db18e3dca52af2844a63c342cc8434bd12e20736cfd988406b5f39bf",
+    "version": "V01 冻结边表（sha16=41833d39db18e3dc，与 deepchain 三门禁同源）",
+    "license_tier": "V01 封存资产（INHERITANCE.md）"
+  },
+  "v01_chains": {
+    "path": "archive/Version01/data/logs/mechanism_chains.tsv",
+    "anchor_sha256": "00e9508d17b9f8381920f6e1e2c99167bbc0232aefe1f718c4d813354ade7e46",
+    "version": "V01 冻结链 102,854（sha16=00e9508d17b9f838）",
+    "license_tier": "V01 封存资产"
+  },
+  "ko_map": {
+    "path": "archive/Version01/data/logs/external_evidence/metabolite_ko_map_v2.tsv",
+    "anchor_sha256": "46df51184c72ec8909337332b8634e280e7f367b81cf8fcd5f4a409cbea17f0c",
+    "version": "B1 手工映射 v2（24 行冻结/57 可测，INHERITANCE 登记 sha16=46df51184c72ec89）",
+    "license_tier": "V01 封存资产"
+  },
+  "gutmgene": {
+    "local_key": "gutmgene_dir",
+    "anchor_file": "Gut Microbe-Host Gene.csv",
+    "anchor_sha256": "55d342a9ffc2c54a3fa510d229e9ab61cbbb1929d9ab66a67219d9c4f34bee78",
+    "version": "gutMGene 本地部署（用户指定目录）",
+    "license_tier": "学术用途，已过许可核验（INHERITANCE.md:28-41）"
+  }
+}
